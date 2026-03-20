@@ -136,32 +136,32 @@ flowchart TB
     end
 
     subgraph AgentTeam["Agent Teams 実行層"]
-        subgraph CoreDev["開発コア"]
-            SRS_Agent["srs-writer<br/>仕様書作成"]
-            Arch_Agent["architect<br/>設計"]
-            Sec_Agent["security-reviewer<br/>セキュリティ"]
-            Impl_Agent["implementer<br/>実装"]
-            Test_Agent["test-engineer<br/>テスト"]
-            Review_Agent["review-agent<br/>レビュー"]
+        subgraph CoreDev["開発コア（6）"]
+            SRS_Agent["srs-writer"]
+            Arch_Agent["architect"]
+            Sec_Agent["security-reviewer"]
+            Impl_Agent["implementer"]
+            Test_Agent["test-engineer"]
+            Review_Agent["review-agent"]
         end
-        subgraph ProcessMgmt["プロセス管理"]
-            PM_Agent["progress-monitor<br/>進捗管理"]
-            Change_Agent["change-manager<br/>変更管理"]
-            Risk_Agent["risk-manager<br/>リスク管理"]
-            License_Agent["license-checker<br/>ライセンス"]
+        subgraph ProcessMgmt["プロセス管理（4）"]
+            PM_Agent["progress-monitor"]
+            Change_Agent["change-manager"]
+            Risk_Agent["risk-manager"]
+            License_Agent["license-checker"]
         end
-        subgraph QualityGuard["品質ガード"]
-            Koto_Agent["kotodama-kun<br/>用語チェック"]
-            FTV_Agent["framework-translation-verifier<br/>翻訳検証"]
+        subgraph QualityGuard["品質ガード（2）"]
+            Koto_Agent["kotodama-kun"]
+            FTV_Agent["framework-translation-verifier"]
         end
-        subgraph DocWriter["文書作成"]
-            UMW_Agent["user-manual-writer<br/>マニュアル"]
-            RBW_Agent["runbook-writer<br/>運用手順書"]
-            IR_Agent["incident-reporter<br/>インシデント報告"]
+        subgraph DocWriter["文書作成（3）"]
+            UMW_Agent["user-manual-writer"]
+            RBW_Agent["runbook-writer"]
+            IR_Agent["incident-reporter"]
         end
-        subgraph Improvement["プロセス改善"]
-            PI_Agent["process-improver<br/>ふりかえり"]
-            DW_Agent["decree-writer<br/>改善適用"]
+        subgraph Improvement["プロセス改善（2）"]
+            PI_Agent["process-improver"]
+            DW_Agent["decree-writer"]
         end
     end
 
@@ -172,47 +172,25 @@ flowchart TB
         Slack["Slack通知"]
     end
 
-    H1 -->|"1 コンセプト入力"| Orch
-    Orch -->|"2 計画策定依頼"| Plan
-    Plan -->|"3 計画承認要求"| H2
-    H2 -->|"4 承認/修正指示"| Orch
-    Orch -->|"5 タスク分配"| AgentTeam
-    SRS_Agent -->|"6 spec-foundation<br/>interview-record"| Koto_Agent
-    SRS_Agent -->|"6a spec-foundation"| Review_Agent
-    Koto_Agent -->|"7 用語チェック済"| Arch_Agent
-    Arch_Agent -->|"8 spec-architecture<br/>observability-design"| Koto_Agent
-    Arch_Agent -->|"8a spec-architecture"| Review_Agent
-    Arch_Agent -->|"8b spec-architecture"| Sec_Agent
-    Koto_Agent -->|"9 用語チェック済"| Impl_Agent
-    Sec_Agent -->|"10 threat-model<br/>security-architecture"| Impl_Agent
-    Sec_Agent -->|"10a security-scan-report"| Review_Agent
-    Impl_Agent -->|"11 src/ tests/"| Test_Agent
-    Impl_Agent -->|"11a src/"| Review_Agent
-    Test_Agent -->|"12 test-plan<br/>performance-report<br/>traceability"| Review_Agent
-    Test_Agent -->|"12a defect"| Impl_Agent
-    Review_Agent -->|"13 review"| Orch
-    Orch -->|"13a decision"| Arch_Agent
-    PM_Agent -->|"14 progress<br/>wbs"| Orch
-    Risk_Agent -->|"15 risk"| Orch
-    Change_Agent -->|"16 change-request"| Orch
-    License_Agent -->|"17 license-report"| Orch
-    Koto_Agent -->|"18 用語指摘"| Orch
-    FTV_Agent -->|"19 review<br/>翻訳検証結果"| Orch
-    UMW_Agent -->|"19a user-manual"| Orch
-    RBW_Agent -->|"19b runbook"| Orch
-    IR_Agent -->|"19c incident-report"| Orch
-    Orch -->|"20 完成報告"| H3
-    H3 -->|"21 変更要求"| Change_Agent
-    AgentTeam -->|"22 ツール利用"| Tools
-    Explore -->|"23 コードベース調査"| Orch
-    Orch -->|"E1 エスカレーション<br/>リスク/コスト/変更"| H2
-    Orch -->|"R1 フェーズ完了時<br/>ふりかえり起動"| PI_Agent
-    PI_Agent -->|"R2 retrospective-report<br/>改善策提案"| Orch
-    Orch -->|"R3 承認済み改善策"| DW_Agent
-    DW_Agent -->|"R4 適用完了報告"| Orch
+    H1 -->|"コンセプト入力"| Orch
+    Orch -->|"計画策定依頼"| Plan
+    Plan -->|"計画承認要求"| H2
+    H2 -->|"承認/修正指示"| Orch
+    Orch -->|"タスク分配/decision"| CoreDev
+    CoreDev -->|"review/成果物"| Orch
+    ProcessMgmt -->|"progress/risk/<br/>change-request/<br/>license-report"| Orch
+    QualityGuard -->|"用語/翻訳<br/>チェック結果"| Orch
+    DocWriter -->|"user-manual/runbook/<br/>incident-report"| Orch
+    Orch -->|"ふりかえり起動"| Improvement
+    Improvement -->|"retrospective-report/<br/>適用完了"| Orch
+    Orch -->|"完成報告"| H3
+    H3 -->|"変更要求"| ProcessMgmt
+    AgentTeam -->|"ツール利用"| Tools
+    Explore -->|"コードベース調査"| Orch
+    Orch -->|"エスカレーション<br/>リスク/コスト/変更"| H2
 ```
 
-この図は全自動開発における情報の流れを示す。ユーザーはコンセプト提示(1)、重要判断(3-4, E1)、受入テスト(20)でプロジェクトに関与する。review-agent は各工程の成果物を受け取りレビューする（6a: srs-writer、8a: architect、10a: security-reviewer、11a: implementer、12: test-engineer）。12a は defect フィードバックループで、テストで発見された不具合を implementer に戻す。E1はエスカレーション経路で、リスクスコア≧6、コスト予算80%到達、impact_level=high の変更要求など、開発途中で orchestrator がユーザーに判断を仰ぐフローを示す。R1-R4はふりかえりサイクルで、各フェーズ完了時に process-improver が defect パターンを分析し（R1-R2）、orchestrator が承認した改善策を decree-writer が安全チェック後にガバナンスファイルに適用する（R3-R4）。
+この図は全自動開発の全体構成と情報の流れをグループレベルで示す。ユーザーはコンセプト提示・重要判断・受入テストの3点でプロジェクトに関与する。orchestrator が全フェーズを制御し、5つのエージェントグループ（開発コア・プロセス管理・品質ガード・文書作成・プロセス改善、計17エージェント）にタスクを分配する。エスカレーション経路（リスクスコア≧6、コスト予算80%到達、impact_level=high の変更要求）では orchestrator がユーザーに判断を仰ぐ。個別エージェント間の file_type データフローは agent-list §3 を参照。
 
 ### 1.3 前提となるClaude Codeの主要機能
 
