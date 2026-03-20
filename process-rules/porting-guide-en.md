@@ -20,11 +20,11 @@ The following are AI-platform-independent. Use them as-is:
 | `infra/` | IaC code |
 | `project-management/` | Progress and WBS |
 | `project-records/` | Reviews, decisions, and risk records |
-| `process-rules/glossary-ja.md` | Glossary |
-| `process-rules/defect-taxonomy-ja.md` | Defect taxonomy |
-| `process-rules/review-standards-ja.md` | Review standards (R1-R6) |
+| `process-rules/glossary-en.md` | Glossary |
+| `process-rules/defect-taxonomy-en.md` | Defect taxonomy |
+| `process-rules/review-standards-en.md` | Review standards (R1-R6) |
 | `process-rules/spec-template-*.md` | Specification templates |
-| `process-rules/prompt-structure-ja.md` | Prompt structure conventions (S0-S6) |
+| `process-rules/prompt-structure-en.md` | Prompt structure conventions (S0-S6) |
 | `user-order.md` | User requirements (3-question format) |
 | `.mcp.json` | MCP configuration (open standard) |
 
@@ -32,9 +32,9 @@ The following are AI-platform-independent. Use them as-is:
 
 | File | Replacement Target |
 |---|---|
-| `process-rules/full-auto-dev-process-rules-ja.md` | "Claude Code", "Agent Teams", model names (Opus/Sonnet/Haiku) |
-| `process-rules/full-auto-dev-document-rules-ja.md` | Paths `.claude/agents/`, `.claude/commands/` |
-| `process-rules/agent-list-ja.md` | Model names in the model assignment table |
+| `process-rules/full-auto-dev-process-rules-en.md` | "Claude Code", "Agent Teams", model names (Opus/Sonnet/Haiku) |
+| `process-rules/full-auto-dev-document-rules-en.md` | Paths `.claude/agents/`, `.claude/commands/` |
+| `process-rules/agent-list-en.md` | Model names in the model assignment table |
 
 ### Format Conversion Required
 
@@ -176,7 +176,7 @@ Instruct the target AI as follows:
 
 ```
 This repository is a full-auto-dev framework for Claude Code.
-Follow the conversion specifications in process-rules/porting-guide-ja.md
+Follow the conversion specifications in process-rules/porting-guide-en.md
 and convert for [target platform name].
 
 1. Select the language for agents and commands (project primary language: [ja/en/other])

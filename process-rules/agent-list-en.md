@@ -54,7 +54,7 @@ Derived from Document Management Rules §11. **Each file_type has a single owner
 | interview-record | project-management/ | S | planning |
 | spec-foundation | docs/spec/ | S | planning |
 
-> srs-writer is responsible for validation and completion of user-order. The initial creation of user-order is performed by the user; srs-writer, as owner, ensures consistency.
+> srs-writer is responsible for validation only of user-order; user-order itself is not modified. The initial creation is performed by the user. Gaps identified during validation are resolved through interviews and reflected in spec-foundation.
 
 ### architect
 

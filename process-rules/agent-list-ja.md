@@ -54,7 +54,7 @@
 | interview-record | project-management/ | 単 | planning |
 | spec-foundation | docs/spec/ | 単 | planning |
 
-> srs-writer は user-order のバリデーションと補完を担当する。user-order の初期作成はユーザーが行い、srs-writer は所有者として整合性を保証する。
+> srs-writer は user-order のバリデーションのみを担当し、user-order 自体は修正しない。初期作成はユーザーが行う。バリデーションで発見された不足はインタビューで解消し、spec-foundation に反映する。
 
 ### architect
 

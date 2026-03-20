@@ -115,3 +115,5 @@ Seek user confirmation in the following cases:
 | review-agent returns FAIL | Roll back to the relevant phase based on the flagged review criteria and instruct corrections |
 | User rejects acceptance testing | Record the rejection reasons and roll back to the appropriate correction phase |
 | Cost budget exceeded | Halt work and confirm with the user whether to continue |
+| user-order.md does not exist | Do not start work. Report to the user and request creation |
+| Framework rules are missing under process-rules/ | Do not start work. Report to the user and request framework setup |

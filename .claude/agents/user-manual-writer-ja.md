@@ -78,3 +78,4 @@ model: sonnet
 |------|------|
 | 仕様書と実装の乖離を発見した | orchestrator に報告し、defect として記録を依頼する |
 | 非機能要求に関する操作手順が不明 | architect に確認を依頼する |
+| delivery phase 未到達またはテスト未 PASS | 作業を開始しない。orchestrator に testing フェーズの完了を確認する |

@@ -82,3 +82,4 @@ model: sonnet
 |------|------|
 | 可観測性設計が不十分でアラート対応手順を書けない | architect に設計の補完を依頼する |
 | DR手順がインフラ構成と不整合 | orchestrator に報告し、defect として記録を依頼する |
+| delivery phase 未到達または IaC コードが未完了 | 作業を開始しない。orchestrator に testing フェーズの完了と IaC の準備状況を確認する |

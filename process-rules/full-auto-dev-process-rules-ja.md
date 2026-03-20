@@ -190,7 +190,7 @@ flowchart TB
     Orch -->|"エスカレーション<br/>リスク/コスト/変更"| H2
 ```
 
-この図は全自動開発の全体構成と情報の流れをグループレベルで示す。ユーザーはコンセプト提示・重要判断・受入テストの3点でプロジェクトに関与する。orchestrator が全フェーズを制御し、5つのエージェントグループ（開発コア・プロセス管理・品質ガード・文書作成・プロセス改善、計17エージェント）にタスクを分配する。エスカレーション経路（リスクスコア≧6、コスト予算80%到達、impact_level=high の変更要求）では orchestrator がユーザーに判断を仰ぐ。個別エージェント間の file_type データフローは agent-list §3 を参照。
+この図は全自動開発の全体構成と情報の流れをグループレベルで示す。ユーザーはコンセプト提示・重要判断・受入テストの3点でプロジェクトに関与する。orchestrator が全フェーズを制御し、5つのエージェントグループ（開発コア・プロセス管理・品質ガード・文書作成・プロセス改善、計17エージェント、orchestrator を含めて18体）にタスクを分配する。エスカレーション経路（リスクスコア≧6、コスト予算80%到達、impact_level=high の変更要求）では orchestrator がユーザーに判断を仰ぐ。個別エージェント間の file_type データフローは agent-list §3 を参照。
 
 ### 1.3 前提となるClaude Codeの主要機能
 
@@ -1361,6 +1361,7 @@ project_root/
       check-progress.md           ... 進捗確認
       retrospective.md            ... ふりかえり・再発防止（推奨）
       council-review.md           ... 諮問団レビュー
+      translate-framework.md      ... フレームワーク文書翻訳
     settings.json                 ... プロジェクト設定
   docs/
     api/                          ... APIドキュメント（OpenAPI仕様）
@@ -1497,7 +1498,7 @@ project_root/
 
 ## 可観測性要求
 
-- ログ: 構造化JSON形式、INFO/WARN/ERROR の3レベル
+- ログ: 構造化JSON形式、DEBUG/INFO/WARN/ERROR の4レベル
 - メトリクス: RED（Rate/Error/Duration）メトリクスを全APIに計装
 - トレーシング: OpenTelemetryでリクエスト追跡
 - アラート: エラーレート1%超、P99レイテンシがSLA超過でアラート
@@ -1558,6 +1559,12 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 # 機能安全(HARA/FMEA): [有効/無効] - 理由: [記載]
 
 # アクセシビリティ(WCAG 2.1): [有効/無効] - 理由: [記載]
+
+# HW連携: [有効/無効] - 理由: [記載]
+
+# AI/LLM連携: [有効/無効] - 理由: [記載]
+
+# フレームワーク要求定義: [有効/無効] - 理由: [記載]
 
 # HW生産工程管理: [有効/無効] - 理由: [記載]
 
@@ -1742,6 +1749,40 @@ claude
 - 対策: [対象ファイルと変更内容]
 - 承認区分: [ユーザー承認 / orchestrator 承認]
 - 効果確認方法: [次フェーズでの確認方法]
+```
+
+### 8.4 フレームワーク翻訳コマンド
+
+**.claude/commands/translate-framework.md:**
+
+```markdown
+gr-sw-maker フレームワーク文書を {対象言語} に翻訳する。
+
+引数形式: `{元言語} {対象言語}`（例: `ja fr`, `en fr`）
+
+1. 翻訳対象を収集する（process-rules, agents, commands, CLAUDE.md, user-order.md）
+2. 英語固定要素は翻訳しない（YAMLキー、file_type名、フィールド名、ID、MermaidノードID）
+3. 各ファイルを翻訳し、対象言語サフィックスを付けて出力する
+4. 元ファイルと翻訳ファイルの構造一致性を検証する（見出し、テーブル、図、数値）
+```
+
+### 8.5 諮問団レビューコマンド
+
+**.claude/commands/council-review.md:**
+
+```markdown
+gr-sw-maker フレームワークの品質を横断的にレビューする諮問団レビュー。
+
+Phase 0: 翻訳一致性ゲート（JA/EN ペア検証）
+Phase 1: サブエージェントによる機械チェック（プロンプト品質、用語スキャン）
+Phase 2: 4名の専門家によるメインレビュー
+  - Expert 1: プロセス工学（フェーズ遷移、品質ゲート、エスカレーション基準）
+  - Expert 2: エージェントアーキテクチャ（所有権、データフロー、安全チェック）
+  - Expert 3: 用語・文書構造（用語集、Form Block、多言語規則）
+  - Expert 4: 図表クロスチェック（文書間整合性）
+Phase 3: 結果を最終レポートに統合（project-records/reviews/）
+
+判定: PASS (C=0, H=0) / CONDITIONAL PASS (C=0, H≤3) / FAIL (C≥1 or H≥4)
 ```
 
 ---
@@ -2395,6 +2436,11 @@ sequenceDiagram
     RM->>Orch: リスクスコア≧6 を報告
     Orch->>User: エスカレーション（リスク/コスト/変更等）
     User->>Orch: 判断結果を回答
+
+    note over CM,User: 変更要求経路（仕様書承認後）
+    User->>CM: 変更要求を提出
+    CM->>Orch: 影響分析結果を報告（impact_level）
+    Orch->>User: 承認を要請（impact_level = high の場合）
 
     par 並列設計フェーズ
         Orch->>Arch: 仕様書 Ch3-6 詳細化+OpenAPI+observability-design 作成を依頼

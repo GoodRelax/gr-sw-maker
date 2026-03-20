@@ -70,8 +70,9 @@ None
 5. Verify consistency between the OpenAPI specification (docs/api/openapi.yaml) and API endpoints
 6. Generate a coverage report
 7. Update the test consumption curve data
-8. Create a defect ticket when a defect is found
-9. Request a terminology check from kotodama-kun (test-plan, defect, performance-report)
+8. Update the test column in project-records/traceability/traceability-matrix.md (map test IDs to requirement IDs)
+9. Create a defect ticket when a defect is found
+10. Request a terminology check from kotodama-kun (test-plan, defect, performance-report)
 
 ## Rules
 

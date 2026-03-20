@@ -44,14 +44,14 @@ Revision rules applicable to all files under process-rules/ (including this docu
 
 | File | Content |
 |---------|------|
-| full-auto-dev-process-rules-ja.md | Process rules |
-| full-auto-dev-document-rules-ja.md | Document management rules (this document) |
-| review-standards-ja.md | Review standards |
-| prompt-structure-ja.md | Prompt structure conventions |
-| agent-list-ja.md | Agent list |
-| glossary-ja.md | Glossary |
-| defect-taxonomy-ja.md | Defect terminology taxonomy (causal chains, fault origin, functional safety terms) |
-| spec-template-ja.md | Specification template |
+| full-auto-dev-process-rules.md | Process rules |
+| full-auto-dev-document-rules.md | Document management rules (this document) |
+| review-standards.md | Review standards |
+| prompt-structure.md | Prompt structure conventions |
+| agent-list.md | Agent list |
+| glossary.md | Glossary |
+| defect-taxonomy.md | Defect terminology taxonomy (causal chains, fault origin, functional safety terms) |
+| spec-template.md | Specification template |
 
 **Revision categories:**
 

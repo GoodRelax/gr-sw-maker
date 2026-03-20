@@ -82,3 +82,4 @@ The output file_type (runbook) must be created in accordance with the Form Block
 |---------|----------|
 | Observability design is insufficient and alert response procedures cannot be written | Request design supplementation from architect |
 | DR procedures are inconsistent with infrastructure configuration | Report to orchestrator and request recording as a defect |
+| Delivery phase not reached or IaC code is incomplete | Do not start work. Confirm with orchestrator that the testing phase is complete and IaC is ready |

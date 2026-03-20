@@ -190,7 +190,7 @@ flowchart TB
     Orch -->|"Escalation<br/>Risk/Cost/Change"| H2
 ```
 
-This diagram shows the overall structure and information flow of fully automated development at the group level. The user participates in the project at three points: concept presentation, critical decisions, and acceptance testing. The orchestrator controls all phases and distributes tasks to five agent groups (Development Core, Process Management, Quality Guard, Document Creation, and Process Improvement — 17 agents total). On escalation paths (risk score >= 6, cost budget 80% reached, change requests with impact_level=high), the orchestrator asks the user for decisions. For detailed file_type data flows between individual agents, refer to agent-list Section 3.
+This diagram shows the overall structure and information flow of fully automated development at the group level. The user participates in the project at three points: concept presentation, critical decisions, and acceptance testing. The orchestrator controls all phases and distributes tasks to five agent groups (Development Core, Process Management, Quality Guard, Document Creation, and Process Improvement — 17 agents in groups, 18 including orchestrator). On escalation paths (risk score >= 6, cost budget 80% reached, change requests with impact_level=high), the orchestrator asks the user for decisions. For detailed file_type data flows between individual agents, refer to agent-list Section 3.
 
 ### 1.3 Key Claude Code Features Used
 
@@ -1361,6 +1361,7 @@ project_root/
       check-progress.md           ... Progress check
       retrospective.md            ... Retrospective and recurrence prevention (Recommended)
       council-review.md           ... Advisory council review
+      translate-framework.md      ... Framework document translation
     settings.json                 ... Project settings
   docs/
     api/                          ... API documentation (OpenAPI specification)
@@ -1497,7 +1498,7 @@ This structure is based on conventions that Claude Code automatically recognizes
 
 ## Observability Requirements
 
-- Logs: Structured JSON format, INFO/WARN/ERROR 3 levels
+- Logs: Structured JSON format, DEBUG/INFO/WARN/ERROR 4 levels
 - Metrics: Instrument RED (Rate/Error/Duration) metrics on all APIs
 - Tracing: Request tracking with OpenTelemetry
 - Alerts: Alert on error rate exceeding 1%, P99 latency exceeding SLA
@@ -1558,6 +1559,12 @@ Claude Code may decide autonomously in the following cases:
 # Functional safety (HARA/FMEA): [Enabled/Disabled] - Reason: [description]
 
 # Accessibility (WCAG 2.1): [Enabled/Disabled] - Reason: [description]
+
+# HW integration: [Enabled/Disabled] - Reason: [description]
+
+# AI/LLM integration: [Enabled/Disabled] - Reason: [description]
+
+# Framework requirement definition: [Enabled/Disabled] - Reason: [description]
 
 # HW production process management: [Enabled/Disabled] - Reason: [description]
 
@@ -1742,6 +1749,40 @@ Conduct the following retrospective:
 - Countermeasure: [Target file and change content]
 - Approval category: [User approval / orchestrator approval]
 - Effectiveness verification method: [Verification method in the next phase]
+```
+
+### 8.4 Translate-Framework Command
+
+**.claude/commands/translate-framework.md:**
+
+```markdown
+Translate gr-sw-maker framework documents into {target language}.
+
+Argument format: `{source language} {target language}` (e.g., `ja fr`, `en fr`)
+
+1. Collect translation targets (process-rules, agents, commands, CLAUDE.md, user-order.md)
+2. Keep English-fixed elements untranslated (YAML keys, file_type names, field names, IDs, Mermaid node IDs)
+3. Translate each file and output with the target language suffix
+4. Verify structural consistency between source and translated files (headings, tables, diagrams, numerical values)
+```
+
+### 8.5 Council-Review Command
+
+**.claude/commands/council-review.md:**
+
+```markdown
+Cross-cutting quality review of the gr-sw-maker framework by an advisory council.
+
+Phase 0: Translation consistency gate (JA/EN pair verification)
+Phase 1: Sub-agents for mechanical checks (prompt quality, terminology scan)
+Phase 2: Main council review by 4 experts
+  - Expert 1: Process Engineering (phase transitions, quality gates, escalation criteria)
+  - Expert 2: Agent Architecture (ownership, data flow, safety checks)
+  - Expert 3: Terminology & Document Structure (glossary, Form Block, multilingual rules)
+  - Expert 4: Diagram & Table Cross-check (inter-document consistency)
+Phase 3: Integration of results into final report (project-records/reviews/)
+
+Judgment: PASS (C=0, H=0) / CONDITIONAL PASS (C=0, H≤3) / FAIL (C≥1 or H≥4)
 ```
 
 ---
@@ -2395,6 +2436,11 @@ sequenceDiagram
     RM->>Orch: Report Risk Score >= 6
     Orch->>User: Escalation (Risk/Cost/Change, etc.)
     User->>Orch: Respond with Decision
+
+    note over CM,User: Change Request Path (after specification approval)
+    User->>CM: Submit Change Request
+    CM->>Orch: Report Impact Analysis (impact_level)
+    Orch->>User: Request Approval (if impact_level = high)
 
     par Parallel Design Phase
         Orch->>Arch: Request Specification Ch3-6 Elaboration + OpenAPI + observability-design Creation

@@ -88,3 +88,4 @@ Score = Probability (1-3) x Impact (1-3)
 | Insufficient information for risk evaluation | Do not evaluate based on assumptions. Request information from orchestrator |
 | A risk with a score of 9 is discovered | Report to orchestrator immediately. Confirm with the user whether to continue the project |
 | A mitigation measure is found to be infeasible | Propose an alternative mitigation measure and request a decision from orchestrator |
+| Spec Ch1-2 does not exist | Do not start work. Confirm with orchestrator that the planning phase is complete |

@@ -70,8 +70,9 @@ model: sonnet
 5. OpenAPI仕様（docs/api/openapi.yaml）と API エンドポイントの整合性を検証する
 6. カバレッジレポートを生成する
 7. テスト消化曲線データを更新する
-8. defect 発見時はdefect 票を作成する
-9. kotodama-kun に用語チェックを依頼する（test-plan, defect, performance-report）
+8. project-records/traceability/traceability-matrix.md のテストカラムを更新する（テストIDと要求IDを対応付ける）
+9. defect 発見時はdefect 票を作成する
+10. kotodama-kun に用語チェックを依頼する（test-plan, defect, performance-report）
 
 ## Rules
 

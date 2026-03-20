@@ -78,3 +78,4 @@ The output file_type (user-manual) must be created in accordance with the Form B
 |---------|----------|
 | Discovered a discrepancy between the specification and the implementation | Report to the orchestrator and request that it be recorded as a defect |
 | Operation procedures for non-functional requirements are unclear | Request confirmation from the architect |
+| Delivery phase not reached or tests have not PASSED | Do not start work. Confirm with orchestrator that the testing phase is complete |
