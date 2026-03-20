@@ -54,6 +54,8 @@
 | interview-record | project-management/ | 単 | planning |
 | spec-foundation | docs/spec/ | 単 | planning |
 
+> srs-writer は user-order のバリデーションと補完を担当する。user-order の初期作成はユーザーが行い、srs-writer は所有者として整合性を保証する。
+
 ### architect
 
 | file_type | ディレクトリ | 単/連 | 主要フェーズ |
@@ -92,6 +94,8 @@
 | defect | project-records/defects/ | 連 | testing |
 | traceability | project-records/traceability/ | 単 | implementation 以降 |
 | performance-report | project-records/performance/ | 連 | testing |
+
+> test-engineer は上記 file_type に加え、test-progress.json と defect-curve.json（project-management/progress/）を生成する。これらは JSON 時系列データであり file_type（Common Block 管理対象）ではないが、progress-monitor が消費する。
 
 ### review-agent
 

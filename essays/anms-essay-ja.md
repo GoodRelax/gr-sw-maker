@@ -258,7 +258,7 @@ AIに指示を出す際、以下のパターンを用いることで曖昧さを
 
 **3. Architecture**
 
-**Emergency_Brake_Sequence:**
+**Chauffeur_Mode_Sequence:**
 
 ```mermaid
 sequenceDiagram

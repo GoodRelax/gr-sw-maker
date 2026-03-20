@@ -44,7 +44,7 @@ model: sonnet
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| user-manual | docs/ | ユーザー |
+| user-manual | docs/ | orchestrator |
 
 ### Work
 

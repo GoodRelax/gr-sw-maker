@@ -1360,12 +1360,14 @@ project_root/
       full-auto-dev.md            ... 全自動開発開始（setup〜delivery）
       check-progress.md           ... 進捗確認
       retrospective.md            ... ふりかえり・再発防止（推奨）
+      council-review.md           ... 諮問団レビュー
     settings.json                 ... プロジェクト設定
   docs/
     api/                          ... APIドキュメント（OpenAPI仕様）
     security/                     ... セキュリティ設計書
     spec/                         ... AIが生成する正式仕様書（ANMS/ANPS/ANGS形式）
     observability/                ... 可観測性設計書
+    operations/                   ... 運用手順書・災害復旧計画
   project-management/
     progress/                     ... 進捗レポート・WBS・コスト管理
     test-plan.md                  ... テスト計画書
@@ -1378,9 +1380,11 @@ project_root/
     traceability/                 ... 要求↔設計↔テストのトレーサビリティ（必須）
     licenses/                     ... ライセンスレポート（必須）
     performance/                  ... 性能テスト結果
+    security/                     ... セキュリティスキャン結果（SAST/SCA/DAST）
     release/                      ... リリース判定チェックリスト（推奨）
     improvement/                  ... ふりかえり・プロセス改善記録（推奨）
     archive/                      ... 廃止文書（推奨）
+    incidents/                    ... incident 記録（条件付き）
     legal/                        ... 法規・特許調査記録（条件付き）
     safety/                       ... 機能安全分析文書（条件付き）
   src/                            ... ソースコード
@@ -2430,9 +2434,15 @@ sequenceDiagram
     Sec->>Orch: security-scan-report（Critical/High 0件）を報告
     Orch->>Test: 性能テスト実施を依頼
     Test->>Orch: performance-report（NFR 達成）を報告
+    Orch->>Review: performance-report の R6 レビューを依頼
+    Review->>Orch: R6 レビュー結果を報告
     PM->>Orch: progress レポートを提出
-    Orch->>Review: 最終 R1-R6 レビューを依頼
+    Orch->>Review: 最終 R1-R5 レビューを依頼
     Review->>Orch: 最終レビュー（PASS）を報告
+    Orch->>PI: testing フェーズのふりかえりを依頼
+    PI->>Orch: retrospective-report を提出
+    Orch->>DW: 承認済み改善策の適用を指示
+    DW->>Orch: 適用完了（diff記録済み）を報告
     Orch->>FTV: フレームワーク文書の翻訳検証を依頼
     FTV->>Orch: 翻訳検証結果を報告
     Orch->>UMW: ユーザーマニュアル作成を依頼
@@ -2456,7 +2466,7 @@ sequenceDiagram
   "project_status": {
     "project_name": "string",
     "last_updated": "ISO8601 datetime",
-    "current_phase": "phase0 | planning | dependency-selection | design | implementation | testing | delivery",
+    "current_phase": "setup | planning | dependency-selection | design | implementation | testing | delivery | operation",
     "overall_progress_percent": "number (0-100)",
     "wbs": {
       "total_tasks": "number",
@@ -2544,15 +2554,24 @@ PM Agent はこのスキーマに従って `project-management/progress/progress
 
 | エージェント名      | 役割                                                                | モデル | 区分         |
 | ------------------- | ------------------------------------------------------------------- | ------ | ------------ |
-| `srs-writer`        | 仕様書 Ch1-2（Foundation・Requirements）の作成                      | opus   | コア         |
-| `architect`         | 仕様書 Ch3-6 詳細化・OpenAPI仕様・マイグレーション設計              | opus   | コア         |
-| `security-reviewer` | セキュリティ設計・脆弱性レビュー・SCA                               | opus   | コア         |
-| `test-engineer`     | テスト作成・実行・性能テスト・カバレッジ計測                        | sonnet | コア         |
-| `review-agent`      | SW工学原則・並行性・パフォーマンス観点のレビュー（R1〜R6）          | opus   | コア         |
-| `progress-monitor`  | 進捗管理・WBS・品質メトリクス・コスト追跡・エージェント監視         | sonnet | コア         |
-| `change-manager`    | 変更要求の受付・影響分析・記録                                      | sonnet | プロセス管理 |
-| `risk-manager`      | リスク特定・評価・軽減策管理                                        | sonnet | プロセス管理 |
-| `license-checker`   | OSSライセンス互換性確認                                             | haiku  | プロセス管理 |
+| `orchestrator`                    | プロジェクト全体のオーケストレーション、フェーズ遷移制御、意思決定記録 | opus   | コア         |
+| `srs-writer`                      | 仕様書 Ch1-2（Foundation・Requirements）の作成                        | opus   | コア         |
+| `architect`                       | 仕様書 Ch3-6 詳細化・OpenAPI仕様・マイグレーション設計                | opus   | コア         |
+| `security-reviewer`               | セキュリティ設計・脆弱性レビュー・SCA                                 | opus   | コア         |
+| `implementer`                     | ソースコード実装、単体テスト作成                                      | opus   | コア         |
+| `test-engineer`                   | テスト作成・実行・性能テスト・カバレッジ計測                          | sonnet | コア         |
+| `review-agent`                    | SW工学原則・並行性・パフォーマンス観点のレビュー（R1〜R6）            | opus   | コア         |
+| `progress-monitor`                | 進捗管理・WBS・品質メトリクス・コスト追跡・エージェント監視           | sonnet | コア         |
+| `change-manager`                  | 変更要求の受付・影響分析・記録                                        | sonnet | プロセス管理 |
+| `risk-manager`                    | リスク特定・評価・軽減策管理                                          | sonnet | プロセス管理 |
+| `license-checker`                 | OSSライセンス互換性確認                                               | haiku  | プロセス管理 |
+| `kotodama-kun`                    | 用語・命名の整合性チェック                                            | haiku  | 品質保証     |
+| `framework-translation-verifier`  | フレームワーク文書の多言語間翻訳一致性検証                            | sonnet | 品質保証     |
+| `user-manual-writer`              | ユーザーマニュアルの作成                                              | sonnet | 納品物       |
+| `runbook-writer`                  | 運用手順書（Runbook）の作成                                           | sonnet | 納品物       |
+| `incident-reporter`               | インシデント報告書の作成                                              | sonnet | 運用         |
+| `process-improver`                | ふりかえり・根本原因分析・プロセス改善策の提案                        | sonnet | 改善         |
+| `decree-writer`                   | 承認済み改善策のガバナンスファイルへの安全な適用                      | sonnet | 改善         |
 
 ### 環境変数
 

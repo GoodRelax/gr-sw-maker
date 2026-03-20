@@ -725,7 +725,7 @@ external-dependency-spec（抽象テンプレート）
 | file_type | commissioned_by | consumed_by | owner |
 |-----------|----------------|-------------|-------|
 | pipeline-state | `orchestrator` | 全エージェント | orchestrator |
-| handoff | フェーズ遷移時（例: `phase-planning`） | to-agent | from-agent |
+| handoff | フェーズ遷移時（例: `phase-planning`） | to-agent | orchestrator |
 | progress | `phase-design`（以降更新） | orchestrator, ユーザー | progress-monitor |
 | interview-record | `phase-planning` | architect, orchestrator | srs-writer |
 | wbs | `phase-design` | progress-monitor, orchestrator | progress-monitor |
@@ -1587,7 +1587,7 @@ CLAUDE.md に以下を設定する（setup フェーズで AI が提案）:
 
 | Common Block管理対象 | Common Block管理対象外 |
 |---------------------|----------------------|
-| 第7章の全22ファイルタイプ（Form Block付き） | 外部ツール規定形式（.claude/agents/, openapi.yaml等） |
+| 第7章の全32ファイルタイプ（Form Block付き） | 外部ツール規定形式（.claude/agents/, openapi.yaml等） |
 | 仕様書（user-order.md, {project}-spec.md） | JSON時系列データ（cost-log, test-progress, defect-curve） |
 | セキュリティ設計文書（threat-model, security-architecture） | ソースコード・テストコード |
 | 可観測性設計文書（observability-design） | 設定ファイル・IaC (Infrastructure as Code) |

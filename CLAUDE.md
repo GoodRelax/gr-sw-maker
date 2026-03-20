@@ -101,7 +101,7 @@
 
 ## 可観測性要求
 
-- ログ: 構造化JSON形式、INFO/WARN/ERROR の3レベル
+- ログ: 構造化JSON形式、DEBUG/INFO/WARN/ERROR の4レベル
 - メトリクス: RED（Rate/Error/Duration）メトリクスを全APIに計装
 - トレーシング: OpenTelemetryでリクエスト追跡
 - アラート: エラーレート1%超、P99レイテンシがSLA超過でアラート

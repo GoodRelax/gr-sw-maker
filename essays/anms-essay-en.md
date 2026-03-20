@@ -17,7 +17,7 @@ Traditional software specifications (e.g., IEEE 830) were designed primarily for
 The current problems boil down to two issues:
 
 1. **Verbosity vs. Cost Gap:** Rigorous standards (IEEE 29148, AUTOSAR SRS, etc.) impose extremely high documentation costs, hindering the pace of agile AI-driven development.
-2. **Ambiguity-Induced Hallucination:** When instructions are given only in natural language, AI may independently infer system constraints and boundary conditions, embedding unintended behavior (defects).
+2. **Ambiguity-Induced Hallucination:** When instructions are given only in natural language, AI may independently infer system constraints and boundary conditions, embedding unintended behavior (faults).
 
 This paper defines a hierarchical specification format that achieves maximum control with minimal documentation. The chapter structure of the proposed ANMS is summarized below (see the template itself, anms-spec-template.md, for full details).
 
