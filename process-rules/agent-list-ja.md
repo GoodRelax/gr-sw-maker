@@ -22,6 +22,7 @@
 | 10 | risk-manager | リスク特定・評価・監視、リスク台帳管理 | sonnet | planning 以降 |
 | 11 | license-checker | OSS ライセンス互換性確認、帰属表示管理 | haiku | implementation, delivery |
 | 12 | kotodama-kun | 用語・命名の整合性チェック（フレームワーク用語集 + プロジェクト用語集） | haiku | 全フェーズ（Out 生成時） |
+| 13 | framework-translation-verifier | フレームワーク文書の多言語間翻訳一致性を検証 | sonnet | delivery（リリース前） |
 
 ---
 
@@ -130,6 +131,15 @@
 | spec-foundation (Ch1.8 Glossary) | srs-writer | プロジェクト用語集との照合 |
 | full-auto-dev-document-rules-ja.md §7 | framework | file_type 名・名前空間の正式定義 |
 
+### framework-translation-verifier
+
+> framework-translation-verifier は file_type を所有しない。検証結果は review として project-records/reviews/ に記録する（review-agent の file_type を借用）。
+
+| 入力 | 提供元 | 用途 |
+|------|--------|------|
+| 多言語ファイルペア（`*-en.md` / `*-ja.md`） | framework | 翻訳一致性の検証対象 |
+| process-rules/, essays/, README 等 | framework | 構造・テーブル・リンク・コードブロック・用語の一致検証 |
+
 ---
 
 ## 3. エージェント間データフロー
@@ -153,6 +163,7 @@ flowchart TD
     RM["risk-manager"]
     Lic["license-checker"]
     Koto["kotodama-kun"]
+    FTV["framework-translation-verifier"]
 
     User -->|"user-order"| SRS
     SRS -->|"spec-foundation<br/>interview-record"| Koto
@@ -177,6 +188,7 @@ flowchart TD
     Lead -->|"decision"| Arch
     Lead -->|"executive-dashboard<br/>final-report"| User
     User -->|"変更要求"| CM
+    FTV -->|"review<br/>翻訳検証結果"| Lead
 
     style User fill:#1a5276,stroke:#333,color:#fff
     style Lead fill:#FF8C00,stroke:#333,color:#000
@@ -191,6 +203,7 @@ flowchart TD
     style RM fill:#d5dbdb,stroke:#333,color:#000
     style Lic fill:#d5dbdb,stroke:#333,color:#000
     style Koto fill:#af7ac5,stroke:#333,color:#fff
+    style FTV fill:#af7ac5,stroke:#333,color:#fff
 ```
 
 上図はプロセス規約から導出したエージェント間のデータフローを示す。矢印のラベルは受け渡される file_type。色はフェーズの早さに対応: 橙（全フェーズ）→ ゴールド（planning/design）→ 緑（implementation/testing）→ 灰（プロセス管理）。
@@ -209,7 +222,7 @@ flowchart TD
 | design | lead, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent | R2/R4/R5 PASS |
 | implementation | lead, implementer, test-engineer(単体), security-reviewer(SCA), kotodama-kun, license-checker, review-agent, progress-monitor | R2/R3/R4/R5 PASS, SCA クリア |
 | testing | lead, test-engineer, kotodama-kun, review-agent, progress-monitor | R6 PASS, 全テスト PASS |
-| delivery | lead, kotodama-kun, review-agent, license-checker | R1-R6 全 PASS, ユーザー受入 |
+| delivery | lead, kotodama-kun, review-agent, license-checker, framework-translation-verifier | R1-R6 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
 | operation | lead, security-reviewer(パッチ), progress-monitor | SLA 達成 |
 
 ---

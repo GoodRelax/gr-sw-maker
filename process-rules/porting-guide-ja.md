@@ -41,9 +41,46 @@
 | 種別 | 現在のパス | 変換内容 |
 |---|---|---|
 | プロジェクト指示ファイル | `CLAUDE.md` | 対象プラットフォームの指示ファイルにリネーム・移動 |
-| エージェント定義（12本） | `.claude/agents/*.md` | フロントマター（YAML）を対象形式に変換。本文（S0-S6）は流用 |
-| カスタムコマンド（3本） | `.claude/commands/*.md` | 対象プラットフォームの実行方式に変換 |
+| エージェント定義（13本 × 2言語） | `.claude/agents/*-ja.md`, `*-en.md` | 言語選択 → リネーム → フロントマター（YAML）を対象形式に変換。本文（S0-S6）は流用 |
+| カスタムコマンド（3本 × 2言語） | `.claude/commands/*-ja.md`, `*-en.md` | 言語選択 → リネーム → 対象プラットフォームの実行方式に変換 |
 | 設定ファイル | `.claude/settings*.json` | 対象プラットフォームの設定形式で新規作成 |
+
+## エージェント・コマンドの言語選択
+
+フレームワークはエージェント定義（`.claude/agents/`）とカスタムコマンド（`.claude/commands/`）を日英ペアで提供する。プロジェクトにデプロイする際、以下の4択から選択してサフィックスなしの `.md` にリネームする。
+
+**Claude Code はファイル名からエージェント名を導出する**（`lead-ja.md` → エージェント名 `lead-ja`）。プロジェクトで正しく動作させるには、サフィックスなしの `lead.md` が必要。
+
+### 選択肢
+
+| # | 操作 | ユースケース | 手順 |
+|:-:|------|------------|------|
+| 1 | `-ja.md` をリネーム | 日本語プロジェクト | `lead-ja.md` → `lead.md` |
+| 2 | `-en.md` をリネーム | 英語プロジェクト | `lead-en.md` → `lead.md` |
+| 3 | `-ja.md` を翻訳 | 日本語ベースで他言語プロジェクト | `lead-ja.md` → 翻訳 → `lead.md` |
+| 4 | `-en.md` を翻訳 | 英語ベースで他言語プロジェクト | `lead-en.md` → 翻訳 → `lead.md` |
+
+### デプロイ手順
+
+```bash
+# 例: 日本語プロジェクトの場合（選択肢1）
+cd .claude/agents/
+for f in *-ja.md; do cp "$f" "${f%-ja.md}.md"; done
+
+cd ../commands/
+for f in *-ja.md; do cp "$f" "${f%-ja.md}.md"; done
+```
+
+> **注意:** リネーム後、`-ja.md` / `-en.md` はテンプレートとして残しても、削除してもよい。残す場合は `.gitignore` に追加して混乱を防ぐこと。
+
+### 設計根拠
+
+- フレームワーク配布時は両言語に明示サフィックスを付与する（`-ja.md` / `-en.md`）
+- プロジェクト実行時はサフィックスなし（`.md`）が唯一の実体となる
+- これにより文書管理規則 §12「主言語=サフィックスなし」をプロジェクト側で維持できる
+- 英語 vs 日本語のどちらがデフォルトかという判断をフレームワーク側で強制しない
+
+---
 
 ## プラットフォーム別の変換仕様
 
@@ -128,7 +165,7 @@
 | 役割ランク | Claude | OpenAI | Google | 用途 |
 |---|---|---|---|---|
 | 高（判断・設計） | opus | o3 | gemini-2.5-pro | lead, architect, review-agent, security-reviewer, srs-writer, implementer |
-| 中（定型作業） | sonnet | gpt-4.1 / gpt-4.1-mini | gemini-2.5-flash | test-engineer, progress-monitor, change-manager, risk-manager |
+| 中（定型作業） | sonnet | gpt-4.1 / gpt-4.1-mini | gemini-2.5-flash | test-engineer, progress-monitor, change-manager, risk-manager, framework-translation-verifier |
 | 低（単純ルール） | haiku | gpt-4.1-mini | gemini-2.5-flash | license-checker, kotodama-kun |
 
 > 推奨値はPoC検証で調整すること。各モデルの能力・コスト・速度バランスはプラットフォームごとに異なる。
@@ -142,13 +179,16 @@
 process-rules/porting-guide-ja.md の変換仕様に従い、
 [対象プラットフォーム名] 用に変換せよ。
 
-1. ポータブルファイルはそのまま残す
-2. process-rules/ 内のベンダー固有記述を一括置換する
-3. CLAUDE.md を [対象ファイル名] にリネームし、ベンダー固有記述を書き換える
-4. .claude/agents/*.md のプロンプト本文（S0-S6）を抽出し、[対象形式] に変換する
-5. .claude/commands/*.md を [対象実行方式] に変換する
-6. .claude/settings*.json を [対象設定形式] に変換する
-7. 不要になった .claude/ ディレクトリを削除する
+1. エージェント・コマンドの言語を選択する（本プロジェクトの主言語: [ja/en/他]）
+   - .claude/agents/*-[lang].md → .claude/agents/*.md にリネーム（またはベース言語から翻訳）
+   - .claude/commands/*-[lang].md → .claude/commands/*.md にリネーム（またはベース言語から翻訳）
+2. ポータブルファイルはそのまま残す
+3. process-rules/ 内のベンダー固有記述を一括置換する
+4. CLAUDE.md を [対象ファイル名] にリネームし、ベンダー固有記述を書き換える
+5. .claude/agents/*.md のプロンプト本文（S0-S6）を抽出し、[対象形式] に変換する
+6. .claude/commands/*.md を [対象実行方式] に変換する
+7. .claude/settings*.json を [対象設定形式] に変換する
+8. 不要になった .claude/ ディレクトリを削除する
 ```
 
 ## 構造的制約
