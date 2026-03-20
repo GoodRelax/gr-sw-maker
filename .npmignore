@@ -19,3 +19,6 @@ prompt/
 # Project records (template should be empty)
 project-records/
 project-management/
+
+# Scaffold CLI (published separately as create-gr-sw-maker)
+create-gr-sw-maker/

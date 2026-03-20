@@ -1,0 +1,25 @@
+{
+  "name": "create-gr-sw-maker",
+  "version": "0.0.4",
+  "description": "Scaffold a gr-sw-maker project — nearly fully automated software development framework",
+  "keywords": [
+    "create",
+    "scaffold",
+    "gr-sw-maker",
+    "full-auto-dev",
+    "ai-native"
+  ],
+  "homepage": "https://github.com/GoodRelax/gr-sw-maker",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GoodRelax/create-gr-sw-maker.git"
+  },
+  "bin": {
+    "create-gr-sw-maker": "bin/create.js"
+  },
+  "author": "GoodRelax",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
