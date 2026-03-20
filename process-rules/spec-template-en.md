@@ -18,6 +18,14 @@ This template is designed as Level 1 (ANMS) of the three-level specification hie
 
 Under ANPS, each file carries a Common Block + Form Block (per the document management rules). The STFB structure is maintained even when files are split.
 
+**Three responsibilities led by humans:**
+
+Even in full-auto-dev, the following three responsibilities are led by humans (see process rules §1.1):
+
+1. **Presenting the concept** (input to Ch1 Foundation) — What to build and why it is needed
+2. **Critical decision-making** (judgment for Ch3 Architecture Decisions) — Technology selection, architectural direction
+3. **Acceptance testing** (Result judgment for Ch4 Specification) — Whether the deliverable meets business requirements
+
 ---
 
 ## Chapter Structure

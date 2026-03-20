@@ -40,6 +40,12 @@ If discrepancies are detected, halt the review and ask the user for a decision.
 
 > **Note:** Phase 0 runs in the foreground (NOT background). The result must be confirmed before proceeding to the next phase.
 
+### Known Acceptable Differences
+
+The following differences are intentional design choices and should NOT be reported as discrepancies:
+
+- **spec-template table column count difference**: The JA version's section listing tables include an extra "日本語" (Japanese) column for bilingual comparison, making them one column wider than the EN version. This is by design
+
 ### Gate Decision
 
 | Result | Next Action |
