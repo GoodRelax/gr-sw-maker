@@ -62,7 +62,7 @@ None
 3. Conduct a structured interview and record it in interview-record.md
    - Domain deep-dive, scope boundaries, edge cases, priorities, constraints, known compromises, non-functional requirements
    - Domain boundary identification: Clarify "What is the core logic unique to this project?"
-   - Limit each round to 3-5 questions. Summarize and confirm answers as you proceed
+   - Ask one question at a time. Summarize and confirm the answer before moving to the next question
 4. Create mocks/samples/PoC and request user feedback (if applicable)
 5. Create Chapter 1 (Foundation)
    - Background, Issues, Goals, Approach, Scope, Constraints, Limitations, Glossary, Notation

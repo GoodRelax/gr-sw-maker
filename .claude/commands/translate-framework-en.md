@@ -87,3 +87,10 @@ After completing translation of all files, verify the following:
 - [ ] Row count and column count of tables match the original
 - [ ] Node count and arrow count of Mermaid diagrams match the original
 - [ ] Glossary terms are used consistently across all files
+- [ ] Heading structure (h1-h4) count and order match the original
+- [ ] Numerical values in documents (agent count, file_type count, phase count, etc.) match the original
+- [ ] Link targets (references to `.md` files) match the original
+
+### When Discrepancies Are Found
+
+Do not automatically determine which version (source or target) is correct. Record discrepancies in the report and ask the user to decide. The translated version may become the primary maintenance target in the future, so do not assume the source language is always authoritative.

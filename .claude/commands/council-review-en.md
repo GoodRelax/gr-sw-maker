@@ -3,53 +3,99 @@ Detect contradictions, inconsistencies, and omissions by combining delegation of
 
 ---
 
-## Files Under Review
+## Phase 0: Translation Consistency Check (Gate)
+
+Before entering the main review, verify translation consistency across all JA/EN pairs.
+If discrepancies are detected, halt the review and ask the user for a decision.
+
+### Target Pairs
+
+| Category | Glob Pattern | Expected Pairs |
+|----------|--------------|:--------------:|
+| Process rules | `process-rules/*-ja.md` ↔ `*-en.md` | 9 |
+| Agent definitions | `.claude/agents/*-ja.md` ↔ `*-en.md` | 18 |
+| Custom commands | `.claude/commands/*-ja.md` ↔ `*-en.md` | 5 |
+| Essays | `essays/anms-essay-ja.md` ↔ `-en.md`, `essays/angs-essay-ja.md` ↔ `-en.md` | 2 |
+
+### Check Criteria (per translate-framework §2 + §6)
+
+**Structural checks:**
+- [ ] T1: Do heading structures (h1-h4) match in count and order between JA and EN?
+- [ ] T2: Do table row counts and column counts match?
+- [ ] T3: Do Mermaid diagram node counts and arrow counts match?
+- [ ] T4: Do numerical values in documents (agent count, file_type count, phase count, etc.) match between JA and EN?
+- [ ] T5: Do link targets (references to `.md` files) match between JA and EN?
+
+**English-fixed element checks:**
+- [ ] T6: Are YAML frontmatter keys and `name` field values identical?
+- [ ] T7: Are file_type names, phase names, S0-S6 section headings, and subsection headings untranslated (kept in English)?
+- [ ] T8: Are field names, namespace prefixes, and HTML comments (FIELD annotations) identical?
+
+**Terminology check:**
+- [ ] T9: Are glossary terms used consistently across all files?
+
+### Launch Method
+
+`Agent tool` (subagent_type: "framework-translation-verifier", description: "Full JA-EN translation consistency gate")
+
+> **Note:** Phase 0 runs in the foreground (NOT background). The result must be confirmed before proceeding to the next phase.
+
+### Gate Decision
+
+| Result | Next Action |
+|--------|-------------|
+| All pairs consistent | Proceed to Phase 1 |
+| Discrepancies found | Record discrepancies in the report and **halt the review** to ask the user for a decision. Do not automatically determine which version (source or target) is correct (per translate-framework §6 "When Discrepancies Are Found") |
+
+---
+
+## Files Under Review (Phase 1 onwards)
+
+If Phase 0 passes, JA and EN content is confirmed consistent. From this point, **only EN versions** are reviewed.
 
 | # | Path | Content |
 |:-:|------|---------|
 | F01 | `CLAUDE.md` | Project instruction template |
-| F02 | `process-rules/full-auto-dev-process-rules-ja.md` / `-en.md` | Process rules |
-| F03 | `process-rules/full-auto-dev-document-rules-ja.md` / `-en.md` | Document management rules |
-| F04 | `process-rules/agent-list-ja.md` / `-en.md` | Agent list (Single Source of Truth) |
-| F05 | `process-rules/glossary-ja.md` / `-en.md` | Glossary |
-| F06 | `process-rules/defect-taxonomy-ja.md` / `-en.md` | Defect taxonomy |
-| F07 | `process-rules/review-standards-ja.md` / `-en.md` | Review standards (R1-R6) |
-| F08 | `process-rules/prompt-structure-ja.md` / `-en.md` | Prompt structure conventions (S0-S6) |
-| F09 | `process-rules/spec-template-ja.md` / `-en.md` | Specification template |
-| F10 | `process-rules/porting-guide-ja.md` / `-en.md` | Porting guide |
-| F11 | `.claude/agents/*-ja.md` / `*-en.md` (18 each, 36 total) | Agent definitions |
-| F12 | `.claude/commands/*-ja.md` / `*-en.md` | Custom commands |
-| F13 | `essays/anms-essay-ja.md` | ANMS essay (Japanese) |
-| F14 | `essays/anms-essay-en.md` | ANMS essay (English) |
-| F15 | `essays/angs-essay-ja.md` | ANGS essay (Japanese) |
-| F16 | `essays/angs-essay-en.md` | ANGS essay (English) |
-| F17 | `user-order.md` | User requirement template |
+| F02 | `process-rules/full-auto-dev-process-rules-en.md` | Process rules |
+| F03 | `process-rules/full-auto-dev-document-rules-en.md` | Document management rules |
+| F04 | `process-rules/agent-list-en.md` | Agent list (Single Source of Truth) |
+| F05 | `process-rules/glossary-en.md` | Glossary |
+| F06 | `process-rules/defect-taxonomy-en.md` | Defect taxonomy |
+| F07 | `process-rules/review-standards-en.md` | Review standards (R1-R6) |
+| F08 | `process-rules/prompt-structure-en.md` | Prompt structure conventions (S0-S6) |
+| F09 | `process-rules/spec-template-en.md` | Specification template |
+| F10 | `process-rules/porting-guide-en.md` | Porting guide |
+| F11 | `.claude/agents/*-en.md` (18 files) | Agent definitions |
+| F12 | `.claude/commands/*-en.md` | Custom commands |
+| F13 | `essays/anms-essay-en.md` | ANMS essay |
+| F14 | `essays/angs-essay-en.md` | ANGS essay |
+| F15 | `user-order.md` | User requirement template |
 
 > **Out of scope:** `essays/research/*.md` (research reports), `prompt/next-session-handoff.md` (working notes)
 
 ---
 
-## Phase 0: Sub-agent Delegation
+## Phase 1: Sub-agent Delegation
 
-Launch the following 3 sub-agents **in parallel in the background using the Agent tool (run_in_background: true)**. Delegate mechanical and localized checks to preserve the main council's context.
+Launch the following 2 sub-agents **in parallel in the background using the Agent tool (run_in_background: true)**. Delegate mechanical and localized checks to preserve the main council's context.
 
-**After launching all 3 simultaneously, proceed to Phase 1 without waiting for completion.**
+**After launching both simultaneously, proceed to Phase 2 without waiting for completion.**
 
 ### Sub-agent A: Prompt Quality Checker
 
-**Launch method:** `Agent tool` (description: "Prompt quality check for 18 agents", run_in_background: true)
+**Launch method:** `Agent tool` (description: "Prompt quality check for 18 EN agents", run_in_background: true)
 
 **Prompt (pass the following as-is):**
 
 ```
-Perform a quality check on all 18 agent definition files in the gr-sw-maker framework.
+Perform a quality check on all 18 agent definition files (EN versions) in the gr-sw-maker framework.
 No code needs to be written. Read and analyze only.
 
 ## Files to Read
 
-1. process-rules/agent-list-ja.md / agent-list-en.md §1 (agent list table) and §2 (all ownership sections)
-2. process-rules/prompt-structure-ja.md / prompt-structure-en.md (S0-S6 structure conventions)
-3. .claude/agents/*-ja.md all 18 files + .claude/agents/*-en.md all 18 files
+1. process-rules/agent-list-en.md §1 (agent list table) and §2 (all ownership sections)
+2. process-rules/prompt-structure-en.md (S0-S6 structure conventions)
+3. .claude/agents/*-en.md all 18 files
 
 ## Check Items
 
@@ -78,62 +124,25 @@ Severity definitions:
 - Low: Improvement recommended
 ```
 
-### Sub-agent B: Translation Consistency Checker
+### Sub-agent B: Terminology Mechanical Scan
 
-**Launch method:** `Agent tool` (subagent_type: "framework-translation-verifier", description: "Essay translation consistency check", run_in_background: true)
-
-**Prompt (pass the following as-is):**
-
-```
-Verify translation consistency for the following 2 Japanese-English pairs.
-No code needs to be written. Read and analyze only.
-
-## Targets
-
-1. essays/anms-essay-ja.md (Japanese) ↔ essays/anms-essay-en.md (English)
-2. essays/angs-essay-ja.md (Japanese) ↔ essays/angs-essay-en.md (English)
-
-## Check Items
-
-- [ ] C1: Do the heading structures (h1-h4) correspond between pairs?
-- [ ] C2: Are Mermaid diagram node counts, arrow counts, and structures identical? (Labels differ by language, so verify content correspondence)
-- [ ] C3: Do table row counts and column counts match?
-- [ ] C4: Are important terms (agent names, file_type names, phase names, etc.) correctly translated?
-- [ ] C5: Are there any sections, diagrams, or tables that exist in only one version?
-- [ ] C6: Do numerical values referenced in the essays (agent count, file_type count, phase count, etc.) match between Japanese and English?
-
-## Output Format
-
-Return results for each pair in the following format. If all checks PASS, return "ALL PASS".
-
-| # | Severity | Target Pair | Check Item | Finding | Fix Proposal |
-|:-:|:--------:|-------------|:----------:|---------|-------------|
-
-Severity definitions:
-- Critical: Structural omission (section or diagram missing in one version)
-- High: Numerical mismatch, mistranslation of important terms
-- Medium: Minor expression differences
-- Low: Notation inconsistencies
-```
-
-### Sub-agent C: Terminology Mechanical Scan
-
-**Launch method:** `Agent tool` (description: "Terminology mechanical scan", run_in_background: true)
+**Launch method:** `Agent tool` (description: "Terminology mechanical scan on EN files", run_in_background: true)
 
 **Prompt (pass the following as-is):**
 
 ```
 Check mechanical terminology consistency across the entire gr-sw-maker framework.
 No code needs to be written. Search and analyze using Grep/Glob/Read only.
+Target EN version files primarily (CLAUDE.md has no language variant).
 
 ## Check Items
 
 ### C1: Agent Count Consistency
 Search all files for references to "18" (agent count) and verify no differing numbers exist.
-Targets: CLAUDE.md, process-rules/*-ja.md, process-rules/*-en.md, essays/anms-essay-ja.md, essays/angs-essay-ja.md, essays/anms-essay-en.md, essays/angs-essay-en.md
+Targets: CLAUDE.md, process-rules/*-en.md, essays/anms-essay-en.md, essays/angs-essay-en.md
 
 ### C2: file_type Name Consistency
-Cross-check that file_type names in the file_type master table in process-rules/full-auto-dev-document-rules-ja.md (and -en.md) §7 exactly match those in the ownership sections of process-rules/agent-list-ja.md (and -en.md) §2.
+Cross-check that file_type names in the file_type master table in process-rules/full-auto-dev-document-rules-en.md §7 exactly match those in the ownership sections of process-rules/agent-list-en.md §2.
 
 ### C3: Framework Name Usage
 Search all files for the following:
@@ -143,7 +152,7 @@ Search all files for the following:
 Targets: all .md files
 
 ### C4: Phase Name Consistency
-Verify that the 8 phase names in process-rules/full-auto-dev-process-rules-ja.md (and -en.md) §2 (setup, planning, dependency-selection, design, implementation, testing, delivery, operation) match the activation map in process-rules/agent-list-ja.md (and -en.md) §4.
+Verify that the 8 phase names in process-rules/full-auto-dev-process-rules-en.md §2 (setup, planning, dependency-selection, design, implementation, testing, delivery, operation) match the activation map in process-rules/agent-list-en.md §4.
 
 ### C5: file_type Count Consistency
 Search all files to verify that references to the total file_type count (32) are consistent.
@@ -164,13 +173,13 @@ Severity definitions:
 
 ---
 
-## Phase 1: Main Council Review
+## Phase 2: Main Council Review
 
-Begin reading and reviewing the following core rule files without waiting for sub-agent completion:
-**F01, F02, F03, F04, F05, F06, F07, F09, F10, F12, F17**
+Begin reading and reviewing the following core rule files (EN versions) without waiting for sub-agent completion:
+**F01, F02, F03, F04, F05, F06, F07, F09, F10, F12, F15**
 
 > F08 (prompt structure conventions) and F11 (18 agent definitions) have been delegated to Sub-agent A.
-> F13-F16 (essays) have been delegated to Sub-agent B.
+> F13-F14 (essays) were verified for translation consistency in Phase 0. Read only if content review is needed.
 > However, if verifying the F04 §3 data flow diagram requires referencing F11 In/Out, read only the necessary agent definitions.
 
 The following 4 experts conduct a review from a bird's-eye perspective.
@@ -242,13 +251,13 @@ The following 4 experts conduct a review from a bird's-eye perspective.
 
 ---
 
-## Phase 2: Integrated Judgment
+## Phase 3: Integrated Judgment
 
-### 2.1 Integration of Sub-agent Results
+### 3.1 Integration of Sub-agent Results
 
-Receive results from the 3 sub-agents (A: Prompt quality, B: Translation consistency, C: Terminology mechanical scan) and integrate them with Phase 1 findings.
+Receive results from the 2 sub-agents (A: Prompt quality, B: Terminology mechanical scan) and integrate them with Phase 2 findings.
 
-### 2.2 Findings List
+### 3.2 Findings List
 
 Consolidate all findings in the following format:
 
@@ -262,7 +271,7 @@ Consolidate all findings in the following format:
 - **Medium**: Inconsistency with limited impact (expression variation, minor description omission, etc.)
 - **Low**: Improvement recommended (readability, redundant description, etc.)
 
-### 2.3 Overall Judgment
+### 3.3 Overall Judgment
 
 | Judgment | Condition |
 |----------|-----------|
@@ -279,8 +288,9 @@ Output the review results to `project-records/reviews/council-review-{today's da
 Output in MCBSMD format (single Markdown enclosed in sextuple backticks).
 
 Output structure:
-1. Sub-agent results summary (summary of A/B/C results)
-2. Main council review results (Expert 1-4 results)
-3. Cross-check results (X01-X18 each PASS/FAIL)
-4. Consolidated findings list
-5. Overall judgment
+1. Phase 0 results (translation consistency check summary)
+2. Sub-agent results summary (A/B results)
+3. Main council review results (Expert 1-4 results)
+4. Cross-check results (X01-X18 each PASS/FAIL)
+5. Consolidated findings list
+6. Overall judgment
