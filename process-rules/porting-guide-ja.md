@@ -47,7 +47,7 @@
 
 ## エージェント・コマンドの言語選択
 
-フレームワークはエージェント定義（`.claude/agents/`）とカスタムコマンド（`.claude/commands/`）を日英ペアで提供する。プロジェクトにデプロイする際、以下の4択から選択してサフィックスなしの `.md` にリネームする。
+フレームワークはエージェント定義（`.claude/agents/`）とカスタムコマンド（`.claude/commands/`）を日英ペアで提供する。プロジェクトにデプロイする際、以下の4択から選択してサフィックスなしの `.md` にリネームする。選択肢3・4（翻訳）は `/translate-framework` コマンド（`.claude/commands/translate-framework-ja.md`）で実行できる。
 
 **Claude Code はファイル名からエージェント名を導出する**（`orchestrator-ja.md` → エージェント名 `orchestrator-ja`）。プロジェクトで正しく動作させるには、サフィックスなしの `orchestrator.md` が必要。
 
@@ -190,6 +190,7 @@ process-rules/porting-guide-ja.md の変換仕様に従い、
 7. .claude/settings*.json を [対象設定形式] に変換する
 8. 不要になった .claude/ ディレクトリを削除する
 ```
+
 
 ## 構造的制約
 

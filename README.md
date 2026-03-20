@@ -76,7 +76,7 @@ If you are not using Claude Code, have your AI read [`process-rules/porting-guid
 ## Switching Language
 
 1. Delete all files with the unwanted language suffix (e.g., `-ja.md`)
-2. Have your AI translate the remaining `-en.md` files to your target language (e.g., `-vi.md`)
+2. Have your AI translate the remaining `-en.md` files to your target language (e.g., `-fr.md`)
 
 Files without a language suffix (`CLAUDE.md`, `.claude/agents/*.md`, etc.) do not need translation.
 

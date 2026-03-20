@@ -481,7 +481,7 @@ schema_version → file_type → form_block_cardinality → language
 | schema_version | string | Yes | 識別 | スキーマバージョン（現在 "0.0"） |
 | file_type | enum | Yes | 識別 | 登録済みファイルタイプの1つ（第7章参照） |
 | form_block_cardinality | enum: single / multiple | Yes | 識別 | このファイルのForm Blockが単一か複数か |
-| language | string (ISO 639-1) | Yes | 識別 | このファイルの記述言語（例: `ja`, `en`, `vi`） |
+| language | string (ISO 639-1) | Yes | 識別 | このファイルの記述言語（例: `ja`, `en`, `fr`） |
 | document_status | enum: draft / review / approved / archived | Yes | 状態 | 文書のライフサイクルステータス |
 | owner | string | Yes | ワークフロー | 書込み権限を持つエージェント |
 | commissioned_by | string | Yes | ワークフロー | この文書の作成トリガー（値: `user`, `orchestrator`, `phase-{name}`, または `{agent-name}`） |
@@ -1523,7 +1523,7 @@ released  → 現ファイルを old/ へ移動 → 新ファイルを作成
 
 CLAUDE.md に以下を設定する（setup フェーズで AI が提案）:
 
-- **project_language:** 主言語（ISO 639-1: `ja`, `en`, `vi` 等）
+- **project_language:** 主言語（ISO 639-1: `ja`, `en`, `fr` 等）
 - **translation_languages:** 翻訳言語のリスト（空 = 単一言語プロジェクト）
 
 ## 12.3 ファイル命名と言語サフィックス
