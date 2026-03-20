@@ -66,7 +66,7 @@ None
 | # | Rule | Description |
 |---|------|-------------|
 | SR1 | Approved improvements only | Do not apply changes that are not documented in a retrospective-report |
-| SR2 | Self-modification prohibited | Do not modify decree-writer's own definition (decree-writer-ja.md / decree-writer-en.md / decree-writer.md) |
+| SR2 | Self-modification prohibited | Do not modify decree-writer's own definition (decree-writer.md) |
 | SR3 | Quality gate protection | Do not apply changes that weaken R1-R6 quality criteria |
 | SR4 | Security rule protection | Do not apply changes that remove or weaken security requirements, OWASP countermeasures, or authentication methods |
 | SR5 | Audit trail required | Record before/after diffs for all changes. Application without records is prohibited |

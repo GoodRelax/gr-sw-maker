@@ -20,7 +20,7 @@ Detect naming inconsistencies before they propagate across the entire project, a
 ### Start Conditions
 
 - [ ] The deliverable to be checked (Out) has been generated
-- [ ] process-rules/glossary-ja.md exists
+- [ ] process-rules/glossary.md exists
 - [ ] The project specification Ch1.8 Glossary exists (from the planning phase onward)
 
 ### End Conditions
@@ -35,9 +35,9 @@ Detect naming inconsistencies before they propagate across the entire project, a
 | file_type | Provider | Usage |
 |-----------|----------|-------|
 | (deliverable to be checked) | Each agent | Target of terminology check |
-| glossary-ja.md | framework | Cross-reference with framework glossary |
+| glossary.md | framework | Cross-reference with framework glossary |
 | spec-foundation (Ch1.8 Glossary) | srs-writer | Cross-reference with project glossary |
-| full-auto-dev-document-rules-ja.md §7 | framework | Authoritative definition of file_type names and namespaces |
+| full-auto-dev-document-rules.md §7 | framework | Authoritative definition of file_type names and namespaces |
 
 ### Out
 
@@ -52,7 +52,7 @@ None
 ## Procedure
 
 1. Read the deliverable to be checked
-2. Read process-rules/glossary-ja.md
+2. Read process-rules/glossary.md
 3. Read the project specification Ch1.8 Glossary (if it exists)
 4. Check against the following 5 viewpoints:
    - **Viewpoint A: Glossary mismatch** — Whether expressions different from terms defined in the glossary are used
@@ -69,13 +69,13 @@ None
 
 **Same thing with different names → unify. Different things with similar names → document the distinction.**
 
-How to determine: ask whether two terms "translate to the same English word" and "serve the same role in the system." If both are Yes, they are unification targets. If either is No, they are similar but distinct, and the distinction must be recorded in glossary-ja.md §4.
+How to determine: ask whether two terms "translate to the same English word" and "serve the same role in the system." If both are Yes, they are unification targets. If either is No, they are similar but distinct, and the distinction must be recorded in glossary.md §4.
 
 ### Details of the 5 Check Viewpoints
 
 **Viewpoint A: Glossary mismatch**
-- Whether terms listed in the "Not Adopted" column of glossary-ja.md §1 "Intentionally selected terms" are being used
-- Whether the distinctions defined in glossary-ja.md §4 "Confusable pairs" are correctly maintained
+- Whether terms listed in the "Not Adopted" column of glossary.md §1 "Intentionally selected terms" are being used
+- Whether the distinctions defined in glossary.md §4 "Confusable pairs" are correctly maintained
 - Whether expressions differ from terms defined in the project Ch1.8 Glossary
 
 **Viewpoint B: Wasei-eigo (Japanese-coined English)**
@@ -83,7 +83,7 @@ How to determine: ask whether two terms "translate to the same English word" and
 - When in doubt: verify whether the term appears with the same meaning in a standard English dictionary (Oxford, Merriam-Webster)
 
 **Viewpoint C: Abbreviation rule violation**
-- Whether abbreviations ruled as not permitted in glossary-ja.md §3 "Abbreviation permission decisions" are being used
+- Whether abbreviations ruled as not permitted in glossary.md §3 "Abbreviation permission decisions" are being used
 - When a new abbreviation appears: propose a permit/deny decision to orchestrator
 
 **Viewpoint D: Synonym mixing**
@@ -112,7 +112,7 @@ How to determine: ask whether two terms "translate to the same English word" and
 
 | Anomaly | Response |
 |---------|----------|
-| glossary-ja.md does not exist | Do not start work. Request orchestrator to create the glossary |
+| glossary.md does not exist | Do not start work. Request orchestrator to create the glossary |
 | A term in the check target is a new word not in the glossary | Report as Low and ask orchestrator to decide whether to add it to the glossary |
 | Cannot determine whether a term is wasei-eigo | Withhold judgment, present options explicitly, and report to orchestrator |
 | The glossary itself contains contradictions (e.g., definitions conflict between §1 and §4) | Request orchestrator to fix the glossary. Suspend checking until the glossary is corrected |

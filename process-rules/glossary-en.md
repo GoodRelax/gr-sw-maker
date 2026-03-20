@@ -1,7 +1,7 @@
 # Glossary
 
 > **Purpose of this document:** Definitions of terms used in the full-auto-dev framework. General dictionary terms are not included. This document records framework-specific meanings, selection rationale, and non-adopted alternatives.
-> **Related documents:** [Process Rules](full-auto-dev-process-rules-ja.md), [Document Management Rules](full-auto-dev-document-rules-ja.md), [Agent List](agent-list-ja.md), [Defect Taxonomy](defect-taxonomy-ja.md)
+> **Related documents:** [Process Rules](full-auto-dev-process-rules.md), [Document Management Rules](full-auto-dev-document-rules.md), [Agent List](agent-list.md), [Defect Taxonomy](defect-taxonomy.md)
 
 ---
 
@@ -14,14 +14,14 @@ Terms where one synonym was intentionally chosen from multiple alternatives. Non
 | requirement | requirement | A condition the system must satisfy. Formalized using EARS syntax | 要件 (yoken) | "requirement" is the root concept (what is demanded). 要件 is a derivative (conditions to be met). Unified to "requirement" |
 | interview | interview | Structured questioning of users for requirement elicitation | ヒアリング (hearing) | "hearing" is Japanese-English (wasei-eigo). In English, "hearing" means a court proceeding or the sense of hearing |
 | status | status | A value indicating the current position in a workflow | state | The distinction between state (mode of existence) and status (progress position) is unnecessary in practice. Unified to status |
-| error | error | A mistake in human cognition, judgment, or operation. The cause of a fault (IEEE 1044). See [defect-taxonomy](defect-taxonomy-ja.md) for details | 誤り (ayamari) | Unified to English term. The Japanese word "誤り" is an everyday word with low technical precision |
+| error | error | A mistake in human cognition, judgment, or operation. The cause of a fault (IEEE 1044). See [defect-taxonomy](defect-taxonomy.md) for details | 誤り (ayamari) | Unified to English term. The Japanese word "誤り" is an everyday word with low technical precision |
 | fault | fault | An incorrect condition latent in code, design, or specification resulting from an error. Does not manifest until discovered (IEEE 1044, IEC 61508) | フォールト, 欠陥 | Unified to English term. Katakana form also not adopted |
 | failure | failure | An event where a fault manifests at runtime and the system no longer satisfies requirements (IEEE 1044, IEC 61508) | フェイラー, 故障, 障害 | "故障" (koshou) is hardware-oriented, "障害" (shougai) is ambiguous. Unified to English term |
 | defect | defect | A formal record (file_type) of a failure (or fault) discovered during testing or operations. Causal chain: error → fault → failure → defect | 障害, bug, バグ, 不具合 | "障害" is deprecated due to confusion with failure/incident. Unified to English term |
 | incident | incident | An unplanned event affecting services in a production environment (ITIL, ISO 20000). file_type: incident-report | 障害, インシデント | Unified to English term. Katakana form also not adopted |
 | hazard | hazard | A danger source where a failure could cause harm to life, property, or environment (IEC 61508). Used when the conditional process "Functional Safety" is enabled | ハザード | Unified to English term |
 | fault origin | fault origin | The phase where a fault was introduced. Three classifications: requirements fault / design fault / implementation fault (IEEE 1044). Used in root cause analysis of defect | — | A classification axis for identifying the origin of a fault in the causal chain |
-| HARA | HARA | Hazard Analysis and Risk Assessment (ISO 26262). An analysis method to identify hazard at the system level and derive safety goals. Required when Functional Safety is enabled | — | Top-down analysis. See [defect-taxonomy §7](defect-taxonomy-ja.md) for details |
+| HARA | HARA | Hazard Analysis and Risk Assessment (ISO 26262). An analysis method to identify hazard at the system level and derive safety goals. Required when Functional Safety is enabled | — | Top-down analysis. See [defect-taxonomy §7](defect-taxonomy.md) for details |
 | FMEA | FMEA | Failure Mode and Effects Analysis (IEC 60812). A method to comprehensively analyze fault modes and effects at the component level | — | Bottom-up analysis. Performed after Ch3 is finalized |
 | FTA | FTA | Fault Tree Analysis (IEC 61025). An analysis method that traces causes from a specific top event using AND/OR gates in reverse | — | Top-down analysis. Used for root cause analysis of high-risk hazard or critical incident |
 | interview-record | interview-record | A structured record of user interviews (file_type) | hearing-record | Linked to the selection of interview above |
@@ -67,7 +67,7 @@ Clarifying distinctions between concepts that are similar but different.
 |------|-------------|
 | gr-sw-maker vs full-auto-dev | gr-sw-maker = tool name / repository name / npm package name. full-auto-dev = methodology name (a higher-level concept independent of the tool). They must never be interchanged. Use gr-sw-maker for tool-specific topics and full-auto-dev for methodology/process topics |
 | requirement vs change request | requirement = a condition the system must satisfy. change request = a user-initiated change request after specification approval. Both contain "request" but in English they are distinct words: requirement vs request |
-| specification vs template | specification = a project-specific deliverable (docs/spec/). template = a boilerplate provided by the framework (process-rules/spec-template-ja.md) |
+| specification vs template | specification = a project-specific deliverable (docs/spec/). template = a boilerplate provided by the framework (process-rules/spec-template.md) |
 | agent vs sub-agent | agent = one of the 18 role definitions registered in agent-list. sub-agent = a child process spawned by Claude Code (which may include agents) |
 | orchestrator vs organizer | orchestrator = the orchestrator agent defined in the process rules. organizer = a graph-traversal agent proposed in the ANGS paper. Currently the same role referred to by different names in different contexts |
 | document_status vs {type}_status | Both are status. document_status = Common Block (document lifecycle: draft/review/approved/archived). {type}_status = Form Block (domain-specific workflow position) |

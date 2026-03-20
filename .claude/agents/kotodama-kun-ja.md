@@ -20,7 +20,7 @@ model: haiku
 ### Start Conditions
 
 - [ ] チェック対象の成果物（Out）が生成されている
-- [ ] process-rules/glossary-ja.md が存在する
+- [ ] process-rules/glossary.md が存在する
 - [ ] プロジェクト仕様書の Ch1.8 Glossary が存在する（planning フェーズ以降）
 
 ### End Conditions
@@ -35,9 +35,9 @@ model: haiku
 | file_type | 提供元 | 用途 |
 |-----------|--------|------|
 | （チェック対象の成果物） | 各エージェント | 用語チェックの対象 |
-| glossary-ja.md | framework | フレームワーク用語集との照合 |
+| glossary.md | framework | フレームワーク用語集との照合 |
 | spec-foundation (Ch1.8 Glossary) | srs-writer | プロジェクト用語集との照合 |
-| full-auto-dev-document-rules-ja.md §7 | framework | file_type 名・名前空間の正式定義 |
+| full-auto-dev-document-rules.md §7 | framework | file_type 名・名前空間の正式定義 |
 
 ### Out
 
@@ -52,7 +52,7 @@ model: haiku
 ## Procedure
 
 1. チェック対象の成果物を読み込む
-2. process-rules/glossary-ja.md を読み込む
+2. process-rules/glossary.md を読み込む
 3. プロジェクト仕様書 Ch1.8 Glossary を読み込む（存在する場合）
 4. 以下の5観点でチェックする:
    - **観点A: 用語集との不一致** — 用語集で定義された用語と異なる表現が使われていないか
@@ -69,13 +69,13 @@ model: haiku
 
 **同じモノに違う名前 → 統一せよ。違うモノに似た名前 → 区別を文書化せよ。**
 
-判別方法: 2つの用語が「同じ英語に訳せるか」「システム内で同じ役割か」を問う。両方 Yes なら統一対象。どちらかが No なら似て非なるものであり、glossary-ja.md §4 に区別を記録する。
+判別方法: 2つの用語が「同じ英語に訳せるか」「システム内で同じ役割か」を問う。両方 Yes なら統一対象。どちらかが No なら似て非なるものであり、glossary.md §4 に区別を記録する。
 
 ### チェック5観点の詳細
 
 **観点A: 用語集との不一致**
-- glossary-ja.md §1「意図的に選定した用語」の「非採用」列に記載された用語が使われていないか
-- glossary-ja.md §4「紛らわしい対の区別」で定義された区別が正しく守られているか
+- glossary.md §1「意図的に選定した用語」の「非採用」列に記載された用語が使われていないか
+- glossary.md §4「紛らわしい対の区別」で定義された区別が正しく守られているか
 - プロジェクト Ch1.8 Glossary に定義された用語と異なる表現がないか
 
 **観点B: 和製英語**
@@ -83,7 +83,7 @@ model: haiku
 - 判断に迷う場合: 英語の一般的な辞書（Oxford, Merriam-Webster）に同じ意味で載っているか確認
 
 **観点C: 略称ルール違反**
-- glossary-ja.md §3「略称の許可判定」で不許可とされた略称が使われていないか
+- glossary.md §3「略称の許可判定」で不許可とされた略称が使われていないか
 - 新しい略称が登場した場合: 許可/不許可の判定を orchestrator に提案する
 
 **観点D: 同義語の混在**
@@ -112,7 +112,7 @@ model: haiku
 
 | 異常 | 対応 |
 |------|------|
-| glossary-ja.md が存在しない | 作業を開始しない。orchestrator に用語集の作成を要請 |
+| glossary.md が存在しない | 作業を開始しない。orchestrator に用語集の作成を要請 |
 | チェック対象の用語が用語集に載っていない新語 | Low として報告し、用語集への追加要否を orchestrator に判断を求める |
 | 和製英語かどうか判断できない | 判断を保留し、選択肢を明示して orchestrator に報告 |
 | 用語集自体に矛盾がある（§1 と §4 で定義が食い違う等） | 用語集の修正を orchestrator に要請。用語集が正されるまでチェックを中断 |

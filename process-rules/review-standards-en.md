@@ -1,7 +1,7 @@
 # Review Standards (R1–R6)
 
 > **Document positioning:** The single source of truth for the review perspectives referenced by review-agent. process-rules §9.2 is a summary of this document; refer here for details.
-> **Related documents:** [Process Rules](full-auto-dev-process-rules-ja.md) §9 Quality Management Framework, [Document Management Rules](full-auto-dev-document-rules-ja.md)
+> **Related documents:** [Process Rules](full-auto-dev-process-rules.md) §9 Quality Management Framework, [Document Management Rules](full-auto-dev-document-rules.md)
 
 ---
 

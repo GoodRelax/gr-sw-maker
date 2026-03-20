@@ -8,17 +8,17 @@ Detect contradictions, inconsistencies, and omissions by combining delegation of
 | # | Path | Content |
 |:-:|------|---------|
 | F01 | `CLAUDE.md` | Project instruction template |
-| F02 | `process-rules/full-auto-dev-process-rules-ja.md` | Process rules |
-| F03 | `process-rules/full-auto-dev-document-rules-ja.md` | Document management rules |
-| F04 | `process-rules/agent-list-ja.md` | Agent list (Single Source of Truth) |
-| F05 | `process-rules/glossary-ja.md` | Glossary |
-| F06 | `process-rules/defect-taxonomy-ja.md` | Defect taxonomy |
-| F07 | `process-rules/review-standards-ja.md` | Review standards (R1-R6) |
-| F08 | `process-rules/prompt-structure-ja.md` | Prompt structure conventions (S0-S6) |
-| F09 | `process-rules/spec-template-ja.md` | Specification template |
-| F10 | `process-rules/porting-guide-ja.md` | Porting guide |
-| F11 | `.claude/agents/*-ja.md` (all 18 files) | Agent definitions |
-| F12 | `.claude/commands/*-ja.md` | Custom commands |
+| F02 | `process-rules/full-auto-dev-process-rules-ja.md` / `-en.md` | Process rules |
+| F03 | `process-rules/full-auto-dev-document-rules-ja.md` / `-en.md` | Document management rules |
+| F04 | `process-rules/agent-list-ja.md` / `-en.md` | Agent list (Single Source of Truth) |
+| F05 | `process-rules/glossary-ja.md` / `-en.md` | Glossary |
+| F06 | `process-rules/defect-taxonomy-ja.md` / `-en.md` | Defect taxonomy |
+| F07 | `process-rules/review-standards-ja.md` / `-en.md` | Review standards (R1-R6) |
+| F08 | `process-rules/prompt-structure-ja.md` / `-en.md` | Prompt structure conventions (S0-S6) |
+| F09 | `process-rules/spec-template-ja.md` / `-en.md` | Specification template |
+| F10 | `process-rules/porting-guide-ja.md` / `-en.md` | Porting guide |
+| F11 | `.claude/agents/*-ja.md` / `*-en.md` (18 each, 36 total) | Agent definitions |
+| F12 | `.claude/commands/*-ja.md` / `*-en.md` | Custom commands |
 | F13 | `essays/anms-essay-ja.md` | ANMS essay (Japanese) |
 | F14 | `essays/anms-essay-en.md` | ANMS essay (English) |
 | F15 | `essays/angs-essay-ja.md` | ANGS essay (Japanese) |
@@ -47,9 +47,9 @@ No code needs to be written. Read and analyze only.
 
 ## Files to Read
 
-1. process-rules/agent-list-ja.md §1 (agent list table) and §2 (all ownership sections)
-2. process-rules/prompt-structure-ja.md (S0-S6 structure conventions)
-3. .claude/agents/*-ja.md all 18 files
+1. process-rules/agent-list-ja.md / agent-list-en.md §1 (agent list table) and §2 (all ownership sections)
+2. process-rules/prompt-structure-ja.md / prompt-structure-en.md (S0-S6 structure conventions)
+3. .claude/agents/*-ja.md all 18 files + .claude/agents/*-en.md all 18 files
 
 ## Check Items
 
@@ -130,10 +130,10 @@ No code needs to be written. Search and analyze using Grep/Glob/Read only.
 
 ### C1: Agent Count Consistency
 Search all files for references to "18" (agent count) and verify no differing numbers exist.
-Targets: CLAUDE.md, process-rules/*.md, essays/anms-essay-ja.md, essays/angs-essay-ja.md, essays/anms-essay-en.md, essays/angs-essay-en.md
+Targets: CLAUDE.md, process-rules/*-ja.md, process-rules/*-en.md, essays/anms-essay-ja.md, essays/angs-essay-ja.md, essays/anms-essay-en.md, essays/angs-essay-en.md
 
 ### C2: file_type Name Consistency
-Cross-check that file_type names in the file_type master table in process-rules/full-auto-dev-document-rules-ja.md §7 exactly match those in the ownership sections of process-rules/agent-list-ja.md §2.
+Cross-check that file_type names in the file_type master table in process-rules/full-auto-dev-document-rules-ja.md (and -en.md) §7 exactly match those in the ownership sections of process-rules/agent-list-ja.md (and -en.md) §2.
 
 ### C3: Framework Name Usage
 Search all files for the following:
@@ -143,7 +143,7 @@ Search all files for the following:
 Targets: all .md files
 
 ### C4: Phase Name Consistency
-Verify that the 8 phase names in process-rules/full-auto-dev-process-rules-ja.md §2 (setup, planning, dependency-selection, design, implementation, testing, delivery, operation) match the activation map in process-rules/agent-list-ja.md §4.
+Verify that the 8 phase names in process-rules/full-auto-dev-process-rules-ja.md (and -en.md) §2 (setup, planning, dependency-selection, design, implementation, testing, delivery, operation) match the activation map in process-rules/agent-list-ja.md (and -en.md) §4.
 
 ### C5: file_type Count Consistency
 Search all files to verify that references to the total file_type count (32) are consistent.

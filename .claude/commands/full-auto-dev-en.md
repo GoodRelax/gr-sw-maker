@@ -1,6 +1,6 @@
 Read user-order.md and start the nearly fully automated software development process.
 
-**Reference rules:** Follow process-rules/full-auto-dev-document-rules-ja.md (Document Management Rules) and process-rules/full-auto-dev-process-rules-ja.md (Process Rules).
+**Reference rules:** Follow process-rules/full-auto-dev-document-rules.md (Document Management Rules) and process-rules/full-auto-dev-process-rules.md (Process Rules).
 
 Execute the following phases sequentially:
 
@@ -47,7 +47,7 @@ Execute the following phases sequentially:
     - End when the user judges "that's enough"
 1c. Record interview results in project-management/interview-record.md and request user confirmation
 1d. Create mocks/samples/PoCs and request user feedback (UI: wireframes/HTML mocks, API: OpenAPI snippets, Data: ER diagrams/sample JSON). Incorporate feedback and iterate until the user judges "looks right"
-1e. Refer to process-rules/spec-template-ja.md and create the specification in docs/spec/[project-name]-spec.md using interview results + user-order.md as input (Ch1-2: Foundation & Requirements, format selected in the setup phase)
+1e. Refer to process-rules/spec-template.md and create the specification in docs/spec/[project-name]-spec.md using interview results + user-order.md as input (Ch1-2: Foundation & Requirements, format selected in the setup phase)
 1f. Place skeletons (headings only) for Ch3-6 in the same file
 1g. Report the specification overview to the user and request approval
 1h. Conduct quality review of specification Ch1-2 with review-agent (R1 perspective: R1a structural quality + R1b expression quality), proceed after PASS
@@ -71,7 +71,7 @@ Execute the following phases sequentially:
 3g. Create observability design (logging, metrics, tracing, alerting) in docs/observability/observability-design.md
 3h. Create WBS and Gantt chart in project-management/progress/wbs.md
 3i. Create risk register in project-records/risks/ with risk-manager
-3j. [If functional safety is enabled] Conduct safety analysis (see defect-taxonomy-ja.md section 7 for details):
+3j. [If functional safety is enabled] Conduct safety analysis (see defect-taxonomy.md section 7 for details):
     - HARA: Before Ch3 detailing, perform hazard enumeration, safety goal assignment, and ASIL/SIL allocation → project-records/safety/hara-*.md
     - Add safety requirements to spec-foundation Ch2 NFR
     - FMEA: After Ch3 is finalized, perform component-level failure mode analysis → project-records/safety/fmea-*.md

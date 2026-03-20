@@ -5,7 +5,7 @@
 > **Target Version:** Claude Code (latest as of February 2026 — Opus 4.6 / Sonnet 4.6 compatible)
 > **Prerequisites:** Claude Pro/Team/Enterprise subscription, or Anthropic API account
 > **Document Status:** Process rules for the full-auto-dev framework. Structured based on official Claude Code features, but includes experimental features such as Agent Teams. Always refer to the official documentation (https://code.claude.com/docs/en/overview) for the latest specifications.
-> **Related Documents:** [Document Management Rules](full-auto-dev-document-rules-ja.md) v0.0.0 — Document management rules for file naming, block structure, versioning, etc. Scheduled for promotion to v1.0.0 after PoC completion.
+> **Related Documents:** [Document Management Rules](full-auto-dev-document-rules.md) v0.0.0 — Document management rules for file naming, block structure, versioning, etc. Scheduled for promotion to v1.0.0 after PoC completion.
 
 ---
 
@@ -49,7 +49,7 @@
 - [Chapter 6: CLAUDE.md Design](#chapter-6-claudemd-design-the-brain-of-the-project)
   - 6.1 CLAUDE.md Template
   - 6.2 Key Points for CLAUDE.md Design
-- [Chapter 7: Agent Definitions](#chapter-7-agent-definitions) (-> [Agent List](agent-list-ja.md), [Prompt Structure Specification](prompt-structure-ja.md), [Glossary](glossary-ja.md))
+- [Chapter 7: Agent Definitions](#chapter-7-agent-definitions) (-> [Agent List](agent-list.md), [Prompt Structure Specification](prompt-structure.md), [Glossary](glossary.md))
 - [Chapter 8: Custom Command Definitions](#chapter-8-custom-command-definitions)
   - 8.1 Full Auto Development Start Command (full-auto-dev)
   - 8.2 Progress Check Command (check-progress)
@@ -640,7 +640,7 @@ For systems that expose APIs externally, define the following during the design 
 
 During the setup phase of the full-auto-dev command, the lead agent automatically evaluates the following (see Chapter 8, Section 8.1).
 
-1. Functional Safety -> If applicable, **immediately request user confirmation** and finalize safety requirements before specification creation. Create `project-records/safety/` and add HARA (mandatory), FMEA (after Ch3 finalization), and FTA (if high-risk hazards exist) to the design phase. For detailed methods and adoption criteria, refer to [defect-taxonomy-ja.md Section 7](defect-taxonomy-ja.md)
+1. Functional Safety -> If applicable, **immediately request user confirmation** and finalize safety requirements before specification creation. Create `project-records/safety/` and add HARA (mandatory), FMEA (after Ch3 finalization), and FTA (if high-risk hazards exist) to the design phase. For detailed methods and adoption criteria, refer to [defect-taxonomy.md Section 7](defect-taxonomy.md)
 2. Legal Research -> If applicable, add to CLAUDE.md and include regulatory requirements in the non-functional requirements section of specification Ch2. Create `project-records/legal/`
 3. Patent Research -> If applicable, add a patent research task before the start of the design phase in the WBS. Record in `project-records/legal/patent-clearance.md`
 4. Technology Trend Research -> If applicable, add a technology trend check step to the WBS at the start of each phase. Create `docs/tech-watch.md`
@@ -772,7 +772,7 @@ Create specification Ch1-2 using the interview record (interview-record.md) and 
 ```bash
 claude "Read user-order.md and start the nearly fully automated development.
 First, conduct a structured interview.
-After the interview is complete, refer to process-rules/spec-template-ja.md and
+After the interview is complete, refer to process-rules/spec-template.md and
 create the specification (Ch1-2: Foundation & Requirements) in docs/spec/ (follow the ANMS/ANPS/ANGS format selected in the setup phase).
 After creation, conduct an R1 perspective review with review-agent,
 and once PASSED, report a summary of the specification and present any points requiring critical decisions."
@@ -859,7 +859,7 @@ claude "Specification Ch1-2 has been approved. Execute the following in parallel
 10. [If HW integration is enabled] Create docs/hardware/hw-requirement-spec.md and include HW Adapter layer design in SW Spec Ch3
 11. [If AI/LLM integration is enabled] Create docs/ai/ai-requirement-spec.md and include AI Adapter layer design in SW Spec Ch3. Define prompt templates, input/output schemas, and cost constraints
 12. [If framework requirement definition is enabled] Create docs/framework/framework-requirement-spec.md and include Adapter layer design in SW Spec Ch3
-13. [If functional safety is enabled] Execute the following sequentially (see defect-taxonomy-ja.md Section 7 for details):
+13. [If functional safety is enabled] Execute the following sequentially (see defect-taxonomy.md Section 7 for details):
     a. Conduct HARA and record hazard list, safety goals, ASIL/SIL allocation in project-records/safety/hara-*.md (**before** Ch3 elaboration)
     b. Add safety requirements to spec-foundation Ch2 NFR
     c. After Ch3 finalization, conduct FMEA and record in project-records/safety/fmea-*.md
@@ -1428,8 +1428,8 @@ This structure is based on conventions that Claude Code automatically recognizes
 - Code is placed under src/, tests under tests/, IaC (Infrastructure as Code) under infra/
 - **Product AI/LLM prompts are placed under src/ (managed as equivalent to code).** Prompts for running the project are placed under .claude/ (meta layer). Do not mix them
 - Refer to the following for operational rules:
-  - process-rules/full-auto-dev-process-rules-ja.md (Process rules)
-  - process-rules/full-auto-dev-document-rules-ja.md v0.0.0 (Document management rules)
+  - process-rules/full-auto-dev-process-rules.md (Process rules)
+  - process-rules/full-auto-dev-document-rules.md v0.0.0 (Document management rules)
 
 ## Language Settings
 
@@ -1583,13 +1583,13 @@ This template is committed to version control and shared across the entire team.
 
 ## Chapter 7: Agent Definitions
 
-For the agent list, ownership, data flow, and phase-based activation, refer to [Agent List](agent-list-ja.md).
+For the agent list, ownership, data flow, and phase-based activation, refer to [Agent List](agent-list.md).
 
-For prompt structure specification (S0-S6: Identity / Activation / Ownership / Procedure / Rules / Exception), refer to [Prompt Structure Specification](prompt-structure-ja.md).
+For prompt structure specification (S0-S6: Identity / Activation / Ownership / Procedure / Rules / Exception), refer to [Prompt Structure Specification](prompt-structure.md).
 
 For each agent's prompt definition, refer to `.claude/agents/*.md`. This is the Single Source of Truth for each agent.
 
-For term definitions, selection rationale, and abbreviation permission decisions, refer to [Glossary](glossary-ja.md).
+For term definitions, selection rationale, and abbreviation permission decisions, refer to [Glossary](glossary.md).
 
 ---
 
@@ -1627,7 +1627,7 @@ Execute the following phases sequentially:
 
 ## Phase 1: Planning
 1. Analyze user-order.md
-2. Refer to process-rules/spec-template-ja.md and create the specification in docs/spec/ (Ch1-2: Foundation & Requirements, following the ANMS/ANPS/ANGS format selected in the setup phase)
+2. Refer to process-rules/spec-template.md and create the specification in docs/spec/ (Ch1-2: Foundation & Requirements, following the ANMS/ANPS/ANGS format selected in the setup phase)
 3. Place Ch3-6 skeleton (headings only) in the same file
 4. Report specification overview to the user and request approval
 5. Conduct quality review (R1 perspective) of specification Ch1-2 with review-agent, proceed after PASS
@@ -1720,7 +1720,7 @@ Conduct the following retrospective:
 1. Read all defect tickets from project-records/defects/
 2. Identify recurring defect patterns
 3. Analyze root causes (CMMI CAR process)
-4. Verify compliance with document management rules (process-rules/full-auto-dev-document-rules-ja.md)
+4. Verify compliance with document management rules (process-rules/full-auto-dev-document-rules.md)
    - Does the Common Block / Form Block structure match the actual state?
    - Are there missing or unnecessary fields?
 5. Record improvement measures as a retrospective-report in project-records/improvement/
@@ -1815,7 +1815,7 @@ Each review gate is automatically executed by review-agent. Phase transitions ar
 
 ### 9.2 Review Perspectives (R1-R6)
 
-Six perspectives applied by review-agent. **For detailed checklists, refer to `process-rules/review-standards-ja.md` (Review Standards Specification).** The following is a summary of each perspective.
+Six perspectives applied by review-agent. **For detailed checklists, refer to `process-rules/review-standards.md` (Review Standards Specification).** The following is a summary of each perspective.
 
 | Perspective | Content | Applicable To |
 | --- | --- | --- |
@@ -2334,7 +2334,7 @@ claude
 From here, Claude Code automatically executes the following:
 
 1. setup: user-order.md validation -> CLAUDE.md proposal -> Evaluate conditional processes -> Confirm with user
-2. planning: Create specification Ch1-2 based on user-order.md + process-rules/spec-template-ja.md -> R1 review -> Request user specification approval
+2. planning: Create specification Ch1-2 based on user-order.md + process-rules/spec-template.md -> R1 review -> Request user specification approval
 3. dependency-selection: External dependency evaluation and selection (conditional — when HW integration, AI/LLM integration, or framework requirement definition is enabled) -> User approval
 4. design: Parallelize specification Ch3-6 elaboration / OpenAPI specification / security design / observability design / WBS -> Design review
 5. implementation: Implement code and execute tests in parallel following the Git branch strategy -> Code review -> SCA/secret scanning

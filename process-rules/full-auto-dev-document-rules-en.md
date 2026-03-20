@@ -15,7 +15,7 @@ All agents MUST follow these rules when creating or updating managed files.
 
 Regardless of the specification format used by the process (ANMS / ANPS / ANGS), the document management formats in this document (Common Block, Form Block, etc.) apply to all managed documents.
 
-**Related document:** [Process Rules](full-auto-dev-process-rules-en.md) — Process rules for phase definitions, agent definitions, quality management, etc.
+**Related document:** [Process Rules](full-auto-dev-process-rules.md) — Process rules for phase definitions, agent definitions, quality management, etc.
 
 ## 1.1 Versioning of This Document
 
@@ -1107,7 +1107,7 @@ Describe scope and strategy per test level, test case list (ID, target requireme
 
 ### Detail Block Guidance
 
-Describe Specification Ch1 (Foundation: project overview, scope, terminology definitions, assumptions) and Ch2 (Requirements: functional requirements list FR-NNN, non-functional requirements list NFR-NNN, requirement priority matrix). Follow the structure of spec-template-ja.md.
+Describe Specification Ch1 (Foundation: project overview, scope, terminology definitions, assumptions) and Ch2 (Requirements: functional requirements list FR-NNN, non-functional requirements list NFR-NNN, requirement priority matrix). Follow the structure of spec-template.md.
 
 ---
 
@@ -1124,7 +1124,7 @@ Describe Specification Ch1 (Foundation: project overview, scope, terminology def
 
 ### Detail Block Guidance
 
-Describe Specification Ch3 (Architecture: system architecture diagram, layer definitions, component design, data model), Ch4 (Specification: API specifications, sequence diagrams, state transition diagrams), Ch5 (Test Strategy: test approach, coverage targets), Ch6 (Design Principles: adopted design principles and their application points). Follow the structure of spec-template-ja.md.
+Describe Specification Ch3 (Architecture: system architecture diagram, layer definitions, component design, data model), Ch4 (Specification: API specifications, sequence diagrams, state transition diagrams), Ch5 (Test Strategy: test approach, coverage targets), Ch6 (Design Principles: adopted design principles and their application points). Follow the structure of spec-template.md.
 
 ---
 
@@ -1622,7 +1622,7 @@ Language-specific subfolders (`ja/`, `en/`) are not adopted. Reason: When agents
 
 # References
 
-1. full-auto-dev Process Rules — `process-rules/full-auto-dev-process-rules-ja.md`
+1. full-auto-dev Process Rules — `process-rules/full-auto-dev-process-rules.md`
 2. Martin, R.C. "The Clean Architecture" — Stable Dependencies Principle (SDP)
 3. Nygard, M. "Documenting Architecture Decisions" — Reference for ADR format
 ``````

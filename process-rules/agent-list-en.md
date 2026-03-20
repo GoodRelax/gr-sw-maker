@@ -1,8 +1,8 @@
 # Agent List
 
 > **Document purpose:** Single Source of Truth for all agents registered in the full-auto-dev framework. Update this document when adding, modifying, or removing agents.
-> **Derived from:** [Process Rules](full-auto-dev-process-rules-ja.md) §2-4, §7, §9 / [Document Management Rules](full-auto-dev-document-rules-ja.md) §7, §7.1, §11
-> **Related documents:** [Prompt Structure Convention](prompt-structure-ja.md), each agent prompt (`.claude/agents/*.md`)
+> **Derived from:** [Process Rules](full-auto-dev-process-rules.md) §2-4, §7, §9 / [Document Management Rules](full-auto-dev-document-rules.md) §7, §7.1, §11
+> **Related documents:** [Prompt Structure Convention](prompt-structure.md), each agent prompt (`.claude/agents/*.md`)
 
 ---
 
@@ -135,9 +135,9 @@ Derived from Document Management Rules §11. **Each file_type has a single owner
 | Input | Provider | Purpose |
 |-------|----------|---------|
 | (artifacts to be checked) | Each agent | Target for terminology and naming check |
-| glossary-ja.md | framework | Cross-reference with framework glossary |
+| glossary.md | framework | Cross-reference with framework glossary |
 | spec-foundation (Ch1.8 Glossary) | srs-writer | Cross-reference with project glossary |
-| full-auto-dev-document-rules-ja.md §7 | framework | Authoritative definition of file_type names and namespaces |
+| full-auto-dev-document-rules.md §7 | framework | Authoritative definition of file_type names and namespaces |
 
 ### framework-translation-verifier
 
@@ -354,5 +354,5 @@ Which agents are activated in which phases.
 2. Add the assigned file_types to §2 (confirm no overlap with existing agents)
 3. Update the data flow diagram in §3
 4. Update the activation map in §4
-5. Create `.claude/agents/{name}.md` following the [Prompt Structure Convention](prompt-structure-ja.md)
+5. Create `.claude/agents/{name}.md` following the [Prompt Structure Convention](prompt-structure.md)
 6. Update Document Management Rules §7 (file_type table), §7.1 (workflow reference table), and §11 (ownership model)

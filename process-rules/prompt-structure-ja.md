@@ -1,7 +1,7 @@
 # エージェントプロンプト構造規約
 
 > **本文書の位置づけ:** `.claude/agents/*.md` に配置するエージェントプロンプトの唯一の構造定義（Single Source of Truth）。新規エージェント作成時および既存エージェント改修時に参照する。
-> **関連文書:** [プロセス規則](full-auto-dev-process-rules-ja.md) §7 エージェント定義、[文書管理規則](full-auto-dev-document-rules-ja.md)
+> **関連文書:** [プロセス規則](full-auto-dev-process-rules.md) §7 エージェント定義、[文書管理規則](full-auto-dev-document-rules.md)
 
 ---
 
@@ -214,7 +214,7 @@ model: opus | sonnet | haiku | inherit
 **ルール:**
 - サブセクション構成はエージェントごとに自由
 - 必要に応じて `### Constraints`（やってはならないこと）をサブセクションとして置いてよい
-- 大きな規則体系は外部文書に分離し参照リンクを貼る（例: review-agent → review-standards-ja.md）
+- 大きな規則体系は外部文書に分離し参照リンクを貼る（例: review-agent → review-standards.md）
 
 ### 3.6 S6: Exception
 

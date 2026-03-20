@@ -1,7 +1,7 @@
 # レビュー観点規約書（R1〜R6）
 
 > **本文書の位置づけ:** review-agent が参照するレビュー観点の唯一の正（Single Source of Truth）。process-rules §9.2 はこの文書の要約であり、詳細は本文書を参照する。
-> **関連文書:** [プロセス規則](full-auto-dev-process-rules-ja.md) §9 品質管理フレームワーク、[文書管理規則](full-auto-dev-document-rules-ja.md)
+> **関連文書:** [プロセス規則](full-auto-dev-process-rules.md) §9 品質管理フレームワーク、[文書管理規則](full-auto-dev-document-rules.md)
 
 ---
 

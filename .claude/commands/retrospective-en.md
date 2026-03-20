@@ -5,7 +5,7 @@ Conduct the following retrospective:
 1. Read all defect tickets from project-records/defects/
 2. Identify recurring defect patterns
 3. Analyze root causes (CMMI CAR process)
-4. Verify conformance with the document management rules (process-rules/full-auto-dev-document-rules-ja.md)
+4. Verify conformance with the document management rules (process-rules/full-auto-dev-document-rules.md)
    - Does the Common Block / Form Block structure match the actual situation?
    - Are there any missing or unnecessary fields?
 5. Record the analysis results and improvement measures in project-records/improvement/retrospective-{today's date}.md

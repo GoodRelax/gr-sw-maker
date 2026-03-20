@@ -207,7 +207,7 @@ This paper proposed the "ANMS" template for near-fully-automated AI development.
 ## References
 
 1. Martin, R.C. "[The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)" — Stable Dependencies Principle (SDP), Stable Abstractions Principle (SAP)
-2. ANGS (AI-Native Graph Spec) — Specification Management and Agent Coordination via Graph Structure (angs-essay-en.md)
+2. ANGS (AI-Native Graph Spec) — Specification Management and Agent Coordination via Graph Structure (angs-essay.md)
 3. Mavin, A., et al. "[EARS: Easy Approach to Requirements Syntax](https://ieeexplore.ieee.org/document/5328509)" — IEEE, 2009
 4. Cucumber. "[Gherkin Reference](https://cucumber.io/docs/gherkin/reference/)"
 5. Starke, G. "[arc42 Architecture Template](https://arc42.org/)"

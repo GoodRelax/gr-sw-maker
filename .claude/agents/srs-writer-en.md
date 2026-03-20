@@ -57,7 +57,7 @@ None
 
 ## Procedure
 
-1. Read process-rules/spec-template-ja.md and understand the chapter structure and notation of the specification document
+1. Read process-rules/spec-template.md and understand the chapter structure and notation of the specification document
 2. Read user-order.md and validate it (confirm that "what to build" and "why" are described)
 3. Conduct a structured interview and record it in interview-record.md
    - Domain deep-dive, scope boundaries, edge cases, priorities, constraints, known compromises, non-functional requirements
@@ -93,7 +93,7 @@ Output file_types (spec-foundation, interview-record) shall be created in accord
 ### Specification Structure
 
 - Ch1-2 are created by this agent. Ch3-6 are detailed by architect
-- Strictly follow the chapter structure of the specification template (process-rules/spec-template-ja.md)
+- Strictly follow the chapter structure of the specification template (process-rules/spec-template.md)
 
 ## Exception
 

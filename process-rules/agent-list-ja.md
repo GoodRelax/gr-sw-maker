@@ -1,8 +1,8 @@
 # エージェント一覧
 
 > **本文書の位置づけ:** full-auto-dev フレームワークに登録された全エージェントの一覧（Single Source of Truth）。エージェントの追加・変更・削除時に本文書を更新する。
-> **導出元:** [プロセス規則](full-auto-dev-process-rules-ja.md) §2-4, §7, §9 / [文書管理規則](full-auto-dev-document-rules-ja.md) §7, §7.1, §11
-> **関連文書:** [プロンプト構造規約](prompt-structure-ja.md)、各エージェントプロンプト（`.claude/agents/*.md`）
+> **導出元:** [プロセス規則](full-auto-dev-process-rules.md) §2-4, §7, §9 / [文書管理規則](full-auto-dev-document-rules.md) §7, §7.1, §11
+> **関連文書:** [プロンプト構造規約](prompt-structure.md)、各エージェントプロンプト（`.claude/agents/*.md`）
 
 ---
 
@@ -135,9 +135,9 @@
 | 入力 | 提供元 | 用途 |
 |------|--------|------|
 | （チェック対象の成果物） | 各エージェント | 用語・命名チェック対象 |
-| glossary-ja.md | framework | フレームワーク用語集との照合 |
+| glossary.md | framework | フレームワーク用語集との照合 |
 | spec-foundation (Ch1.8 Glossary) | srs-writer | プロジェクト用語集との照合 |
-| full-auto-dev-document-rules-ja.md §7 | framework | file_type 名・名前空間の正式定義 |
+| full-auto-dev-document-rules.md §7 | framework | file_type 名・名前空間の正式定義 |
 
 ### framework-translation-verifier
 
@@ -145,7 +145,7 @@
 
 | 入力 | 提供元 | 用途 |
 |------|--------|------|
-| 多言語ファイルペア（`*-en.md` / `*-ja.md`） | framework | 翻訳一致性の検証対象 |
+| 多言語ファイルペア | framework | 翻訳一致性の検証対象 |
 | process-rules/, essays/, README 等 | framework | 構造・テーブル・リンク・コードブロック・用語の一致検証 |
 
 ### user-manual-writer
@@ -354,5 +354,5 @@ kotodama-kun を**使用しない**エージェント:
 2. 担当する file_type を §2 に追加する（既存エージェントとの重複がないことを確認）
 3. §3 のデータフロー図を更新する
 4. §4 のアクティベーションマップを更新する
-5. [プロンプト構造規約](prompt-structure-ja.md) に従い `.claude/agents/{name}.md` を作成する
+5. [プロンプト構造規約](prompt-structure.md) に従い `.claude/agents/{name}.md` を作成する
 6. 文書管理規則 §7（file_type テーブル）、§7.1（ワークフロー参照テーブル）、§11（オーナーシップモデル）を更新する

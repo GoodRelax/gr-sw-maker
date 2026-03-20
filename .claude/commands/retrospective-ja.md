@@ -5,7 +5,7 @@
 1. project-records/defects/ のdefect 票をすべて読み込む
 2. 繰り返し発生しているdefect パターンを特定する
 3. 根本原因を分析する（CMMI CARプロセス）
-4. 文書管理規則（process-rules/full-auto-dev-document-rules-ja.md）の適合性を確認する
+4. 文書管理規則（process-rules/full-auto-dev-document-rules.md）の適合性を確認する
    - Common Block / Form Block の構造は実態に合っているか
    - 不足しているフィールドや不要なフィールドはないか
 5. project-records/improvement/retrospective-{今日の日付}.md に分析結果と改善策を記録する

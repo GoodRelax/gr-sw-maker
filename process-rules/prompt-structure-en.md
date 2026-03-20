@@ -1,7 +1,7 @@
 # Agent Prompt Structure Convention
 
 > **Position of this document:** The single source of truth for the structure definition of agent prompts placed in `.claude/agents/*.md`. Refer to this document when creating new agents or modifying existing ones.
-> **Related documents:** [Process Rules](full-auto-dev-process-rules-ja.md) §7 Agent Definition, [Document Management Rules](full-auto-dev-document-rules-ja.md)
+> **Related documents:** [Process Rules](full-auto-dev-process-rules.md) §7 Agent Definition, [Document Management Rules](full-auto-dev-document-rules.md)
 
 ---
 
@@ -214,7 +214,7 @@ Temporary files used only during work. Document only when they exist.
 **Rules:**
 - Subsection structure is free per agent
 - Optionally add `### Constraints` (things that must not be done) as a subsection
-- Separate large rule systems into external documents and link to them (e.g., review-agent → review-standards-ja.md)
+- Separate large rule systems into external documents and link to them (e.g., review-agent → review-standards.md)
 
 ### 3.6 S6: Exception
 

@@ -21,13 +21,13 @@
 - プロセス記録（レビュー、意思決定、リスク、defect、CR、トレーサビリティ）はproject-records/配下に出力する
 - コードはsrc/配下、テストはtests/配下、IaCはinfra/配下に配置する
 - 運用規則は以下を参照する:
-  - process-rules/full-auto-dev-process-rules-ja.md（プロセス規則: フェーズ定義・品質管理）
-  - process-rules/full-auto-dev-document-rules-ja.md **v0.0.0**（文書管理規則: 命名・ブロック構造・バージョニング。PoC前のPre-release）
-  - process-rules/agent-list-ja.md（エージェント一覧: 名簿・オーナーシップ・データフロー）
-  - process-rules/prompt-structure-ja.md（プロンプト構造規約: S0-S6）
-  - process-rules/glossary-ja.md（用語集: 選定理由・略称判定・紛らわしい対の区別）
-  - process-rules/defect-taxonomy-ja.md（不具合系用語の体系: error/fault/failure/defect/incident/hazard の定義と使い分け）
-  - process-rules/review-standards-ja.md（レビュー観点規約: R1-R6）
+  - process-rules/full-auto-dev-process-rules.md（プロセス規則: フェーズ定義・品質管理）
+  - process-rules/full-auto-dev-document-rules.md **v0.0.0**（文書管理規則: 命名・ブロック構造・バージョニング。PoC前のPre-release）
+  - process-rules/agent-list.md（エージェント一覧: 名簿・オーナーシップ・データフロー）
+  - process-rules/prompt-structure.md（プロンプト構造規約: S0-S6）
+  - process-rules/glossary.md（用語集: 選定理由・略称判定・紛らわしい対の区別）
+  - process-rules/defect-taxonomy.md（不具合系用語の体系: error/fault/failure/defect/incident/hazard の定義と使い分け）
+  - process-rules/review-standards.md（レビュー観点規約: R1-R6）
 
 ## 言語設定
 
@@ -46,7 +46,7 @@
 | 2 | ANPS | AI-Native Plural Spec | 複数Markdownファイル + Common Block | 収まらない、GraphDB不要 |
 | 3 | ANGS | AI-Native Graph Spec | GraphDB + Git（MDはビュー） | 大規模 |
 
-- テンプレート: process-rules/spec-template-ja.md
+- テンプレート: process-rules/spec-template.md
 - setup フェーズでユーザーと規模を判断し、形式を決定する
 
 ## 技術スタック
@@ -118,7 +118,7 @@
 Agent Teamsで作業する場合、以下のロール定義を使用する:
 
 - **Orchestrator Agent（orchestrator）**: プロジェクト全体のオーケストレーション。pipeline-state.md / executive-dashboard.md / final-report.md / decision記録を管理する。フェーズ遷移と品質ゲートを制御する。`.claude/agents/orchestrator.md` で定義
-- **SRS Agent（srs-writer）**: user-order.md（3問形式）+ process-rules/spec-template-ja.md を基に、仕様書を docs/spec/ に作成（Ch1-2 Foundation・Requirements、形式はsetupフェーズで選定）。ユーザーコンセプトを構造化する
+- **SRS Agent（srs-writer）**: user-order.md（3問形式）+ process-rules/spec-template.md を基に、仕様書を docs/spec/ に作成（Ch1-2 Foundation・Requirements、形式はsetupフェーズで選定）。ユーザーコンセプトを構造化する
 - **Architect Agent（architect）**: docs/spec/ の ANMS 仕様書 Ch3-6 を詳細化（Architecture・Specification・Test Strategy・Design Principles）。docs/api/ にOpenAPI仕様を生成する
 - **Security Agent（security-reviewer）**: docs/security/ にセキュリティ設計を作成。実装コードの脆弱性レビューを行う。スキャン結果はproject-records/security/にsecurity-scan-reportとして記録する
 - **Implementer Agent（implementer）**: src/ 配下にコードを実装する。設計文書に従い、Clean Architecture・DIPを遵守する。単体テストも作成する
@@ -158,7 +158,7 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 - ドキュメントの構成
 - defect 修正の方法
 
-## 必須プロセス設定（process-rules/full-auto-dev-process-rules-ja.md 第3章参照）
+## 必須プロセス設定（process-rules/full-auto-dev-process-rules.md 第3章参照）
 
 - 変更管理: 仕様書承認後の変更はchange-managerエージェント経由で処理する
 - リスク管理: planning フェーズ完了時にリスク台帳を作成し、各フェーズ開始時に更新する

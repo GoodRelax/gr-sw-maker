@@ -46,6 +46,7 @@ echo "---"
 
 deploy "$AGENTS_DIR"
 deploy "$COMMANDS_DIR"
+deploy "process-rules"
 
 echo "---"
 if [ "$ERRORS" -gt 0 ]; then

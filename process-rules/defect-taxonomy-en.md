@@ -388,9 +388,9 @@ The top event is structured with OR gates (occurs via any path) and AND gates (o
 
 ---
 
-## 8. Reflection in Glossary (glossary-ja.md)
+## 8. Reflection in Glossary (glossary.md)
 
-The content of this chapter is reflected in [glossary-ja.md](glossary-ja.md).
+The content of this chapter is reflected in [glossary.md](glossary.md).
 
 - Section 1: Registered error, fault, failure, defect (modified), incident, hazard, fault origin
 - Section 4: Registered fault vs defect, failure vs incident, defect vs incident, hazard vs risk
