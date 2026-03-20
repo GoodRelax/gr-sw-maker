@@ -65,6 +65,7 @@
 
 | 対 | 区別 |
 |---|------|
+| gr-sw-maker vs full-auto-dev | gr-sw-maker = ツール名 / リポジトリ名 / npm パッケージ名。full-auto-dev = 手法論名（ツールに依存しない上位概念）。相互に置換してはならない。ツール固有の話題には gr-sw-maker、手法論・プロセスの話題には full-auto-dev を使う |
 | 要求 vs 変更要求 | 要求 = requirement（システムが満たすべき条件）。変更要求 = change request（仕様承認後のユーザー起点の変更リクエスト）。同じ「要求」だが英語では requirement vs request で別語 |
 | 仕様書 vs テンプレート | 仕様書 = プロジェクト固有の成果物（docs/spec/）。テンプレート = フレームワークが提供する雛形（process-rules/spec-template-ja.md） |
 | エージェント vs サブエージェント | エージェント = agent-list に登録された18のロール定義。サブエージェント = Claude Code が起動する子プロセス（エージェントを含む） |

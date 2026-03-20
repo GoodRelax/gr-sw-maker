@@ -12,7 +12,11 @@
       "Bash(npm whoami:*)",
       "Bash(npm info:*)",
       "Bash(rm -rf test-init)",
-      "Bash(npm init:*)"
+      "Bash(npm init:*)",
+      "Bash(wc -l /c/Users/good_/OneDrive/Documents/GitHub/gr-sw-maker/.claude/agents/*-ja.md)",
+      "Bash(wc -l /c/Users/good_/OneDrive/Documents/GitHub/gr-sw-maker/process-rules/*-ja.md)",
+      "Bash(grep -c '```mermaid' defect-taxonomy-ja.md)",
+      "Bash(grep -c '```mermaid' defect-taxonomy-en.md)"
     ]
   }
 }
