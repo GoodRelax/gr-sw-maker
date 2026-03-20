@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "github": {
+      "type": "url",
+      "url": "https://mcp.github.com/sse"
+    },
+    "slack": {
+      "type": "url",
+      "url": "https://mcp.slack.com/sse"
+    }
+  }
+}

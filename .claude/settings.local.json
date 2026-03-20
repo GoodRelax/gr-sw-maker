@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(start \"c:\\\\Users\\\\good_\\\\OneDrive\\\\Documents\\\\GitHub\\\\gr-sw-maker\\\\docs\")",
+      "Read(//c/Users/good_/OneDrive/Documents/GitHub/articles/ai-native-spec/**)",
+      "Skill(mcbsmd)",
+      "Skill(mcbsmd:*)",
+      "Bash(start \"\" \"c:\\\\Users\\\\good_\\\\OneDrive\\\\Documents\\\\GitHub\\\\gr-sw-maker\\\\docs\")",
+      "Bash(ls -d /c/Users/good_/OneDrive/Documents/GitHub/gr-sw-maker/project-records/*/)",
+      "Bash(grep -rn \"ドメイン\\\\|UseCase\\\\|Adapter\\\\|フレームワーク層\\\\|Clean Architecture\\\\|レイヤー\\\\|仕訳\" /c/Users/good_/OneDrive/Documents/GitHub/gr-sw-maker/process-rules/*.md)",
+      "Bash(start \"c:\\\\Users\\\\good_\\\\OneDrive\\\\Documents\\\\GitHub\\\\gr-sw-maker\\\\prompt\")",
+      "Bash(rm docs/consistency-final-report-20260315.md docs/document-inventory.md docs/project-consistency-check-20260315.md docs/project-consistency-review-20260315.md)",
+      "Bash(rm project-records/reviews/review-essay-template-consistency-20260315.md project-records/reviews/review-god-view-harmony-check-20260315.md)",
+      "Bash(rm -rf sandbox/)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:www.augmentcode.com)",
+      "WebFetch(domain:deepwiki.com)",
+      "Bash(start \"\" \"C:\\\\Users\\\\good_\\\\OneDrive\\\\Documents\\\\GitHub\\\\gr-sw-maker\\\\essays\\\\research\")",
+      "WebFetch(domain:zenn.dev)",
+      "Bash(grep -i \"model:\" /c/Users/good_/OneDrive/Documents/GitHub/gr-sw-maker/.claude/agents/*.md)",
+      "Bash(grep -i \"claude\\\\|anthropic\" /c/Users/good_/OneDrive/Documents/GitHub/gr-sw-maker/process-rules/*.md)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\good_\\OneDrive\\Documents\\GitHub\\articles\\ai-native-spec",
+      "c:\\Users\\good_\\OneDrive\\Documents\\GitHub\\gr-sw-maker\\.claude\\agents"
+    ]
+  }
+}
