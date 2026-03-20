@@ -57,6 +57,7 @@ model: sonnet
 3. スコア6以上のリスクについて軽減策を定義する
 4. 各フェーズ開始時にリスク台帳を更新する
 5. 新規リスク発生時は即座に orchestrator に報告する
+6. kotodama-kun に用語チェックを依頼する（risk）
 
 ## Rules
 

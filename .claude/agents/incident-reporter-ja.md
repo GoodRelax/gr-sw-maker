@@ -58,7 +58,8 @@ model: sonnet
 4. runbook との乖離がないか確認する
 5. 再発防止策を策定する
 6. インシデント報告書を project-records/incidents/ に作成する
-7. review-agent にレビューを依頼する
+7. kotodama-kun に用語チェックを依頼する（incident-report）
+8. review-agent にレビューを依頼する
 
 ## Rules
 

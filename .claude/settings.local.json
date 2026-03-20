@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -n \"^\\\\`\\\\`\\\\`mermaid\" \"C:\\\\Users\\\\good_\\\\OneDrive\\\\Documents\\\\GitHub\\\\gr-sw-maker\\\\process-rules\\\\full-auto-dev-process-rules-ja.md\")",
+      "Bash(grep -n \"^\\\\`\\\\`\\\\`mermaid\" \"C:\\\\Users\\\\good_\\\\OneDrive\\\\Documents\\\\GitHub\\\\gr-sw-maker\\\\process-rules\\\\full-auto-dev-document-rules-ja.md\")",
+      "Bash(grep -n \"^#\\\\|^\\\\`\\\\`\\\\`mermaid\\\\|^\\\\|\")",
+      "Bash(grep -B 20 \"^\\\\`\\\\`\\\\`mermaid\" \"C:\\\\Users\\\\good_\\\\OneDrive\\\\Documents\\\\GitHub\\\\gr-sw-maker\\\\process-rules\\\\full-auto-dev-process-rules-ja.md\")"
+    ]
+  }
+}

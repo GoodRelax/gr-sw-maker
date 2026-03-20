@@ -42,6 +42,10 @@ model: opus
 | spec-architecture | architect | R2/R4/R5 レビュー対象 |
 | （src/） | implementer | R2/R3/R4/R5 レビュー対象 |
 | （tests/） | test-engineer | R6 レビュー対象 |
+| test-plan | test-engineer | R6 テスト計画の妥当性レビュー |
+| performance-report | test-engineer | R5 性能テスト結果のレビュー |
+| traceability | test-engineer | R1 要求-テスト間トレースの完全性レビュー |
+| security-scan-report | security-reviewer | セキュリティスキャン結果のレビュー |
 | review-standards-ja.md | framework | R1-R6 の詳細チェック項目 |
 
 ### Out

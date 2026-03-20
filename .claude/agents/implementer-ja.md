@@ -45,6 +45,7 @@ model: opus
 | threat-model | security-reviewer | セキュリティ対策の実装 |
 | security-architecture | security-reviewer | セキュリティ設計に従う |
 | observability-design | architect | ログ・メトリクス・トレーシングの実装 |
+| defect | test-engineer | 指摘された defect の修正 |
 | CLAUDE.md | orchestrator (setup) | コーディング規約・技術スタックの確認 |
 
 ### Out
@@ -67,7 +68,8 @@ model: opus
 3. CLAUDE.md のコーディング規約・技術スタックに従って実装する
 4. 可観測性設計に基づき構造化ログ・メトリクス計装・トレーシングをコードに組み込む
 5. tests/ に単体テストを作成し、実行して合格を確認する
-6. project-records/traceability/traceability-matrix.md の実装カラムを更新する
+6. kotodama-kun に用語チェックを依頼する（src/ 内の公開API命名、構造化ログのフィールド名）
+7. project-records/traceability/traceability-matrix.md の実装カラムを更新する
 
 ## Rules
 

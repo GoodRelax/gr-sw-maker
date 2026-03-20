@@ -65,6 +65,7 @@ model: sonnet
 6. コスト（APIトークン消費）を追跡する
 7. ボトルネック領域を特定し orchestrator に報告する
 8. エージェント応答を監視する（タイムアウト・循環待機の検知）
+9. kotodama-kun に用語チェックを依頼する（progress, wbs）
 
 ## Rules
 

@@ -71,6 +71,7 @@ model: sonnet
 6. カバレッジレポートを生成する
 7. テスト消化曲線データを更新する
 8. defect 発見時はdefect 票を作成する
+9. kotodama-kun に用語チェックを依頼する（test-plan, defect, performance-report）
 
 ## Rules
 

@@ -65,6 +65,8 @@
 | framework-requirement-spec | docs/framework/ | 単 | design（条件付き） |
 | disaster-recovery-plan | docs/operations/ | 単 | design |
 
+> architect は上記 file_type に加え、openapi.yaml（docs/api/）を生成・管理する。openapi.yaml は外部ツール規定形式（文書管理規則 §13）であり file_type ではないが、implementer と test-engineer が消費する。
+
 ### security-reviewer
 
 | file_type | ディレクトリ | 単/連 | 主要フェーズ |
@@ -179,7 +181,7 @@
 
 ## 3. エージェント間データフロー
 
-file_type の流れでエージェント間の依存関係を示す。
+file_type およびアクションの流れでエージェント間の依存関係を示す。
 
 **エージェント間データフロー:**
 
@@ -197,20 +199,14 @@ flowchart TD
     CM["change-manager"]
     RM["risk-manager"]
     Lic["license-checker"]
-    Koto["kotodama-kun"]
     FTV["framework-translation-verifier"]
-    UMW["user-manual-writer"]
-    RBW["runbook-writer"]
-    IR["incident-reporter"]
     PI["process-improver"]
     DW["decree-writer"]
 
     User -->|"user-order"| SRS
-    SRS -->|"spec-foundation<br/>interview-record"| Koto
-    Koto -->|"用語チェック済"| Arch
+    SRS -->|"spec-foundation<br/>interview-record"| Arch
     SRS -->|"spec-foundation"| Rev
-    Arch -->|"spec-architecture<br/>observability-design"| Koto
-    Koto -->|"用語チェック済"| Impl
+    Arch -->|"spec-architecture<br/>observability-design"| Impl
     Arch -->|"spec-architecture"| Rev
     Arch -->|"spec-architecture"| Sec
     Sec -->|"threat-model<br/>security-architecture"| Impl
@@ -224,18 +220,17 @@ flowchart TD
     RM -->|"risk"| Orch
     CM -->|"change-request"| Orch
     Lic -->|"license-report"| Orch
-    Koto -->|"用語指摘"| Orch
     Orch -->|"decision"| Arch
     Orch -->|"executive-dashboard<br/>final-report"| User
-    User -->|"変更要求"| CM
-    FTV -->|"review<br/>翻訳検証結果"| Orch
-    UMW -->|"user-manual"| Orch
-    RBW -->|"runbook"| Orch
-    IR -->|"incident-report"| Orch
-    Orch -->|"ふりかえり起動"| PI
+    User -->|"&lt;&lt;action&gt;&gt;<br/>change-request-input"| CM
+    FTV -->|"review"| Orch
+    Orch -->|"&lt;&lt;action&gt;&gt;<br/>retrospective-trigger"| PI
     PI -->|"retrospective-report"| Orch
-    Orch -->|"承認済み改善策"| DW
-    DW -->|"適用完了報告"| Orch
+    Orch -->|"&lt;&lt;action&gt;&gt;<br/>approved-improvement"| DW
+    DW -->|"&lt;&lt;action&gt;&gt;<br/>apply-completion"| Orch
+    Arch -->|"openapi.yaml"| Test
+    Impl -->|"src/"| Sec
+    Test -->|"test-progress.json<br/>defect-curve.json"| PM
 
     style User fill:#1a5276,stroke:#333,color:#fff
     style Orch fill:#FF8C00,stroke:#333,color:#000
@@ -249,16 +244,86 @@ flowchart TD
     style CM fill:#d5dbdb,stroke:#333,color:#000
     style RM fill:#d5dbdb,stroke:#333,color:#000
     style Lic fill:#d5dbdb,stroke:#333,color:#000
-    style Koto fill:#af7ac5,stroke:#333,color:#fff
     style FTV fill:#af7ac5,stroke:#333,color:#fff
-    style UMW fill:#87CEEB,stroke:#333,color:#000
-    style RBW fill:#87CEEB,stroke:#333,color:#000
-    style IR fill:#87CEEB,stroke:#333,color:#000
     style PI fill:#F0E68C,stroke:#333,color:#000
     style DW fill:#F0E68C,stroke:#333,color:#000
 ```
 
-上図はプロセス規約から導出したエージェント間のデータフローを示す。矢印のラベルは受け渡される file_type。色はフェーズの早さに対応: 橙（全フェーズ）→ ゴールド（planning/design）→ 緑（implementation/testing）→ 灰（プロセス管理）→ 紫（品質保証）→ 水色（文書作成）→ カーキ（プロセス改善）。
+上図はプロセス規約から導出したエージェント間のメインデータフローを示す。矢印のラベルは受け渡される file_type またはアクションを示す。DocWriter系（文書作成エージェント）と kotodama-kun（用語チェック）は別図を参照。
+
+**DocWriter系（文書作成エージェント）:**
+
+```mermaid
+flowchart LR
+    SRS["srs-writer"] -->|"spec-foundation"| UMW
+    Arch["architect"] -->|"spec-architecture"| UMW
+    Arch -->|"spec-architecture<br/>observability-design<br/>disaster-recovery-plan"| RBW
+    Sec["security-reviewer"] -->|"threat-model"| RBW
+    UMW["user-manual-writer"] -->|"user-manual"| Orch["orchestrator"]
+    RBW["runbook-writer"] -->|"runbook"| Orch
+    IR["incident-reporter"] -->|"incident-report"| Orch
+
+    style UMW fill:#87CEEB,stroke:#333,color:#000
+    style RBW fill:#87CEEB,stroke:#333,color:#000
+    style IR fill:#87CEEB,stroke:#333,color:#000
+    style Orch fill:#FF8C00,stroke:#333,color:#000
+```
+
+delivery フェーズで user-manual-writer と runbook-writer が起動される。入力として上流エージェントの設計文書を参照し、成果物を orchestrator に納品する。incident-reporter は operation フェーズで起動される。
+
+**kotodama-kun（用語チェック）:**
+
+```mermaid
+flowchart LR
+    SRS["srs-writer"] -.-> Koto
+    Arch["architect"] -.-> Koto
+    Sec["security-reviewer"] -.-> Koto
+    Impl["implementer"] -.-> Koto
+    Test["test-engineer"] -.-> Koto
+    PM["progress-monitor"] -.-> Koto
+    RM["risk-manager"] -.-> Koto
+    IR["incident-reporter"] -.-> Koto
+    UMW["user-manual-writer"] -.-> Koto
+    RBW["runbook-writer"] -.-> Koto
+
+    Koto["kotodama-kun"] -.->|"terminology-issue"| Orch["orchestrator"]
+
+    style Koto fill:#af7ac5,stroke:#333,color:#fff
+    style Orch fill:#FF8C00,stroke:#333,color:#000
+```
+
+Out を生成する全エージェントが受け渡し前に kotodama-kun へ用語チェックを依頼する。重大な用語不整合は review file_type として orchestrator に報告される。詳細は各エージェント定義の Procedure を参照。
+
+**ラベルの区別:**
+
+| ラベル形式 | 意味 | 例 |
+|-----------|------|-----|
+| `file_type名` | file_type の受け渡し（ファイル成果物） | `spec-foundation`, `review`, `retrospective-report` |
+| `<<action>> 名前` | ファイル成果物を伴わないアクション/トリガー | `<<action>> retrospective-trigger`, `<<action>> approved-improvement` |
+
+**アクション一覧:**
+
+| アクションラベル | 発信元 | 受信先 | 説明 |
+|----------------|--------|--------|------|
+| change-request-input | User | change-manager | ユーザー起点の変更要求（受付後 change-request file_type として記録） |
+| retrospective-trigger | orchestrator | process-improver | フェーズ完了時のふりかえり起動指示 |
+| approved-improvement | orchestrator | decree-writer | 承認済み改善策の適用指示（decision 記録が根拠） |
+| apply-completion | decree-writer | orchestrator | 改善策の適用完了報告（before/after diff は project-records/improvement/ に記録） |
+
+**kotodama-kun（用語チェック）について:**
+
+kotodama-kun は図中に矢印を持たないが、Out を生成する全エージェントが受け渡し前に用語チェックを依頼する。詳細は各エージェント定義の Procedure を参照。重大な用語不整合は review file_type として orchestrator に報告される。
+
+kotodama-kun を**使用しない**エージェント:
+
+| エージェント | 理由 |
+|------------|------|
+| orchestrator | 自身は file_type の内容を生成しない（管理・転送のみ） |
+| review-agent | 他エージェントの成果物を評価する側 |
+| change-manager | ユーザー起点の変更要求を記録するだけで用語創出が少ない |
+| license-checker | 外部ライセンス名をそのまま記録 |
+| framework-translation-verifier | 翻訳一致性の検証が主務。用語定義自体は変更しない |
+| decree-writer | 承認済み改善策を適用するだけで新規用語を生成しない |
 
 ---
 
