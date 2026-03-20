@@ -462,7 +462,7 @@ The diagram above shows the dependency relationships among the four cognitive op
 
 To address the two challenges identified in Section 1.2 — (1) the context size limitation and (2) managing large specification families — the organizer agent extracts task-level subgraphs from the graph and distributes them to sub-agents.
 
-**Note on the relationship between organizer and lead:** The "organizer" agent referenced in this paper currently corresponds to the "lead" agent defined in the full-auto-dev framework's process rules. "Lead" is used in the context of process management, while "organizer" is used in the context of graph traversal and context distribution. If the graph traversal responsibility becomes independent in the future, the organizer may be separated from lead as a dedicated agent.
+**Note on the relationship between organizer and orchestrator:** The "organizer" agent referenced in this paper currently corresponds to the "orchestrator" agent defined in the full-auto-dev framework's process rules. "Orchestrator" is used in the context of process management, while "organizer" is used in the context of graph traversal and context distribution. If the graph traversal responsibility becomes independent in the future, the organizer may be separated from orchestrator as a dedicated agent.
 
 ### 5.1 Overall Flow
 

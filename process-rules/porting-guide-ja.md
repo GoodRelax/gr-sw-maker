@@ -41,7 +41,7 @@
 | 種別 | 現在のパス | 変換内容 |
 |---|---|---|
 | プロジェクト指示ファイル | `CLAUDE.md` | 対象プラットフォームの指示ファイルにリネーム・移動 |
-| エージェント定義（13本 × 2言語） | `.claude/agents/*-ja.md`, `*-en.md` | 言語選択 → リネーム → フロントマター（YAML）を対象形式に変換。本文（S0-S6）は流用 |
+| エージェント定義（17本 × 2言語） | `.claude/agents/*-ja.md`, `*-en.md` | 言語選択 → リネーム → フロントマター（YAML）を対象形式に変換。本文（S0-S6）は流用 |
 | カスタムコマンド（3本 × 2言語） | `.claude/commands/*-ja.md`, `*-en.md` | 言語選択 → リネーム → 対象プラットフォームの実行方式に変換 |
 | 設定ファイル | `.claude/settings*.json` | 対象プラットフォームの設定形式で新規作成 |
 
@@ -49,16 +49,16 @@
 
 フレームワークはエージェント定義（`.claude/agents/`）とカスタムコマンド（`.claude/commands/`）を日英ペアで提供する。プロジェクトにデプロイする際、以下の4択から選択してサフィックスなしの `.md` にリネームする。
 
-**Claude Code はファイル名からエージェント名を導出する**（`lead-ja.md` → エージェント名 `lead-ja`）。プロジェクトで正しく動作させるには、サフィックスなしの `lead.md` が必要。
+**Claude Code はファイル名からエージェント名を導出する**（`orchestrator-ja.md` → エージェント名 `orchestrator-ja`）。プロジェクトで正しく動作させるには、サフィックスなしの `orchestrator.md` が必要。
 
 ### 選択肢
 
 | # | 操作 | ユースケース | 手順 |
 |:-:|------|------------|------|
-| 1 | `-ja.md` をリネーム | 日本語プロジェクト | `lead-ja.md` → `lead.md` |
-| 2 | `-en.md` をリネーム | 英語プロジェクト | `lead-en.md` → `lead.md` |
-| 3 | `-ja.md` を翻訳 | 日本語ベースで他言語プロジェクト | `lead-ja.md` → 翻訳 → `lead.md` |
-| 4 | `-en.md` を翻訳 | 英語ベースで他言語プロジェクト | `lead-en.md` → 翻訳 → `lead.md` |
+| 1 | `-ja.md` をリネーム | 日本語プロジェクト | `orchestrator-ja.md` → `orchestrator.md` |
+| 2 | `-en.md` をリネーム | 英語プロジェクト | `orchestrator-en.md` → `orchestrator.md` |
+| 3 | `-ja.md` を翻訳 | 日本語ベースで他言語プロジェクト | `orchestrator-ja.md` → 翻訳 → `orchestrator.md` |
+| 4 | `-en.md` を翻訳 | 英語ベースで他言語プロジェクト | `orchestrator-en.md` → 翻訳 → `orchestrator.md` |
 
 ### デプロイ手順
 
@@ -164,8 +164,8 @@ for f in *-ja.md; do cp "$f" "${f%-ja.md}.md"; done
 
 | 役割ランク | Claude | OpenAI | Google | 用途 |
 |---|---|---|---|---|
-| 高（判断・設計） | opus | o3 | gemini-2.5-pro | lead, architect, review-agent, security-reviewer, srs-writer, implementer |
-| 中（定型作業） | sonnet | gpt-4.1 / gpt-4.1-mini | gemini-2.5-flash | test-engineer, progress-monitor, change-manager, risk-manager, framework-translation-verifier |
+| 高（判断・設計） | opus | o3 | gemini-2.5-pro | orchestrator, architect, review-agent, security-reviewer, srs-writer, implementer |
+| 中（定型作業） | sonnet | gpt-4.1 / gpt-4.1-mini | gemini-2.5-flash | test-engineer, progress-monitor, change-manager, risk-manager, framework-translation-verifier, user-manual-writer, runbook-writer, incident-reporter, process-improver |
 | 低（単純ルール） | haiku | gpt-4.1-mini | gemini-2.5-flash | license-checker, kotodama-kun |
 
 > 推奨値はPoC検証で調整すること。各モデルの能力・コスト・速度バランスはプラットフォームごとに異なる。

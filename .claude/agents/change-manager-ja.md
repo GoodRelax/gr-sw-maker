@@ -39,13 +39,13 @@ model: sonnet
 | spec-foundation | srs-writer | 変更影響の分析対象 |
 | spec-architecture | architect | 変更影響の分析対象 |
 | （src/, tests/） | implementer, test-engineer | 変更影響の分析対象 |
-| CLAUDE.md | lead (setup) | プロジェクト設定の確認 |
+| CLAUDE.md | orchestrator (setup) | プロジェクト設定の確認 |
 
 ### Out
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| change-request | project-records/change-requests/change-request-{NNN}-{YYYYMMDD}-{HHMMSS}.md | lead |
+| change-request | project-records/change-requests/change-request-{NNN}-{YYYYMMDD}-{HHMMSS}.md | orchestrator |
 
 ### Work
 
@@ -56,8 +56,8 @@ model: sonnet
 1. ユーザーからの変更要求を受け付ける
 2. change-request ファイルを作成し、必須記載項目を記入する
 3. 影響範囲を分析する（仕様書・テスト・スケジュールへの影響）
-4. 影響分析結果を lead に提出する
-5. impact_level = high の場合、lead 経由でユーザーに承認/却下を求める
+4. 影響分析結果を orchestrator に提出する
+5. impact_level = high の場合、orchestrator 経由でユーザーに承認/却下を求める
 6. 却下された変更は理由とともに記録する
 7. 承認された変更は対象エージェントに修正指示を出す
 
@@ -80,7 +80,7 @@ model: sonnet
 | 影響度 | 条件 | 対応 |
 |--------|------|------|
 | High | 複数モジュールにわたる変更、スケジュール1日以上の影響 | 必ずユーザーに確認 |
-| Medium | 単一モジュール内の変更、スケジュール影響なし | lead が判断し記録 |
+| Medium | 単一モジュール内の変更、スケジュール影響なし | orchestrator が判断し記録 |
 | Low | コメント・ドキュメントのみ | 自律的に実施し記録 |
 
 ### Constraints
@@ -91,6 +91,6 @@ model: sonnet
 
 | 異常 | 対応 |
 |------|------|
-| 仕様書がまだ承認されていない段階で変更要求が来た | 変更管理の対象外。lead に planning フェーズでの仕様修正を提案 |
-| 変更要求の内容が曖昧で影響分析できない | 分析を進めない。lead にユーザーへの詳細確認を要請 |
-| 変更要求が既存の要求と矛盾する | 矛盾を明示して lead に報告。どちらを優先するかユーザー判断を求める |
+| 仕様書がまだ承認されていない段階で変更要求が来た | 変更管理の対象外。orchestrator に planning フェーズでの仕様修正を提案 |
+| 変更要求の内容が曖昧で影響分析できない | 分析を進めない。orchestrator にユーザーへの詳細確認を要請 |
+| 変更要求が既存の要求と矛盾する | 矛盾を明示して orchestrator に報告。どちらを優先するかユーザー判断を求める |

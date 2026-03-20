@@ -48,7 +48,7 @@ model: opus
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| review | project-records/reviews/review-{対象}-{日付}.md | lead, 対象エージェント |
+| review | project-records/reviews/review-{対象}-{日付}.md | orchestrator, 対象エージェント |
 
 ### Work
 
@@ -93,7 +93,7 @@ model: opus
 
 - Critical: **0件**（必須）
 - High: **0件**（必須）
-- Medium: 件数を lead に報告し対応方針の承認を得る
+- Medium: 件数を orchestrator に報告し対応方針の承認を得る
 
 ### FAIL 時のルーティング
 
@@ -118,7 +118,7 @@ model: opus
 
 | 異常 | 対応 |
 |------|------|
-| レビュー対象が不完全（作成途中） | レビューを開始しない。lead に対象の完成を確認 |
-| review-standards-ja.md が見つからない | 作業を開始しない。lead に報告 |
-| Critical 指摘が修正されずに再レビュー依頼が来た | FAIL を維持し、lead に未修正の Critical を報告 |
-| レビュー観点の適用が不明確（複合成果物等） | lead に適用観点の判断を求める |
+| レビュー対象が不完全（作成途中） | レビューを開始しない。orchestrator に対象の完成を確認 |
+| review-standards-ja.md が見つからない | 作業を開始しない。orchestrator に報告 |
+| Critical 指摘が修正されずに再レビュー依頼が来た | FAIL を維持し、orchestrator に未修正の Critical を報告 |
+| レビュー観点の適用が不明確（複合成果物等） | orchestrator に適用観点の判断を求める |

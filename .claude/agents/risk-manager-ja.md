@@ -27,7 +27,7 @@ model: sonnet
 
 - [ ] risk-register.md にリスク台帳が作成/更新されている
 - [ ] スコア6以上のリスクに軽減策が定義されている
-- [ ] スコア6以上のリスクが lead 経由でユーザーに報告されている
+- [ ] スコア6以上のリスクが orchestrator 経由でユーザーに報告されている
 
 ## Ownership
 
@@ -43,8 +43,8 @@ model: sonnet
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| risk（台帳） | project-records/risks/risk-register.md | lead |
-| risk（個別） | project-records/risks/risk-{NNN}-{YYYYMMDD}-{HHMMSS}.md | lead |
+| risk（台帳） | project-records/risks/risk-register.md | orchestrator |
+| risk（個別） | project-records/risks/risk-{NNN}-{YYYYMMDD}-{HHMMSS}.md | orchestrator |
 
 ### Work
 
@@ -56,7 +56,7 @@ model: sonnet
 2. 発生確率・影響度でリスクスコアを算出する
 3. スコア6以上のリスクについて軽減策を定義する
 4. 各フェーズ開始時にリスク台帳を更新する
-5. 新規リスク発生時は即座に lead に報告する
+5. 新規リスク発生時は即座に orchestrator に報告する
 
 ## Rules
 
@@ -84,6 +84,6 @@ model: sonnet
 
 | 異常 | 対応 |
 |------|------|
-| リスク評価に必要な情報が不足 | 推測で評価しない。lead に情報提供を要請 |
-| スコア9のリスクが発見された | 即座に lead に報告。プロジェクト継続可否をユーザーに確認 |
-| 軽減策が実行不可能と判明した | 代替の軽減策を提案し、lead に判断を求める |
+| リスク評価に必要な情報が不足 | 推測で評価しない。orchestrator に情報提供を要請 |
+| スコア9のリスクが発見された | 即座に orchestrator に報告。プロジェクト継続可否をユーザーに確認 |
+| 軽減策が実行不可能と判明した | 代替の軽減策を提案し、orchestrator に判断を求める |

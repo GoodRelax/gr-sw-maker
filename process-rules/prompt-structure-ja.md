@@ -125,7 +125,7 @@ model: opus | sonnet | haiku | inherit
 
 **ルール:**
 - End Conditions の各項目は Ownership の Out に対応しなければならない（MUST）
-- lead エージェントはフェーズ遷移時に End Conditions を検証する
+- orchestrator エージェントはフェーズ遷移時に End Conditions を検証する
 
 ### 3.3 S3: Ownership
 
@@ -225,14 +225,14 @@ model: opus | sonnet | haiku | inherit
 
 | 異常 | 対応 |
 |------|------|
-| {異常条件の説明} | {安全な対応。原則: 推測で進まない。lead に報告する} |
+| {異常条件の説明} | {安全な対応。原則: 推測で進まない。orchestrator に報告する} |
 ```
 
-**共通原則:** わからないときは推測で進まない。lead に報告する。
+**共通原則:** わからないときは推測で進まない。orchestrator に報告する。
 
 **ルール:**
 - Start Conditions 未達、Procedure 中の想定外、End Conditions 達成不能の3類型を網羅する
-- 報告先は原則 lead。lead がユーザーに聞くかどうかは lead の判断
+- 報告先は原則 orchestrator。orchestrator がユーザーに聞くかどうかは orchestrator の判断
 - 対応は「安全側に倒す動作」を記述する（停止する、判断を委ねる、選択肢を提示する等）
 
 ---

@@ -53,7 +53,7 @@ model: sonnet
 | test-plan | project-management/ | review-agent |
 | defect | project-records/defects/ | implementer |
 | traceability | project-records/traceability/ | review-agent |
-| performance-report | project-records/performance/ | review-agent, lead |
+| performance-report | project-records/performance/ | review-agent, orchestrator |
 | test-progress.json | project-management/progress/ | progress-monitor |
 | defect-curve.json | project-management/progress/ | progress-monitor |
 
@@ -93,7 +93,7 @@ model: sonnet
 
 | 異常 | 対応 |
 |------|------|
-| テスト対象コードが存在しない | 作業を開始しない。lead に implementation の完了を確認 |
-| NFR の数値目標が未定義 | 性能テストを保留し、lead に Ch2 への追記を要請 |
-| テスト合格率が基準を下回る | defect を作成し、implementer に修正を依頼。原因が設計に起因する場合は lead に報告 |
-| 性能テストで NFR 未達 | ボトルネックを特定し、defect として記録。lead に報告 |
+| テスト対象コードが存在しない | 作業を開始しない。orchestrator に implementation の完了を確認 |
+| NFR の数値目標が未定義 | 性能テストを保留し、orchestrator に Ch2 への追記を要請 |
+| テスト合格率が基準を下回る | defect を作成し、implementer に修正を依頼。原因が設計に起因する場合は orchestrator に報告 |
+| 性能テストで NFR 未達 | ボトルネックを特定し、defect として記録。orchestrator に報告 |

@@ -110,7 +110,7 @@
 
 Agent Teamsで作業する場合、以下のロール定義を使用する:
 
-- **Lead Agent（orchestrator）**: プロジェクト全体のオーケストレーション。pipeline-state.md / executive-dashboard.md / final-report.md / decision記録を管理する。フェーズ遷移と品質ゲートを制御する。`.claude/agents/lead.md` で定義
+- **Orchestrator Agent（orchestrator）**: プロジェクト全体のオーケストレーション。pipeline-state.md / executive-dashboard.md / final-report.md / decision記録を管理する。フェーズ遷移と品質ゲートを制御する。`.claude/agents/orchestrator.md` で定義
 - **SRS Agent（srs-writer）**: user-order.md（3問形式）+ process-rules/spec-template-ja.md を基に、仕様書を docs/spec/ に作成（Ch1-2 Foundation・Requirements、形式はsetupフェーズで選定）。ユーザーコンセプトを構造化する
 - **Architect Agent（architect）**: docs/spec/ の ANMS 仕様書 Ch3-6 を詳細化（Architecture・Specification・Test Strategy・Design Principles）。docs/api/ にOpenAPI仕様を生成する
 - **Security Agent（security-reviewer）**: docs/security/ にセキュリティ設計を作成。実装コードの脆弱性レビューを行う。スキャン結果はproject-records/security/にsecurity-scan-reportとして記録する
@@ -123,6 +123,10 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 - **License Checker Agent（license-checker）**: 依存ライブラリ追加時にライセンス互換性を確認し、帰属表示を管理する
 - **Kotodama-kun Agent（kotodama-kun）**: 成果物の用語・命名がフレームワーク用語集およびプロジェクト用語集に準拠しているかチェックする
 - **Framework Translation Verifier Agent（framework-translation-verifier）**: リリース前にフレームワーク文書の多言語間翻訳一致性を検証する
+- **User Manual Writer Agent（user-manual-writer）**: delivery フェーズでユーザーマニュアルを docs/ に作成する
+- **Runbook Writer Agent（runbook-writer）**: delivery フェーズで運用手順書を docs/operations/ に作成する
+- **Incident Reporter Agent（incident-reporter）**: operation フェーズでインシデント報告書を project-records/incidents/ に作成する
+- **Process Improver Agent（process-improver）**: 各フェーズ完了時にふりかえりを実施し、defect パターンの根本原因分析とプロセス改善策を提案する
 
 ## 重要判断の基準
 
