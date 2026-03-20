@@ -1,59 +1,62 @@
-# Nearly Fully Automated Software Development Template
+# gr-sw-maker — Nearly Fully Automated Software Development Framework
 
-[Japanese version available here](README-ja.md)
+[Japanese Version](README-ja.md)
 
-A project template that **nearly fully automates** the software development process using AI coding agent multi-agent capabilities. The user only does three things: describe the concept, make key decisions, and accept the deliverables.
+A framework that **nearly fully automates** the software development process using AI coding agent multi-agent capabilities.
 
-## AI Platform Support
+**What you do:** Write a concept → Answer key decisions → Accept the deliverables. That's it.
 
-Default configuration targets **Claude Code** (Anthropic), but the framework is portable to other AI coding agents.
-
-| Status | Platform |
-|---|---|
-| Ready to use | Claude Code |
-| Porting guide available | OpenAI Codex CLI, Gemini CLI, Cursor, Windsurf, Cline, Roo Code, Aider |
-
-**Tell your AI to read the [Porting Guide](process-rules/porting-guide-en.md) and auto-convert.** If it can't handle that, it can't handle this framework.
-
-## Language Support
-
-Default language is English (`-en.md`). Japanese (`-ja.md`) is also included.
-
-To switch to another language, delete the unwanted suffix files and have your AI translate the rest. See [Switching Language](#switching-language) for details.
-
-> Both English and Japanese are maintained in this repository. Consistency between languages is verified by AI agents before each release.
+---
 
 ## Quick Start
 
-### 1. Install
+### 1. Get it
 
 ```bash
+# From npm (recommended)
+npm init gr-sw-maker my-project
+cd my-project
+
+# Or from GitHub
 git clone https://github.com/GoodRelax/gr-sw-maker.git my-project
 cd my-project
 ```
 
-### 2. Switch AI platform (skip if using Claude Code)
+### 2. Choose a language
 
-Have your AI read the [Porting Guide](process-rules/porting-guide-en.md) and auto-convert. See [Switching AI Platform](#switching-ai-platform) for details.
+Framework documents are available in English (`-en.md`) and Japanese (`-ja.md`).
 
-### 3. Switch language (skip if using English)
+| Goal                    | Command                                                        |
+| ----------------------- | -------------------------------------------------------------- |
+| Use in English          | `bash setup.sh en`                                             |
+| Use in Japanese         | `bash setup.sh ja`                                             |
+| Use in another language | `/translate-framework en fr` to translate → `bash setup.sh fr` |
 
-Delete unwanted language files and have your AI translate the rest. See [Switching Language](#switching-language) for details.
+> See [Language Selection](#language-selection) for details.
+
+### 3. Choose an AI platform (skip for Claude Code)
+
+If using an AI other than Claude Code, have your AI read the [Porting Guide](process-rules/porting-guide-en.md) and auto-convert.
+
+> See [Switching AI Platform](#switching-ai-platform) for details.
 
 ### 4. Describe what you want to build
 
-Write your concept in `user-order.md`:
+Answer three questions in `user-order.md`:
 
 ```markdown
-# What I want to build
+## What do you want to build?
 
-## What?
-A web app for managing team tasks — create tasks, assign members, set deadlines, and view progress on a dashboard.
+A web app for managing team tasks — create tasks, assign members, set deadlines,
+and view progress on a dashboard.
 
 ## Why?
-Work is siloed across individuals and no one knows who is doing what. Excel-based tracking has hit its limits.
+
+Work is siloed across individuals and no one knows who is doing what.
+Excel-based tracking has hit its limits.
 
 ## Other preferences
+
 Web-based. Mobile-friendly would be nice.
 ```
 
@@ -63,29 +66,95 @@ Web-based. Mobile-friendly would be nice.
 /full-auto-dev
 ```
 
-The AI proposes a project configuration, conducts a structured interview, generates a specification, and proceeds through design, implementation, testing, and delivery — all automatically.
+The AI auto-generates the project configuration (`CLAUDE.md`), then asks for your review. Once approved, it proceeds through spec writing → design → implementation → testing → delivery automatically.
 
-## Switching AI Platform
+---
 
-If you are not using Claude Code, have your AI read [`process-rules/porting-guide-en.md`](process-rules/porting-guide-en.md) and auto-convert. Roughly:
+## Development Flow
+
+After launch, the AI progresses through 8 phases automatically:
+
+|  #  | Phase                | What the AI does                                 | What you do                     |
+| :-: | -------------------- | ------------------------------------------------ | ------------------------------- |
+|  1  | setup                | Generate project configuration (CLAUDE.md)       | Review & approve                |
+|  2  | planning             | Write specs, conduct structured interviews       | Answer questions, approve specs |
+|  3  | dependency-selection | Propose external dependencies (HW/AI/frameworks) | Approve selections              |
+|  4  | design               | Architecture design, API design, security design | —                               |
+|  5  | implementation       | Code implementation, unit tests                  | —                               |
+|  6  | testing              | Integration tests, E2E tests, performance tests  | —                               |
+|  7  | delivery             | User manual, IaC deployment                      | Approve IaC, acceptance testing |
+|  8  | operation            | Incident response (conditional)                  | —                               |
+
+Quality gates (AI reviews) must pass at each phase boundary before proceeding. Issues are auto-fixed by the AI.
+
+---
+
+## AI Platform Support
+
+Default target is **Claude Code**, but the framework is portable to other AI coding agents.
+
+| Status                  | Platform                                                               |
+| ----------------------- | ---------------------------------------------------------------------- |
+| Ready to use            | Claude Code                                                            |
+| Porting guide available | OpenAI Codex CLI, Gemini CLI, Cursor, Windsurf, Cline, Roo Code, Aider |
+
+### Switching AI Platform
+
+Have your AI read [`process-rules/porting-guide-en.md`](process-rules/porting-guide-en.md) and auto-convert.
 
 - ~70% of files are portable — no changes needed
 - ~15% require find-and-replace (vendor names, model names, paths)
 - ~15% require format conversion (YAML frontmatter only — prompt body is reusable)
 
-## Switching Language
+**If your AI can't handle this conversion, it can't handle this framework.**
 
-1. Delete all files with the unwanted language suffix (e.g., `-ja.md`)
-2. Have your AI translate the remaining `-en.md` files to your target language (e.g., `-fr.md`)
+> If you need both language selection and platform conversion, run **language selection → platform conversion** in that order.
 
-Files without a language suffix (`CLAUDE.md`, `.claude/agents/*.md`, etc.) do not need translation.
+---
+
+## Language Selection
+
+### English / Japanese
+
+Just run the setup script:
+
+```bash
+bash setup.sh en    # English
+bash setup.sh ja    # Japanese
+```
+
+Agent definitions and commands are deployed automatically.
+
+### Other languages
+
+1. Have the AI translate:
+
+```
+/translate-framework en fr
+```
+
+2. Deploy the translated files:
+
+```bash
+bash setup.sh fr
+```
+
+Translation rules (what to translate and what to keep in English) are defined in the command.
+
+---
 
 ## Documentation
 
-- [Process Rules](process-rules/full-auto-dev-process-rules-ja.md) — Phase definitions, agents, quality gates
-- [Document Rules](process-rules/full-auto-dev-document-rules-ja.md) v0.0.0 — Naming, block structure, versioning
-- [Porting Guide](process-rules/porting-guide-en.md) — How to convert to other AI platforms
-- [Spec Format & Design Rationale](essays/) — ANMS / ANPS / ANGS three-tier spec system
+| Document                                                           | Contents                                                           |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| [Process Rules](process-rules/full-auto-dev-process-rules-en.md)   | Phase definitions, agents, quality gates                           |
+| [Document Rules](process-rules/full-auto-dev-document-rules-en.md) | Naming, block structure, versioning                                |
+| [Agent List](process-rules/agent-list-en.md)                       | All agents, ownership, data flow                                   |
+| [Porting Guide](process-rules/porting-guide-en.md)                 | Conversion specs for other AI platforms                            |
+| [Glossary](process-rules/glossary-en.md)                           | Term definitions and rationale                                     |
+| [Essays](essays/)                                                  | Design rationale for the ANMS / ANPS / ANGS three-tier spec system |
+
+---
 
 ## License
 
