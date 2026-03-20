@@ -27,6 +27,7 @@
 | 15 | runbook-writer | 運用手順書（Runbook）の作成 | sonnet | delivery |
 | 16 | incident-reporter | インシデント報告書の作成 | sonnet | operation |
 | 17 | process-improver | ふりかえり・根本原因分析・プロセス改善策の提案 | sonnet | 全フェーズ（フェーズ完了時） |
+| 18 | decree-writer | 承認済み改善策のガバナンスファイルへの安全な適用 | sonnet | 全フェーズ（フェーズ完了時） |
 
 ---
 
@@ -165,6 +166,15 @@
 |-----------|------------|:-----:|------------|
 | retrospective-report | project-records/improvement/ | 連 | 全フェーズ（フェーズ完了時） |
 
+### decree-writer
+
+> decree-writer は file_type を所有しない。適用結果の before/after diff は project-records/improvement/ に記録する（retrospective-report の補足として）。
+
+| 入力 | 提供元 | 用途 |
+|------|--------|------|
+| retrospective-report | process-improver | 適用すべき改善策の参照 |
+| decision | orchestrator | 承認記録の確認 |
+
 ---
 
 ## 3. エージェント間データフロー
@@ -193,6 +203,7 @@ flowchart TD
     RBW["runbook-writer"]
     IR["incident-reporter"]
     PI["process-improver"]
+    DW["decree-writer"]
 
     User -->|"user-order"| SRS
     SRS -->|"spec-foundation<br/>interview-record"| Koto
@@ -223,6 +234,8 @@ flowchart TD
     IR -->|"incident-report"| Orch
     Orch -->|"ふりかえり起動"| PI
     PI -->|"retrospective-report"| Orch
+    Orch -->|"承認済み改善策"| DW
+    DW -->|"適用完了報告"| Orch
 
     style User fill:#1a5276,stroke:#333,color:#fff
     style Orch fill:#FF8C00,stroke:#333,color:#000
@@ -242,6 +255,7 @@ flowchart TD
     style RBW fill:#87CEEB,stroke:#333,color:#000
     style IR fill:#87CEEB,stroke:#333,color:#000
     style PI fill:#F0E68C,stroke:#333,color:#000
+    style DW fill:#F0E68C,stroke:#333,color:#000
 ```
 
 上図はプロセス規約から導出したエージェント間のデータフローを示す。矢印のラベルは受け渡される file_type。色はフェーズの早さに対応: 橙（全フェーズ）→ ゴールド（planning/design）→ 緑（implementation/testing）→ 灰（プロセス管理）→ 紫（品質保証）→ 水色（文書作成）→ カーキ（プロセス改善）。
@@ -255,13 +269,13 @@ flowchart TD
 | フェーズ | 起動されるエージェント | 品質ゲート |
 |---------|---------------------|-----------|
 | setup | orchestrator | CLAUDE.md 承認 |
-| planning | orchestrator, srs-writer, kotodama-kun, review-agent, process-improver | R1 PASS → 仕様書承認 |
+| planning | orchestrator, srs-writer, kotodama-kun, review-agent, process-improver, decree-writer | R1 PASS → 仕様書承認 |
 | dependency-selection | orchestrator, architect, kotodama-kun, license-checker | ユーザー選定承認 |
-| design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, process-improver | R2/R4/R5 PASS |
-| implementation | orchestrator, implementer, test-engineer(単体), security-reviewer(SCA), kotodama-kun, license-checker, review-agent, progress-monitor, process-improver | R2/R3/R4/R5 PASS, SCA クリア |
-| testing | orchestrator, test-engineer, kotodama-kun, review-agent, progress-monitor, process-improver | R6 PASS, 全テスト PASS |
-| delivery | orchestrator, kotodama-kun, review-agent, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver | R1-R6 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
-| operation | orchestrator, security-reviewer(パッチ), progress-monitor, incident-reporter, process-improver | SLA 達成 |
+| design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, process-improver, decree-writer | R2/R4/R5 PASS |
+| implementation | orchestrator, implementer, test-engineer(単体), security-reviewer(SCA), kotodama-kun, license-checker, review-agent, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5 PASS, SCA クリア |
+| testing | orchestrator, test-engineer, kotodama-kun, review-agent, progress-monitor, process-improver, decree-writer | R6 PASS, 全テスト PASS |
+| delivery | orchestrator, kotodama-kun, review-agent, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R6 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
+| operation | orchestrator, security-reviewer(パッチ), progress-monitor, incident-reporter, process-improver, decree-writer | SLA 達成 |
 
 ---
 

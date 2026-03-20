@@ -1482,6 +1482,8 @@ released  → 現ファイルを old/ へ移動 → 新ファイルを作成
 
 **Detail Block例外:** 任意のエージェントが、自分がオーナーでないファイルのDetail Blockに追記してよい（MAY）。ただしchange_logに追記を記録することが条件。
 
+**decree-writer の委任書き込み権限:** decree-writer は file_type を所有しないが、承認済み retrospective-report に基づき、CLAUDE.md・エージェント定義（.claude/agents/）・process-rules/ への書き込みを行う。適用には承認テーブル（CLAUDE.md / process-rules = ユーザー承認、エージェント定義 = orchestrator 承認）に基づく事前承認が必須。全変更の before/after diff を project-records/improvement/ に記録する。
+
 **Handoffのオーナーシップ:** `from` エージェントが作成。`status` が `in-progress` になった後は `to` エージェントがステータスを更新できる。
 
 ---

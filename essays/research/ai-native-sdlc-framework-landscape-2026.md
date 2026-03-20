@@ -127,7 +127,7 @@ flowchart LR
 
 | 軸 | MetaGPT | ④ full-auto-dev |
 |----|---------|-----------------|
-| C1 マルチエージェント | 5役割 | 17役割 |
+| C1 マルチエージェント | 5役割 | 18役割 |
 | C2 SDLC カバー | 要求→コード | 要求→運用（8フェーズ） |
 | C3 品質ゲート | なし（暗黙的） | R1-R6（明示的ブロック） |
 | C4 プロセスガバナンス | SOP ベース（軽量） | リスク/変更/不具合/監査（重厚） |
@@ -162,7 +162,7 @@ flowchart LR
 
 | 軸 | ChatDev | ④ full-auto-dev |
 |----|---------|-----------------|
-| C1 マルチエージェント | 4+役割（CEO, CTO, Programmer, Tester） | 17役割 |
+| C1 マルチエージェント | 4+役割（CEO, CTO, Programmer, Tester） | 18役割 |
 | C2 SDLC カバー | 設計→テスト | 要求→運用（8フェーズ） |
 | C3 品質ゲート | なし | R1-R6（明示的ブロック） |
 | C4 プロセスガバナンス | なし | リスク/変更/不具合/監査 |
@@ -205,7 +205,7 @@ flowchart TD
 
 | 比較軸 | BMAD Method | ④ full-auto-dev |
 |--------|-------------|-----------------|
-| エージェント数 | 12+ | 17 |
+| エージェント数 | 12+ | 18 |
 | 開発方法論 | アジャイル/スクラム | フェーズゲート型（8フェーズ） |
 | 品質ゲート | 部分的（DoD ベース） | R1-R6（6観点、重大度分類、ブロッキング） |
 | リスク管理 | なし | risk-manager + リスク台帳（スコア6以上通知） |
@@ -372,7 +372,7 @@ Category B のプロジェクトは④の「実行インフラ層」として統
 | 軸 | claude-pipeline | ④ full-auto-dev |
 |----|----------------|-----------------|
 | 構造 | .claude/ フォルダベース | .claude/ フォルダベース |
-| エージェント数 | 10 | 17 |
+| エージェント数 | 10 | 18 |
 | 品質ゲート | 3段階（実装品質特化） | R1-R6（6観点、プロセス品質含む） |
 | プロセス管理 | なし | リスク/変更/不具合/監査 |
 | スキル数 | 19（TDD、デバッグ、PR処理等） | 3コマンド（full-auto-dev, check-progress, retrospective） |
@@ -434,8 +434,8 @@ Category D のフレームワークは「エンジン」であり、④のよう
 
 | # | 名称 | Stars | 特徴 | ④との重複度 |
 |---|------|-------|------|------------|
-| 17 | OpenHands | 65,000+ | AI 開発プラットフォーム、$18.8M 調達、87%バグ解決率 | 低（実行ツール） |
-| 17 | Aperant (Auto-Claude) | 小規模 | Electron デスクトップアプリ、Spec→Plan→Code→QA パイプライン | 中（QA ループ類似） |
+| 18 | OpenHands | 65,000+ | AI 開発プラットフォーム、$18.8M 調達、87%バグ解決率 | 低（実行ツール） |
+| 18 | Aperant (Auto-Claude) | 小規模 | Electron デスクトップアプリ、Spec→Plan→Code→QA パイプライン | 中（QA ループ類似） |
 | 18 | GuardKit | 小規模 | 品質ゲート付き AI 開発、カバレッジ80%閾値、RequireKit 統合 | 中（品質ゲート類似） |
 | 19 | OpenAgentsControl | 小規模 | Plan-first + 承認ベース実行、パターン発見 | 低〜中 |
 | 20 | SDLC Copilot | 小規模 | フル SDLC 自動化、予測メンテナンス | 中（SDLC カバー類似） |
@@ -473,7 +473,7 @@ Category D のフレームワークは「エンジン」であり、④のよう
 | 1 | MetaGPT | 4 | 3 | 1 | 2 | 5 | 15 |
 | 2 | ChatDev | 3 | 3 | 1 | 1 | 5 | 13 |
 | 3 | **BMAD Method** | **5** | **4** | **2** | **1** | **4** | **16** |
-| 4 | AI Coding Factory | 4 | 4 | 3 | 3 | 3 | 17 |
+| 4 | AI Coding Factory | 4 | 4 | 3 | 3 | 3 | 18 |
 | 5 | Composio Orchestrator | 3 | 1 | 2 | 1 | 5 | 12 |
 | 6 | Code Conductor | 2 | 1 | 1 | 1 | 5 | 10 |
 | 7 | ccswarm | 3 | 1 | 1 | 1 | 4 | 10 |
@@ -485,8 +485,8 @@ Category D のフレームワークは「エンジン」であり、④のよう
 | 13 | CrewAI | 5 | 1 | 1 | 1 | 4 | 12 |
 | 14 | AutoGen | 5 | 1 | 1 | 1 | 4 | 12 |
 | 15 | Swarm/Agents SDK | 3 | 1 | 1 | 1 | 4 | 10 |
-| 17 | OpenHands | 2 | 2 | 1 | 1 | 5 | 11 |
-| 17 | Aperant | 3 | 3 | 2 | 1 | 4 | 13 |
+| 18 | OpenHands | 2 | 2 | 1 | 1 | 5 | 11 |
+| 18 | Aperant | 3 | 3 | 2 | 1 | 4 | 13 |
 | 18 | GuardKit | 2 | 2 | 3 | 1 | 3 | 11 |
 | 19 | OpenAgentsControl | 2 | 2 | 2 | 1 | 3 | 10 |
 | 20 | SDLC Copilot | 2 | 4 | 1 | 1 | 3 | 11 |
@@ -677,8 +677,8 @@ flowchart TD
 | 13 | D | CrewAI | https://github.com/crewAIInc/crewAI | 45,900 |
 | 14 | D | Microsoft AutoGen | https://github.com/microsoft/autogen | 48,000 |
 | 15 | D | OpenAI Swarm | https://github.com/openai/swarm | 20,000+ |
-| 17 | E | OpenHands | https://github.com/OpenHands/OpenHands | 65,000+ |
-| 17 | E | Aperant | https://github.com/AndyMik90/Aperant | 小規模 |
+| 18 | E | OpenHands | https://github.com/OpenHands/OpenHands | 65,000+ |
+| 18 | E | Aperant | https://github.com/AndyMik90/Aperant | 小規模 |
 | 18 | E | GuardKit | https://github.com/guardkit/guardkit | 小規模 |
 | 19 | E | OpenAgentsControl | https://github.com/darrenhinde/OpenAgentsControl | 小規模 |
 | 20 | E | SDLC Copilot | https://github.com/shubhamprajapati7748/sdlc-copilot | 小規模 |

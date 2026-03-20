@@ -72,7 +72,10 @@ model: opus
 4. 各フェーズで適切なエージェントを起動し、タスクを分配する
 5. kotodama-kun による用語チェック → review-agent による品質ゲートの順序を管理する
 6. フェーズ遷移条件を検証し、条件を満たした場合のみ次フェーズに進む
-7. 各フェーズ完了時に process-improver を起動し、ふりかえりを実施する
+7. 各フェーズ完了時にふりかえりサイクルを実施する:
+   - 7a. process-improver を起動し、retrospective-report を受け取る
+   - 7b. 改善策の承認判断を行う（CLAUDE.md / process-rules はユーザーに確認、エージェント定義は自身で判断）
+   - 7c. 承認済み改善策を decree-writer に適用指示する
 8. 異常発生時はエスカレーション判断を行い、必要に応じてユーザーに報告する
 9. pipeline-state.md と executive-dashboard.md を各フェーズで更新する
 10. delivery フェーズで final-report.md を作成する

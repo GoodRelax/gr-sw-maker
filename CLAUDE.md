@@ -127,6 +127,7 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 - **Runbook Writer Agent（runbook-writer）**: delivery フェーズで運用手順書を docs/operations/ に作成する
 - **Incident Reporter Agent（incident-reporter）**: operation フェーズでインシデント報告書を project-records/incidents/ に作成する
 - **Process Improver Agent（process-improver）**: 各フェーズ完了時にふりかえりを実施し、defect パターンの根本原因分析とプロセス改善策を提案する
+- **Decree Writer Agent（decree-writer）**: 承認済みの改善策をガバナンスファイル（CLAUDE.md、エージェント定義、process-rules）に安全に適用する。自己変更禁止・品質ゲート保護等の安全チェックを経て変更を実行し、before/after diff を記録する
 
 ## 重要判断の基準
 

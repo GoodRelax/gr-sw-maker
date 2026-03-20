@@ -41,7 +41,7 @@
 | 種別 | 現在のパス | 変換内容 |
 |---|---|---|
 | プロジェクト指示ファイル | `CLAUDE.md` | 対象プラットフォームの指示ファイルにリネーム・移動 |
-| エージェント定義（17本 × 2言語） | `.claude/agents/*-ja.md`, `*-en.md` | 言語選択 → リネーム → フロントマター（YAML）を対象形式に変換。本文（S0-S6）は流用 |
+| エージェント定義（18本 × 2言語） | `.claude/agents/*-ja.md`, `*-en.md` | 言語選択 → リネーム → フロントマター（YAML）を対象形式に変換。本文（S0-S6）は流用 |
 | カスタムコマンド（3本 × 2言語） | `.claude/commands/*-ja.md`, `*-en.md` | 言語選択 → リネーム → 対象プラットフォームの実行方式に変換 |
 | 設定ファイル | `.claude/settings*.json` | 対象プラットフォームの設定形式で新規作成 |
 
@@ -165,7 +165,7 @@ for f in *-ja.md; do cp "$f" "${f%-ja.md}.md"; done
 | 役割ランク | Claude | OpenAI | Google | 用途 |
 |---|---|---|---|---|
 | 高（判断・設計） | opus | o3 | gemini-2.5-pro | orchestrator, architect, review-agent, security-reviewer, srs-writer, implementer |
-| 中（定型作業） | sonnet | gpt-4.1 / gpt-4.1-mini | gemini-2.5-flash | test-engineer, progress-monitor, change-manager, risk-manager, framework-translation-verifier, user-manual-writer, runbook-writer, incident-reporter, process-improver |
+| 中（定型作業） | sonnet | gpt-4.1 / gpt-4.1-mini | gemini-2.5-flash | test-engineer, progress-monitor, change-manager, risk-manager, framework-translation-verifier, user-manual-writer, runbook-writer, incident-reporter, process-improver, decree-writer |
 | 低（単純ルール） | haiku | gpt-4.1-mini | gemini-2.5-flash | license-checker, kotodama-kun |
 
 > 推奨値はPoC検証で調整すること。各モデルの能力・コスト・速度バランスはプラットフォームごとに異なる。
