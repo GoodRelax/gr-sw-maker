@@ -13,6 +13,11 @@ AIコーディングエージェントのマルチエージェント機能を活
 ### 1. 入手
 
 ```bash
+# npm から（推奨）
+npm init gr-sw-maker my-project
+cd my-project
+
+# または GitHub から
 git clone https://github.com/GoodRelax/gr-sw-maker.git my-project
 cd my-project
 ```
@@ -23,9 +28,9 @@ cd my-project
 
 | やりたいこと | 操作 |
 |------------|------|
-| 日本語で使う | 何もしない（`-ja.md` がそのまま使える） |
-| 英語で使う | 何もしない（`-en.md` がそのまま使える） |
-| 他の言語で使う | `/translate-framework ja fr` のように AI に翻訳させる |
+| 日本語で使う | `bash setup.sh ja` |
+| 英語で使う | `bash setup.sh en` |
+| 他の言語で使う | `/translate-framework ja fr` で翻訳 → `bash setup.sh fr` |
 
 > 詳細は[言語の選択](#言語の選択)を参照。
 
@@ -108,29 +113,30 @@ AI がプロジェクト構成（`CLAUDE.md`）を自動生成し、あなたに
 
 ### 日本語 / 英語で使う場合
 
-エージェント定義とコマンドのリネームが必要です（AI プラットフォームがファイル名からエージェント名を導出するため）:
+セットアップスクリプトを実行するだけです:
 
 ```bash
-# 日本語の場合
-cd .claude/agents/ && for f in *-ja.md; do cp "$f" "${f%-ja.md}.md"; done
-cd ../commands/ && for f in *-ja.md; do cp "$f" "${f%-ja.md}.md"; done
+bash setup.sh ja    # 日本語
+bash setup.sh en    # 英語
 ```
 
-```bash
-# 英語の場合
-cd .claude/agents/ && for f in *-en.md; do cp "$f" "${f%-en.md}.md"; done
-cd ../commands/ && for f in *-en.md; do cp "$f" "${f%-en.md}.md"; done
-```
+エージェント定義とコマンドが自動でデプロイされます。
 
 ### 他の言語で使う場合
 
-AI に翻訳を指示します:
+1. AI に翻訳を指示:
 
 ```
 /translate-framework ja fr
 ```
 
-翻訳ルール（何を翻訳し、何を英語のまま残すか）はコマンド内に定義済みです。翻訳後、生成されたファイルをリネームしてデプロイしてください。
+2. 翻訳されたファイルをデプロイ:
+
+```bash
+bash setup.sh fr
+```
+
+翻訳ルール（何を翻訳し、何を英語のまま残すか）はコマンド内に定義済みです。
 
 ---
 

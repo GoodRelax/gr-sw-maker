@@ -16,12 +16,5 @@
     "url": "git+https://github.com/GoodRelax/gr-sw-maker.git"
   },
   "author": "GoodRelax",
-  "license": "MIT",
-  "files": [
-    "process-rules/spec-template-ja.md",
-    "process-rules/spec-template-en.md",
-    "README.md",
-    "README-ja.md",
-    "LICENSE"
-  ]
+  "license": "MIT"
 }

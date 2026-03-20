@@ -1,0 +1,18 @@
+# Git/GitHub
+.git/
+.gitignore
+.github/
+
+# Working files
+old/
+prompt/
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Project records (template should be empty)
+project-records/
+project-management/
