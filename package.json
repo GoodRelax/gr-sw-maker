@@ -1,6 +1,6 @@
 {
   "name": "gr-sw-maker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Nearly fully automated software development framework with AI-Native spec templates (ANMS/ANPS/ANGS)",
   "keywords": [
     "ai-native",

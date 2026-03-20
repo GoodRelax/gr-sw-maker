@@ -4,6 +4,9 @@ old/
 # Prompt (working notes, proposals, handoffs)
 prompt/
 
+# Claude Code local settings
+.claude/settings.local.json
+
 # Secrets and keys
 .env
 .env.*
