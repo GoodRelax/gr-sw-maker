@@ -41,8 +41,8 @@ The following are AI-platform-independent. Use them as-is:
 | Type | Current Path | Conversion Details |
 |---|---|---|
 | Project instruction file | `CLAUDE.md` | Rename and move to the target platform's instruction file |
-| Agent definitions (18 files x 2 languages) | `.claude/agents/*-ja.md`, `*-en.md` | Select language -> Rename -> Convert frontmatter (YAML) to target format. Body text (S0-S6) can be reused as-is |
-| Custom commands (3 files x 2 languages) | `.claude/commands/*-ja.md`, `*-en.md` | Select language -> Rename -> Convert to target platform's execution method |
+| Agent definitions (see agent-list §1 for count, x 2 languages) | `.claude/agents/*-ja.md`, `*-en.md` | Select language -> Rename -> Convert frontmatter (YAML) to target format. Body text (S0-S6) can be reused as-is |
+| Custom commands (see `.claude/commands/` for count, x 2 languages) | `.claude/commands/*-ja.md`, `*-en.md` | Select language -> Rename -> Convert to target platform's execution method |
 | Configuration file | `.claude/settings*.json` | Create new file in the target platform's configuration format |
 
 ## Agent and Command Language Selection

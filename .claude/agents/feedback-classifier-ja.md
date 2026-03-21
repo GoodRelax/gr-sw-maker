@@ -3,6 +3,8 @@ name: feedback-classifier
 description: フィードバックを仕様書と照合し defect / CR / 質問に分類する
 tools:
   - Read
+  - Write
+  - Edit
   - Glob
   - Grep
 model: sonnet

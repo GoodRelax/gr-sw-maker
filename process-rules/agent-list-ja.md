@@ -381,6 +381,7 @@ kotodama-kun を**使用しない**エージェント:
 | decree-writer | 承認済み改善策を適用するだけで新規用語を生成しない |
 | feedback-classifier | 仕様書との照合・分類判定のみで用語創出が少ない |
 | field-issue-analyst | 原因分析・対策立案で既存用語を使用するのみ |
+| field-test-engineer | 実機テストの速報的なチケットを記録するのみで用語創出が少ない |
 
 ---
 

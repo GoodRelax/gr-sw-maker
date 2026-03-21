@@ -1615,7 +1615,7 @@ CLAUDE.md に以下を設定する（setup フェーズで AI が提案）:
 
 | Common Block管理対象 | Common Block管理対象外 |
 |---------------------|----------------------|
-| 第7章の全32ファイルタイプ（Form Block付き） | 外部ツール規定形式（.claude/agents/, openapi.yaml等） |
+| 第7章の全ファイルタイプ（Form Block付き） | 外部ツール規定形式（.claude/agents/, openapi.yaml等） |
 | 仕様書（user-order.md, {project}-spec.md） | JSON時系列データ（cost-log, test-progress, defect-curve） |
 | セキュリティ設計文書（threat-model, security-architecture） | ソースコード・テストコード |
 | 可観測性設計文書（observability-design） | 設定ファイル・IaC (Infrastructure as Code) |

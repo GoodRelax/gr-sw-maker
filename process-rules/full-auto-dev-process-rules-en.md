@@ -190,7 +190,7 @@ flowchart TB
     Orch -->|"Escalation<br/>Risk/Cost/Change"| H2
 ```
 
-This diagram shows the overall structure and information flow of fully automated development at the group level. The user participates in the project at three points: concept presentation, critical decisions, and acceptance testing. The orchestrator controls all phases and distributes tasks to five agent groups (Development Core, Process Management, Quality Guard, Document Creation, and Process Improvement — 17 agents in groups, 18 including orchestrator). On escalation paths (risk score >= 6, cost budget 80% reached, change requests with impact_level=high), the orchestrator asks the user for decisions. For detailed file_type data flows between individual agents, refer to agent-list Section 3.
+This diagram shows the overall structure and information flow of fully automated development at the group level. The user participates in the project at three points: concept presentation, critical decisions, and acceptance testing. The orchestrator controls all phases and distributes tasks to five agent groups (Development Core, Process Management, Quality Guard, Document Creation, and Process Improvement — see agent-list §1 for the full roster). On escalation paths (risk score >= 6, cost budget 80% reached, change requests with impact_level=high), the orchestrator asks the user for decisions. For detailed file_type data flows between individual agents, refer to agent-list Section 3.
 
 ### 1.3 Key Claude Code Features Used
 
@@ -1906,7 +1906,7 @@ Define KPIs to track for each phase. progress-monitor reflects these KPIs in the
 
 | Phase | KPI | Target/Criteria | Measurement Method |
 |---------|-----|----------|---------|
-| setup | Conditional process evaluation completion rate | All 12 items evaluated | CLAUDE.md conditional processes section |
+| setup | Conditional process evaluation completion rate | All items evaluated | CLAUDE.md conditional processes section |
 | setup | CLAUDE.md approval | User-approved | User confirmation record |
 | planning | Requirement ID assignment rate | 100% (ID assigned to all FR/NFR) | Specification Ch2 requirements list |
 | planning | R1 PASS rate | Critical/High: 0 | review-agent report |

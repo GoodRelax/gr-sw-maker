@@ -1617,7 +1617,7 @@ Language-specific subfolders (`ja/`, `en/`) are not adopted. Reason: When agents
 
 | Common Block Managed | Not Common Block Managed |
 |---------------------|----------------------|
-| All 32 file types in Chapter 7 (with Form Block) | External tool-dictated formats (.claude/agents/, openapi.yaml, etc.) |
+| All file types in Chapter 7 (with Form Block) | External tool-dictated formats (.claude/agents/, openapi.yaml, etc.) |
 | Specifications (user-order.md, {project}-spec.md) | JSON time-series data (cost-log, test-progress, defect-curve) |
 | Security design documents (threat-model, security-architecture) | Source code and test code |
 | Observability design documents (observability-design) | Configuration files and IaC (Infrastructure as Code) |

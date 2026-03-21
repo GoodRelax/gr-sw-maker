@@ -90,7 +90,7 @@ Launch the following 2 sub-agents **in parallel in the background using the Agen
 
 ### Sub-agent A: Prompt Quality Checker
 
-**Launch method:** `Agent tool` (description: "Prompt quality check for 18 EN agents", run_in_background: true)
+**Launch method:** `Agent tool` (description: "Prompt quality check for EN agents", run_in_background: true)
 
 **Prompt (pass the following as-is):**
 
@@ -102,7 +102,7 @@ No code needs to be written. Read and analyze only.
 
 1. process-rules/agent-list-en.md §1 (agent list table) and §2 (all ownership sections)
 2. process-rules/prompt-structure-en.md (S0-S6 structure conventions)
-3. .claude/agents/*-en.md all 18 files
+3. .claude/agents/*-en.md all 21 files
 
 ## Check Items
 
@@ -145,7 +145,7 @@ Target EN version files primarily (use CLAUDE-en.md).
 ## Check Items
 
 ### C1: Agent Count Consistency
-Search all files for references to "18" (agent count) and verify no differing numbers exist.
+Count the actual rows in agent-list §1 table, then verify all files referencing agent count match that number.
 Targets: CLAUDE-en.md, process-rules/*-en.md, essays/anms-essay-en.md, essays/angs-essay-en.md
 
 ### C2: file_type Name Consistency
@@ -162,7 +162,7 @@ Targets: all .md files
 Verify that the 8 phase names in process-rules/full-auto-dev-process-rules-en.md §2 (setup, planning, dependency-selection, design, implementation, testing, delivery, operation) match the activation map in process-rules/agent-list-en.md §4.
 
 ### C5: file_type Count Consistency
-Search all files to verify that references to the total file_type count (32) are consistent.
+Count the actual rows in full-auto-dev-document-rules §7 file_type master table, then verify all files referencing file_type count match that number.
 
 ## Output Format
 
@@ -185,7 +185,7 @@ Severity definitions:
 Begin reading and reviewing the following core rule files (EN versions) without waiting for sub-agent completion:
 **F01, F02, F03, F04, F05, F06, F07, F09, F10, F12, F15**
 
-> F08 (prompt structure conventions) and F11 (18 agent definitions) have been delegated to Sub-agent A.
+> F08 (prompt structure conventions) and F11 (agent definitions) have been delegated to Sub-agent A.
 > F13-F14 (essays) were verified for translation consistency in Phase 0. Read only if content review is needed.
 > However, if verifying the F04 §3 data flow diagram requires referencing F11 In/Out, read only the necessary agent definitions.
 

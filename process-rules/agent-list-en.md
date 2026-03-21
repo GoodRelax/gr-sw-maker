@@ -381,6 +381,7 @@ Agents that **do not use** kotodama-kun:
 | decree-writer | Only applies approved improvements; does not generate new terminology |
 | feedback-classifier | Only cross-references against spec and classifies; minimal terminology creation |
 | field-issue-analyst | Only uses existing terminology for root cause analysis and solution planning |
+| field-test-engineer | Only records rapid-fire field testing tickets; minimal terminology creation |
 
 ---
 

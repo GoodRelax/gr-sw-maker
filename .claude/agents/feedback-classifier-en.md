@@ -3,6 +3,8 @@ name: feedback-classifier
 description: Classify feedback against spec as defect / CR / question
 tools:
   - Read
+  - Write
+  - Edit
   - Glob
   - Grep
 model: sonnet
