@@ -1,8 +1,9 @@
 # Old
 old/
 
-# Prompt (working notes, proposals, handoffs)
+# Framework development private files (not distributed)
 prompt/
+CLAUDE.md
 
 # Claude Code local settings
 .claude/settings.local.json
@@ -32,4 +33,3 @@ process-rules/*.md
 !process-rules/*-ja.md
 !process-rules/*-en.md
 user-order.md
-CLAUDE.md

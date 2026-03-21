@@ -112,6 +112,11 @@ async function main() {
       fs.writeFileSync(gitignorePath, gi.trimEnd() + "\n");
     }
 
+    // Generate README.md template for the user's project
+    const readmePath = path.join(targetDir, "README.md");
+    const readmeContent = `# ${projectName}\n\n<!-- Write description for your application -->\n`;
+    fs.writeFileSync(readmePath, readmeContent);
+
     console.log("");
     console.log(`Done! Created ${projectName}`);
     console.log("");
