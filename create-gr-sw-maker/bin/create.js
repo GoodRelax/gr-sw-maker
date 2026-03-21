@@ -108,7 +108,7 @@ async function main() {
     console.log("");
     console.log("Next steps:");
     console.log(`  cd ${projectName}`);
-    console.log("  bash setup.sh en        # or: ja");
+    console.log("  node setup.js en        # or: ja");
     console.log("  # Write your concept in user-order.md");
     console.log("  # Launch with /full-auto-dev");
   } catch (err) {

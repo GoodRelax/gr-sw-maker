@@ -28,9 +28,9 @@ cd my-project
 
 | やりたいこと | 操作 |
 |------------|------|
-| 日本語で使う | `bash setup.sh ja` |
-| 英語で使う | `bash setup.sh en` |
-| 他の言語で使う | `/translate-framework ja fr` で翻訳 → `bash setup.sh fr` |
+| 日本語で使う | `node setup.js ja` |
+| 英語で使う | `node setup.js en` |
+| 他の言語で使う | `/translate-framework ja fr` で翻訳 → `node setup.js fr` |
 
 > 詳細は[言語の選択](#言語の選択)を参照。
 
@@ -116,8 +116,8 @@ AI がプロジェクト構成（`CLAUDE.md`）を自動生成し、あなたに
 セットアップスクリプトを実行するだけです:
 
 ```bash
-bash setup.sh ja    # 日本語
-bash setup.sh en    # 英語
+node setup.js ja    # 日本語
+node setup.js en    # 英語
 ```
 
 エージェント定義とコマンドが自動でデプロイされます。
@@ -133,7 +133,7 @@ bash setup.sh en    # 英語
 2. 翻訳されたファイルをデプロイ:
 
 ```bash
-bash setup.sh fr
+node setup.js fr
 ```
 
 翻訳ルール（何を翻訳し、何を英語のまま残すか）はコマンド内に定義済みです。

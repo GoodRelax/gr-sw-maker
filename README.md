@@ -28,9 +28,9 @@ Framework documents are available in English (`-en.md`) and Japanese (`-ja.md`).
 
 | Goal                    | Command                                                        |
 | ----------------------- | -------------------------------------------------------------- |
-| Use in English          | `bash setup.sh en`                                             |
-| Use in Japanese         | `bash setup.sh ja`                                             |
-| Use in another language | `/translate-framework en fr` to translate → `bash setup.sh fr` |
+| Use in English          | `node setup.js en`                                             |
+| Use in Japanese         | `node setup.js ja`                                             |
+| Use in another language | `/translate-framework en fr` to translate → `node setup.js fr` |
 
 > See [Language Selection](#language-selection) for details.
 
@@ -119,8 +119,8 @@ Have your AI read [`process-rules/porting-guide-en.md`](process-rules/porting-gu
 Just run the setup script:
 
 ```bash
-bash setup.sh en    # English
-bash setup.sh ja    # Japanese
+node setup.js en    # English
+node setup.js ja    # Japanese
 ```
 
 Agent definitions and commands are deployed automatically.
@@ -136,7 +136,7 @@ Agent definitions and commands are deployed automatically.
 2. Deploy the translated files:
 
 ```bash
-bash setup.sh fr
+node setup.js fr
 ```
 
 Translation rules (what to translate and what to keep in English) are defined in the command.

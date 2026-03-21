@@ -7,7 +7,7 @@ Scaffold a [gr-sw-maker](https://github.com/GoodRelax/gr-sw-maker) project.
 ```bash
 npm init gr-sw-maker my-project
 cd my-project
-bash setup.sh ja    # or: en
+node setup.js ja    # or: en
 ```
 
 Then write your concept in `user-order.md` and run `/full-auto-dev`.
