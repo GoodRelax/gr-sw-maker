@@ -1,4 +1,3 @@
-``````markdown
 # AI-Native SDLC 自動化フレームワーク ランドスケープ調査 2026
 
 > 調査日: 2026-03-16
@@ -683,4 +682,3 @@ flowchart TD
 | 19 | E | OpenAgentsControl | https://github.com/darrenhinde/OpenAgentsControl | 小規模 |
 | 20 | E | SDLC Copilot | https://github.com/shubhamprajapati7748/sdlc-copilot | 小規模 |
 | 21 | E | Google Smart SDLC | https://github.com/GoogleCloudPlatform/smart-sdlc | 小規模 |
-``````
