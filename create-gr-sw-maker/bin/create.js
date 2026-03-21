@@ -103,6 +103,15 @@ async function main() {
       fs.rmSync(scaffoldDir, { recursive: true, force: true });
     }
 
+    // Clean .gitignore — remove framework-repo-only rules (setup.js deploy outputs)
+    // In user projects, suffix-less files (CLAUDE.md, agents/*.md, etc.) ARE the working files.
+    const gitignorePath = path.join(targetDir, ".gitignore");
+    if (fs.existsSync(gitignorePath)) {
+      let gi = fs.readFileSync(gitignorePath, "utf8");
+      gi = gi.replace(/\n# setup\.js deploy outputs[\s\S]*$/, "\n");
+      fs.writeFileSync(gitignorePath, gi.trimEnd() + "\n");
+    }
+
     console.log("");
     console.log(`Done! Created ${projectName}`);
     console.log("");

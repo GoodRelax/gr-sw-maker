@@ -1,6 +1,14 @@
 #!/usr/bin/env node
 // gr-sw-maker setup script
 // Usage: node setup.js [lang]
+//
+// File conventions:
+//   Source files use language suffixes (*-ja.md, *-en.md) — these are git tracked.
+//   This script copies the selected language to suffix-less files (e.g. CLAUDE-ja.md -> CLAUDE.md).
+//   Suffix-less copies are in .gitignore and must not be committed to the framework repo.
+//   Exception: README.md is tracked directly (required by GitHub).
+//
+// Targets: .claude/agents/, .claude/commands/, process-rules/, and rootFiles below.
 
 const fs = require("fs");
 const path = require("path");

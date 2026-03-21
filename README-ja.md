@@ -137,6 +137,18 @@ node setup.js fr
 
 ---
 
+## フレームワーク開発者向け
+
+gr-sw-maker フレームワーク自体のメンテナンスを行う場合、以下のファイル規約に注意:
+
+- **原本ファイル** は言語サフィックス付き: `*-ja.md`（日本語）と `*-en.md`（英語）。これらが git tracked。
+- **`node setup.js <lang>`** で選択した言語版をサフィックスなしにコピーする（例: `CLAUDE-ja.md` → `CLAUDE.md`）。サフィックスなしのコピーは `.gitignore` に含まれており、コミットしてはならない。
+- **`CLAUDE.md`** は Claude Code の実行時に必須だが、git では追跡しない。clone 後に `node setup.js ja`（または `en`）を実行して生成する。
+- **`README.md`** は唯一の例外 — GitHub の表示に必要なため直接 tracked しており、`setup.js` では生成しない。
+- **`essays/research/*.md`** は単一言語の調査レポート — `setup.js` の生成物ではなく、通常通り tracked。
+
+---
+
 ## ドキュメント
 
 | 文書 | 内容 |
