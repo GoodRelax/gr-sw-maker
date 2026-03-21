@@ -28,6 +28,9 @@
 | 16 | incident-reporter | インシデント報告書の作成 | sonnet | operation |
 | 17 | process-improver | ふりかえり・根本原因分析・プロセス改善策の提案 | sonnet | 全フェーズ（フェーズ完了時） |
 | 18 | decree-writer | 承認済み改善策のガバナンスファイルへの安全な適用 | sonnet | 全フェーズ（フェーズ完了時） |
+| 19 | field-test-engineer | ユーザーとの実機テスト、フィードバック記録、修正後の実機検証 | sonnet | testing（条件付き: 実機テスト有効時） |
+| 20 | feedback-classifier | フィードバックを仕様書と照合し defect / CR / 質問に分類、チケット起票 | sonnet | testing（条件付き: 実機テスト有効時） |
+| 21 | field-issue-analyst | 原因分析（defect）、対策立案（defect / CR）、影響範囲・副作用・代替案比較 | opus | testing（条件付き: 実機テスト有効時） |
 
 ---
 
@@ -181,6 +184,34 @@
 | retrospective-report | process-improver | 適用すべき改善策の参照 |
 | decision | orchestrator | 承認記録の確認 |
 
+### field-test-engineer（条件付き: 実機テスト有効時）
+
+| file_type | ディレクトリ | 単/連 | 主要フェーズ |
+|-----------|------------|:-----:|------------|
+| field-issue | project-records/field-issues/ | 連 | testing |
+
+> field-test-engineer は field-issue の owner。feedback-classifier と field-issue-analyst はチケットに追記する形で情報を蓄積する。詳細は [実機テスト フィードバック管理規則](field-issue-handling-rules.md) を参照。
+
+### feedback-classifier（条件付き: 実機テスト有効時）
+
+> feedback-classifier は file_type を所有しない。field-test-engineer が作成した field-issue チケットに分類結果（`field-issue:type`）を追記する。
+
+| 入力 | 提供元 | 用途 |
+|------|--------|------|
+| field-issue（reported） | field-test-engineer | 分類対象のフィードバック |
+| spec-foundation | srs-writer | 仕様照合（Ch1-2: 要求定義） |
+| spec-architecture | architect | 仕様照合（Ch3-6: 設計仕様） |
+
+### field-issue-analyst（条件付き: 実機テスト有効時）
+
+> field-issue-analyst は file_type を所有しない。field-test-engineer が作成した field-issue チケットに原因分析・対策立案の結果を追記する。
+
+| 入力 | 提供元 | 用途 |
+|------|--------|------|
+| field-issue（classified） | feedback-classifier | 分類済みのフィードバック |
+| src/ | implementer | 原因分析対象のソースコード |
+| spec-foundation, spec-architecture | srs-writer, architect | 影響分析・仕様書更新要否の判定 |
+
 ---
 
 ## 3. エージェント間データフロー
@@ -253,7 +284,50 @@ flowchart TD
     style DW fill:#F0E68C,stroke:#333,color:#000
 ```
 
-上図はプロセス規約から導出したエージェント間のメインデータフローを示す。矢印のラベルは受け渡される file_type またはアクションを示す。DocWriter系（文書作成エージェント）と kotodama-kun（用語チェック）は別図を参照。
+上図はプロセス規約から導出したエージェント間のメインデータフローを示す。矢印のラベルは受け渡される file_type またはアクションを示す。DocWriter系（文書作成エージェント）、kotodama-kun（用語チェック）、実機テスト系は別図を参照。
+
+**実機テスト系（条件付き: 実機テスト有効時）:**
+
+```mermaid
+flowchart TD
+    User["User"]
+    FTE["field-test-engineer"]
+    FC["feedback-classifier"]
+    FIA["field-issue-analyst"]
+    Orch["orchestrator"]
+    SRS["srs-writer"]
+    Arch["architect"]
+    Impl["implementer"]
+    Rev["review-agent"]
+    Test["test-engineer"]
+
+    User -->|"フィードバック"| FTE
+    FTE -->|"field-issue<br/>reported"| FC
+    FC -->|"field-issue<br/>classified"| FIA
+    FIA -->|"field-issue<br/>solution_proposed"| Orch
+    Orch -->|"field-issue<br/>approved"| SRS
+    Orch -->|"field-issue<br/>approved"| Arch
+    SRS -->|"spec-foundation<br/>updated"| Rev
+    Arch -->|"spec-architecture<br/>updated"| Rev
+    Rev -->|"review<br/>spec PASS"| Impl
+    Impl -->|"src/"| Rev
+    Rev -->|"review<br/>code PASS"| Test
+    Test -->|"自動テスト結果"| FTE
+    FTE -->|"field-issue<br/>verified"| Orch
+
+    style User fill:#1a5276,stroke:#333,color:#fff
+    style FTE fill:#E8DAEF,stroke:#333,color:#000
+    style FC fill:#E8DAEF,stroke:#333,color:#000
+    style FIA fill:#E8DAEF,stroke:#333,color:#000
+    style Orch fill:#FF8C00,stroke:#333,color:#000
+    style SRS fill:#FFD700,stroke:#333,color:#000
+    style Arch fill:#FFD700,stroke:#333,color:#000
+    style Impl fill:#90EE90,stroke:#333,color:#000
+    style Rev fill:#f9e79f,stroke:#333,color:#000
+    style Test fill:#90EE90,stroke:#333,color:#000
+```
+
+紫色のノードが実機テスト系の新規エージェント。本図は条件付きプロセス「実機テスト」が有効な場合にのみアクティベートされる。詳細なステータス遷移フローは [実機テスト フィードバック管理規則](field-issue-handling-rules.md) を参照。
 
 **DocWriter系（文書作成エージェント）:**
 
@@ -328,6 +402,8 @@ kotodama-kun を**使用しない**エージェント:
 | license-checker | 外部ライセンス名をそのまま記録 |
 | framework-translation-verifier | 翻訳一致性の検証が主務。用語定義自体は変更しない |
 | decree-writer | 承認済み改善策を適用するだけで新規用語を生成しない |
+| feedback-classifier | 仕様書との照合・分類判定のみで用語創出が少ない |
+| field-issue-analyst | 原因分析・対策立案で既存用語を使用するのみ |
 
 ---
 
@@ -342,7 +418,7 @@ kotodama-kun を**使用しない**エージェント:
 | dependency-selection | orchestrator, architect, kotodama-kun, license-checker | ユーザー選定承認 |
 | design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, process-improver, decree-writer | R2/R4/R5 PASS |
 | implementation | orchestrator, implementer, test-engineer(単体), security-reviewer(SCA), kotodama-kun, license-checker, review-agent, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5 PASS, SCA クリア |
-| testing | orchestrator, test-engineer, kotodama-kun, review-agent, progress-monitor, process-improver, decree-writer | R6 PASS, 全テスト PASS |
+| testing | orchestrator, test-engineer, kotodama-kun, review-agent, progress-monitor, process-improver, decree-writer, field-test-engineer(条件付き), feedback-classifier(条件付き), field-issue-analyst(条件付き) | R6 PASS, 全テスト PASS |
 | delivery | orchestrator, kotodama-kun, review-agent, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R6 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
 | operation | orchestrator, security-reviewer(パッチ), progress-monitor, incident-reporter, process-improver, decree-writer | SLA 達成 |
 
