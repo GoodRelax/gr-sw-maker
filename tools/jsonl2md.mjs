@@ -1,0 +1,225 @@
+#!/usr/bin/env node
+/**
+ * jsonl2md - Convert Claude Code session JSONL to readable Markdown.
+ *
+ * JSONL files are stored by Claude Code at:
+ *   ~/.claude/projects/<project-key>/<session-id>.jsonl
+ *
+ * Usage:
+ *   node jsonl2md.mjs <input.jsonl> [output.md]
+ *
+ * Arguments:
+ *   input.jsonl   Path to the Claude Code session JSONL file.
+ *   output.md     (Optional) Output Markdown path.
+ *                 Defaults to <input-basename>.md in the same directory.
+ *
+ * Examples:
+ *   node jsonl2md.mjs session.jsonl
+ *   node jsonl2md.mjs ~/.claude/projects/my-project/abc123.jsonl ./transcript.md
+ *
+ * Output format:
+ *   - User messages shown under "## User" headings
+ *   - Assistant text shown under "## Assistant" headings
+ *   - Tool calls summarized as a quoted list (file paths, commands, etc.)
+ *   - Internal thinking blocks are omitted
+ *   - System tags (system-reminder, command-message, etc.) are stripped
+ */
+
+import { readFileSync, writeFileSync } from "node:fs";
+import { basename, resolve, dirname, join } from "node:path";
+
+const HELP_TEXT = `
+jsonl2md - Convert Claude Code session JSONL to readable Markdown.
+
+JSONL files are stored by Claude Code at:
+  ~/.claude/projects/<project-key>/<session-id>.jsonl
+
+Usage:
+  node jsonl2md.mjs <input.jsonl> [output.md]
+
+Arguments:
+  input.jsonl   Path to the Claude Code session JSONL file.
+  output.md     (Optional) Output Markdown path.
+                Defaults to <input-basename>.md in the same directory.
+
+Examples:
+  node jsonl2md.mjs session.jsonl
+  node jsonl2md.mjs ~/.claude/projects/my-project/abc123.jsonl ./transcript.md
+`.trim();
+
+/* -- CLI args ------------------------------------------------------------ */
+const inputPath = process.argv[2];
+if (!inputPath || inputPath === "--help" || inputPath === "-h") {
+  console.log(HELP_TEXT);
+  process.exit(inputPath ? 0 : 1);
+}
+
+const outputPath =
+  process.argv[3] ??
+  join(dirname(inputPath), basename(inputPath, ".jsonl") + ".md");
+
+/* -- Read JSONL ---------------------------------------------------------- */
+const raw = readFileSync(resolve(inputPath), "utf8");
+const entries = raw
+  .trim()
+  .split("\n")
+  .map((line) => {
+    try {
+      return JSON.parse(line);
+    } catch {
+      return null;
+    }
+  })
+  .filter(Boolean);
+
+/* -- Session metadata ---------------------------------------------------- */
+const firstUserEntry = entries.find((e) => e.type === "user");
+const sessionId = firstUserEntry?.sessionId ?? "unknown";
+const startTimestamp = firstUserEntry?.timestamp;
+
+/* -- Helpers -------------------------------------------------------------- */
+
+/** Format epoch ms as local datetime string. */
+function formatTimestamp(ms) {
+  if (!ms) return "";
+  return new Date(ms).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
+}
+
+/** Strip <system-reminder> tags from text. */
+function stripSystemTags(text) {
+  return text.replace(/<system-reminder>[\s\S]*?<\/system-reminder>/g, "").trim();
+}
+
+/** Clean up user-facing markup tags injected by the CLI harness. */
+function cleanUserMarkup(text) {
+  return text
+    .replace(/<command-message>[\s\S]*?<\/command-message>/g, "")
+    .replace(/<command-name>(\/[\w-]+)<\/command-name>/g, "`$1`")
+    .replace(/<local-command-caveat>[\s\S]*?<\/local-command-caveat>/g, "")
+    .replace(/<task-notification>[\s\S]*?<\/task-notification>/g, "[Agent task completed]")
+    .trim();
+}
+
+/** Produce a one-line summary of a tool_use block. */
+function summarizeToolUse(block) {
+  const toolName = block.name ?? "unknown";
+  const input = block.input ?? {};
+
+  switch (toolName) {
+    case "Read":
+      return `Read: \`${input.file_path ?? "?"}\``;
+    case "Write":
+      return `Write: \`${input.file_path ?? "?"}\``;
+    case "Edit":
+      return `Edit: \`${input.file_path ?? "?"}\``;
+    case "Glob":
+      return `Glob: \`${input.pattern ?? "?"}\``;
+    case "Grep":
+      return `Grep: \`${input.pattern ?? "?"}\``;
+    case "Bash":
+      return `Bash: \`${truncate(input.command ?? "?", 80)}\``;
+    case "Agent":
+      return `Agent: ${input.description ?? truncate(input.prompt ?? "?", 60)}`;
+    case "TodoWrite":
+      return "TodoWrite";
+    default:
+      return toolName;
+  }
+}
+
+/** Truncate a string with ellipsis. */
+function truncate(str, maxLen) {
+  return str.length > maxLen ? str.substring(0, maxLen) + "..." : str;
+}
+
+/** Extract text from a message content field (string or array). */
+function extractText(content) {
+  if (typeof content === "string") return content;
+  if (Array.isArray(content)) {
+    return content
+      .filter((b) => b.type === "text")
+      .map((b) => b.text)
+      .join("\n");
+  }
+  return "";
+}
+
+/* -- Main conversion ----------------------------------------------------- */
+const md = [];
+
+md.push("# Session Transcript");
+md.push("");
+md.push(`- **Session ID**: \`${sessionId}\``);
+if (startTimestamp) {
+  md.push(`- **Started**: ${formatTimestamp(startTimestamp)}`);
+}
+md.push("- **Generated by**: jsonl2md");
+md.push("");
+md.push("---");
+md.push("");
+
+for (const entry of entries) {
+  /* -- User message ------------------------------------------------------ */
+  if (entry.type === "user" && entry.message) {
+    let text = extractText(entry.message.content);
+    text = stripSystemTags(text);
+    text = cleanUserMarkup(text);
+    if (!text) continue;
+
+    const ts = formatTimestamp(entry.timestamp);
+    md.push(`## User${ts ? ` (${ts})` : ""}`);
+    md.push("");
+    md.push(text);
+    md.push("");
+  }
+
+  /* -- Assistant message -------------------------------------------------- */
+  if (entry.type === "assistant" && entry.message) {
+    const content = entry.message.content;
+    if (!Array.isArray(content)) continue;
+
+    const textParts = [];
+    const toolSummaries = [];
+
+    for (const block of content) {
+      if (block.type === "text" && block.text?.trim()) {
+        const cleaned = stripSystemTags(block.text).trim();
+        if (cleaned) textParts.push(cleaned);
+      }
+      if (block.type === "tool_use") {
+        toolSummaries.push(summarizeToolUse(block));
+      }
+      // "thinking" blocks are internal reasoning -- omit from transcript
+    }
+
+    if (textParts.length === 0 && toolSummaries.length === 0) continue;
+
+    const ts = formatTimestamp(entry.timestamp);
+    md.push(`## Assistant${ts ? ` (${ts})` : ""}`);
+    md.push("");
+
+    if (toolSummaries.length > 0) {
+      md.push("> **Tools used:**");
+      for (const summary of toolSummaries) {
+        md.push(`> - ${summary}`);
+      }
+      md.push("");
+    }
+
+    for (const part of textParts) {
+      md.push(part);
+      md.push("");
+    }
+  }
+}
+
+/* -- Write output -------------------------------------------------------- */
+writeFileSync(resolve(outputPath), md.join("\n"), "utf8");
+
+const userCount = entries.filter((e) => e.type === "user").length;
+const assistantCount = entries.filter((e) => e.type === "assistant").length;
+
+console.log(`Done: ${resolve(outputPath)}`);
+console.log(
+  `  ${userCount} user / ${assistantCount} assistant messages (${entries.length} total entries)`
+);
