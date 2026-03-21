@@ -10,6 +10,8 @@ A framework that **nearly fully automates** the software development process usi
 
 ## Quick Start
 
+> See [Setup Flow](#setup-flow) for the full picture.
+
 ### 1. Get it
 
 ```bash
@@ -24,15 +26,11 @@ cd my-project
 
 ### 2. Choose a language
 
-Framework documents are available in English (`-en.md`) and Japanese (`-ja.md`).
+```bash
+node setup.js
+```
 
-| Goal                    | Command                                                        |
-| ----------------------- | -------------------------------------------------------------- |
-| Use in English          | `node setup.js en`                                             |
-| Use in Japanese         | `node setup.js ja`                                             |
-| Use in another language | `/translate-framework en fr` to translate → `node setup.js fr` |
-
-> See [Language Selection](#language-selection) for details.
+Select your language from the menu. For other languages, see [Language Selection](#language-selection).
 
 ### 3. Choose an AI platform (skip for Claude Code)
 
@@ -116,11 +114,10 @@ Have your AI read [`process-rules/porting-guide-en.md`](process-rules/porting-gu
 
 ### English / Japanese
 
-Just run the setup script:
+Just run the setup script and select from the menu:
 
 ```bash
-node setup.js en    # English
-node setup.js ja    # Japanese
+node setup.js
 ```
 
 Agent definitions and commands are deployed automatically.
@@ -153,6 +150,33 @@ Translation rules (what to translate and what to keep in English) are defined in
 | [Porting Guide](process-rules/porting-guide-en.md)                 | Conversion specs for other AI platforms                            |
 | [Glossary](process-rules/glossary-en.md)                           | Term definitions and rationale                                     |
 | [Essays](essays/)                                                  | Design rationale for the ANMS / ANPS / ANGS three-tier spec system |
+
+---
+
+## Setup Flow
+
+```mermaid
+flowchart TD
+    Install["1. npm init gr-sw-maker my-project<br/>cd my-project"] -->|"Run"| Setup([node setup.js])
+    Setup -->|"lang code<br/>specified?"| ArgCheck{lang code?}
+    ArgCheck -->|"Yes<br/>e.g. node setup.js fr"| Deploy[Deploy files]
+    ArgCheck -->|"No"| Menu["Select your environment:<br/>1 en Claude<br/>2 ja Claude<br/>3 Other lang Claude<br/>4 en Other AI<br/>5 ja Other AI<br/>6 Other lang Other AI"]
+    Menu -->|"1"| Deploy
+    Menu -->|"2"| Deploy
+    Menu -->|"3"| ClaudeOther["1. /translate-framework<br/>en your-lang<br/>2. node setup.js your-lang"]
+    Menu -->|"4"| Deploy4[Deploy files]
+    Menu -->|"5"| Deploy5[Deploy files]
+    Menu -->|"6"| OtherAIOther["1. AI reads porting-guide<br/>to convert framework<br/>2. AI translates files<br/>see README<br/>3. node setup.js your-lang"]
+    Deploy4 -->|"Complete"| PortingMsg4["NOTE:<br/>Have your AI read<br/>porting-guide-en.md<br/>to convert framework"]
+    Deploy5 -->|"Complete"| PortingMsg5["NOTE:<br/>Have your AI read<br/>porting-guide-ja.md<br/>to convert framework"]
+    Deploy -->|"Complete"| WriteOrder["2. Write your concept<br/>in user-order.md"]
+    PortingMsg4 -->|"Next"| WriteOrder
+    PortingMsg5 -->|"Next"| WriteOrder
+    WriteOrder -->|"Ready"| Launch["3. /full-auto-dev"]
+    Launch -->|"Start"| Dev([Development begins])
+    ClaudeOther -->|"Re-run"| Setup
+    OtherAIOther -->|"Re-run"| Setup
+```
 
 ---
 

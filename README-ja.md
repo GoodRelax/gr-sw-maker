@@ -10,6 +10,8 @@ AIコーディングエージェントのマルチエージェント機能を活
 
 ## クイックスタート
 
+> 全体の流れは[セットアップフロー](#セットアップフロー)を参照。
+
 ### 1. 入手
 
 ```bash
@@ -24,15 +26,11 @@ cd my-project
 
 ### 2. 言語を選ぶ
 
-フレームワーク文書は日本語（`-ja.md`）と英語（`-en.md`）で提供しています。
+```bash
+node setup.js
+```
 
-| やりたいこと | 操作 |
-|------------|------|
-| 日本語で使う | `node setup.js ja` |
-| 英語で使う | `node setup.js en` |
-| 他の言語で使う | `/translate-framework ja fr` で翻訳 → `node setup.js fr` |
-
-> 詳細は[言語の選択](#言語の選択)を参照。
+メニューから言語を選択してください。他の言語を使いたい場合は[言語の選択](#言語の選択)を参照。
 
 ### 3. AIプラットフォームを選ぶ（Claude Code ならスキップ）
 
@@ -113,11 +111,10 @@ AI がプロジェクト構成（`CLAUDE.md`）を自動生成し、あなたに
 
 ### 日本語 / 英語で使う場合
 
-セットアップスクリプトを実行するだけです:
+セットアップスクリプトを実行してメニューから選択するだけです:
 
 ```bash
-node setup.js ja    # 日本語
-node setup.js en    # 英語
+node setup.js
 ```
 
 エージェント定義とコマンドが自動でデプロイされます。
@@ -150,6 +147,33 @@ node setup.js fr
 | [移植ガイド](process-rules/porting-guide-ja.md) | 他 AI プラットフォームへの変換仕様 |
 | [用語集](process-rules/glossary-ja.md) | フレームワーク用語の定義と選定理由 |
 | [論文](essays/) | ANMS / ANPS / ANGS 三段階仕様体系の設計根拠 |
+
+---
+
+## セットアップフロー
+
+```mermaid
+flowchart TD
+    Install["1. npm init gr-sw-maker my-project<br/>cd my-project"] -->|"Run"| Setup([node setup.js])
+    Setup -->|"lang code<br/>specified?"| ArgCheck{lang code?}
+    ArgCheck -->|"Yes<br/>e.g. node setup.js fr"| Deploy[Deploy files]
+    ArgCheck -->|"No"| Menu["Select your environment:<br/>1 en Claude<br/>2 ja Claude<br/>3 Other lang Claude<br/>4 en Other AI<br/>5 ja Other AI<br/>6 Other lang Other AI"]
+    Menu -->|"1"| Deploy
+    Menu -->|"2"| Deploy
+    Menu -->|"3"| ClaudeOther["1. /translate-framework<br/>en your-lang<br/>2. node setup.js your-lang"]
+    Menu -->|"4"| Deploy4[Deploy files]
+    Menu -->|"5"| Deploy5[Deploy files]
+    Menu -->|"6"| OtherAIOther["1. AI reads porting-guide<br/>to convert framework<br/>2. AI translates files<br/>see README<br/>3. node setup.js your-lang"]
+    Deploy4 -->|"Complete"| PortingMsg4["NOTE:<br/>Have your AI read<br/>porting-guide-en.md<br/>to convert framework"]
+    Deploy5 -->|"Complete"| PortingMsg5["NOTE:<br/>Have your AI read<br/>porting-guide-ja.md<br/>to convert framework"]
+    Deploy -->|"Complete"| WriteOrder["2. Write your concept<br/>in user-order.md"]
+    PortingMsg4 -->|"Next"| WriteOrder
+    PortingMsg5 -->|"Next"| WriteOrder
+    WriteOrder -->|"Ready"| Launch["3. /full-auto-dev"]
+    Launch -->|"Start"| Dev([Development begins])
+    ClaudeOther -->|"Re-run"| Setup
+    OtherAIOther -->|"Re-run"| Setup
+```
 
 ---
 

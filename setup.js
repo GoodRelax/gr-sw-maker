@@ -1,65 +1,139 @@
 #!/usr/bin/env node
-// gr-sw-maker セットアップスクリプト
-// 使い方: node setup.js ja    (日本語)
-//         node setup.js en    (英語)
+// gr-sw-maker setup script
+// Usage: node setup.js [lang]
 
 const fs = require("fs");
 const path = require("path");
+const readline = require("readline");
 
-const langCode = process.argv[2];
-
-if (!langCode) {
-  console.error("使い方: node setup.js <言語コード>");
-  console.error("");
-  console.error("  node setup.js ja    日本語でセットアップ");
-  console.error("  node setup.js en    英語でセットアップ");
-  console.error("");
-  console.error("他の言語は /translate-framework コマンドで翻訳後に実行してください。");
-  process.exit(1);
+function ask(prompt) {
+  return new Promise((resolve) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    rl.question(prompt, (answer) => {
+      rl.close();
+      resolve(answer.trim());
+    });
+  });
 }
 
-const dirs = [
-  path.join(".claude", "agents"),
-  path.join(".claude", "commands"),
-  "process-rules",
-];
+async function main() {
+  let langCode = process.argv[2];
+  let showPortingGuide = null;
 
-let errors = 0;
+  if (!langCode) {
+    console.log("");
+    console.log("Select your environment:");
+    console.log("");
+    console.log("  Claude Code:");
+    console.log("    1) en (English)");
+    console.log("    2) ja (Japanese)");
+    console.log("    3) Other language");
+    console.log("");
+    console.log("  Other AI:");
+    console.log("    4) en (English)");
+    console.log("    5) ja (Japanese)");
+    console.log("    6) Other language");
+    console.log("");
 
-console.log(`gr-sw-maker セットアップ (言語: ${langCode})`);
-console.log("---");
+    const answer = await ask("> ");
 
-for (const dir of dirs) {
-  const suffix = `-${langCode}.md`;
-  let count = 0;
-
-  if (!fs.existsSync(dir)) {
-    console.log(`  警告: ${dir}/ が見つかりません`);
-    errors++;
-    continue;
+    switch (answer) {
+      case "1": langCode = "en"; break;
+      case "2": langCode = "ja"; break;
+      case "3":
+        console.log("");
+        console.log("For other languages:");
+        console.log("  1. Run /translate-framework en <lang-code> to translate");
+        console.log("  2. Then run: node setup.js <lang-code>");
+        process.exit(0);
+      case "4": langCode = "en"; showPortingGuide = "en"; break;
+      case "5": langCode = "ja"; showPortingGuide = "ja"; break;
+      case "6":
+        console.log("");
+        console.log("For other languages:");
+        console.log("  1. Have your AI read process-rules/porting-guide-en.md to convert the framework");
+        console.log("  2. Then translate: see README.md > Language Selection for details");
+        console.log("  3. Then run: node setup.js <lang-code>");
+        process.exit(0);
+      default:
+        console.error("Invalid selection.");
+        process.exit(1);
+    }
   }
 
-  for (const file of fs.readdirSync(dir)) {
-    if (!file.endsWith(suffix)) continue;
-    const base = file.slice(0, -suffix.length);
-    fs.copyFileSync(path.join(dir, file), path.join(dir, `${base}.md`));
-    count++;
+  deploy(langCode, showPortingGuide);
+}
+
+function deploy(langCode, portingGuideLang) {
+  const dirs = [
+    path.join(".claude", "agents"),
+    path.join(".claude", "commands"),
+    "process-rules",
+  ];
+
+  let errors = 0;
+
+  console.log("");
+  console.log(`gr-sw-maker setup (lang: ${langCode})`);
+  console.log("---");
+
+  for (const dir of dirs) {
+    const suffix = `-${langCode}.md`;
+    let count = 0;
+
+    if (!fs.existsSync(dir)) {
+      console.log(`  warning: ${dir}/ not found`);
+      errors++;
+      continue;
+    }
+
+    for (const file of fs.readdirSync(dir)) {
+      if (!file.endsWith(suffix)) continue;
+      const base = file.slice(0, -suffix.length);
+      fs.copyFileSync(path.join(dir, file), path.join(dir, `${base}.md`));
+      count++;
+    }
+
+    if (count === 0) {
+      console.log(`  warning: ${dir}/*${suffix} not found`);
+      errors++;
+    } else {
+      console.log(`  ${dir}/ ... ${count} files deployed`);
+    }
   }
 
-  if (count === 0) {
-    console.log(`  警告: ${dir}/*${suffix} が見つかりません`);
-    errors++;
+  // Deploy root-level single files
+  const rootFiles = ["user-order"];
+  for (const name of rootFiles) {
+    const src = `${name}-${langCode}.md`;
+    if (fs.existsSync(src)) {
+      fs.copyFileSync(src, `${name}.md`);
+      console.log(`  ${name}.md ... deployed`);
+    } else {
+      console.log(`  warning: ${src} not found`);
+      errors++;
+    }
+  }
+
+  console.log("---");
+  if (errors > 0) {
+    console.log("Done (with warnings). Check that files for the selected language exist.");
+    process.exit(1);
   } else {
-    console.log(`  ${dir}/ ... ${count} ファイルをデプロイ`);
+    if (portingGuideLang) {
+      console.log("");
+      console.log("IMPORTANT: You selected a non-Claude AI platform.");
+      console.log(`  Have your AI read process-rules/porting-guide-${portingGuideLang}.md`);
+      console.log("  to convert the framework for your AI platform.");
+      console.log("");
+    }
+    console.log("Done! Next steps:");
+    console.log("  1. Write your concept in user-order.md");
+    console.log("  2. Launch with /full-auto-dev");
   }
 }
 
-console.log("---");
-if (errors > 0) {
-  console.log("完了（警告あり）。対象言語のファイルが存在するか確認してください。");
-  process.exit(1);
-} else {
-  console.log("完了。次のステップ:");
-  console.log("  1. user-order.md にコンセプトを記述");
-  console.log("  2. /full-auto-dev で起動");
-}
+main();
