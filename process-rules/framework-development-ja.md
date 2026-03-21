@@ -105,21 +105,26 @@ gr-sw-maker には 2 つの利用形態がある:
 ### 4.1 フレームワークリポ版（原本）
 
 ```
+# === Framework repo only (create.js removes everything below this line) ===
+
 # Framework development private files (not distributed)
 prompt/
 CLAUDE.md
 
 # setup.js deploy outputs
 .claude/agents/*.md
-!.claude/agents/*-*.md
+!.claude/agents/*-ja.md
+!.claude/agents/*-en.md
 .claude/commands/*.md
-!.claude/commands/*-*.md
+!.claude/commands/*-ja.md
+!.claude/commands/*-en.md
 process-rules/*.md
 !process-rules/*-ja.md
 !process-rules/*-en.md
 user-order.md
 ```
 
+- マーカー行（`# === Framework repo only ...`）以降が `create.js` により一括削除される
 - `CLAUDE.md`（フレームワーク開発用指示）と `prompt/` は非公開
 - デプロイ出力（サフィックスなし `.md`）を除外
 - `!*-*.md` で `-ja.md` / `-en.md` 原本は追跡対象に戻す

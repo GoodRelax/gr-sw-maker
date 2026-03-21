@@ -103,12 +103,13 @@ async function main() {
       fs.rmSync(scaffoldDir, { recursive: true, force: true });
     }
 
-    // Clean .gitignore — remove framework-repo-only rules (setup.js deploy outputs)
+    // Clean .gitignore — remove framework-repo-only rules
+    // Everything below the marker line is for the framework repo only.
     // In user projects, suffix-less files (CLAUDE.md, agents/*.md, etc.) ARE the working files.
     const gitignorePath = path.join(targetDir, ".gitignore");
     if (fs.existsSync(gitignorePath)) {
       let gi = fs.readFileSync(gitignorePath, "utf8");
-      gi = gi.replace(/\n# setup\.js deploy outputs[\s\S]*$/, "\n");
+      gi = gi.replace(/\n# === Framework repo only[\s\S]*$/, "\n");
       fs.writeFileSync(gitignorePath, gi.trimEnd() + "\n");
     }
 
