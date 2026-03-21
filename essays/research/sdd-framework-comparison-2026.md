@@ -1,4 +1,3 @@
-``````markdown
 # SDD フレームワーク比較分析報告書
 
 > 調査日: 2026-03-16
@@ -1070,4 +1069,3 @@ flowchart TD
 | Semi-living Spec | Delta マーカー等で変更を追跡するが自動同期はしない仕様形態 |
 | Brownfield | 既存コードベースへの機能追加・改修 |
 | Greenfield | ゼロからの新規開発 |
-``````
