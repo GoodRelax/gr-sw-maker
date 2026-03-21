@@ -1,6 +1,6 @@
 {
   "name": "create-gr-sw-maker",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Scaffold a gr-sw-maker project — nearly fully automated software development framework",
   "keywords": [
     "create",
