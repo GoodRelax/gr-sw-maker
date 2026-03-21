@@ -109,8 +109,6 @@ async function main() {
     console.log("Next steps:");
     console.log(`  cd ${projectName}`);
     console.log("  node setup.js");
-    console.log("  # Write your concept in user-order.md");
-    console.log("  # Launch with /full-auto-dev");
     console.log("");
     console.log("(npx may take a moment to finish. You can start the next steps in another terminal.)");
   } catch (err) {

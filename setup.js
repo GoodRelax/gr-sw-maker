@@ -132,7 +132,8 @@ function deploy(langCode, portingGuideLang) {
     }
     console.log("Done! Next steps:");
     console.log("  1. Write your concept in user-order.md");
-    console.log("  2. Launch with /full-auto-dev");
+    console.log("  2. Start Claude Code (or your AI coding agent)");
+    console.log("  3. Run /full-auto-dev");
   }
 }
 
