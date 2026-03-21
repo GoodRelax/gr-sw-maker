@@ -12,8 +12,9 @@ If discrepancies are detected, halt the review and ask the user for a decision.
 
 | Category | Glob Pattern | Expected Pairs |
 |----------|--------------|:--------------:|
-| Process rules | `process-rules/*-ja.md` ↔ `*-en.md` | 9 |
-| Agent definitions | `.claude/agents/*-ja.md` ↔ `*-en.md` | 18 |
+| Process rules | `process-rules/*-ja.md` ↔ `*-en.md` | 10 |
+| Agent definitions | `.claude/agents/*-ja.md` ↔ `*-en.md` | 21 |
+| Project instruction template | `CLAUDE-ja.md` ↔ `CLAUDE-en.md` | 1 |
 | Custom commands | `.claude/commands/*-ja.md` ↔ `*-en.md` | 5 |
 | Essays | `essays/anms-essay-ja.md` ↔ `-en.md`, `essays/angs-essay-ja.md` ↔ `-en.md` | 2 |
 
@@ -61,7 +62,7 @@ If Phase 0 passes, JA and EN content is confirmed consistent. From this point, *
 
 | # | Path | Content |
 |:-:|------|---------|
-| F01 | `CLAUDE.md` | Project instruction template |
+| F01 | `CLAUDE-en.md` | Project instruction template |
 | F02 | `process-rules/full-auto-dev-process-rules-en.md` | Process rules |
 | F03 | `process-rules/full-auto-dev-document-rules-en.md` | Document management rules |
 | F04 | `process-rules/agent-list-en.md` | Agent list (Single Source of Truth) |
@@ -71,7 +72,7 @@ If Phase 0 passes, JA and EN content is confirmed consistent. From this point, *
 | F08 | `process-rules/prompt-structure-en.md` | Prompt structure conventions (S0-S6) |
 | F09 | `process-rules/spec-template-en.md` | Specification template |
 | F10 | `process-rules/porting-guide-en.md` | Porting guide |
-| F11 | `.claude/agents/*-en.md` (18 files) | Agent definitions |
+| F11 | `.claude/agents/*-en.md` (21 files) | Agent definitions |
 | F12 | `.claude/commands/*-en.md` | Custom commands |
 | F13 | `essays/anms-essay-en.md` | ANMS essay |
 | F14 | `essays/angs-essay-en.md` | ANGS essay |
@@ -94,7 +95,7 @@ Launch the following 2 sub-agents **in parallel in the background using the Agen
 **Prompt (pass the following as-is):**
 
 ```
-Perform a quality check on all 18 agent definition files (EN versions) in the gr-sw-maker framework.
+Perform a quality check on all 21 agent definition files (EN versions) in the gr-sw-maker framework.
 No code needs to be written. Read and analyze only.
 
 ## Files to Read
@@ -105,7 +106,7 @@ No code needs to be written. Read and analyze only.
 
 ## Check Items
 
-- [ ] C1: Do all 18 agents comply with the S0-S6 structure? (All sections present: Activation/Ownership/Procedure/Rules/Exception, in correct order)
+- [ ] C1: Do all 21 agents comply with the S0-S6 structure? (All sections present: Activation/Ownership/Procedure/Rules/Exception, in correct order)
 - [ ] C2: Does each agent's YAML frontmatter (name, description, tools, model) match the agent-list §1 table?
 - [ ] C3: Are the file_type entries in each agent's Out table registered as owned by that agent in agent-list §2?
 - [ ] C4: Do the file_type entries in each agent's In table exist in the providing agent's Out?
@@ -139,13 +140,13 @@ Severity definitions:
 ```
 Check mechanical terminology consistency across the entire gr-sw-maker framework.
 No code needs to be written. Search and analyze using Grep/Glob/Read only.
-Target EN version files primarily (CLAUDE.md has no language variant).
+Target EN version files primarily (use CLAUDE-en.md).
 
 ## Check Items
 
 ### C1: Agent Count Consistency
 Search all files for references to "18" (agent count) and verify no differing numbers exist.
-Targets: CLAUDE.md, process-rules/*-en.md, essays/anms-essay-en.md, essays/angs-essay-en.md
+Targets: CLAUDE-en.md, process-rules/*-en.md, essays/anms-essay-en.md, essays/angs-essay-en.md
 
 ### C2: file_type Name Consistency
 Cross-check that file_type names in the file_type master table in process-rules/full-auto-dev-document-rules-en.md §7 exactly match those in the ownership sections of process-rules/agent-list-en.md §2.
@@ -201,7 +202,7 @@ The following 4 experts conduct a review from a bird's-eye perspective.
 - [ ] Is the change management flow (F02 §3.2) description consistent?
 - [ ] Is the defect state transition (F02 stateDiagram) defined?
 - [ ] Is the retrospective cycle (process-improver → orchestrator → decree-writer) 3-step flow described consistently in F02 and F04?
-- [ ] Do the conditional processes (12 items) match between F01 and F02?
+- [ ] Do the conditional processes (13 items) match between F01 and F02?
 
 ### Expert 2: Agent Architecture
 
