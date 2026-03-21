@@ -665,6 +665,7 @@ The Footer is shared across all file types. Agents MUST append a new `<entry>` t
 | disaster-recovery-plan | `disaster-recovery-plan:` | Disaster recovery plan (RPO/RTO, recovery procedures) | `docs/operations/` | Yes |
 | stakeholder-register | `stakeholder-register:` | Stakeholder register (recommended process) | `project-management/` | Yes |
 | retrospective-report | `retrospective-report:` | Retrospective and process improvement record | `project-records/improvement/` | No |
+| field-issue | `field-issue:` | Field testing feedback management (defect / CR unified). Conditional: field testing enabled | `project-records/field-issues/` | No |
 
 ### external-dependency-spec (External Dependency Requirement Specification Template)
 
@@ -756,6 +757,7 @@ Standard values for `commissioned_by` (creation trigger) and `consumed_by` (next
 | disaster-recovery-plan | `phase-design` | Operations team, orchestrator | architect |
 | stakeholder-register | `phase-setup` | All agents | orchestrator |
 | retrospective-report | Phase completion (ad hoc) | orchestrator | process-improver |
+| field-issue | During field testing (as needed) | orchestrator, implementer, test-engineer | field-test-engineer |
 
 ---
 
@@ -798,6 +800,7 @@ Namespace prefixes prevent collisions with standard HTML/XML tags and make field
 | `disaster-recovery-plan:` | disaster-recovery-plan Form Block | `<disaster-recovery-plan:rto_hours>4</disaster-recovery-plan:rto_hours>` |
 | `stakeholder-register:` | stakeholder-register Form Block | `<stakeholder-register:stakeholder_count>5</stakeholder-register:stakeholder_count>` |
 | `retrospective-report:` | retrospective-report Form Block | `<retrospective-report:approval_status>proposed</retrospective-report:approval_status>` |
+| `field-issue:` | field-issue Form Block | `<field-issue:type>defect</field-issue:type>` |
 
 ---
 
@@ -1441,6 +1444,32 @@ Describe the body of the retrospective analysis. Include root cause analysis of 
 
 ---
 
+## 9.33 field-issue (Namespace: field-issue:) (Conditional: field testing enabled)
+
+### Fields
+
+| Field | Type | Required | Description | Value Range / Constraints |
+|-----------|------|------|------|-----------|
+| field-issue:issue_id | string | Yes | Unique identifier | FI-NNN |
+| field-issue:type | enum | Yes | Determined by feedback-classifier | defect / cr |
+| field-issue:status | enum | Yes | Current status | reported / classified / analyzing / cause_identified / planning / solution_proposed / approved / spec_updated / spec_reviewed / fixed / code_reviewed / tested / verified |
+| field-issue:severity | enum | Yes | Severity | critical / high / medium / low |
+| field-issue:reported_by | string | Yes | Reporter | field-test-engineer |
+| field-issue:classified_by | string | No | Classifier | feedback-classifier |
+| field-issue:analyzed_by | string | No | Analyst | field-issue-analyst |
+| field-issue:root_cause | text | No | Root cause (defect only) | — |
+| field-issue:impact_analysis | text | No | Impact scope / side effects / alternative comparison | — |
+| field-issue:approved_solution | text | No | Confirmed solution | — |
+| field-issue:spec_update_required | boolean | No | Whether spec update is needed | — |
+| field-issue:related_requirements | list | No | Related requirement IDs | — |
+| field-issue:related_defect_id | string | No | Link to defect found in automated testing | DEF-NNN |
+
+### Detail Block Guidance
+
+Describe the details of the field-issue. field-test-engineer records feedback (symptoms, logs, reproduction steps), feedback-classifier appends classification results, and field-issue-analyst appends root cause analysis and solution planning results. For status transition details, refer to [Field Testing Feedback Management Rules](field-issue-handling-rules.md).
+
+---
+
 # 10. Versioning Rules
 
 Versioning is determined by the document **status** at the time of change.
@@ -1498,6 +1527,7 @@ Each file has exactly one `owner` agent. Only the owner can modify Common Block 
 | orchestrator | stakeholder-register | Full control of stakeholder register |
 | orchestrator | handoff | Creation of handoff entries. `to` agent may only update status |
 | process-improver | retrospective-report | Full control of retrospective and process improvement records |
+| field-test-engineer | field-issue | Full control of field testing feedback (conditional: field testing enabled). feedback-classifier and field-issue-analyst may append to Detail Block |
 
 **Detail Block exception:** Any agent MAY append to the Detail Block of a file they do not own, provided they record the append in the change_log.
 

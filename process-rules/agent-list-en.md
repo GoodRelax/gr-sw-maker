@@ -28,6 +28,9 @@
 | 16 | incident-reporter | Incident report creation | sonnet | operation |
 | 17 | process-improver | Retrospective, root cause analysis, and process improvement proposal | sonnet | All phases (at phase completion) |
 | 18 | decree-writer | Safe application of approved improvements to governance files | sonnet | All phases (at phase completion) |
+| 19 | field-test-engineer | User field testing, feedback recording, post-fix verification | sonnet | testing (conditional: field testing enabled) |
+| 20 | feedback-classifier | Classify feedback against spec as defect / CR / question, create tickets | sonnet | testing (conditional: field testing enabled) |
+| 21 | field-issue-analyst | Root cause analysis (defect), solution planning (defect / CR), impact/side-effect/alternative analysis | opus | testing (conditional: field testing enabled) |
 
 ---
 
@@ -181,6 +184,34 @@ Derived from Document Management Rules §11. **Each file_type has a single owner
 | retrospective-report | process-improver | Reference for improvements to be applied |
 | decision | orchestrator | Confirmation of approval records |
 
+### field-test-engineer (conditional: field testing enabled)
+
+| file_type | Directory | S/M | Primary Phase |
+|-----------|-----------|:---:|--------------|
+| field-issue | project-records/field-issues/ | M | testing |
+
+> field-test-engineer is the owner of field-issue. feedback-classifier and field-issue-analyst accumulate information by appending to the ticket. See [Field Testing Feedback Management Rules](field-issue-handling-rules.md) for details.
+
+### feedback-classifier (conditional: field testing enabled)
+
+> feedback-classifier does not own any file_type. It appends classification results (`field-issue:type`) to field-issue tickets created by field-test-engineer.
+
+| Input | Provider | Purpose |
+|-------|----------|---------|
+| field-issue (reported) | field-test-engineer | Feedback to be classified |
+| spec-foundation | srs-writer | Spec cross-reference (Ch1-2: Requirements) |
+| spec-architecture | architect | Spec cross-reference (Ch3-6: Design specification) |
+
+### field-issue-analyst (conditional: field testing enabled)
+
+> field-issue-analyst does not own any file_type. It appends root cause analysis and solution planning results to field-issue tickets created by field-test-engineer.
+
+| Input | Provider | Purpose |
+|-------|----------|---------|
+| field-issue (classified) | feedback-classifier | Classified feedback |
+| src/ | implementer | Source code for root cause analysis |
+| spec-foundation, spec-architecture | srs-writer, architect | Impact analysis and spec update necessity assessment |
+
 ---
 
 ## 3. Inter-Agent Data Flow
@@ -253,7 +284,27 @@ flowchart TD
     style DW fill:#F0E68C,stroke:#333,color:#000
 ```
 
-The diagram above shows the main data flow between agents, derived from the process rules. Arrow labels indicate the file_types or actions being passed. For DocWriter agents (document creation agents) and kotodama-kun (terminology check), see the separate diagrams below.
+The diagram above shows the main data flow between agents, derived from the process rules. Arrow labels indicate the file_types or actions being passed. For DocWriter agents (document creation agents), kotodama-kun (terminology check), and field testing agents, see the separate diagrams below.
+
+**Field Testing Agents (conditional: field testing enabled):**
+
+```mermaid
+flowchart LR
+    User["User"] -->|"feedback"| FTE["field-test-engineer"]
+    FTE -->|"field-issue"| FC["feedback-classifier"]
+    FC -->|"field-issue"| FIA["field-issue-analyst"]
+    FIA -->|"field-issue"| Orch["orchestrator"]
+    Orch -->|"field-issue"| Existing["Existing agents<br/>srs-writer architect<br/>review-agent implementer<br/>test-engineer"]
+    Existing -->|"automated test results"| FTE
+
+    style FTE fill:#E8DAEF,stroke:#333,color:#000
+    style FC fill:#E8DAEF,stroke:#333,color:#000
+    style FIA fill:#E8DAEF,stroke:#333,color:#000
+    style Orch fill:#FF8C00,stroke:#333,color:#000
+    style User fill:#1a5276,stroke:#333,color:#fff
+```
+
+Purple nodes represent the field testing agents. They are activated only when the conditional process "field testing" is enabled. For details on status transitions (12 statuses, 12 gates), see [Field Testing Feedback Management Rules](field-issue-handling-rules.md).
 
 **DocWriter Agents (Document Creation Agents):**
 
@@ -328,6 +379,8 @@ Agents that **do not use** kotodama-kun:
 | license-checker | Records external license names as-is |
 | framework-translation-verifier | Primary duty is translation consistency verification; does not modify terminology definitions |
 | decree-writer | Only applies approved improvements; does not generate new terminology |
+| feedback-classifier | Only cross-references against spec and classifies; minimal terminology creation |
+| field-issue-analyst | Only uses existing terminology for root cause analysis and solution planning |
 
 ---
 
@@ -342,7 +395,7 @@ Which agents are activated in which phases.
 | dependency-selection | orchestrator, architect, kotodama-kun, license-checker | User selection approval |
 | design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, process-improver, decree-writer | R2/R4/R5 PASS |
 | implementation | orchestrator, implementer, test-engineer (unit), security-reviewer (SCA), kotodama-kun, license-checker, review-agent, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5 PASS, SCA clear |
-| testing | orchestrator, test-engineer, kotodama-kun, review-agent, progress-monitor, process-improver, decree-writer | R6 PASS, all tests PASS |
+| testing | orchestrator, test-engineer, kotodama-kun, review-agent, progress-monitor, process-improver, decree-writer, field-test-engineer (conditional), feedback-classifier (conditional), field-issue-analyst (conditional) | R6 PASS, all tests PASS |
 | delivery | orchestrator, kotodama-kun, review-agent, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R6 all PASS, translation consistency verification PASS, user acceptance |
 | operation | orchestrator, security-reviewer (patching), progress-monitor, incident-reporter, process-improver, decree-writer | SLA achieved |
 

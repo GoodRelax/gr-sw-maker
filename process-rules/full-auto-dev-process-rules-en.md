@@ -635,6 +635,7 @@ For systems that expose APIs externally, define the following during the design 
 | **Product i18n/l10n** | - Multi-language support is a product requirement<br>- RTL (right-to-left) language support<br>- Date/currency/number format localization required | setup phase<br>(include as NFR in specification Ch2) |
 | **Certification Acquisition** | - Public certifications such as CE/FCC/medical device certification required<br>- Submission documents to certification bodies required<br>- Post-certification change management (re-certification triggers) required | setup phase<br>(decide alongside legal research) |
 | **Operations and Maintenance** | - Operating a service in production<br>- Post-release defect fixes and patch application required<br>- SLA (uptime, response time) guarantees required | setup phase<br>(decision to activate the operation phase) |
+| **Field Testing** | - HW integration project requiring field device integration testing<br>- User-attended verification of actual device behavior needed<br>- Verification of device-specific behavior not reproducible with mocks | setup phase<br>(additional evaluation when HW integration is enabled) |
 
 #### 3.4.2 setup Phase Evaluation Process
 
@@ -652,6 +653,7 @@ During the setup phase of the full-auto-dev command, the lead agent automaticall
 10. Product i18n/l10n -> If applicable, add i18n requirements to the NFR in specification Ch2 and include message catalog design in the design phase
 11. Certification Acquisition -> In addition to legal research, add certification submission document creation and certification body interaction to the WBS. Create `project-records/legal/certification/`
 12. Operations and Maintenance -> If operating in production, activate the operation phase. Include RPO/RTO, backup strategy, and monitoring infrastructure in the design phase
+13. Field Testing -> When HW integration is enabled and user-attended testing is required. Activate field-test-engineer / feedback-classifier / field-issue-analyst in testing phase. Feedback management follows [Field Issue Handling Rules](field-issue-handling-rules.md)
 
 ---
 
@@ -1111,7 +1113,25 @@ xychart-beta
     line [2, 8, 13, 16]
 ```
 
-#### 4.6.5 Automatic Resource Allocation to Bottlenecks
+#### 4.6.5 Field Testing (Conditional: Field Testing Enabled)
+
+When the conditional process "Field Testing" is enabled, user-attended field testing is conducted after automated testing is complete.
+
+**Owner:** field-test-engineer
+
+**Process overview:**
+
+1. field-test-engineer tests with the user using the latest SW and records feedback
+2. feedback-classifier cross-references feedback against the specification and classifies it as defect / CR / question
+3. field-issue-analyst performs root cause analysis (defect) and countermeasure planning (defect / CR)
+4. After approval, the existing agent team (srs-writer / architect -> review-agent -> implementer -> review-agent -> test-engineer) implements the fixes
+5. field-test-engineer verifies the fixes on the actual device
+
+**Management rules:** For detailed status transitions (12 statuses, 12 gates, 5 prohibitions) of feedback, refer to [Field Issue Handling Rules](field-issue-handling-rules.md).
+
+**Metrics integration:** field-issue (type: defect) counts toward found_cumulative on the defect curve, and field-issue (type: cr) counts toward CR tallies. For details, refer to [Field Issue Handling Rules](field-issue-handling-rules.md) Section 9.
+
+#### 4.6.6 Automatic Resource Allocation to Bottlenecks
 
 When the PM Agent detects anomalies, the lead agent automatically takes the following actions:
 
@@ -1674,6 +1694,7 @@ Execute the following phases sequentially:
 30. Update test progress curve and defect curve
 31. Conduct test code review (R6 perspective) with review-agent
 32. Evaluate quality criteria
+32a. [If field testing is enabled] Conduct user-attended field testing. Feedback management follows field-issue-handling-rules.md
 
 ## Phase 6: Delivery
 33. Conduct final review of all deliverables (all R1-R6 perspectives) with review-agent

@@ -106,7 +106,7 @@ function deploy(langCode, portingGuideLang) {
   }
 
   // Deploy root-level single files
-  const rootFiles = ["user-order"];
+  const rootFiles = ["user-order", "CLAUDE"];
   for (const name of rootFiles) {
     const src = `${name}-${langCode}.md`;
     if (fs.existsSync(src)) {

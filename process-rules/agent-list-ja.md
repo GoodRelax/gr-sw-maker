@@ -289,45 +289,22 @@ flowchart TD
 **実機テスト系（条件付き: 実機テスト有効時）:**
 
 ```mermaid
-flowchart TD
-    User["User"]
-    FTE["field-test-engineer"]
-    FC["feedback-classifier"]
-    FIA["field-issue-analyst"]
-    Orch["orchestrator"]
-    SRS["srs-writer"]
-    Arch["architect"]
-    Impl["implementer"]
-    Rev["review-agent"]
-    Test["test-engineer"]
+flowchart LR
+    User["User"] -->|"フィードバック"| FTE["field-test-engineer"]
+    FTE -->|"field-issue"| FC["feedback-classifier"]
+    FC -->|"field-issue"| FIA["field-issue-analyst"]
+    FIA -->|"field-issue"| Orch["orchestrator"]
+    Orch -->|"field-issue"| Existing["既存エージェント群<br/>srs-writer architect<br/>review-agent implementer<br/>test-engineer"]
+    Existing -->|"自動テスト結果"| FTE
 
-    User -->|"フィードバック"| FTE
-    FTE -->|"field-issue<br/>reported"| FC
-    FC -->|"field-issue<br/>classified"| FIA
-    FIA -->|"field-issue<br/>solution_proposed"| Orch
-    Orch -->|"field-issue<br/>approved"| SRS
-    Orch -->|"field-issue<br/>approved"| Arch
-    SRS -->|"spec-foundation<br/>updated"| Rev
-    Arch -->|"spec-architecture<br/>updated"| Rev
-    Rev -->|"review<br/>spec PASS"| Impl
-    Impl -->|"src/"| Rev
-    Rev -->|"review<br/>code PASS"| Test
-    Test -->|"自動テスト結果"| FTE
-    FTE -->|"field-issue<br/>verified"| Orch
-
-    style User fill:#1a5276,stroke:#333,color:#fff
     style FTE fill:#E8DAEF,stroke:#333,color:#000
     style FC fill:#E8DAEF,stroke:#333,color:#000
     style FIA fill:#E8DAEF,stroke:#333,color:#000
     style Orch fill:#FF8C00,stroke:#333,color:#000
-    style SRS fill:#FFD700,stroke:#333,color:#000
-    style Arch fill:#FFD700,stroke:#333,color:#000
-    style Impl fill:#90EE90,stroke:#333,color:#000
-    style Rev fill:#f9e79f,stroke:#333,color:#000
-    style Test fill:#90EE90,stroke:#333,color:#000
+    style User fill:#1a5276,stroke:#333,color:#fff
 ```
 
-紫色のノードが実機テスト系の新規エージェント。本図は条件付きプロセス「実機テスト」が有効な場合にのみアクティベートされる。詳細なステータス遷移フローは [実機テスト フィードバック管理規則](field-issue-handling-rules.md) を参照。
+紫色のノードが実機テスト系の新規エージェント。条件付きプロセス「実機テスト」が有効な場合にのみアクティベートされる。ステータス遷移の詳細（12 ステータス・12 ゲート）は [実機テスト フィードバック管理規則](field-issue-handling-rules.md) を参照。
 
 **DocWriter系（文書作成エージェント）:**
 
