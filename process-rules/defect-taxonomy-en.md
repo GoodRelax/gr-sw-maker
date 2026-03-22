@@ -1,4 +1,3 @@
-``````markdown
 # Defect Taxonomy — Systematic Organization of Defect-Related Terms
 
 ## 1. Background and Purpose
@@ -414,4 +413,3 @@ Classification of locations requiring replacement of ambiguous Japanese terms wi
 | Ambiguous defect detection term | defect detection | process-rules |
 | Ambiguous incident record term | incident report | document-rules, README |
 | Ambiguous incident management term | incident management | full-auto-dev.md |
-``````

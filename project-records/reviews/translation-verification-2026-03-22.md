@@ -1,4 +1,3 @@
-``````markdown
 # Framework Translation Verification Report
 
 **Date:** 2026-03-22
@@ -427,4 +426,3 @@ Key notes:
 - No High-severity translation discrepancies found
 
 **Recommendation for council-review gate:** Translation consistency is confirmed. Proceed to Phase 1 (main council review). The 3 findings listed above are content/operational issues that should be addressed in a follow-up edit pass and do not block the council review.
-``````

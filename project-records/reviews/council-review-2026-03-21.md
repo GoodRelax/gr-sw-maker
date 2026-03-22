@@ -1,4 +1,3 @@
-``````markdown
 # Council Review Report — 2026-03-21
 
 ## 1. Phase 0: Translation Consistency Check (Gate)
@@ -213,5 +212,3 @@ All 15 findings have been fixed in the same session. Details:
 ### Coverage Note
 
 Both sub-agents completed successfully. All check items (Sub-agent A: C1-C9, Sub-agent B: C1-C5) have been fully verified and integrated into this report.
-
-``````

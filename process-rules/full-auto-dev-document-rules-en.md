@@ -1,4 +1,3 @@
-``````markdown
 # full-auto-dev Document Management Rules v0.0.0
 
 ## Version 0.0.0 | Date: 2026-03-15
@@ -1743,4 +1742,3 @@ Language-specific subfolders (`ja/`, `en/`) are not adopted. Reason: When agents
 1. full-auto-dev Process Rules — `process-rules/full-auto-dev-process-rules.md`
 2. Martin, R.C. "The Clean Architecture" — Stable Dependencies Principle (SDP)
 3. Nygard, M. "Documenting Architecture Decisions" — Reference for ADR format
-``````

@@ -1,4 +1,3 @@
-``````markdown
 # Council Review Report — 2026-03-22
 
 **Reviewer:** Council (council-review-ja)
@@ -174,4 +173,3 @@ The 3 Medium findings are directory listing omissions and a diagram node omissio
 | C3: Framework name usage | PASS | No `claude-code-full-auto-dev` in content. `gr-sw-maker` and `full-auto-dev` used correctly |
 | C4: Phase name consistency | PASS | 8 phases match between process-rules §2 and agent-list §4 |
 | C5: file_type count consistency | PASS | 33 file_types in master table, no contradicting counts elsewhere |
-``````

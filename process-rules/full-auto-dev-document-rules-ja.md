@@ -1,4 +1,3 @@
-``````markdown
 # full-auto-dev 文書管理規則 v0.0.0
 
 ## Version 0.0.0 | Date: 2026-03-15
@@ -1741,4 +1740,3 @@ CLAUDE.md に以下を設定する（setup フェーズで AI が提案）:
 1. full-auto-dev プロセス規則 — `process-rules/full-auto-dev-process-rules.md`
 2. Martin, R.C. "The Clean Architecture" — 安定依存の原則 (SDP)
 3. Nygard, M. "Documenting Architecture Decisions" — ADR形式の参考文献
-``````

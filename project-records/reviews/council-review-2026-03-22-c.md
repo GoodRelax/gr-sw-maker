@@ -1,4 +1,3 @@
-``````markdown
 # Council Review Report — 2026-03-22-c
 
 **Review Type:** Confirmation review (post-fix verification of council-review-2026-03-22-b findings + full framework re-review)
@@ -173,4 +172,3 @@ All 5 handoff improvement items verified as implemented:
 Conditions met: Critical = 0, High = 0.
 
 The framework is in excellent shape. The single Medium finding (document-rules §9.7 defect diagram underscore inconsistency) is a localized cosmetic issue that does not affect runtime behavior — the field value definitions in the same section correctly use kebab-case. Recommended to fix for consistency before the next release.
-``````

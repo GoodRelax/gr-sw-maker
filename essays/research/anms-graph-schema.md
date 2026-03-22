@@ -1,4 +1,3 @@
-``````markdown
 # ANMSグラフスキーマ定義
 
 ## 1. 抽象スキーマ — SpecNode と SpecEdge
@@ -247,4 +246,3 @@ flowchart TD
 | test_level | unit, integration, e2e, performance |
 | category | naming, dependency, simplicity, responsibility, solid, coupling, readability, testing, purity, state, concurrency, error, resource, immutability, efficiency |
 | status (DP) | compliant, non_compliant, not_evaluated |
-``````

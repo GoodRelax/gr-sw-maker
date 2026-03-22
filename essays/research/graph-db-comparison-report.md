@@ -1,4 +1,3 @@
-``````markdown
 # グラフDB比較調査レポート — ANMS大規模スケーリングにおけるDB選定
 
 ## 1. 調査目的
@@ -303,4 +302,3 @@ sequenceDiagram
 7. Microsoft. "GraphRAG: From Local to Global" — Microsoft Research, 2024
 8. Apache AGE. "A Graph Extension for PostgreSQL" — https://age.apache.org/
 9. Text2GQL-Bench — LLMによるグラフクエリ生成ベンチマーク（2026）
-``````

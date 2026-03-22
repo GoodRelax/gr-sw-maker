@@ -1,4 +1,3 @@
-``````markdown
 # Council Review Report — 2026-03-22 (Session B: Post-§4.3 Status Naming Convention)
 
 ## Review Scope
@@ -182,4 +181,3 @@ Verify that the §4.3 status naming convention addition and existing status valu
 - **Sub-agent B (Terminology Mechanical Scan):** Completed. All 5 checks PASS. No additional findings beyond the main council review. The old repo name detection was evaluated and determined to be a false positive (found only in check instructions and historical records).
 
 **Note on §4.3 compliance (primary review scope):** The new §4.3 status naming convention and all existing status enum value modifications from the previous session (document_status: review→in-review, handoff_status: done→completed, change_request_status: analyzing→in-analysis, incident_status: investigating→in-investigation, and all field-issue status renames) have been verified as correctly applied. No residual old values were found in any EN rule file.
-``````

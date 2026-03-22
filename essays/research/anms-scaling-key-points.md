@@ -1,4 +1,3 @@
-``````markdown
 # ANMS大規模スケーリング — 要点整理
 
 ## 1. 目的
@@ -99,4 +98,3 @@ flowchart TD
 | ~~4~~ | ~~Adapter~~ | ~~J関手（rebuild）の実装方針~~ | ~~CQRS方針は確定。パーサー設計は未着手~~ | ~~後回し。方針は決まっている~~ |
 | ~~5~~ | ~~Adapter~~ | ~~MCP Serverのinterface設計~~ | ~~未着手~~ | ~~後回し。Entity/UseCaseが先~~ |
 | ~~6~~ | ~~Framework~~ | ~~PoC対象のDB選定~~ | ~~方針確定（何でもいい）~~ | ~~後回し。何でもいい~~ |
-``````
