@@ -25,7 +25,7 @@ For issues discovered during field testing, identify root causes, analyze impact
 
 ### End Conditions
 
-- [ ] Solution is finalized and status has been changed to `solution_proposed`
+- [ ] Solution is finalized and status has been changed to `solution-proposed`
 - [ ] Impact analysis, side-effect analysis, and alternative comparison are complete
 - [ ] Spec update requirement has been determined
 
@@ -44,7 +44,7 @@ For issues discovered during field testing, identify root causes, analyze impact
 
 | file_type | Destination | Next Consumer |
 |-----------|-------------|---------------|
-| field-issue (solution_proposed) | project-records/field-issues/ (update existing ticket) | orchestrator (defect) / User (cr) |
+| field-issue (solution-proposed) | project-records/field-issues/ (update existing ticket) | orchestrator (defect) / User (cr) |
 
 ### Work
 
@@ -56,21 +56,21 @@ None
 
 ### For defect
 
-1. **analyzing**: Begin root cause investigation
+1. **in-analysis**: Begin root cause investigation
    - Load related source code
    - Identify fault location from error logs and reproduction steps
-2. **cause_identified**: Identify all factors and complete root cause analysis (Why-Why)
+2. **cause-identified**: Identify all factors and complete root cause analysis (Why-Why)
    - Identify the root cause
    - For compound causes, enumerate all contributing factors
    - Clarify the causal relationship between each factor
    - Record in `field-issue:root_cause`
-3. **planning**: Plan the solution (see "Solution Planning" below)
-4. **solution_proposed**: Finalize the solution (see "Solution Finalization" below)
+3. **in-planning**: Plan the solution (see "Solution Planning" below)
+4. **solution-proposed**: Finalize the solution (see "Solution Finalization" below)
 
 ### For cr
 
-1. **planning**: Plan the solution (skip analyzing / cause_identified)
-2. **solution_proposed**: Finalize the solution
+1. **in-planning**: Plan the solution (skip in-analysis / cause-identified)
+2. **solution-proposed**: Finalize the solution
 
 ### Solution Planning (common to defect / cr)
 
@@ -82,7 +82,7 @@ Analyze the following 3 points and record in `field-issue:impact_analysis`:
 
 ### Solution Finalization
 
-Ensure all of the following are met before changing status to `solution_proposed`:
+Ensure all of the following are met before changing status to `solution-proposed`:
 
 - Recommended solution has been narrowed down to one
 - All impact areas have been enumerated

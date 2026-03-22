@@ -203,7 +203,7 @@
 | T4 | PASS | 13 statuses, 12 gate conditions consistent |
 | T5 | PASS | Internal links correct |
 | T6 | N/A | No YAML frontmatter |
-| T7 | PASS | Status values (reported, classified, analyzing, cause_identified, planning, solution_proposed, implementing, tested, verified, closed, wont_fix, deferred) in English in both |
+| T7 | PASS | Status values (reported, classified, in-analysis, cause-identified, in-planning, solution-proposed, approved, spec-updated, spec-reviewed, fixed, code-reviewed, tested, verified) in English in both |
 | T8 | PASS | field-issue:status, field-issue:type, field-issue:root_cause, etc. identical |
 | T9 | PASS | Terminology consistent |
 

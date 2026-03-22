@@ -70,7 +70,7 @@ Clarifying distinctions between concepts that are similar but different.
 | specification vs template | specification = a project-specific deliverable (docs/spec/). template = a boilerplate provided by the framework (process-rules/spec-template.md) |
 | agent vs sub-agent | agent = one of the role definitions registered in agent-list §1. sub-agent = a child process spawned by Claude Code (which may include agents) |
 | orchestrator vs organizer | orchestrator = the orchestrator agent defined in the process rules. organizer = a graph-traversal agent proposed in the ANGS paper. Currently the same role referred to by different names in different contexts |
-| document_status vs {type}_status | Both are status. document_status = Common Block (document lifecycle: draft/review/approved/archived). {type}_status = Form Block (domain-specific workflow position) |
+| document_status vs {type}_status | Both are status. document_status = Common Block (document lifecycle: draft/in-review/approved/archived). {type}_status = Form Block (domain-specific workflow position) |
 | fault vs defect | fault = an incorrect condition latent in code (undiscovered). defect = a formal issue ticket recorded after discovery (file_type). A fault is discovered and filed as a defect |
 | failure vs incident | failure = a technical event where requirements are no longer satisfied (including during testing). incident = an operational event where a failure affects services in production. A failure during testing is not an incident |
 | defect vs incident | defect = a discovery record during testing/development (file_type: defect, owner: test-engineer). incident = an occurrence record in production (file_type: incident-report, owner: incident-reporter). They differ by phase |

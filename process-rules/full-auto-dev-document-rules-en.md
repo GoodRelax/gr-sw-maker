@@ -455,6 +455,76 @@ test-engineer creates after k6 execution. Comparison results against NFR targets
 
 ---
 
+## 4.3 Status Value Naming Convention
+
+Status values (enum field choices) in this framework MUST follow these meta-rules.
+
+### 4.3.1 Lifecycle Model
+
+All statuses are classified into one of four states.
+
+| # | State | Meaning | English Pattern | Japanese Pattern |
+|:-:|-------|---------|----------------|-----------------|
+| 1 | Not Started | Work has not begun | Adjective / noun (open, draft) | ○○前 / 未○○ |
+| 2 | In Progress | Work is actively underway | in-{noun} (in-review, in-analysis) | ○○中 |
+| 3 | Waiting | Blocked pending external input | waiting-for-{noun} / needs-{noun} / blocked | ○○待 |
+| 4 | Completed | Work is finished | Past participle (approved, fixed, closed) | ○○済 |
+
+> **Note:** Judgment results such as `pass / fail` are binary outcomes, not lifecycle states, and are therefore exempt from this convention.
+
+```mermaid
+stateDiagram-v2
+    [*] --> NotStarted
+    NotStarted --> InProgress : start
+    InProgress --> Waiting : external input required
+    Waiting --> InProgress : input received
+    InProgress --> Completed : finish
+    Completed --> [*]
+```
+
+### 4.3.2 Naming Rules
+
+1. **Values are kebab-case, English only** — per Language Policy (§12), status values are never translated
+2. **"In Progress" uses `in-{noun}`** — the subject of a status is an item (document, defect, etc.), not a person; `-ing` form implies the item is the actor (e.g., ✗ `reviewing` → ✓ `in-review`)
+3. **"Completed" uses past participle** — completion is a "resulting state", not an "action" (e.g., approved, fixed, closed)
+4. **"Waiting" specifies what is awaited** — use `waiting-for-{noun}` / `needs-{noun}`; `blocked` is reserved for unknown or external-cause stalls
+
+### 4.3.3 Cross-Process Transition Rules
+
+When completion of Process A triggers the start of Process B, three patterns apply.
+
+| Pattern | Condition | Transition | Example |
+|---------|-----------|------------|---------|
+| Immediate | No decision needed, same owner | A-done → B-wip (A-done is logged but not a resting state) | fixed → in-retest |
+| Decision Branch | Multiple destinations | A-done lingers → decision routes to next state (record as decision) | reviewed → {in-fix / deferred / accepted} |
+| Owner Handoff | Next owner differs | A-done → B-wait → B-wip ("wait" is mandatory) | implemented → waiting-for-review → in-review |
+
+**Decision criteria:**
+
+1. Are there multiple destinations? → Yes: **Decision Branch**
+2. Does the owner change? → Yes: **Owner Handoff**
+3. Neither → **Immediate**
+
+```mermaid
+stateDiagram-v2
+    state "Process A" as A {
+        A_wip : in-progress
+        A_done : completed
+        A_wip --> A_done : finish
+    }
+    state "Process B" as B {
+        B_wait : waiting
+        B_wip : in-progress
+        B_wait --> B_wip : start
+    }
+
+    A_done --> B_wip : Immediate
+    A_done --> A_done : Decision Branch (lingers)
+    A_done --> B_wait : Owner Handoff
+```
+
+---
+
 # 5. Common Block Specification
 
 Field order is fixed. Agents MUST NOT reorder fields or omit required fields.
@@ -484,7 +554,7 @@ schema_version → file_type → form_block_cardinality → language
 | file_type | enum | Yes | Identification | One of the registered file types (see Chapter 7) |
 | form_block_cardinality | enum: single / multiple | Yes | Identification | Whether this file has a single or multiple Form Blocks |
 | language | string (ISO 639-1) | Yes | Identification | Language of this file (e.g., `ja`, `en`, `fr`) |
-| document_status | enum: draft / review / approved / archived | Yes | State | Document lifecycle status |
+| document_status | enum: draft / in-review / approved / archived | Yes | State | Document lifecycle status |
 | owner | string | Yes | Workflow | Agent with write permission |
 | commissioned_by | string | Yes | Workflow | Trigger for this document's creation (values: `user`, `orchestrator`, `phase-{name}`, or `{agent-name}`) |
 | consumed_by | string | Yes | Workflow | Agent that will use this document next |
@@ -522,7 +592,7 @@ schema_version → file_type → form_block_cardinality → language
 
 ## Document State
 
-<!-- FIELD: document_status | type: enum | values: draft,review,approved,archived | required: true -->
+<!-- FIELD: document_status | type: enum | values: draft,in-review,approved,archived | required: true -->
 
 <doc:document_status>draft</doc:document_status>
 
@@ -897,7 +967,7 @@ Describe phase transition log (append-only table) and free-form notes.
 | handoff:from | string | Yes | Source agent | — |
 | handoff:to | string | Yes | Destination agent | — |
 | handoff:phase_transition | string | Yes | "N->N" phase transition | — |
-| handoff:handoff_status | enum | Yes | Handoff status | ready / in-progress / done / blocked / needs-human |
+| handoff:handoff_status | enum | Yes | Handoff status | ready / in-progress / completed / blocked / needs-human |
 
 ### Detail Block Guidance
 
@@ -1024,7 +1094,7 @@ stateDiagram-v2
 | change-request:id | string | Yes | CR-NNN | — |
 | change-request:cause | enum | Yes | Change cause (user-initiated only) | requirement-addition / requirement-change / scope-change |
 | change-request:impact_level | enum | Yes | Impact level | high -> user approval required / medium / low |
-| change-request:change_request_status | enum | Yes | Change request status | submitted / analyzing / approved / rejected / implemented |
+| change-request:change_request_status | enum | Yes | Change request status | submitted / in-analysis / approved / rejected / implemented |
 | change-request:approved_by | string | No | Approver. Empty when undecided | — |
 
 ### Detail Block Guidance
@@ -1396,7 +1466,7 @@ Describe daily operational procedures (deploy, backup, rotation), incident respo
 |-----------|------|------|------|-----------|
 | incident-report:incident_id | string | Yes | INC-NNN | — |
 | incident-report:severity | enum | Yes | incident severity | P1 / P2 / P3 / P4 |
-| incident-report:incident_status | enum | Yes | incident status | open / investigating / mitigated / resolved / closed |
+| incident-report:incident_status | enum | Yes | incident status | open / in-investigation / mitigated / resolved / closed |
 | incident-report:detected_at | string | Yes | Detection datetime (ISO-8601) | — |
 | incident-report:resolved_at | string | No | Resolution datetime (ISO-8601). Empty when unresolved | — |
 | incident-report:duration_minutes | int | No | Impact duration (minutes). Filled after resolution | — |
@@ -1464,7 +1534,7 @@ Describe the body of the retrospective analysis. Include root cause analysis of 
 |-----------|------|------|------|-----------|
 | field-issue:issue_id | string | Yes | Unique identifier | FI-NNN |
 | field-issue:type | enum | Yes | Determined by feedback-classifier | defect / cr |
-| field-issue:status | enum | Yes | Current status | reported / classified / analyzing / cause_identified / planning / solution_proposed / approved / spec_updated / spec_reviewed / fixed / code_reviewed / tested / verified |
+| field-issue:status | enum | Yes | Current status | reported / classified / in-analysis / cause-identified / in-planning / solution-proposed / approved / spec-updated / spec-reviewed / fixed / code-reviewed / tested / verified |
 | field-issue:severity | enum | Yes | Severity | critical / high / medium / low |
 | field-issue:reported_by | string | Yes | Reporter | field-test-engineer |
 | field-issue:classified_by | string | No | Classifier | feedback-classifier |

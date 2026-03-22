@@ -90,21 +90,21 @@ flowchart TD
     FC -->|"Question"| Q
 
     DEF -->|"classified"| FIA_D1
-    FIA_D1 -->|"analyzing"| FIA_D2
-    FIA_D2 -->|"cause_identified"| FIA_D3
-    FIA_D3 -->|"planning"| FIA_D4
-    FIA_D4 -->|"solution_proposed"| ORC
+    FIA_D1 -->|"in-analysis"| FIA_D2
+    FIA_D2 -->|"cause-identified"| FIA_D3
+    FIA_D3 -->|"in-planning"| FIA_D4
+    FIA_D4 -->|"solution-proposed"| ORC
 
     CR -->|"classified"| FIA_C1
-    FIA_C1 -->|"planning"| FIA_C2
-    FIA_C2 -->|"solution_proposed"| USR
+    FIA_C1 -->|"in-planning"| FIA_C2
+    FIA_C2 -->|"solution-proposed"| USR
 
     ORC -->|"approved"| SPEC
     USR -->|"approved"| SPEC
-    SPEC -->|"spec_updated"| SREV
-    SREV -->|"spec_reviewed"| IMP
+    SPEC -->|"spec-updated"| SREV
+    SREV -->|"spec-reviewed"| IMP
     IMP -->|"fixed"| CREV
-    CREV -->|"code_reviewed"| TE
+    CREV -->|"code-reviewed"| TE
     TE -->|"tested"| FTE2
     FTE2 -->|"Field OK"| DONE
 ```
@@ -117,15 +117,15 @@ flowchart TD
 |---|---|---|
 | `reported` | Feedback recorded | Same |
 | `classified` | Spec comparison complete; confirmed as defect | Spec comparison complete; confirmed as CR |
-| `analyzing` | Root cause analysis in progress | — (skipped) |
-| `cause_identified` | Cause identified; all contributing factors determined | — (skipped) |
-| `planning` | Solution planning in progress | Solution planning in progress |
-| `solution_proposed` | Solution finalized; awaiting approval | Solution finalized; awaiting approval |
+| `in-analysis` | Root cause analysis in progress | — (skipped) |
+| `cause-identified` | Cause identified; all contributing factors determined | — (skipped) |
+| `in-planning` | Solution planning in progress | Solution planning in progress |
+| `solution-proposed` | Solution finalized; awaiting approval | Solution finalized; awaiting approval |
 | `approved` | Fix authorized to proceed | Implementation authorized to proceed |
-| `spec_updated` | Spec updated (only when necessary) | Spec updated (mandatory) |
-| `spec_reviewed` | Spec review PASS (R2/R4/R5) | Same |
+| `spec-updated` | Spec updated (only when necessary) | Spec updated (mandatory) |
+| `spec-reviewed` | Spec review PASS (R2/R4/R5) | Same |
 | `fixed` | Code fix complete | Code fix complete |
-| `code_reviewed` | Code review PASS (R2/R3/R4/R5) | Same |
+| `code-reviewed` | Code review PASS (R2/R3/R4/R5) | Same |
 | `tested` | All automated tests PASS | Same |
 | `verified` | Field verification PASS | Same |
 
@@ -145,7 +145,7 @@ Each status transition MUST satisfy the following gate conditions.
 | Criteria | Behavior differs from what is documented in the spec → `defect`; Request not documented in the spec → `cr`; Request for information → `question` (no ticket required) |
 | Output | Set the `type` field on the ticket |
 
-### 6.2 classified → analyzing (defect only)
+### 6.2 classified → in-analysis (defect only)
 
 | Item | Details |
 |---|---|
@@ -154,7 +154,7 @@ Each status transition MUST satisfy the following gate conditions.
 | Activities | Begin root cause investigation |
 | Gate condition | None (auto-transitions after classified is complete) |
 
-### 6.3 analyzing → cause_identified (defect only)
+### 6.3 in-analysis → cause-identified (defect only)
 
 | Item | Details |
 |---|---|
@@ -166,7 +166,7 @@ Each status transition MUST satisfy the following gate conditions.
 | | - The causal relationships among factors are clear |
 | Output | Record root cause analysis results in the ticket |
 
-### 6.4 cause_identified → planning (defect) / classified → planning (CR)
+### 6.4 cause-identified → in-planning (defect) / classified → in-planning (CR)
 
 | Item | Details |
 |---|---|
@@ -178,7 +178,7 @@ Each status transition MUST satisfy the following gate conditions.
 | Gate condition | Analysis of the above 3 points is complete |
 | Output | Record solution proposals, impact analysis, side effect analysis, and alternative comparison in the ticket |
 
-### 6.5 planning → solution_proposed
+### 6.5 in-planning → solution-proposed
 
 | Item | Details |
 |---|---|
@@ -191,7 +191,7 @@ Each status transition MUST satisfy the following gate conditions.
 | | - Whether additional test cases are needed has been determined |
 | Output | Documented finalized solution proposal |
 
-### 6.6 solution_proposed → approved
+### 6.6 solution-proposed → approved
 
 | Item | Details |
 |---|---|
@@ -203,7 +203,7 @@ Each status transition MUST satisfy the following gate conditions.
 
 **Important: The implementer MUST NOT touch any code until the status reaches `approved`.**
 
-### 6.7 approved → spec_updated
+### 6.7 approved → spec-updated
 
 | Item | Details |
 |---|---|
@@ -215,7 +215,7 @@ Each status transition MUST satisfy the following gate conditions.
 
 **Important: The implementer fixes code based on the updated specification. Code MUST NOT be modified before the specification is updated.**
 
-### 6.8 spec_updated → spec_reviewed
+### 6.8 spec-updated → spec-reviewed
 
 | Item | Details |
 |---|---|
@@ -226,7 +226,7 @@ Each status transition MUST satisfy the following gate conditions.
 
 **Important: The implementer MUST NOT modify code before the specification review has PASSed.**
 
-### 6.9 spec_reviewed → fixed
+### 6.9 spec-reviewed → fixed
 
 | Item | Details |
 |---|---|
@@ -237,7 +237,7 @@ Each status transition MUST satisfy the following gate conditions.
 | | - The specification and the code are consistent |
 | Output | Fixed code |
 
-### 6.10 fixed → code_reviewed
+### 6.10 fixed → code-reviewed
 
 | Item | Details |
 |---|---|
@@ -246,7 +246,7 @@ Each status transition MUST satisfy the following gate conditions.
 | Gate condition | Zero Critical / High findings |
 | Output | Review report (`project-records/reviews/`) |
 
-### 6.11 code_reviewed → tested
+### 6.11 code-reviewed → tested
 
 | Item | Details |
 |---|---|
@@ -273,7 +273,7 @@ Each status transition MUST satisfy the following gate conditions.
 | Aspect | defect | CR |
 |---|---|---|
 | Definition | Implementation differs from behavior documented in the spec | A new request not documented in the spec |
-| Root cause analysis | Required (analyzing → cause_identified) | Not required (skipped) |
+| Root cause analysis | Required (in-analysis → cause-identified) | Not required (skipped) |
 | Solution planning | Required | Required |
 | Approver | orchestrator | User |
 | Spec update | Only when spec ambiguity is the cause (may be skipped) | Mandatory |
@@ -284,7 +284,7 @@ Each status transition MUST satisfy the following gate conditions.
 
 1. **No code changes before `approved`**: The implementer MUST NOT change code before the status reaches `approved`
 2. **No process bypass via hotfix**: Even in urgent cases, the status transitions defined in this rule MUST NOT be skipped. However, the content recorded at each step may be brief
-3. **No code changes before spec update**: The implementer MUST NOT change code before the status reaches `spec_updated`
+3. **No code changes before spec update**: The implementer MUST NOT change code before the status reaches `spec-updated`
 4. **No reporting completion without testing**: Completion MUST NOT be reported to the user without confirming all automated tests PASS
 5. **No skipping reviews**: Quality reviews by review-agent MUST NOT be skipped
 

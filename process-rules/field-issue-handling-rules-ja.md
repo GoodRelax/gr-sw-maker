@@ -90,21 +90,21 @@ flowchart TD
     FC -->|"質問"| Q
 
     DEF -->|"classified"| FIA_D1
-    FIA_D1 -->|"analyzing"| FIA_D2
-    FIA_D2 -->|"cause_identified"| FIA_D3
-    FIA_D3 -->|"planning"| FIA_D4
-    FIA_D4 -->|"solution_proposed"| ORC
+    FIA_D1 -->|"in-analysis"| FIA_D2
+    FIA_D2 -->|"cause-identified"| FIA_D3
+    FIA_D3 -->|"in-planning"| FIA_D4
+    FIA_D4 -->|"solution-proposed"| ORC
 
     CR -->|"classified"| FIA_C1
-    FIA_C1 -->|"planning"| FIA_C2
-    FIA_C2 -->|"solution_proposed"| USR
+    FIA_C1 -->|"in-planning"| FIA_C2
+    FIA_C2 -->|"solution-proposed"| USR
 
     ORC -->|"approved"| SPEC
     USR -->|"approved"| SPEC
-    SPEC -->|"spec_updated"| SREV
-    SREV -->|"spec_reviewed"| IMP
+    SPEC -->|"spec-updated"| SREV
+    SREV -->|"spec-reviewed"| IMP
     IMP -->|"fixed"| CREV
-    CREV -->|"code_reviewed"| TE
+    CREV -->|"code-reviewed"| TE
     TE -->|"tested"| FTE2
     FTE2 -->|"実機OK"| DONE
 ```
@@ -117,15 +117,15 @@ flowchart TD
 |---|---|---|
 | `reported` | フィードバック記録済み | 同左 |
 | `classified` | 仕様照合完了・defect 確定 | 仕様照合完了・CR 確定 |
-| `analyzing` | 原因分析中 | ー（スキップ） |
-| `cause_identified` | 原因判明・全要因の特定完了 | ー（スキップ） |
-| `planning` | 対策立案中 | 対策立案中 |
-| `solution_proposed` | 対策確定・承認待ち | 対策確定・承認待ち |
+| `in-analysis` | 原因分析中 | ー（スキップ） |
+| `cause-identified` | 原因判明・全要因の特定完了 | ー（スキップ） |
+| `in-planning` | 対策立案中 | 対策立案中 |
+| `solution-proposed` | 対策確定・承認待ち | 対策確定・承認待ち |
 | `approved` | 修正着手 OK | 実装着手 OK |
-| `spec_updated` | 仕様書更新済み（必要時のみ） | 仕様書更新済み（必須） |
-| `spec_reviewed` | 仕様書レビュー PASS（R2/R4/R5） | 同左 |
+| `spec-updated` | 仕様書更新済み（必要時のみ） | 仕様書更新済み（必須） |
+| `spec-reviewed` | 仕様書レビュー PASS（R2/R4/R5） | 同左 |
 | `fixed` | コード修正完了 | コード修正完了 |
-| `code_reviewed` | コードレビュー PASS（R2/R3/R4/R5） | 同左 |
+| `code-reviewed` | コードレビュー PASS（R2/R3/R4/R5） | 同左 |
 | `tested` | 自動テスト全テスト PASS | 同左 |
 | `verified` | 実機検証 PASS | 同左 |
 
@@ -145,7 +145,7 @@ flowchart TD
 | 判定基準 | 仕様書に記載された動作と異なる → `defect`、仕様書に記載がない要求 → `cr`、情報提供の依頼 → `質問`（チケット不要） |
 | 出力 | チケットに `type` フィールドを設定 |
 
-### 6.2 classified → analyzing（defect のみ）
+### 6.2 classified → in-analysis（defect のみ）
 
 | 項目 | 内容 |
 |---|---|
@@ -154,7 +154,7 @@ flowchart TD
 | 実施内容 | 根本原因の調査を開始する |
 | ゲート条件 | なし（classified 完了後に自動遷移） |
 
-### 6.3 analyzing → cause_identified（defect のみ）
+### 6.3 in-analysis → cause-identified（defect のみ）
 
 | 項目 | 内容 |
 |---|---|
@@ -166,7 +166,7 @@ flowchart TD
 | | - 各要因の因果関係が明確である |
 | 出力 | チケットに根本原因分析の結果を記載 |
 
-### 6.4 cause_identified → planning（defect）/ classified → planning（CR）
+### 6.4 cause-identified → in-planning（defect）/ classified → in-planning（CR）
 
 | 項目 | 内容 |
 |---|---|
@@ -178,7 +178,7 @@ flowchart TD
 | ゲート条件 | 上記 3 点の分析が完了していること |
 | 出力 | チケットに対策案・影響分析・副作用分析・代替案比較を記載 |
 
-### 6.5 planning → solution_proposed
+### 6.5 in-planning → solution-proposed
 
 | 項目 | 内容 |
 |---|---|
@@ -191,7 +191,7 @@ flowchart TD
 | | - 必要なテストケースの追加要否が判定されている |
 | 出力 | 確定した対策案の記載 |
 
-### 6.6 solution_proposed → approved
+### 6.6 solution-proposed → approved
 
 | 項目 | 内容 |
 |---|---|
@@ -203,7 +203,7 @@ flowchart TD
 
 **重要: `approved` になるまで implementer はコードに触れてはならない（MUST NOT）。**
 
-### 6.7 approved → spec_updated
+### 6.7 approved → spec-updated
 
 | 項目 | 内容 |
 |---|---|
@@ -215,7 +215,7 @@ flowchart TD
 
 **重要: implementer は更新された仕様書に基づいてコードを修正する。仕様書が更新される前にコードを修正してはならない（MUST NOT）。**
 
-### 6.8 spec_updated → spec_reviewed
+### 6.8 spec-updated → spec-reviewed
 
 | 項目 | 内容 |
 |---|---|
@@ -226,7 +226,7 @@ flowchart TD
 
 **重要: 仕様書レビューが PASS する前に implementer がコードを修正してはならない（MUST NOT）。**
 
-### 6.9 spec_reviewed → fixed
+### 6.9 spec-reviewed → fixed
 
 | 項目 | 内容 |
 |---|---|
@@ -237,7 +237,7 @@ flowchart TD
 | | - 仕様書の内容とコードが整合している |
 | 出力 | 修正済みコード |
 
-### 6.10 fixed → code_reviewed
+### 6.10 fixed → code-reviewed
 
 | 項目 | 内容 |
 |---|---|
@@ -246,7 +246,7 @@ flowchart TD
 | ゲート条件 | Critical / High 指摘が 0 件であること |
 | 出力 | レビュー報告（`project-records/reviews/`） |
 
-### 6.11 code_reviewed → tested
+### 6.11 code-reviewed → tested
 
 | 項目 | 内容 |
 |---|---|
@@ -273,7 +273,7 @@ flowchart TD
 | 観点 | defect | CR |
 |---|---|---|
 | 定義 | 仕様書に記載された動作と実装が異なる | 仕様書に記載されていない新たな要求 |
-| 原因分析 | 必須（analyzing → cause_identified） | 不要（スキップ） |
+| 原因分析 | 必須（in-analysis → cause-identified） | 不要（スキップ） |
 | 対策立案 | 必須 | 必須 |
 | 承認者 | orchestrator | ユーザー |
 | 仕様書更新 | 仕様の曖昧さが原因の場合のみ（スキップ可） | 必須 |
@@ -284,7 +284,7 @@ flowchart TD
 
 1. **`approved` 前のコード変更禁止**: ステータスが `approved` になる前に implementer がコードを変更してはならない（MUST NOT）
 2. **hotfix によるプロセス省略禁止**: 緊急性が高い場合でも本規則のステータス遷移を省略してはならない（MUST NOT）。ただし各ステップの記載量は簡潔でよい
-3. **仕様書更新前のコード変更禁止**: `spec_updated` になる前に implementer がコードを変更してはならない（MUST NOT）
+3. **仕様書更新前のコード変更禁止**: `spec-updated` になる前に implementer がコードを変更してはならない（MUST NOT）
 4. **テスト未実行の報告禁止**: 自動テスト全テスト PASS を確認せずにユーザーに修正完了を報告してはならない（MUST NOT）
 5. **レビュー省略禁止**: review-agent による品質レビューを省略してはならない（MUST NOT）
 

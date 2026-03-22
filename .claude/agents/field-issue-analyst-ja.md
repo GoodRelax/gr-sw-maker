@@ -25,7 +25,7 @@ model: opus
 
 ### End Conditions
 
-- [ ] 対策案が確定し、ステータスが `solution_proposed` に変更されている
+- [ ] 対策案が確定し、ステータスが `solution-proposed` に変更されている
 - [ ] 影響分析・副作用分析・代替案比較が完了している
 - [ ] 仕様書更新の要否が判定されている
 
@@ -44,7 +44,7 @@ model: opus
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| field-issue（solution_proposed） | project-records/field-issues/（既存チケットを更新） | orchestrator（defect）/ ユーザー（cr） |
+| field-issue（solution-proposed） | project-records/field-issues/（既存チケットを更新） | orchestrator（defect）/ ユーザー（cr） |
 
 ### Work
 
@@ -56,21 +56,21 @@ model: opus
 
 ### defect の場合
 
-1. **analyzing**: 根本原因の調査を開始する
+1. **in-analysis**: 根本原因の調査を開始する
    - 関連するソースコードを読み込む
    - エラーログ・再現手順からフォルト箇所を特定する
-2. **cause_identified**: 全要因を特定し、根本原因分析（Why-Why）を完了する
+2. **cause-identified**: 全要因を特定し、根本原因分析（Why-Why）を完了する
    - 根本原因を特定する
    - 複合要因の場合、全ての要因を列挙する
    - 各要因の因果関係を明確にする
    - チケットの `field-issue:root_cause` に記録する
-3. **planning**: 対策案を立案する（下記「対策立案」参照）
-4. **solution_proposed**: 対策案を確定する（下記「対策確定」参照）
+3. **in-planning**: 対策案を立案する（下記「対策立案」参照）
+4. **solution-proposed**: 対策案を確定する（下記「対策確定」参照）
 
 ### cr の場合
 
-1. **planning**: 対策案を立案する（analyzing / cause_identified はスキップ）
-2. **solution_proposed**: 対策案を確定する
+1. **in-planning**: 対策案を立案する（in-analysis / cause-identified はスキップ）
+2. **solution-proposed**: 対策案を確定する
 
 ### 対策立案（defect / cr 共通）
 
@@ -82,7 +82,7 @@ model: opus
 
 ### 対策確定
 
-以下を全て満たしてからステータスを `solution_proposed` に変更する:
+以下を全て満たしてからステータスを `solution-proposed` に変更する:
 
 - 推奨対策案が 1 つに絞られている
 - 影響範囲が全て列挙されている
