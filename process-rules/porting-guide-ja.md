@@ -164,8 +164,8 @@ for f in *-ja.md; do cp "$f" "${f%-ja.md}.md"; done
 
 | 役割ランク | Claude | OpenAI | Google | 用途 |
 |---|---|---|---|---|
-| 高（判断・設計） | opus | o3 | gemini-2.5-pro | orchestrator, architect, review-agent, security-reviewer, srs-writer, implementer |
-| 中（定型作業） | sonnet | gpt-4.1 / gpt-4.1-mini | gemini-2.5-flash | test-engineer, progress-monitor, change-manager, risk-manager, framework-translation-verifier, user-manual-writer, runbook-writer, incident-reporter, process-improver, decree-writer |
+| 高（判断・設計） | opus | o3 | gemini-2.5-pro | orchestrator, architect, review-agent, security-reviewer, srs-writer, implementer, field-issue-analyst |
+| 中（定型作業） | sonnet | gpt-4.1 / gpt-4.1-mini | gemini-2.5-flash | test-engineer, progress-monitor, change-manager, risk-manager, framework-translation-verifier, user-manual-writer, runbook-writer, incident-reporter, process-improver, decree-writer, field-test-engineer, feedback-classifier |
 | 低（単純ルール） | haiku | gpt-4.1-mini | gemini-2.5-flash | license-checker, kotodama-kun |
 
 > 推奨値はPoC検証で調整すること。各モデルの能力・コスト・速度バランスはプラットフォームごとに異なる。

@@ -56,7 +56,7 @@ Design the technical structure to realize the requirements from specification Ch
 | hw-requirement-spec | docs/hardware/ | implementer, test-engineer (conditional) |
 | ai-requirement-spec | docs/ai/ | implementer (conditional) |
 | framework-requirement-spec | docs/framework/ | implementer (conditional) |
-| disaster-recovery-plan | docs/operations/ | operations team, orchestrator |
+| disaster-recovery-plan | docs/operations/ | runbook-writer, operations team |
 | openapi.yaml | docs/api/ | implementer, test-engineer |
 
 > openapi.yaml is an external tool prescribed format (Document Management Rules §13) and is not a file_type. It is not subject to Common Block management, but is generated and managed by architect.

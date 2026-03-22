@@ -175,7 +175,7 @@ Claude Code may decide autonomously in the following cases:
 ## Conditional Processes (determined during setup phase)
 
 Enable only when applicable conditions exist:
-- Regulatory research: [enabled/disabled] - Reason: [describe]
+- Legal research: [enabled/disabled] - Reason: [describe]
 - Patent research: [enabled/disabled] - Reason: [describe]
 - Technology trend research: [enabled/disabled] - Reason: [describe]
 - Functional safety (HARA/FMEA/FTA): [enabled/disabled] - Reason: [describe]
@@ -185,7 +185,7 @@ Enable only when applicable conditions exist:
 - Framework requirement definition: [enabled/disabled] - Reason: [describe]
 - HW production process management: [enabled/disabled] - Reason: [describe]
 - Product i18n/l10n: [enabled/disabled] - Reason: [describe]
-- Certification: [enabled/disabled] - Reason: [describe]
+- Certification acquisition: [enabled/disabled] - Reason: [describe]
 - Operations and maintenance: [enabled/disabled] - Reason: [describe]
 - Field testing: [enabled/disabled] - Reason: [describe]
 

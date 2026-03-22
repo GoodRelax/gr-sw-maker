@@ -6,6 +6,7 @@ tools:
   - Write
   - Bash
   - Glob
+  - Grep
 model: haiku
 ---
 

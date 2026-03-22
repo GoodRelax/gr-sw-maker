@@ -1376,6 +1376,9 @@ project_root/
       incident-reporter.md        ... Incident report agent
       process-improver.md         ... Process improvement agent
       decree-writer.md            ... Governance file revision agent
+      field-test-engineer.md      ... Field testing agent (conditional)
+      feedback-classifier.md      ... Feedback classification agent (conditional)
+      field-issue-analyst.md      ... Field issue analysis agent (conditional)
     commands/                     ... Custom slash commands
       full-auto-dev.md            ... Start fully automated development (setup to delivery)
       check-progress.md           ... Progress check
@@ -1405,6 +1408,7 @@ project_root/
     release/                      ... Release judgment checklist (Recommended)
     improvement/                  ... Retrospective and process improvement records (Recommended)
     archive/                      ... Deprecated documents (Recommended)
+    snapshots/                    ... Project snapshots (Recommended)
     incidents/                    ... Incident records (Conditional)
     legal/                        ... Legal and patent research records (Conditional)
     safety/                       ... Functional safety analysis documents (Conditional)
@@ -1527,13 +1531,27 @@ This structure is based on conventions that Claude Code automatically recognizes
 
 When working with Agent Teams, use the following role definitions:
 
-- **SRS Agent**: Creates specification (Ch1-2: Foundation & Requirements) in docs/spec/ (follows the ANMS/ANPS/ANGS format selected in the setup phase). Structures the user concept
-- **Architect Agent**: Elaborates specification Ch3-6 in docs/spec/. Generates OpenAPI specification in docs/api/
-- **Security Agent**: Creates security design in docs/security/. Conducts vulnerability reviews of implementation code
-- **Implementation Agent**: Implements code under src/. Follows design documents
-- **Test Agent**: Creates and executes tests under tests/. Generates coverage reports
-- **Review Agent**: Outputs review reports to project-records/reviews/. Reviews on R1-R6 perspectives (SW engineering principles, concurrency, performance) and blocks phase transitions until Critical/High findings reach zero
-- **PM Agent**: Outputs progress reports to project-management/progress/. Manages WBS/defect curve/cost
+- **Orchestrator Agent (orchestrator)**: Project-wide orchestration. Manages pipeline-state.md / executive-dashboard.md / final-report.md / decision records. Controls phase transitions and quality gates. Defined in `.claude/agents/orchestrator.md`
+- **SRS Agent (srs-writer)**: Creates specification under docs/spec/ based on user-order.md (3-question format) + process-rules/spec-template.md (Ch1-2 Foundation & Requirements, format selected during setup phase). Structures user concepts
+- **Architect Agent (architect)**: Elaborates ANMS spec Ch3-6 under docs/spec/ (Architecture, Specification, Test Strategy, Design Principles). Generates OpenAPI spec under docs/api/
+- **Security Agent (security-reviewer)**: Creates security design under docs/security/. Reviews implementation code for vulnerabilities. Records scan results as security-scan-report under project-records/security/
+- **Implementer Agent (implementer)**: Implements code under src/. Follows design documents, adheres to Clean Architecture and DIP. Also creates unit tests
+- **Test Agent (test-engineer)**: Creates and executes tests under tests/. Generates coverage reports
+- **Review Agent (review-agent)**: Outputs review reports to project-records/reviews/. Reviews from R1-R6 perspectives (SW engineering principles, concurrency, performance), blocking phase transition until Critical/High findings reach zero
+- **PM Agent (progress-monitor)**: Outputs progress reports to project-management/progress/. Manages WBS/defect curve/cost
+- **Change Manager Agent (change-manager)**: Records user-initiated change requests to project-records/change-requests/ after spec approval, performs impact analysis. impact_level=high requires user approval. AI-side technical changes are managed via defect/decision
+- **Risk Manager Agent (risk-manager)**: Records risk entries to project-records/risks/, manages risk-register.md. Notifies user when score≧6
+- **License Checker Agent (license-checker)**: Checks license compatibility when adding dependencies, manages attribution
+- **Kotodama-kun Agent (kotodama-kun)**: Checks that terminology and naming in artifacts comply with framework glossary and project glossary
+- **Framework Translation Verifier Agent (framework-translation-verifier)**: Verifies multi-language translation consistency of framework documents before release
+- **User Manual Writer Agent (user-manual-writer)**: Creates user manual under docs/ during delivery phase
+- **Runbook Writer Agent (runbook-writer)**: Creates operational runbook under docs/operations/ during delivery phase
+- **Incident Reporter Agent (incident-reporter)**: Creates incident reports under project-records/incidents/ during operation phase
+- **Process Improver Agent (process-improver)**: Conducts retrospectives at each phase completion, proposes process improvements through defect pattern root cause analysis
+- **Decree Writer Agent (decree-writer)**: Safely applies approved improvements to governance files (CLAUDE.md, agent definitions, process-rules). Executes changes after safety checks including self-modification prohibition and quality gate protection, records before/after diff
+- **Field Test Engineer Agent (field-test-engineer)** (conditional: field testing enabled): Conducts field testing with user, records feedback, performs post-fix verification. Owner of field-issue tickets
+- **Feedback Classifier Agent (feedback-classifier)** (conditional: field testing enabled): Classifies feedback against spec as defect / CR / question
+- **Field Issue Analyst Agent (field-issue-analyst)** (conditional: field testing enabled): Root cause analysis (defect), solution planning (defect / CR), impact/side-effect/alternative analysis
 
 ## Critical Decision Criteria
 
@@ -1576,7 +1594,7 @@ Claude Code may decide autonomously in the following cases:
 
 # Technology trend research: [Enabled/Disabled] - Reason: [description]
 
-# Functional safety (HARA/FMEA): [Enabled/Disabled] - Reason: [description]
+# Functional safety (HARA/FMEA/FTA): [Enabled/Disabled] - Reason: [description]
 
 # Accessibility (WCAG 2.1): [Enabled/Disabled] - Reason: [description]
 
@@ -1593,6 +1611,8 @@ Claude Code may decide autonomously in the following cases:
 # Certification acquisition: [Enabled/Disabled] - Reason: [description]
 
 # Operations and maintenance: [Enabled/Disabled] - Reason: [description]
+
+# Field testing: [Enabled/Disabled] - Reason: [description]
 ```
 
 This template is committed to version control and shared across the entire team.
@@ -2520,6 +2540,17 @@ sequenceDiagram
     User->>Orch: IaC Apply Approved
     Orch->>Orch: Execute Deploy and Smoke Test
     Orch->>User: Deliver final-report and Request Acceptance Testing
+
+    note over Orch,User: Field Testing Path (conditional: field testing enabled)
+    participant FTE as field-test-engineer
+    participant FC as feedback-classifier
+    participant FIA as field-issue-analyst
+    User->>FTE: Conduct Field Test Session
+    FTE->>FC: Submit field-issue (reported)
+    FC->>FIA: Forward field-issue (classified)
+    FIA->>Impl: Request Fix (if defect)
+    Impl->>FTE: Notify Fix Complete
+    FTE->>User: Verify Fix on Device
 ```
 
 ---
@@ -2639,6 +2670,11 @@ The PM Agent updates `project-management/progress/progress-report.json` accordin
 | `incident-reporter` | Incident report creation | sonnet | Operations |
 | `process-improver` | Retrospective, root cause analysis, process improvement proposals | sonnet | Improvement |
 | `decree-writer` | Safe application of approved improvements to governance files | sonnet | Improvement |
+| `field-test-engineer` | Field testing with user, feedback recording, post-fix verification | sonnet | Conditional |
+| `feedback-classifier` | Feedback classification against spec (defect / CR / question) | sonnet | Conditional |
+| `field-issue-analyst` | Root cause analysis, solution planning, impact analysis | opus | Conditional |
+
+> **Note:** Conditional agents (field-test-engineer, feedback-classifier, field-issue-analyst) are activated only when "Field testing" is enabled in the setup phase. See agent-list §1 for details.
 
 ### Environment Variables
 

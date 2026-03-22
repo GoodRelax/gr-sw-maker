@@ -12,7 +12,7 @@ If discrepancies are detected, halt the review and ask the user for a decision.
 
 | Category | Glob Pattern | Expected Pairs |
 |----------|--------------|:--------------:|
-| Process rules | `process-rules/*-ja.md` ↔ `*-en.md` | 10 |
+| Process rules | `process-rules/*-ja.md` ↔ `*-en.md` | 11 |
 | Agent definitions | `.claude/agents/*-ja.md` ↔ `*-en.md` | 21 |
 | Project instruction template | `CLAUDE-ja.md` ↔ `CLAUDE-en.md` | 1 |
 | Custom commands | `.claude/commands/*-ja.md` ↔ `*-en.md` | 5 |
@@ -72,7 +72,7 @@ If Phase 0 passes, JA and EN content is confirmed consistent. From this point, *
 | F08 | `process-rules/prompt-structure-en.md` | Prompt structure conventions (S0-S6) |
 | F09 | `process-rules/spec-template-en.md` | Specification template |
 | F10 | `process-rules/porting-guide-en.md` | Porting guide |
-| F11 | `.claude/agents/*-en.md` (21 files) | Agent definitions |
+| F11 | `.claude/agents/*-en.md` | Agent definitions |
 | F12 | `.claude/commands/*-en.md` | Custom commands |
 | F13 | `essays/anms-essay-en.md` | ANMS essay |
 | F14 | `essays/angs-essay-en.md` | ANGS essay |
@@ -95,18 +95,18 @@ Launch the following 2 sub-agents **in parallel in the background using the Agen
 **Prompt (pass the following as-is):**
 
 ```
-Perform a quality check on all 21 agent definition files (EN versions) in the gr-sw-maker framework.
+Perform a quality check on all agent definition files (EN versions; count should match agent-list §1 table rows) in the gr-sw-maker framework.
 No code needs to be written. Read and analyze only.
 
 ## Files to Read
 
 1. process-rules/agent-list-en.md §1 (agent list table) and §2 (all ownership sections)
 2. process-rules/prompt-structure-en.md (S0-S6 structure conventions)
-3. .claude/agents/*-en.md all 21 files
+3. .claude/agents/*-en.md all files (count should match agent-list §1)
 
 ## Check Items
 
-- [ ] C1: Do all 21 agents comply with the S0-S6 structure? (All sections present: Activation/Ownership/Procedure/Rules/Exception, in correct order)
+- [ ] C1: Do all agents listed in agent-list §1 comply with the S0-S6 structure? (All sections present: Activation/Ownership/Procedure/Rules/Exception, in correct order)
 - [ ] C2: Does each agent's YAML frontmatter (name, description, tools, model) match the agent-list §1 table?
 - [ ] C3: Are the file_type entries in each agent's Out table registered as owned by that agent in agent-list §2?
 - [ ] C4: Do the file_type entries in each agent's In table exist in the providing agent's Out?

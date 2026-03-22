@@ -139,6 +139,7 @@ Revision rules applicable to all files under process-rules/ (including this docu
     licenses/                     # License reports
     performance/                  # Performance test reports
     improvement/                  # Retrospective and improvement records
+    release/                      # Release judgment checklist
     incidents/                    # Production incident records (conditional)
     legal/                        # Legal research results (conditional)
     safety/                       # Functional safety records (conditional)

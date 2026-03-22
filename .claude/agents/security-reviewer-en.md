@@ -41,6 +41,7 @@ Identify and mitigate security threats at the design stage, and detect vulnerabi
 | spec-architecture | architect | Evaluate security aspects of the architecture |
 | CLAUDE.md | orchestrator (setup) | Confirm security requirements |
 | (src/) | implementer | Vulnerability scanning of implementation code |
+| license-report | license-checker | Cross-reference license risk with security vulnerabilities |
 
 ### Out
 

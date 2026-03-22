@@ -164,8 +164,8 @@ Recommended mappings when replacing model specifications in agent definitions:
 
 | Role Rank | Claude | OpenAI | Google | Usage |
 |---|---|---|---|---|
-| High (judgment and design) | opus | o3 | gemini-2.5-pro | orchestrator, architect, review-agent, security-reviewer, srs-writer, implementer |
-| Medium (routine tasks) | sonnet | gpt-4.1 / gpt-4.1-mini | gemini-2.5-flash | test-engineer, progress-monitor, change-manager, risk-manager, framework-translation-verifier, user-manual-writer, runbook-writer, incident-reporter, process-improver, decree-writer |
+| High (judgment and design) | opus | o3 | gemini-2.5-pro | orchestrator, architect, review-agent, security-reviewer, srs-writer, implementer, field-issue-analyst |
+| Medium (routine tasks) | sonnet | gpt-4.1 / gpt-4.1-mini | gemini-2.5-flash | test-engineer, progress-monitor, change-manager, risk-manager, framework-translation-verifier, user-manual-writer, runbook-writer, incident-reporter, process-improver, decree-writer, field-test-engineer, feedback-classifier |
 | Low (simple rules) | haiku | gpt-4.1-mini | gemini-2.5-flash | license-checker, kotodama-kun |
 
 > Recommended values should be adjusted through PoC validation. The capability, cost, and speed balance of each model differs by platform.

@@ -166,7 +166,7 @@ flowchart TD
 | 観点 | Defect | Incident |
 |------|--------|----------|
 | フェーズ | implementation, testing | operation |
-| owner | test-engineer | orchestrator |
+| owner | test-engineer | incident-reporter |
 | 目的 | Fault の修正と再発防止 | サービス復旧と事後分析 |
 | file_type | `defect` (DEF-NNN) | `incident-report` (INC-NNN) |
 | 関係 | Incident の根本原因調査で新たな Defect が起票されることがある |

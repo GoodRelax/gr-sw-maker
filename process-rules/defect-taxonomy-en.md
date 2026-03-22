@@ -166,7 +166,7 @@ The causal chain consists of 5 layers: orange (cause) -> yellow (latent) -> red 
 | Aspect | Defect | Incident |
 |--------|--------|----------|
 | Phase | implementation, testing | operation |
-| owner | test-engineer | orchestrator |
+| owner | test-engineer | incident-reporter |
 | Purpose | Fix Fault and prevent recurrence | Restore service and conduct post-mortem |
 | file_type | `defect` (DEF-NNN) | `incident-report` (INC-NNN) |
 | Relationship | A root cause investigation of an Incident may result in filing new Defects |

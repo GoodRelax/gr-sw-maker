@@ -12,7 +12,7 @@
 
 | カテゴリ | glob パターン | 想定ペア数 |
 |----------|---------------|:----------:|
-| プロセス規則 | `process-rules/*-ja.md` ↔ `*-en.md` | 10 |
+| プロセス規則 | `process-rules/*-ja.md` ↔ `*-en.md` | 11 |
 | エージェント定義 | `.claude/agents/*-ja.md` ↔ `*-en.md` | 21 |
 | プロジェクト指示テンプレート | `CLAUDE-ja.md` ↔ `CLAUDE-en.md` | 1 |
 | カスタムコマンド | `.claude/commands/*-ja.md` ↔ `*-en.md` | 5 |
@@ -72,7 +72,7 @@ Phase 0 を通過した場合、日英の内容は一致しているため、以
 | F08 | `process-rules/prompt-structure-en.md` | プロンプト構造規約（S0-S6） |
 | F09 | `process-rules/spec-template-en.md` | 仕様テンプレート |
 | F10 | `process-rules/porting-guide-en.md` | 移植ガイド |
-| F11 | `.claude/agents/*-en.md`（21本） | エージェント定義 |
+| F11 | `.claude/agents/*-en.md` | エージェント定義 |
 | F12 | `.claude/commands/*-en.md` | カスタムコマンド |
 | F13 | `essays/anms-essay-en.md` | ANMS 論文 |
 | F14 | `essays/angs-essay-en.md` | ANGS 論文 |
@@ -95,18 +95,18 @@ Phase 0 を通過した場合、日英の内容は一致しているため、以
 **プロンプト（以下をそのまま渡す）:**
 
 ```
-gr-sw-maker フレームワークの全21エージェント定義ファイル（EN版）の品質チェックを行う。
+gr-sw-maker フレームワークの全エージェント定義ファイル（EN版）の品質チェックを行う（ファイル数は agent-list §1 テーブルの行数と一致すること）。
 コードを書く必要はない。読み取りと分析のみ。
 
 ## 読み込むファイル
 
 1. process-rules/agent-list-en.md の §1（エージェント一覧テーブル）と §2（オーナーシップ全セクション）
 2. process-rules/prompt-structure-en.md（S0-S6 構造規約）
-3. .claude/agents/*-en.md 全21ファイル
+3. .claude/agents/*-en.md 全ファイル（ファイル数は agent-list §1 と一致すること）
 
 ## チェック項目
 
-- [ ] C1: 全21エージェントが S0-S6 構造に準拠しているか（Activation/Ownership/Procedure/Rules/Exception の全セクション存在、順序正しい）
+- [ ] C1: agent-list §1 に記載された全エージェントが S0-S6 構造に準拠しているか（Activation/Ownership/Procedure/Rules/Exception の全セクション存在、順序正しい）
 - [ ] C2: 各エージェントの YAML フロントマター（name, description, tools, model）が agent-list §1 テーブルと一致しているか
 - [ ] C3: 全エージェントの Out テーブルの file_type が、agent-list §2 で当該エージェントの所有として登録されているか
 - [ ] C4: 全エージェントの In テーブルの file_type が、提供元エージェントの Out に存在するか
