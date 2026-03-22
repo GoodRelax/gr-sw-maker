@@ -453,6 +453,11 @@ The matrix is managed in Common Block-managed Markdown format. The Detail Block 
 
 ```mermaid
 stateDiagram-v2
+    state "open" as Open
+    state "in-analysis" as InAnalysis
+    state "in-fix" as InFix
+    state "in-retest" as InRetest
+    state "closed" as Closed
     [*] --> Open: defect Detected
     Open --> InAnalysis: Assignee Allocated
     InAnalysis --> InFix: Cause Identified
@@ -1163,7 +1168,7 @@ When the conditional process "Field Testing" is enabled, user-attended field tes
 4. After approval, the existing agent team (srs-writer / architect -> review-agent -> implementer -> review-agent -> test-engineer) implements the fixes
 5. field-test-engineer verifies the fixes on the actual device
 
-**Management rules:** For detailed status transitions (12 statuses, 12 gates, 5 prohibitions) of feedback, refer to [Field Issue Handling Rules](field-issue-handling-rules.md).
+**Management rules:** For detailed status transitions (13 statuses, 12 gates, 5 prohibitions) of feedback, refer to [Field Issue Handling Rules](field-issue-handling-rules.md).
 
 **Metrics integration:** field-issue (type: defect) counts toward found_cumulative on the defect curve, and field-issue (type: cr) counts toward CR tallies. For details, refer to [Field Issue Handling Rules](field-issue-handling-rules.md) Section 9.
 
@@ -2626,7 +2631,7 @@ sequenceDiagram
     Orch->>Review: Request R6 Review of performance-report
     Review->>Orch: Report R6 Review Results
     PM->>Orch: Submit progress Report
-    Orch->>Review: Request Final R1-R5 Review
+    Orch->>Review: Request Final R1-R6 Review
     Review->>Orch: Report Final Review (PASS)
     Orch->>PI: Request testing Phase Retrospective
     PI->>Orch: Submit retrospective-report

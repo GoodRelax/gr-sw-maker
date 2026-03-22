@@ -453,6 +453,11 @@ flowchart LR
 
 ```mermaid
 stateDiagram-v2
+    state "open" as Open
+    state "in-analysis" as InAnalysis
+    state "in-fix" as InFix
+    state "in-retest" as InRetest
+    state "closed" as Closed
     [*] --> Open: defect 検出
     Open --> InAnalysis: 担当割当
     InAnalysis --> InFix: 原因特定
@@ -1163,7 +1168,7 @@ xychart-beta
 4. 承認後、既存エージェント群（srs-writer / architect → review-agent → implementer → review-agent → test-engineer）が修正を実施する
 5. field-test-engineer が実機で修正を検証する
 
-**管理規則:** フィードバックの詳細なステータス遷移（12 ステータス・12 ゲート・5 禁止事項）は [実機テスト フィードバック管理規則](field-issue-handling-rules.md) を参照。
+**管理規則:** フィードバックの詳細なステータス遷移（13 ステータス・12 ゲート・5 禁止事項）は [実機テスト フィードバック管理規則](field-issue-handling-rules.md) を参照。
 
 **メトリクス統合:** field-issue（type: defect）は defect curve の found_cumulative にカウントし、field-issue（type: cr）は CR 集計にカウントする。詳細は [実機テスト フィードバック管理規則](field-issue-handling-rules.md) §9 を参照。
 
@@ -2626,7 +2631,7 @@ sequenceDiagram
     Orch->>Review: performance-report の R6 レビューを依頼
     Review->>Orch: R6 レビュー結果を報告
     PM->>Orch: progress レポートを提出
-    Orch->>Review: 最終 R1-R5 レビューを依頼
+    Orch->>Review: 最終 R1-R6 レビューを依頼
     Review->>Orch: 最終レビュー（PASS）を報告
     Orch->>PI: testing フェーズのふりかえりを依頼
     PI->>Orch: retrospective-report を提出

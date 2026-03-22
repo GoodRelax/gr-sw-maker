@@ -304,7 +304,7 @@ flowchart LR
     style User fill:#1a5276,stroke:#333,color:#fff
 ```
 
-Purple nodes represent the field testing agents. They are activated only when the conditional process "field testing" is enabled. For details on status transitions (12 statuses, 12 gates), see [Field Testing Feedback Management Rules](field-issue-handling-rules.md).
+Purple nodes represent the field testing agents. They are activated only when the conditional process "field testing" is enabled. For details on status transitions (13 statuses, 12 gates), see [Field Testing Feedback Management Rules](field-issue-handling-rules.md).
 
 **DocWriter Agents (Document Creation Agents):**
 
