@@ -929,9 +929,9 @@ Describe review finding details (location, severity, proposed fix). Quality gate
 
 | # | Severity | Finding Summary | Disposition | Reference |
 |:-:|:--------:|----------------|:-----------:|-----------|
-| 1 | ... | ... | fix / defer / accept | Correction details or DEC-NNN |
+| 1 | ... | ... | fixed / deferred / accepted | Correction details or DEC-NNN |
 
-Dispositions: **fix** = corrected and verified, **defer** = acknowledged but deferred (decision record required), **accept** = accepted as-is with rationale.
+Dispositions: **fixed** = corrected and verified, **deferred** = acknowledged but deferred (decision record required), **accepted** = accepted as-is with rationale.
 
 ## 9.4 decision (Namespace: decision:)
 

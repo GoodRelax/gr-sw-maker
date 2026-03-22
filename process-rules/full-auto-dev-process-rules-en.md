@@ -2039,23 +2039,23 @@ flowchart LR
 
 | Severity | Allowed Dispositions | Gate Requirement |
 |----------|---------------------|-----------------|
-| Critical | fix only | Must be 0 for phase transition (per CLAUDE.md Quality Targets) |
-| High | fix only | Must be 0 for phase transition (per CLAUDE.md Quality Targets) |
-| Medium | fix / defer / accept | All must have a recorded disposition |
-| Low | fix / defer / accept | All must have a recorded disposition |
+| Critical | fixed only | Must be 0 for phase transition (per CLAUDE.md Quality Targets) |
+| High | fixed only | Must be 0 for phase transition (per CLAUDE.md Quality Targets) |
+| Medium | fixed / deferred / accepted | All must have a recorded disposition |
+| Low | fixed / deferred / accepted | All must have a recorded disposition |
 
 **Recording Requirements:**
-- **fix**: The finding is corrected. The re-review report confirms resolution
-- **defer**: The finding is acknowledged but deferred. A decision record MUST be created in `project-records/decisions/` with the deferral rationale, risk assessment, and planned resolution timeline
-- **accept**: The finding is accepted as-is. The rationale is recorded in the review report's Finding Disposition Table
+- **fixed**: The finding has been corrected. The re-review report confirms resolution
+- **deferred**: The finding is acknowledged but deferred. A decision record MUST be created in `project-records/decisions/` with the deferral rationale, risk assessment, and planned resolution timeline
+- **accepted**: The finding is accepted as-is. The rationale is recorded in the review report's Finding Disposition Table
 
 **Finding Disposition Table (in review Detail Block):**
 
 | # | Severity | Finding Summary | Disposition | Reference |
 |:-:|:--------:|----------------|:-----------:|-----------|
-| 1 | Medium | ... | fix | Corrected in rev 2 |
-| 2 | Medium | ... | defer | DEC-003 |
-| 3 | Low | ... | accept | Acceptable for project scope |
+| 1 | Medium | ... | fixed | Corrected in rev 2 |
+| 2 | Medium | ... | deferred | DEC-003 |
+| 3 | Low | ... | accepted | Acceptable for project scope |
 
 The review-agent records this table in the Detail Block of the review report. The orchestrator verifies that all findings have dispositions before allowing phase transition.
 

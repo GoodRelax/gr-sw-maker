@@ -455,6 +455,74 @@ test-engineerがk6実行後に作成。NFR目標との比較結果。
 
 ---
 
+## 4.3 ステータス値の命名規約
+
+本フレームワークにおけるステータス値（enum型フィールドの選択肢）は、以下のメタルールに従って定義する。
+
+### 4.3.1 ライフサイクルモデル
+
+全てのステータスは以下の4状態のいずれかに分類される。
+
+| # | 状態 | 意味 | 英語パターン | 日本語パターン |
+|:-:|------|------|-------------|--------------|
+| 1 | 未着手 | まだ作業が開始されていない | 形容詞・名詞（open, draft） | ○○前 / 未○○ |
+| 2 | 作業中 | 作業が進行中 | in-{名詞}（in-review） / -ing 形（reviewing） | ○○中 |
+| 3 | 待機中 | 外部入力待ちで停止している | waiting-for-{名詞} / needs-{名詞} / blocked | ○○待 |
+| 4 | 作業完 | 作業が完了済み | 過去分詞（approved, fixed, closed） | ○○済 |
+
+```mermaid
+stateDiagram-v2
+    [*] --> 未着手
+    未着手 --> 作業中 : 着手
+    作業中 --> 待機中 : 外部入力要
+    待機中 --> 作業中 : 入力受領
+    作業中 --> 作業完 : 完了
+    作業完 --> [*]
+```
+
+### 4.3.2 命名規則
+
+1. **値は kebab-case、英語固定** — 言語ポリシー（§12）に従い、ステータス値は翻訳しない
+2. **「作業中」と「作業完」を厳密に区別する** — 日本語: 「○○中」vs「○○済」、英語: `in-{noun}` / `-ing` vs 過去分詞 `-ed`
+3. **「作業完」には過去分詞を使う** — 完了は「行為」ではなく「結果の状態」である
+4. **「待機中」は待機対象を明示する** — 推奨: `waiting-for-{名詞}`、許容: `needs-{名詞}`。`blocked` は原因不明・外部要因での停止に限定する
+
+### 4.3.3 プロセス間遷移ルール
+
+あるプロセス A の完了が次のプロセス B の開始に繋がる場合、3つのパターンがある。
+
+| パターン | 条件 | 遷移 | 例 |
+|---------|------|------|-----|
+| 即時遷移 | 判断不要かつオーナー同一 | A済 → B中（A済はログに記録、ステータスとしては経由しない） | fixed → in-retest |
+| 判断分岐 | 分岐先が複数ある | A済で滞留 → 判断後に遷移（判断を decision として記録） | reviewed → {in-fix / deferred / accepted} |
+| オーナー交代 | 次のオーナーが異なる | A済 → B待 → B中（「待」を必ず挟む） | implemented → waiting-for-review → in-review |
+
+**判断基準:**
+
+1. 分岐先が複数あるか？ → Yes なら**判断分岐**
+2. オーナーが変わるか？ → Yes なら**オーナー交代**
+3. どちらも No → **即時遷移**
+
+```mermaid
+stateDiagram-v2
+    state "プロセス A" as A {
+        A_wip : ○○中
+        A_done : ○○済
+        A_wip --> A_done : 完了
+    }
+    state "プロセス B" as B {
+        B_wait : ○○待
+        B_wip : ○○中
+        B_wait --> B_wip : 着手
+    }
+
+    A_done --> B_wip : 即時遷移
+    A_done --> A_done : 判断分岐（済で滞留）
+    A_done --> B_wait : オーナー交代
+```
+
+---
+
 # 5. Common Block 仕様
 
 フィールド順序は固定。エージェントはフィールドの順序変更や必須フィールドの省略をしてはならない（MUST NOT）。
@@ -522,7 +590,7 @@ schema_version → file_type → form_block_cardinality → language
 
 ## Document State
 
-<!-- FIELD: document_status | type: enum | values: draft,review,approved,archived | required: true -->
+<!-- FIELD: document_status | type: enum | values: draft,in-review,approved,archived | required: true -->
 
 <doc:document_status>draft</doc:document_status>
 
@@ -929,9 +997,9 @@ external-dependency-spec（抽象テンプレート）
 
 | # | 重大度 | 指摘概要 | 対応 | 参照 |
 |:-:|:------:|---------|:----:|------|
-| 1 | ... | ... | 修正 / 据置き / 受容 | 修正内容 or DEC-NNN |
+| 1 | ... | ... | 修正済み / 据置き / 受容済み | 修正内容 or DEC-NNN |
 
-対応区分: **修正（fix）** = 修正済み・検証済み、**据置き（defer）** = 認識済みだが据置き（decision 記録必須）、**受容（accept）** = 理由付きで現状受容。
+対応区分: **修正済み（fixed）** = 修正済み・検証済み、**据置き（deferred）** = 認識済みだが据置き（decision 記録必須）、**受容済み（accepted）** = 理由付きで現状受容。
 
 ## 9.4 decision（名前空間: decision:）
 

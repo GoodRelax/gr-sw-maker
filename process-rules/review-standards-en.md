@@ -282,16 +282,16 @@ After review-agent raises findings, the following disposition workflow applies. 
 
 | Severity | Allowed Dispositions | Gate Requirement |
 |----------|---------------------|-----------------|
-| Critical | fix only | Must be 0 for phase transition (per CLAUDE.md Quality Targets) |
-| High | fix only | Must be 0 for phase transition (per CLAUDE.md Quality Targets) |
-| Medium | fix / defer / accept | All must have a recorded disposition |
-| Low | fix / defer / accept | All must have a recorded disposition |
+| Critical | fixed only | Must be 0 for phase transition (per CLAUDE.md Quality Targets) |
+| High | fixed only | Must be 0 for phase transition (per CLAUDE.md Quality Targets) |
+| Medium | fixed / deferred / accepted | All must have a recorded disposition |
+| Low | fixed / deferred / accepted | All must have a recorded disposition |
 
 ### Recording Requirements
 
-- **fix**: Correct the finding, then request re-review. The re-review report confirms resolution
-- **defer**: Create a decision record in `project-records/decisions/` with: deferral rationale, risk assessment, and planned resolution timeline. The finding remains tracked
-- **accept**: Record the acceptance rationale in the review report's Finding Disposition Table
+- **fixed**: Correct the finding, then request re-review. The re-review report confirms resolution
+- **deferred**: Create a decision record in `project-records/decisions/` with: deferral rationale, risk assessment, and planned resolution timeline. The finding remains tracked
+- **accepted**: Record the acceptance rationale in the review report's Finding Disposition Table
 
 ### Re-review Behavior
 
