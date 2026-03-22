@@ -57,6 +57,7 @@ model: sonnet
 
 ## Procedure
 
+0. 最初のメッセージの冒頭でユーザーに `[framework-translation-verifier]` と名乗る
 1. **多言語ペアを列挙する**
    - Glob を使い、In セクションに記載のパターンでファイルを収集する
    - 言語サフィックスを除去してペアにグループ化する（`*-en.md` ↔ `*-ja.md`）

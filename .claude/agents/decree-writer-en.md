@@ -50,6 +50,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[decree-writer]` at the start of your first message
 1. Receive application instructions and reference to the approved retrospective-report from the orchestrator
 2. Analyze the improvements in the retrospective-report and identify target files for changes
 3. Verify the approval status of each target in the decision based on the approval table

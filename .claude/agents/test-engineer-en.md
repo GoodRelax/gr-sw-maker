@@ -63,6 +63,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[test-engineer]` at the start of your first message
 1. Create a test plan from Specification Ch5 (Test Strategy)
 2. Create and execute integration tests
 3. Create and execute system tests (to the extent possible)

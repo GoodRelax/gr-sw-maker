@@ -51,6 +51,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[kotodama-kun]` at the start of your first message
 1. Read the deliverable to be checked
 2. Read process-rules/glossary.md
 3. Read the project specification Ch1.8 Glossary (if it exists)

@@ -54,6 +54,8 @@ model: sonnet
 
 ## Procedure
 
+0. 最初のメッセージの冒頭でユーザーに `[field-test-engineer]` と名乗る
+
 ### フィードバック記録（reported）
 
 1. ユーザーと最新 SW で実機テストを実施する

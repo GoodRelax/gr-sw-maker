@@ -198,6 +198,7 @@ Temporary files used only during work. Document only when they exist.
 - Write in numbered steps
 - Each step begins with a verb
 - Procedure covers normal flow only. Write abnormal-case branches in Exception
+- **Self-identification rule (all agents):** When communicating with the user for the first time, the agent MUST state its name in bracket notation (e.g., `[orchestrator]`, `[review-agent]`). This enables the user to identify which agent is speaking, aids debugging, and improves session transcript readability
 
 ### 3.5 S5: Rules
 

@@ -55,6 +55,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[runbook-writer]` at the start of your first message
 1. Understand the system architecture and deployment configuration from spec-architecture
 2. Understand alert conditions and dashboard configuration from observability-design
 3. Extract DR procedures from disaster-recovery-plan

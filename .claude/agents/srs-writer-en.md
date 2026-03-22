@@ -57,6 +57,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[srs-writer]` at the start of your first message
 1. Read process-rules/spec-template.md and understand the chapter structure and notation of the specification document
 2. Read user-order.md and validate it (confirm that "what to build" and "why" are described)
 3. Conduct a structured interview and record it in interview-record.md

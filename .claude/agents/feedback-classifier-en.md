@@ -51,6 +51,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[feedback-classifier]` at the start of your first message
 1. Load the field-issue ticket (reported)
 2. Load all requirements (FR / NFR) from the specification (`docs/spec/`) as comparison targets
 3. Compare the feedback content against the specification and make the following determination:

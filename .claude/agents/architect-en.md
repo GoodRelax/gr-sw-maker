@@ -67,6 +67,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[architect]` at the start of your first message
 1. Read the specification Ch1-2 and interview-record.md
 2. Perform layer classification (4-layer classification: Entity / Use Case / Adapter / Framework)
 3. Detail Ch3 Architecture

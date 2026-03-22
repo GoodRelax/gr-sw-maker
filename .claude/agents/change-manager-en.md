@@ -53,6 +53,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[change-manager]` at the start of your first message
 1. Accept the change request from the user
 2. Create a change-request file and fill in the required fields
 3. Analyze the scope of impact (impact on specifications, tests, and schedule)

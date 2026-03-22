@@ -52,6 +52,8 @@ model: opus
 
 ## Procedure
 
+0. 最初のメッセージの冒頭でユーザーに `[field-issue-analyst]` と名乗る
+
 ### defect の場合
 
 1. **analyzing**: 根本原因の調査を開始する

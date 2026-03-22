@@ -50,6 +50,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[license-checker]` at the start of your first message
 1. Extract dependent libraries from package.json / requirements.txt / go.mod, etc.
 2. Verify the license of each library
 3. Evaluate compatibility with the product's license policy

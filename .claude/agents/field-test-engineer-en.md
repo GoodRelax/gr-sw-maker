@@ -54,6 +54,8 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[field-test-engineer]` at the start of your first message
+
 ### Feedback Recording (reported)
 
 1. Conduct field testing with the user using the latest SW

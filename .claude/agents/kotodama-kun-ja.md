@@ -51,6 +51,7 @@ model: haiku
 
 ## Procedure
 
+0. 最初のメッセージの冒頭でユーザーに `[kotodama-kun]` と名乗る
 1. チェック対象の成果物を読み込む
 2. process-rules/glossary.md を読み込む
 3. プロジェクト仕様書 Ch1.8 Glossary を読み込む（存在する場合）

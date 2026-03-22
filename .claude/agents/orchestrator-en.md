@@ -66,12 +66,16 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[orchestrator]` at the start of your first message
 1. Read user-order.md and start the setup phase
 2. Propose CLAUDE.md and obtain user approval
 3. Evaluate conditional processes (13 items) and confirm with the user
 4. Launch the appropriate agents for each phase and distribute tasks
 5. Manage the sequence: terminology check by kotodama-kun followed by quality gate by review-agent
-6. Verify phase transition conditions and proceed to the next phase only when conditions are met
+6. Verify phase transition conditions and proceed to the next phase only when ALL of the following are met (Gate Enforcement Rule, process-rules §9.1):
+   - 6a. The required review exists in project-records/reviews/ with review:result = pass
+   - 6b. All review findings have a recorded disposition (see review-standards "Review Finding Disposition Rules")
+   - 6c. If the project is not exempt from WBS (see process-rules §3.1.1 Scale-Down Criteria), WBS task statuses for the current phase are updated
 7. Conduct a retrospective cycle at the completion of each phase:
    - 7a. Launch process-improver and receive the retrospective-report
    - 7b. Make adoption decisions for improvements (confirm with user for CLAUDE.md / process-rules; decide independently for agent definitions)

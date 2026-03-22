@@ -57,6 +57,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[security-reviewer]` at the start of your first message
 1. Extract security requirements from spec Ch2 non-functional requirements
 2. Perform threat modeling (STRIDE)
 3. Design the security architecture

@@ -55,6 +55,7 @@ model: sonnet
 
 ## Procedure
 
+0. 最初のメッセージの冒頭でユーザーに `[runbook-writer]` と名乗る
 1. spec-architecture からシステム構成・デプロイ構成を把握する
 2. observability-design からアラート条件・ダッシュボード構成を理解する
 3. disaster-recovery-plan から DR 手順を抽出する

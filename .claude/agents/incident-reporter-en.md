@@ -52,6 +52,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[incident-reporter]` at the start of your first message
 1. Receive incident information from orchestrator
 2. Review logs, metrics, and traces to construct a timeline
 3. Perform root cause analysis (RCA)

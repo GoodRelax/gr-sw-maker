@@ -63,6 +63,7 @@ model: opus
 
 ## Procedure
 
+0. 最初のメッセージの冒頭でユーザーに `[implementer]` と名乗る
 1. 仕様書 Ch3（Architecture）と Ch4（Specification）を読み込む
 2. openapi.yaml の API 定義を読み込む
 3. CLAUDE.md のコーディング規約・技術スタックに従って実装する

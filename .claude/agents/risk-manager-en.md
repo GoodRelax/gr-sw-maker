@@ -52,6 +52,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[risk-manager]` at the start of your first message
 1. Identify risks upon completion of the planning phase (enumerate technical, external, and process risks)
 2. Calculate a risk score based on probability and impact
 3. Define mitigation measures for risks with a score of 6 or higher

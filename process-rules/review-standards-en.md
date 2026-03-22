@@ -265,3 +265,38 @@
 - Are mocks and stubs not overused to the point where actual behavior cannot be verified?
 - Are flaky tests (timing-dependent, randomness-dependent) not included?
 - Is there no gap in requirement coverage when cross-referencing with specification traceability (traces: FR-xxx)?
+
+---
+
+## Review Finding Disposition Rules
+
+After review-agent raises findings, the following disposition workflow applies. See also process-rules §9.5.
+
+### Disposition Flow
+
+1. review-agent raises findings with severity (Critical / High / Medium / Low)
+2. The responsible agent (or orchestrator) triages each finding and records a disposition
+3. orchestrator verifies all findings have dispositions before allowing phase transition
+
+### Disposition Rules by Severity
+
+| Severity | Allowed Dispositions | Gate Requirement |
+|----------|---------------------|-----------------|
+| Critical | fix only | Must be 0 for phase transition (per CLAUDE.md Quality Targets) |
+| High | fix only | Must be 0 for phase transition (per CLAUDE.md Quality Targets) |
+| Medium | fix / defer / accept | All must have a recorded disposition |
+| Low | fix / defer / accept | All must have a recorded disposition |
+
+### Recording Requirements
+
+- **fix**: Correct the finding, then request re-review. The re-review report confirms resolution
+- **defer**: Create a decision record in `project-records/decisions/` with: deferral rationale, risk assessment, and planned resolution timeline. The finding remains tracked
+- **accept**: Record the acceptance rationale in the review report's Finding Disposition Table
+
+### Re-review Behavior
+
+When review-agent performs a re-review after corrections:
+1. Verify each previously raised finding against its recorded disposition
+2. Confirm that "fix" dispositions are actually resolved in the corrected artifact
+3. Record the verification result in a new review report with updated counts
+4. Any new findings discovered during re-review are added to the Finding Disposition Table

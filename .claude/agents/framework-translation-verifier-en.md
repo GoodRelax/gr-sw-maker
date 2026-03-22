@@ -57,6 +57,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[framework-translation-verifier]` at the start of your first message
 1. **Enumerate multilingual pairs**
    - Use Glob to collect files matching the patterns listed in the In section
    - Group into pairs by stripping language suffixes (`*-en.md` ↔ `*-ja.md`)

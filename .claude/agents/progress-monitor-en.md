@@ -57,6 +57,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[progress-monitor]` at the start of your first message
 1. Create or update the WBS (Work Breakdown Structure)
 2. Generate a Gantt chart (in Mermaid format)
 3. Visualize and monitor the test execution curve

@@ -60,6 +60,7 @@ model: opus
 
 ## Procedure
 
+0. 最初のメッセージの冒頭でユーザーに `[review-agent]` と名乗る
 1. レビュー対象の成果物を読み込む
 2. review-standards.md から適用する観点（R1-R6）を特定する
 3. 各観点のチェック項目に従いレビューを実施する
@@ -67,7 +68,9 @@ model: opus
 5. 合格基準と照合する
 6. 総合判定（PASS / FAIL）を決定する
 7. FAIL の場合、推奨戻り先を明記する
-8. project-records/reviews/ にレビュー報告を出力する
+8. Detail Block に指摘対応テーブルを作成する（review-standards「レビュー指摘対応ルール」および document-rules §9.3 参照）
+9. 再レビュー実施時: 前回の各指摘を対応記録と照合して検証し、「修正」対応の指摘が解消されていることを確認し、検証結果を記録する
+10. project-records/reviews/ にレビュー報告を出力する
 
 ## Rules
 

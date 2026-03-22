@@ -349,6 +349,38 @@ This chapter references ISO/IEC 12207, CMMI, and PMBOK to organize the processes
 | **Recommended** | Applied to medium-scale and above (guideline: development period exceeding 1 month, or 3 or more independent modules) |
 | **Conditional** | Applied only when meeting the criteria defined in Section 3.4 |
 
+### 3.1.1 Scale-Down Criteria
+
+When the project scale is small, certain Mandatory and Recommended processes may be exempted. The orchestrator evaluates scale during the setup phase and records exemptions in the CLAUDE.md "Scale-Down Settings" section.
+
+**Scale Tiers:**
+
+| Tier | Criteria | Examples |
+|------|----------|---------|
+| **Micro** | Completes within a single session (< 1 hour). Single module, no external dependencies | Dice app, calculator, simple CLI tool |
+| **Small** | Completes within 1 day. Few modules, minimal external dependencies | Simple web app, utility library |
+| **Standard** | Exceeds 1 day. Multiple modules or external dependencies | API service, desktop app with DB |
+
+**Exemption Matrix:**
+
+| Process / Artifact | Micro | Small | Standard |
+|--------------------|:-----:|:-----:|:--------:|
+| WBS / Gantt chart | Exempt | Exempt | Required |
+| Progress reports (progress/) | Exempt | Exempt | Required |
+| Cost log (cost-log.json) | Exempt | Optional | Required |
+| pipeline-state.md | Exempt | Optional | Required |
+| executive-dashboard.md | Exempt | Optional | Required |
+| stakeholder-register.md | Exempt | Exempt | Required (if multi-stakeholder) |
+| Performance testing (k6 etc.) | Exempt (if no NFR) | Optional | Required |
+| Observability design | Exempt | Optional | Required |
+| R3 Code review (separate report) | Merged into final review | Required | Required |
+| R6 Test review (separate report) | Merged into final review | Required | Required |
+
+**Rules:**
+- Quality gates (R1, R2/R4/R5, final R1-R6) are NEVER exempt regardless of scale. Reviews may be merged (e.g., Micro: single final review covering R1-R6) but never skipped
+- defect/CR recording, risk management, traceability, and change management remain Mandatory at all scales — but the recording format may be simplified for Micro tier (inline in session-transcript with a summary table)
+- Exemptions MUST be recorded in CLAUDE.md during setup. Unrecorded exemptions are violations
+
 ---
 
 ### 3.2 Mandatory Processes (Common to All Projects)
@@ -431,6 +463,13 @@ stateDiagram-v2
 ```
 
 **Output:** `project-records/defects/defect-{NNN}-{YYYYMMDD}-{HHMMSS}.md` (defect ticket with Common Block + defect: Form Block): Includes reproduction steps, severity, root cause, and recurrence prevention measures. The defect:id field records DEF-NNN.
+
+**Immediate Ticket Rule:** When a defect or issue is discovered during any phase, the responsible agent MUST create a ticket **before** starting the fix. The workflow is: discover → create ticket (status: open) → analyze → fix → retest → close. "Fix first, record later" is prohibited. This ensures that all issues are tracked from the moment of discovery, preventing lost context and enabling accurate defect metrics.
+
+**Implementation-Phase Design Deviation:** When a design change occurs during implementation that deviates from the approved specification (e.g., replacing an algorithm, changing an API contract, modifying state management), the implementer MUST:
+1. Record the deviation as a defect (if caused by a fault in the spec) or CR (if caused by a new requirement/constraint discovered during implementation)
+2. After the fix is applied and retested, update the specification to reflect the actual implementation
+3. If the deviation affects Ch1-2 (requirements), route through change-manager for impact analysis
 
 #### 3.2.5 License Management
 
@@ -523,10 +562,7 @@ Guideline for medium-scale and above: Development period exceeding 1 month, or 3
 
 ```markdown
 - [ ] All functional requirements implemented (comparison with specification Ch2 complete)
-- [ ] Unit test pass rate 95% or higher
-- [ ] Integration test pass rate 100%
-- [ ] Code coverage 80% or higher
-- [ ] Performance testing: All NFR numerical targets achieved
+- [ ] All quality metrics meet CLAUDE.md Quality Targets thresholds
 - [ ] Security scan Critical/High zero findings (including SAST/SCA)
 - [ ] Review report Critical/High zero findings
 - [ ] License report confirmed
@@ -1507,13 +1543,22 @@ This structure is based on conventions that Claude Code automatically recognizes
 - SCA: npm audit / Snyk (always execute when adding dependencies)
 - Secret scanning: git-secrets or truffleHog (pre-commit hook)
 
-## Testing Policy
+## Quality Targets (Single Source of Truth for all quality gates)
 
-- Coverage target: 80% or higher
-- Unit tests: All business logic (pass rate 95% or higher)
-- Integration tests: API endpoints (pass rate 100%)
-- E2E tests: Key user flows
-- Performance tests: Verify NFR numerical targets with k6
+Agreed with the user during setup. All agents and quality gates reference this section for threshold values.
+
+| Metric | Target | Notes |
+|--------|--------|-------|
+| Unit test pass rate | [e.g., 95%] or higher | All business logic |
+| Integration test pass rate | [e.g., 100%] | API endpoints |
+| Code coverage | [e.g., 80%] or higher | Coverage tools |
+| E2E tests | Major user flows PASS | Corresponds to Ch4 Gherkin scenarios |
+| Performance tests | All NFR numerical targets achieved | [e.g., k6] |
+| Security vulnerabilities | Critical: 0, High: 0 | SAST/SCA scan results |
+| Review findings | Critical: 0, High: 0 | review-agent output |
+| Coding convention compliance | 0 violations | Linter execution results |
+| Cost budget alert threshold | [e.g., 80%] of budget | Triggers user notification |
+| Patch response time | Critical: [e.g., 48h], High: [e.g., 1 week] | operation phase only |
 
 ## API Documentation
 
@@ -1564,7 +1609,7 @@ Request user confirmation in the following cases:
 - Decisions affecting budget or schedule
 - Ambiguous requirements allowing multiple interpretations
 - Risk scores of 6 or higher
-- Cost budget reaching 80%
+- Cost budget reaching the alert threshold defined in Quality Targets above
 - Change requests with High impact level
 
 Claude Code may decide autonomously in the following cases:
@@ -1894,7 +1939,14 @@ flowchart TD
     Deploy -->|"Smoke OK"| Done
 ```
 
-Each review gate is automatically executed by review-agent. Phase transitions are blocked until Critical/High findings reach zero.
+Each review gate is automatically executed by review-agent. Phase transitions are blocked until the quality thresholds defined in CLAUDE.md Quality Targets are met. Numeric values shown in the diagram above are illustrative defaults — actual thresholds are always read from CLAUDE.md.
+
+**Gate Enforcement Rule:** The orchestrator MUST verify the following before any phase transition:
+1. The required review for the current gate exists in `project-records/reviews/` with `review:result = pass`
+2. All review findings have a recorded disposition (see Section 9.5 Review Finding Tracking)
+3. If the project is not exempt from WBS (see Section 3.1.1), WBS task statuses for the current phase are updated
+
+If any condition is not met, the orchestrator MUST NOT proceed to the next phase. Missing reviews must be executed; missing dispositions must be recorded. There are no exceptions to this rule.
 
 ### 9.2 Review Perspectives (R1-R6)
 
@@ -1909,17 +1961,20 @@ Six perspectives applied by review-agent. **For detailed checklists, refer to `p
 | **R5: Performance** | Algorithm complexity (O(n^2) and above), N+1 queries, memory leaks, unnecessary serialization, network/frontend optimization (overfetching, unnecessary re-rendering) | Specification Ch3-4, Code |
 | **R6: Test Quality** | Test independence, boundary values, error cases, flaky tests, requirements coverage, NFR coverage in performance testing | Test code |
 
-### 9.3 Quality Criteria Table
+### 9.3 Quality Metrics Definition
 
-| Metric | Threshold | Measurement Method |
-| --- | --- | --- |
-| Unit test pass rate | 95% or higher | Test framework execution results |
-| Integration test pass rate | 100% | Test framework execution results |
-| Code coverage | 80% or higher | Coverage tools (e.g., c8, istanbul) |
-| Performance testing | All NFR numerical targets achieved | Performance testing results (k6, etc.) |
-| Security vulnerabilities | Critical/High: 0 | Security Agent + SAST/SCA scan results |
-| Review findings | Critical/High: 0 | review-agent output |
-| Coding convention compliance | 0 violations | Linter (ESLint, etc.) execution results |
+Numeric thresholds for each metric are defined in the project's **CLAUDE.md "Quality Targets" section** (agreed with the user during setup). This table defines the metric names and measurement methods only. All agents and quality gates MUST reference CLAUDE.md for threshold values — never hardcode numbers.
+
+| Metric | Measurement Method |
+| --- | --- |
+| Unit test pass rate | Test framework execution results |
+| Integration test pass rate | Test framework execution results |
+| Code coverage | Coverage tools (e.g., c8, istanbul) |
+| Performance testing | Performance testing results (k6, etc.) |
+| Security vulnerabilities (Critical/High) | Security Agent + SAST/SCA scan results |
+| Review findings (Critical/High) | review-agent output |
+| Coding convention compliance | Linter (ESLint, etc.) execution results |
+| Cost budget consumption | progress-monitor cost tracking |
 
 ### 9.4 Phase-Specific KPIs (Key Performance Indicators)
 
@@ -1930,30 +1985,79 @@ Define KPIs to track for each phase. progress-monitor reflects these KPIs in the
 | setup | Conditional process evaluation completion rate | All items evaluated | CLAUDE.md conditional processes section |
 | setup | CLAUDE.md approval | User-approved | User confirmation record |
 | planning | Requirement ID assignment rate | 100% (ID assigned to all FR/NFR) | Specification Ch2 requirements list |
-| planning | R1 PASS rate | Critical/High: 0 | review-agent report |
+| planning | R1 PASS rate | Per CLAUDE.md Quality Targets | review-agent report |
 | planning | Mock/sample feedback complete | User "matches image" judgment | interview-record |
 | planning | Specification approval | User-approved | User confirmation record |
 | dependency-selection | Candidate evaluation completion rate | Candidate list and evaluation complete for all external dependencies | requirement-spec |
 | dependency-selection | Selection approval rate | User-approved | decision record |
 | design | Ch3-6 completion rate | All 4 chapters complete | Specification Ch3-6 |
-| design | R2/R4/R5 PASS rate | Critical/High: 0 | review-agent report |
+| design | R2/R4/R5 PASS rate | Per CLAUDE.md Quality Targets | review-agent report |
 | design | WBS creation complete | Critical path identified | wbs.md |
 | design | Risk register creation complete | All risks evaluated | risk-register.md |
 | implementation | Code implementation progress rate | WBS tasks completed / total | wbs.md |
-| implementation | Unit test pass rate | 95% or higher | Test framework |
-| implementation | Code coverage | 80% or higher | Coverage tools |
-| implementation | SCA/SAST clear rate | Critical/High: 0 | security-scan-report |
-| testing | Integration test pass rate | 100% | Test framework |
-| testing | Performance test NFR achievement rate | 100% | performance-report |
-| testing | defect open count (Critical/High) | 0 | defect aggregation |
+| implementation | Unit test pass rate | Per CLAUDE.md Quality Targets | Test framework |
+| implementation | Code coverage | Per CLAUDE.md Quality Targets | Coverage tools |
+| implementation | SCA/SAST clear rate | Per CLAUDE.md Quality Targets | security-scan-report |
+| testing | Integration test pass rate | Per CLAUDE.md Quality Targets | Test framework |
+| testing | Performance test NFR achievement rate | Per CLAUDE.md Quality Targets | performance-report |
+| testing | defect open count (Critical/High) | Per CLAUDE.md Quality Targets | defect aggregation |
 | testing | defect curve convergence | New discovery trending downward | defect-curve.json |
-| delivery | Final review PASS | R1-R6 all PASS | review-agent report |
+| delivery | Final review PASS | R1-R6 all PASS per CLAUDE.md Quality Targets | review-agent report |
 | delivery | Acceptance test pass | User-approved | final-report |
 | delivery | Deployment complete | Smoke test passed | Deploy logs |
-| operation | SLA achievement rate | Meeting target uptime and response time | Monitoring metrics |
+| operation | SLA achievement rate | Per CLAUDE.md Quality Targets | Monitoring metrics |
 | operation | Incident count/MTTR | P1/P2: Trending downward, MTTR: Trending shorter | incident-report aggregation |
-| operation | Patch application rate | Critical: within 48h, High: within 1 week | security-scan-report |
+| operation | Patch application rate | Per CLAUDE.md Quality Targets | security-scan-report |
 | operation | Dependency freshness | Major dependencies within latest minor version | Periodic SCA scan |
+
+### 9.5 Review Finding Tracking
+
+Every review finding (Critical, High, Medium, Low) must have a recorded disposition before the associated quality gate can be considered satisfied.
+
+**Finding Disposition Flow:**
+
+```mermaid
+flowchart LR
+    Find["Finding Raised<br/>by review-agent"]
+    Triage{"Severity?"}
+    Fix["Fix and Re-verify"]
+    Defer["Defer with Decision Record"]
+    Accept["Accept as-is<br/>with Rationale"]
+    Close["Finding Closed"]
+
+    Find -->|"Triage"| Triage
+    Triage -->|"Critical / High"| Fix
+    Triage -->|"Medium"| Fix
+    Triage -->|"Medium (acceptable)"| Defer
+    Triage -->|"Low"| Accept
+    Fix -->|"Verified"| Close
+    Defer -->|"decision record created"| Close
+    Accept -->|"Rationale recorded"| Close
+```
+
+**Disposition Rules:**
+
+| Severity | Allowed Dispositions | Gate Requirement |
+|----------|---------------------|-----------------|
+| Critical | fix only | Must be 0 for phase transition (per CLAUDE.md Quality Targets) |
+| High | fix only | Must be 0 for phase transition (per CLAUDE.md Quality Targets) |
+| Medium | fix / defer / accept | All must have a recorded disposition |
+| Low | fix / defer / accept | All must have a recorded disposition |
+
+**Recording Requirements:**
+- **fix**: The finding is corrected. The re-review report confirms resolution
+- **defer**: The finding is acknowledged but deferred. A decision record MUST be created in `project-records/decisions/` with the deferral rationale, risk assessment, and planned resolution timeline
+- **accept**: The finding is accepted as-is. The rationale is recorded in the review report's Finding Disposition Table
+
+**Finding Disposition Table (in review Detail Block):**
+
+| # | Severity | Finding Summary | Disposition | Reference |
+|:-:|:--------:|----------------|:-----------:|-----------|
+| 1 | Medium | ... | fix | Corrected in rev 2 |
+| 2 | Medium | ... | defer | DEC-003 |
+| 3 | Low | ... | accept | Acceptable for project scope |
+
+The review-agent records this table in the Detail Block of the review report. The orchestrator verifies that all findings have dispositions before allowing phase transition.
 
 ---
 
@@ -2276,10 +2380,7 @@ Verify all items below before deployment in the delivery phase.
 ## Quality Gates
 
 - [ ] Final review (R1-R6): Critical/High zero findings
-- [ ] Unit test pass rate 95% or higher
-- [ ] Integration test pass rate 100%
-- [ ] Code coverage 80% or higher
-- [ ] Performance testing: All NFR numerical targets achieved
+- [ ] All quality metrics meet CLAUDE.md Quality Targets thresholds
 
 ## Security
 
@@ -2339,7 +2440,7 @@ Agent Teams consumes tokens independently for each agent. Guidelines for cost op
 1. **Model selection**: Default to `sonnet` (cost-effective) and use `opus` only for situations requiring advanced judgment, such as architectural decisions and security/quality reviews
 2. **Agent count limits**: Recommend 3-5 simultaneous Agent Teams agents. More than that yields diminishing cost-effectiveness
 3. **Context management**: Use `/compact` as needed to compress unnecessary context
-4. **Cost tracking**: Record API token consumption in `project-management/progress/cost-log.json` and take action when 80% of the budget is reached
+4. **Cost tracking**: Record API token consumption in `project-management/progress/cost-log.json` and take action when the cost budget threshold defined in CLAUDE.md Quality Targets is reached
 
 ---
 

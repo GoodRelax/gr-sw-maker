@@ -918,10 +918,20 @@ Describe deliverables, human intervention requirements, and quality gate results
 | review:medium_count | int | Yes | Number of Medium findings | — |
 | review:low_count | int | Yes | Number of Low findings | — |
 | review:gate_phase | string | No | Phase transition this review gates (e.g., "1->2") | — |
+| review:findings_resolved_count | int | Yes | Number of findings with disposition "fix" | — |
+| review:findings_deferred_count | int | No | Number of findings with disposition "defer". Each requires a decision record in project-records/decisions/ | — |
 
 ### Detail Block Guidance
 
-Describe review finding details (location, severity, proposed fix). Quality gate rule: Phase transition requires Critical = 0 and High = 0.
+Describe review finding details (location, severity, proposed fix). Quality gate rule: Phase transition requires thresholds defined in CLAUDE.md Quality Targets to be met and all findings to have a recorded disposition (see process-rules §9.5).
+
+**Finding Disposition Table (required in all review reports):**
+
+| # | Severity | Finding Summary | Disposition | Reference |
+|:-:|:--------:|----------------|:-----------:|-----------|
+| 1 | ... | ... | fix / defer / accept | Correction details or DEC-NNN |
+
+Dispositions: **fix** = corrected and verified, **defer** = acknowledged but deferred (decision record required), **accept** = accepted as-is with rationale.
 
 ## 9.4 decision (Namespace: decision:)
 

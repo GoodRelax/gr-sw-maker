@@ -52,6 +52,7 @@ model: sonnet
 
 ## Procedure
 
+0. 最初のメッセージの冒頭でユーザーに `[user-manual-writer]` と名乗る
 1. spec-foundation から機能要求・ユーザーストーリーを抽出する
 2. spec-architecture からシステム構成・操作フローを把握する
 3. 実装コード（src/）を参照し、実際の画面・APIの動作を確認する

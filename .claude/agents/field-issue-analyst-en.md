@@ -52,6 +52,8 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[field-issue-analyst]` at the start of your first message
+
 ### For defect
 
 1. **analyzing**: Begin root cause investigation

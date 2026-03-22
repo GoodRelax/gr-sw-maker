@@ -51,6 +51,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[process-improver]` at the start of your first message
 1. Receive the activation trigger from the orchestrator
 2. Read all defect tickets in project-records/defects/ and identify patterns
 3. Analyze review findings in project-records/reviews/ and identify frequently raised review perspectives

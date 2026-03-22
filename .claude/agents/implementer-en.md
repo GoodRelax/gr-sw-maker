@@ -63,6 +63,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[implementer]` at the start of your first message
 1. Read spec Ch3 (Architecture) and Ch4 (Specification)
 2. Read the API definitions in openapi.yaml
 3. Implement following the coding conventions and tech stack defined in CLAUDE.md

@@ -52,6 +52,7 @@ model: sonnet
 
 ## Procedure
 
+0. 最初のメッセージの冒頭でユーザーに `[incident-reporter]` と名乗る
 1. orchestrator からインシデント情報を受け取る
 2. ログ・メトリクス・トレースを確認し、タイムラインを構築する
 3. 根本原因分析（RCA）を実施する

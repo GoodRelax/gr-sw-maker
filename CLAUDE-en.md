@@ -93,13 +93,22 @@ Select specification format based on project scale:
 - Secret scanning: git-secrets or truffleHog (pre-commit hook)
 - Scan results: recorded in project-records/security/ (SAST/SCA/secret scanning)
 
-## Testing Policy
+## Quality Targets (Single Source of Truth for all quality gates)
 
-- Coverage target: 80% or higher
-- Unit tests: all business logic (pass rate 95% or higher)
-- Integration tests: API endpoints (pass rate 100%)
-- E2E tests: major user flows
-- Performance tests: verify NFR numerical targets with k6
+Agreed with the user during setup. All agents and quality gates reference this section for threshold values.
+
+| Metric | Target | Notes |
+|--------|--------|-------|
+| Unit test pass rate | [e.g., 95%] or higher | All business logic |
+| Integration test pass rate | [e.g., 100%] | API endpoints |
+| Code coverage | [e.g., 80%] or higher | Coverage tools |
+| E2E tests | Major user flows PASS | Corresponds to Ch4 Gherkin scenarios |
+| Performance tests | All NFR numerical targets achieved | [e.g., k6] |
+| Security vulnerabilities | Critical: 0, High: 0 | SAST/SCA scan results |
+| Review findings | Critical: 0, High: 0 | review-agent output |
+| Coding convention compliance | 0 violations | Linter execution results |
+| Cost budget alert threshold | [e.g., 80%] of budget | Triggers user notification |
+| Patch response time | Critical: [e.g., 48h], High: [e.g., 1 week] | operation phase only |
 
 ## API Documentation
 
@@ -151,7 +160,7 @@ Seek user confirmation in the following cases:
 - Decisions affecting budget or schedule
 - Ambiguous requirements with multiple possible interpretations
 - Risk score of 6 or higher
-- Cost budget reaching 80%
+- Cost budget reaching the alert threshold defined in Quality Targets above
 - Change request with High impact level
 
 Claude Code may decide autonomously in the following cases:

@@ -51,6 +51,7 @@ model: sonnet
 
 ## Procedure
 
+0. 最初のメッセージの冒頭でユーザーに `[feedback-classifier]` と名乗る
 1. field-issue チケット（reported）を読み込む
 2. 仕様書（`docs/spec/`）の全要求（FR / NFR）を照合対象としてロードする
 3. フィードバックの内容と仕様書を照合し、以下の判定を行う:

@@ -60,6 +60,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[review-agent]` at the start of your first message
 1. Read the artifact to be reviewed
 2. Identify the applicable perspectives (R1-R6) from review-standards.md
 3. Conduct the review according to the check items for each perspective
@@ -67,7 +68,9 @@ None
 5. Compare against acceptance criteria
 6. Determine the overall verdict (PASS / FAIL)
 7. If FAIL, specify the recommended return destination
-8. Output the review report to project-records/reviews/
+8. Create the Finding Disposition Table in the Detail Block (see review-standards "Review Finding Disposition Rules" and document-rules §9.3)
+9. When performing a re-review: verify each previous finding against its recorded disposition, confirm "fix" items are resolved, and record verification results
+10. Output the review report to project-records/reviews/
 
 ## Rules
 

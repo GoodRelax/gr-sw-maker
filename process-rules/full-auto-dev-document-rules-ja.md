@@ -918,10 +918,20 @@ external-dependency-spec（抽象テンプレート）
 | review:medium_count | int | Yes | Medium指摘の件数 | — |
 | review:low_count | int | Yes | Low指摘の件数 | — |
 | review:gate_phase | string | No | このレビューがゲートするフェーズ遷移（例: "1->2"） | — |
+| review:findings_resolved_count | int | Yes | 対応が「修正」の指摘件数 | — |
+| review:findings_deferred_count | int | No | 対応が「据置き」の指摘件数。各件に project-records/decisions/ への decision 記録が必須 | — |
 
 ### Detail Block Guidance
 
-レビュー指摘の詳細（指摘箇所、重大度、修正提案）を記載する。品質ゲートルール: フェーズ遷移には Critical = 0 かつ High = 0 が必要。
+レビュー指摘の詳細（指摘箇所、重大度、修正提案）を記載する。品質ゲートルール: フェーズ遷移には CLAUDE.md 品質目標で定義された閾値を満たし、かつ全指摘に対応記録があることが必要（process-rules §9.5 参照）。
+
+**指摘対応テーブル（全レビュー報告で必須）:**
+
+| # | 重大度 | 指摘概要 | 対応 | 参照 |
+|:-:|:------:|---------|:----:|------|
+| 1 | ... | ... | 修正 / 据置き / 受容 | 修正内容 or DEC-NNN |
+
+対応区分: **修正（fix）** = 修正済み・検証済み、**据置き（defer）** = 認識済みだが据置き（decision 記録必須）、**受容（accept）** = 理由付きで現状受容。
 
 ## 9.4 decision（名前空間: decision:）
 

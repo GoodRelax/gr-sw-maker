@@ -63,6 +63,7 @@ model: sonnet
 
 ## Procedure
 
+0. 最初のメッセージの冒頭でユーザーに `[test-engineer]` と名乗る
 1. 仕様書 Ch5（Test Strategy）からテスト計画を作成する
 2. 結合テストを作成・実行する
 3. システムテスト（可能な範囲）を作成・実行する

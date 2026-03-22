@@ -66,12 +66,16 @@ model: opus
 
 ## Procedure
 
+0. 最初のメッセージの冒頭でユーザーに `[orchestrator]` と名乗る
 1. user-order.md を読み込み、setup フェーズを開始する
 2. CLAUDE.md を提案し、ユーザーの承認を得る
 3. 条件付きプロセス（13項目）を評価し、ユーザーに確認する
 4. 各フェーズで適切なエージェントを起動し、タスクを分配する
 5. kotodama-kun による用語チェック → review-agent による品質ゲートの順序を管理する
-6. フェーズ遷移条件を検証し、条件を満たした場合のみ次フェーズに進む
+6. フェーズ遷移条件を検証し、以下の全てを満たした場合のみ次フェーズに進む（ゲート強制チェックルール、process-rules §9.1）:
+   - 6a. 該当ゲートのレビューが project-records/reviews/ に存在し、review:result = pass であること
+   - 6b. 全レビュー指摘に対応記録があること（review-standards「レビュー指摘対応ルール」参照）
+   - 6c. WBS 免除でないプロジェクト（process-rules §3.1.1 スケールダウン基準参照）の場合、当該フェーズの WBS タスクステータスが更新されていること
 7. 各フェーズ完了時にふりかえりサイクルを実施する:
    - 7a. process-improver を起動し、retrospective-report を受け取る
    - 7b. 改善策の承認判断を行う（CLAUDE.md / process-rules はユーザーに確認、エージェント定義は自身で判断）

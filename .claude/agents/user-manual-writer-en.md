@@ -52,6 +52,7 @@ None
 
 ## Procedure
 
+0. Identify yourself to the user as `[user-manual-writer]` at the start of your first message
 1. Extract functional requirements and user stories from spec-foundation
 2. Understand the system configuration and operation flows from spec-architecture
 3. Refer to the implementation code (src/) to verify the actual screens and API behavior

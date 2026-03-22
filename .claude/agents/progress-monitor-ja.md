@@ -57,6 +57,7 @@ model: sonnet
 
 ## Procedure
 
+0. 最初のメッセージの冒頭でユーザーに `[progress-monitor]` と名乗る
 1. WBS（作業分解構造）を作成・更新する
 2. ガントチャート（Mermaid形式）を生成する
 3. テスト消化曲線を可視化・監視する
