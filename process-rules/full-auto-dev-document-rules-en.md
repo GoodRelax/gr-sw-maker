@@ -1077,12 +1077,18 @@ Describe defect details (reproduction steps, root cause analysis, fix content, r
 
 ```mermaid
 stateDiagram-v2
-    [*] --> open : defect reported
-    open --> in_analysis : Assigned agent starts analysis
-    in_analysis --> in_fix : Root cause identified
-    in_fix --> in_retest : Fix applied
-    in_retest --> closed : Retest passed
-    in_retest --> in_fix : Retest failed
+    state "open" as Open
+    state "in-analysis" as InAnalysis
+    state "in-fix" as InFix
+    state "in-retest" as InRetest
+    state "closed" as Closed
+    [*] --> Open : defect reported
+    Open --> InAnalysis : Assigned agent starts analysis
+    InAnalysis --> InFix : Root cause identified
+    InFix --> InRetest : Fix applied
+    InRetest --> Closed : Retest passed
+    InRetest --> InFix : Retest failed
+    Closed --> [*]
 ```
 
 ## 9.8 change-request (Namespace: change-request:)

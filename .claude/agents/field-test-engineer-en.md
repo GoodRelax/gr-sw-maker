@@ -35,7 +35,7 @@ Ensure quality in the field testing phase by accurately recording user feedback 
 
 ### In
 
-| file_type | Source | Purpose |
+| file_type | Source | Usage |
 |-----------|--------|---------|
 | spec-foundation | srs-writer | Requirements specification for test target |
 | spec-architecture | architect | Design specification for test target |
