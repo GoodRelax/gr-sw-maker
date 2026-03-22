@@ -1407,8 +1407,9 @@ project_root/
     security/                     ... セキュリティスキャン結果（SAST/SCA/DAST）
     release/                      ... リリース判定チェックリスト（推奨）
     improvement/                  ... ふりかえり・プロセス改善記録（推奨）
-    archive/                      ... 廃止文書（推奨）
+    old/                          ... 廃止文書（推奨）
     snapshots/                    ... プロジェクトスナップショット（推奨）
+    field-issues/                 ... フィールドテストフィードバック（条件付き）
     incidents/                    ... incident 記録（条件付き）
     legal/                        ... 法規・特許調査記録（条件付き）
     safety/                       ... 機能安全分析文書（条件付き）

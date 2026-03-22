@@ -340,6 +340,7 @@ flowchart LR
     IR["incident-reporter"] -.-> Koto
     UMW["user-manual-writer"] -.-> Koto
     RBW["runbook-writer"] -.-> Koto
+    PI["process-improver"] -.-> Koto
 
     Koto["kotodama-kun"] -.->|"terminology-issue"| Orch["orchestrator"]
 

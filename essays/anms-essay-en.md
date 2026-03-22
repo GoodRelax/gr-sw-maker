@@ -2,7 +2,7 @@
 
 ## Abstract
 
-The rapid evolution of Large Language Models (LLMs) is shifting software development from an era where humans write code to one where AI interprets specifications and generates code. However, traditional heavyweight specifications are redundant for AI, while fragmented instructions orchestrator to "context loss" that undermines system-wide consistency. This paper proposes a new specification template called "AI-Native Minimal Spec (ANMS)" — a shared design foundation for humans and AI that enables near-fully-automated development. ANMS adopts a chapter structure called "STFB (Stable Top, Flexible Bottom)" based on the Stable Dependencies Principle, and combines EARS, Gherkin, and Mermaid to achieve both logical rigor and visual design synchronization. The goal is to maximize human review efficiency and AI implementation accuracy.
+The rapid evolution of Large Language Models (LLMs) is shifting software development from an era where humans write code to one where AI interprets specifications and generates code. However, traditional heavyweight specifications are redundant for AI, while fragmented instructions lead to "context loss" that undermines system-wide consistency. This paper proposes a new specification template called "AI-Native Minimal Spec (ANMS)" — a shared design foundation for humans and AI that enables near-fully-automated development. ANMS adopts a chapter structure called "STFB (Stable Top, Flexible Bottom)" based on the Stable Dependencies Principle, and combines EARS, Gherkin, and Mermaid to achieve both logical rigor and visual design synchronization. The goal is to maximize human review efficiency and AI implementation accuracy.
 
 This proposal is positioned as the first level of a three-level specification hierarchy scaled by project size. The three levels are: ANMS (single file, fits in one context window), ANPS (AI-Native Plural Spec: multiple file split, medium-scale), and ANGS (AI-Native Graph Spec: GraphDB-based, large-scale) [2]. All three share the STFB design principle. This paper defines ANMS and also describes the scaling path to ANPS and ANGS.
 
@@ -19,7 +19,7 @@ The current problems boil down to two issues:
 1. **Verbosity vs. Cost Gap:** Rigorous standards (IEEE 29148, AUTOSAR SRS, etc.) impose extremely high documentation costs, hindering the pace of agile AI-driven development.
 2. **Ambiguity-Induced Hallucination:** When instructions are given only in natural language, AI may independently infer system constraints and boundary conditions, embedding unintended behavior (faults).
 
-This paper defines a hierarchical specification format that achieves maximum control with minimal documentation. The chapter structure of the proposed ANMS is summarized below (see the template itself, anms-spec-template.md, for full details).
+This paper defines a hierarchical specification format that achieves maximum control with minimal documentation. The chapter structure of the proposed ANMS is summarized below (see the template itself, process-rules/spec-template-en.md, for full details).
 
 | Chapter | Name                         | Role                                          | Stability        |
 | ------- | ---------------------------- | --------------------------------------------- | ---------------- |

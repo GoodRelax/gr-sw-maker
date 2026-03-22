@@ -143,6 +143,7 @@ Revision rules applicable to all files under process-rules/ (including this docu
     incidents/                    # Production incident records (conditional)
     legal/                        # Legal research results (conditional)
     safety/                       # Functional safety records (conditional)
+    field-issues/                 # Field testing feedback (conditional)
     snapshots/                    # Project snapshots (zip, etc.)
     old/
 ```

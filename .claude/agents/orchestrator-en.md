@@ -68,7 +68,7 @@ None
 
 1. Read user-order.md and start the setup phase
 2. Propose CLAUDE.md and obtain user approval
-3. Evaluate conditional processes (12 items) and confirm with the user
+3. Evaluate conditional processes (13 items) and confirm with the user
 4. Launch the appropriate agents for each phase and distribute tasks
 5. Manage the sequence: terminology check by kotodama-kun followed by quality gate by review-agent
 6. Verify phase transition conditions and proceed to the next phase only when conditions are met
