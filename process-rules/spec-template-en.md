@@ -1,4 +1,4 @@
-# ANMS v0.33 — AI-Native Minimal Spec Template
+# ANMS v0.34 — AI-Native Minimal Spec Template
 
 ## Design Principle: STFB (Stable Top, Flexible Bottom)
 
@@ -51,7 +51,7 @@ The project's "North Star." The prerequisite for all subsequent chapters. The mo
 | Section | Name        | Content                                          |
 | ------- | ----------- | ------------------------------------------------ |
 | 1.1     | Background  | Why this software is needed. Current state of the domain |
-| 1.2     | Issues      | Specific problems in the current state           |
+| 1.2     | Challenges  | Specific problems in the current state           |
 | 1.3     | Goals       | Definition of success. The desired end state     |
 | 1.4     | Approach    | Technology stack, architectural direction         |
 | 1.5     | Scope       | What is in-scope and what is out-of-scope for this project |

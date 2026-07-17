@@ -66,7 +66,7 @@ None
    - Ask one question at a time. Summarize and confirm the answer before moving to the next question
 4. Create mocks/samples/PoC and request user feedback (if applicable)
 5. Create Chapter 1 (Foundation)
-   - Background, Issues, Goals, Approach, Scope, Constraints, Limitations, Glossary, Notation
+   - Background, Challenges, Goals, Approach, Scope, Constraints, Limitations, Glossary, Notation
 6. Create Chapter 2 (Requirements)
    - Describe functional requirements using EARS syntax (6 patterns)
    - Describe non-functional requirements using EARS syntax + mathematical formulas

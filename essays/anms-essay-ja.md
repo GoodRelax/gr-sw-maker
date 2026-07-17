@@ -92,7 +92,7 @@ flowchart TD
 
 #### Chapter 1. Foundation（基本事項）
 
-プロジェクトの「北極星」。Background, Issues, Goals, Approach, Scope, Constraints, Limitations, Glossary, Notation の9節で構成される。AI駆動開発では特に以下の3節が重要な役割を果たす。
+プロジェクトの「北極星」。Background, Challenges, Goals, Approach, Scope, Constraints, Limitations, Glossary, Notation の9節で構成される。AI駆動開発では特に以下の3節が重要な役割を果たす。
 
 - **Glossary（用語集）:** AIと人間で用語の解釈を揃える。ドメイン固有の語彙を明示的に定義することで、AIの誤解釈を防ぐ。
 - **Notation（表記規約）:** RFC 2119/8174 に準拠し、SHALL/MUST=必須, SHOULD=推奨, MAY=任意 のキーワードを定義する。EARS 構文中の shall はこの SHALL と同義であることを明示する。
@@ -239,7 +239,7 @@ AIに指示を出す際、以下のパターンを用いることで曖昧さを
 **1. Foundation**
 
 - **Background:** 富裕層の顧客は専属運転手による移動体験――行き先を告げるだけで、安全・快適・時間通りに目的地へ届けてくれる――を求めている。しかし人間の運転手は採用コストが高く、24時間対応が難しい。
-- **Issues:** 人間の運転手は疲労・体調不良により品質が安定しない。深夜・早朝の対応に限界がある。
+- **Challenges:** 人間の運転手は疲労・体調不良により品質が安定しない。深夜・早朝の対応に限界がある。
 - **Goals:** 「行き先を告げるだけ」の体験を、人間の運転手なしで24時間365日提供する。
 - **Approach:** 自動運転SW。センサー融合（LiDAR + カメラ）による環境認識、経路計画、車両制御の3層構成。
 - **Scope:** In-scope: 一般道・高速道路での自律走行、乗客との対話による目的地設定。Out-of-scope: 未舗装路、積雪路面での走行。

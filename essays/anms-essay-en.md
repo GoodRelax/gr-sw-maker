@@ -92,7 +92,7 @@ The above shows the proposed specification lifecycle, from user intent through s
 
 #### Chapter 1. Foundation
 
-The project's "North Star." It consists of 9 sections: Background, Issues, Goals, Approach, Scope, Constraints, Limitations, Glossary, and Notation. Three sections play a particularly important role in AI-driven development:
+The project's "North Star." It consists of 9 sections: Background, Challenges, Goals, Approach, Scope, Constraints, Limitations, Glossary, and Notation. Three sections play a particularly important role in AI-driven development:
 
 - **Glossary:** Aligns vocabulary between AI and humans. Explicitly defining domain-specific terms prevents AI misinterpretation.
 - **Notation:** Compliant with RFC 2119/8174. Defines keywords: SHALL/MUST = mandatory, SHOULD = recommended, MAY = optional. Explicitly states that `shall` in EARS syntax is synonymous with SHALL.
@@ -239,7 +239,7 @@ The following example derives a specification from the concept of "a car with a 
 **1. Foundation**
 
 - **Background:** Affluent customers desire the experience of a personal chauffeur — just tell it where to go, and it delivers you safely, comfortably, and on time. However, hiring a human chauffeur is expensive, and 24/7 availability is impractical.
-- **Issues:** Human chauffeurs are inconsistent due to fatigue and health conditions. Late-night and early-morning availability is limited.
+- **Challenges:** Human chauffeurs are inconsistent due to fatigue and health conditions. Late-night and early-morning availability is limited.
 - **Goals:** Deliver the "just tell it where to go" experience without a human chauffeur, 24 hours a day, 365 days a year.
 - **Approach:** Autonomous driving software. Three-layer architecture: environment perception via sensor fusion (LiDAR + camera), route planning, and vehicle control.
 - **Scope:** In-scope: Autonomous driving on public roads and highways, destination setting via passenger dialogue. Out-of-scope: Unpaved roads, snow-covered surfaces.

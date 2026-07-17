@@ -1,4 +1,4 @@
-# ANMS v0.33 — AI-Native Minimal Spec Template
+# ANMS v0.34 — AI-Native Minimal Spec Template
 
 ## 仕様書の設計原則: STFB (Stable Top, Flexible Bottom) — 上剛下柔
 
@@ -51,7 +51,7 @@ ANPSでは各ファイルにCommon Block + Form Blockを付与する（文書管
 | Section | English     | 日本語   | 記述内容                                   |
 | ------- | ----------- | -------- | ------------------------------------------ |
 | 1.1     | Background  | 背景     | なぜこのSWが必要か。ドメインの現状         |
-| 1.2     | Issues      | 課題     | 現状の具体的な問題点                       |
+| 1.2     | Challenges  | 課題     | 現状の具体的な問題点                       |
 | 1.3     | Goals       | 目標     | 成功の定義。達成すべき状態                 |
 | 1.4     | Approach    | 解決方針 | 技術スタック、アーキテクチャ方針           |
 | 1.5     | Scope       | 範囲     | 本プロジェクトでやること (In-scope) とやらないこと (Out-of-scope) |
