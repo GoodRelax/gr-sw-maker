@@ -89,7 +89,7 @@ Software structure and design decisions. Defines the technical structure to real
 | Section | Name                 | Content                                                                |
 | ------- | -------------------- | ---------------------------------------------------------------------- |
 | 3.1     | Architecture Concept | Type of architecture adopted (CA, Hexagonal, Layered, etc.) and legend definition |
-| 3.2     | Components           | Partitioning of parts and responsibilities. Component diagram (color-coded per 3.1 legend) |
+| 3.2     | Components           | Partitioning of parts and responsibilities. Component diagram (color-coded per 3.1 legend). If the project involves AI/LLM integration, also define prompt template placement (e.g., `src/prompts/`), input/output schemas, test policy, and hallucination countermeasures |
 | 3.3     | File Structure       | Directory structure. Mapping between components and folders            |
 | 3.4     | Domain Model         | Definition of structure, relationships, and state. Class diagram (color-coded per 3.1 legend), ER diagram, state transition diagram |
 | 3.5     | Behavior             | Process flows and interactions. Sequence diagrams, activity diagrams   |
