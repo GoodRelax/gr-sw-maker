@@ -44,6 +44,13 @@
 | In | エージェントの入力。仕事開始時に存在するファイル。イミュータブル（読むだけ） |
 | Out | エージェントの出力。仕事終了時の最終成果物。End Conditions に対応。次のエージェントの In になる |
 | Work | エージェントの作業用一時ファイル。Out 完成後に削除する。再利用しない |
+| pure function（純粋関数）| 可変内部状態なし・副作用なし・外部状態を読まない。出力は引数のみで決まる（参照透過）|
+| semi-pure function（準純粋関数）| 可変状態なし・副作用なしだが、外部状態を自ら読む。参照透過ではない。準純粋-a=不変値の読取（決定的）、準純粋-b=可変/非決定の読取（時刻・乱数・DB/ファイル読取）|
+| non-pure function（非純粋関数）| 可変内部状態を持つ、または副作用がある（グローバル/引数の書換・I/O・ログ・lock/mutex・throw・HW/OS/env 変更）|
+| immutable class（不変クラス）| 構築後フィールド不変。メソッドは新インスタンスを返し純粋（this 固定＝引数扱い）。例: LocalDate, record |
+| value object（値オブジェクト）| 同一性でなく値で比較される不変オブジェクト。純粋メソッド。例: Money, Coordinate |
+| stateless class（ステートレスクラス）| 状態を持たず純粋メソッド/ユーティリティのみ。例: Math |
+| stateful class（ステートフルクラス）| 可変状態を持つ、または副作用メソッドを持つ（非純粋メソッドを含む）。例: 書込リポジトリ、キャッシュ |
 
 ## 3. 略称の許可判定
 
@@ -75,3 +82,18 @@
 | failure vs incident | failure = 要求を満たさなくなった技術的事象（テスト中含む）。incident = failure が本番でサービスに影響した運用的事象。テスト中の failure は incident ではない |
 | defect vs incident | defect = テスト・開発中の発見記録（file_type: defect, owner: test-engineer）。incident = 本番での発生記録（file_type: incident-report, owner: incident-reporter）。フェーズが異なる |
 | hazard vs risk | hazard = 人命・財産への危険源（IEC 61508）。risk = プロジェクト目標への影響（file_type: risk）。hazard は機能安全固有、risk は全プロジェクト共通 |
+
+## 5. コード単位の階層（包含関係）
+
+純粋性の判定は原則「クラス/関数」単位、物理分離は「モジュール/コンポーネント」単位で行う。レイヤー軸（Entity/UseCase/Adapter/Framework）はこの包含と直交し、spec-template Ch3.1・本書 CA に定義済み。
+
+| 階層 | 単位（日 / 英）| 対応 | 含むもの |
+|------|----------------|------|----------|
+| 1 | メンバ / ローカル (member, local)（プロパティ・メソッド・内部変数/関数・内部クラス）| — | 文、式 |
+| 2 | クラス / 関数 (class, function) | — | メンバ、ローカル、内部クラス |
+| 3 | モジュール (module) | ファイル | クラス、関数 |
+| 4 | コンポーネント (component) | フォルダ（多い場合サブフォルダ）| モジュール |
+| 5 | パッケージ / ライブラリ (package, library) | 配布単位 | コンポーネント |
+| 6 | アプリ (application) | — | パッケージ、外部ライブラリ |
+
+分散システムでは 5 と 6 の間に「サービス / デプロイ単位」を挿入する。

@@ -230,7 +230,8 @@ Scenario: SC-002 [シナリオ名] (traces: FR-xxx)
 | 可読性   | POLA                 | Principle of Least Astonishment       | 読み手が予想する通りに動作するか                                           |
 | 可読性   | PIE                  | Program Intently and Expressively     | 意図が明確に伝わるコードか                                                 |
 | テスト   | Testability          | —                                     | 単体テストがしやすいか。Mock・スタブを容易に差し込める設計か               |
-| 純粋性   | Pure/Impure          | —                                     | 純粋関数と副作用のある関数が分離・整理されているか                         |
+| 純粋性   | Pure / Semi-pure / Non-pure | —                              | 各関数を純粋/準純粋/非純粋に分類できるか。副作用と外部読み取りを外側へ寄せているか（functional core / imperative shell）|
+| 構造     | Collect-Process Separation | 収集後処理                       | 関数/クラス内で、入力の収集（全読取）を処理（変換）より前に完結させ、結果がタイミング依存にならないか |
 | 状態遷移 | State Transition     | —                                     | 状態遷移の条件取得と遷移実行が分離されているか                             |
 | 並行性   | Concurrency Safety   | —                                     | デッドロック・競合状態・グリッチが発生しないか                             |
 | エラー   | Error Propagation    | —                                     | エラーが握りつぶされず、適切に伝播・処理されているか                       |
