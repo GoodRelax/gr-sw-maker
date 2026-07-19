@@ -44,6 +44,13 @@ Concepts defined by this framework that are not found in dictionaries.
 | In | Agent input. Files that exist at the start of work. Immutable (read-only) |
 | Out | Agent output. The final deliverable at the end of work. Corresponds to End Conditions. Becomes the In for the next agent |
 | Work | Agent temporary working files. Deleted after Out is completed. Not reused |
+| pure function | No mutable internal state, no side effects, reads no external state. Output depends only on arguments (referentially transparent) |
+| semi-pure function | No mutable state, no side effects, but reads external state itself. Not referentially transparent. semi-pure-a = reads immutable values (deterministic); semi-pure-b = reads mutable/nondeterministic (clock, RNG, DB/file read) |
+| non-pure function | Has mutable internal state, OR any side effect (global/argument mutation, I/O, log, lock/mutex, throw, HW/OS/env change) |
+| immutable class | Fields never change after construction; methods return new instances and are pure (this is fixed = an extra argument). E.g. LocalDate, record |
+| value object | Immutable object compared by value, not identity. Pure methods. E.g. Money, Coordinate |
+| stateless class | Holds no state; only pure methods/utilities. E.g. Math |
+| stateful class | Holds mutable state or has side-effecting methods (contains non-pure methods). E.g. write repository, cache |
 
 ## 3. Abbreviation Permission Decisions
 
@@ -75,3 +82,18 @@ Clarifying distinctions between concepts that are similar but different.
 | failure vs incident | failure = a technical event where requirements are no longer satisfied (including during testing). incident = an operational event where a failure affects services in production. A failure during testing is not an incident |
 | defect vs incident | defect = a discovery record during testing/development (file_type: defect, owner: test-engineer). incident = an occurrence record in production (file_type: incident-report, owner: incident-reporter). They differ by phase |
 | hazard vs risk | hazard = a danger source to life and property (IEC 61508). risk = an impact on project objectives (file_type: risk). hazard is specific to functional safety; risk is common to all projects |
+
+## 5. Code Unit Hierarchy (containment)
+
+Purity is judged at the class/function level; physical separation is done at the module/component level. The layer axis (Entity/UseCase/Adapter/Framework) is orthogonal to this containment and is defined in spec-template Ch3.1 and the CA perspective of review-standards.
+
+| Level | Unit (EN) | Maps to | Contains |
+|-------|-----------|---------|----------|
+| 1 | member / local (property, method, local var/func, nested class) | — | statements, expressions |
+| 2 | class / function | — | members, locals, nested classes |
+| 3 | module | file | classes, functions |
+| 4 | component | folder (subfolder if many) | modules |
+| 5 | package / library | distribution unit | components |
+| 6 | application | — | packages, external libraries |
+
+For distributed systems, insert "service / deployable" between levels 5 and 6.

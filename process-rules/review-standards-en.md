@@ -1,4 +1,4 @@
-# Review Standards (R1–R6)
+# Review Standards (R1–R7)
 
 > **Document positioning:** The single source of truth for the review perspectives referenced by review-agent. process-rules §9.2 is a summary of this document; refer here for details.
 > **Related documents:** [Process Rules](full-auto-dev-process-rules.md) §9 Quality Management Framework, [Document Management Rules](full-auto-dev-document-rules.md)
@@ -300,3 +300,23 @@ When review-agent performs a re-review after corrections:
 2. Confirm that "fix" dispositions are actually resolved in the corrected artifact
 3. Record the verification result in a new review report with updated counts
 4. Any new findings discovered during re-review are added to the Finding Disposition Table
+
+---
+
+## R7: Purity & Structure Checklist (Mandatory)
+
+Keywords follow RFC 2119 (MUST/SHALL = mandatory, SHOULD = recommended). When this sheet is used standalone, the reviewer MUST fill Verdict (PASS/FAIL/NA) for every row and MUST raise a finding for each FAIL.
+
+**Purity annotation convention (language-agnostic):** every function/method MUST carry exactly one `@purity` tag inside the language's comment (`//`, `#`, `--`, `/* */`, `"""..."""`, etc.). Value is `pure` / `semi-pure` / `semi-pure-b` / `non-pure`. `@purity` is a text marker inside a comment, not language syntax, so it works in every language and is greppable. Pure is stated explicitly, never left unmarked (to catch omissions).
+
+| ID | Level | Check item | Verdict |
+|----|-------|------------|:------:|
+| P1 | MUST | Every function/method is classified pure / semi-pure / non-pure (pure = no mutable state, no side effect, no external read; semi-pure = no side effect but reads external state; non-pure = mutable state or side effect) | — |
+| P2 | MUST | Non-pure effects (I/O, DB write, log, lock/mutex/semaphore, global or argument mutation, throw, HW/OS/env change) occur ONLY in outer layers (imperative shell / Adapter, Framework); the domain core stays pure | — |
+| P3 | SHOULD | semi-pure-b reads (clock, RNG, DB/file/network read) are collected at the top and injected as arguments where feasible, raising the function toward pure | — |
+| P4 | MUST | Within a function, input collection (all reads) completes before processing; collect and process are not interleaved | — |
+| P5 | MUST | Pure-side classes are immutable class / value object / stateless class and hold no mutable state; mutable state or side-effecting methods make a class stateful (non-pure) | — |
+| M1 | MUST | Every function/method carries a `@purity` tag (pure / semi-pure / semi-pure-b / non-pure) inside a comment; unmarked is not allowed | — |
+| M2 | SHOULD | Within a class/module, members are ordered pure to semi-pure to non-pure, with a section comment before the non-pure group | — |
+| M3 | SHOULD | A class does not mix mutable state with pure computation; pure logic is extracted into pure functions or value objects | — |
+| M4 | SHOULD | Files/modules are separated by purity (pure core and non-pure shell in different files) | — |
