@@ -56,10 +56,12 @@ const state = {
 // The status line is drawn after every response. It must never fail loudly: a
 // stack trace in place of the status line would be permanent visual noise, and
 // losing the measurement is a smaller loss than losing the display.
+let recorded = false;
 try {
   if (payload) {
     mkdirSync(join(projectDir, STATE[0], STATE[1]), { recursive: true });
     writeFileSync(join(projectDir, ...STATE), JSON.stringify(state, null, 2) + "\n", "utf8");
+    recorded = true;
   }
 } catch {
   // fall through to the status line
@@ -69,4 +71,8 @@ const parts = [];
 if (state.model) parts.push(state.model);
 if (state.context_used_pct !== null) parts.push(`ctx ${state.context_used_pct}%`);
 if (state.total_cost_usd !== null) parts.push(`$${state.total_cost_usd.toFixed(2)}`);
+// A status line that renders while the file behind it was never written would
+// report health it cannot back up. progress-monitor would then read a stale
+// session-state.json, or none, and say nothing about it.
+if (payload && !recorded) parts.push("meter: NOT RECORDED");
 process.stdout.write(parts.length ? parts.join("  |  ") : "session-meter: no session data");

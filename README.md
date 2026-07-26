@@ -135,6 +135,7 @@ No figures appear here on purpose: consumption depends almost entirely on what y
 
 - `tools/session-meter.mjs` runs as the status line and writes context usage and cost to `project-management/progress/session-state.json` after every response
 - progress-monitor reads that at each phase boundary and appends the per-phase figures to `project-management/progress/cost-log.json`
+- **The status line runs only where Claude Code draws one.** Where it does not, `session-state.json` is never written, and the process records the gap rather than estimating around it
 
 **What you have to set**
 

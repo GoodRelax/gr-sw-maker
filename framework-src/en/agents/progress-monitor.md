@@ -119,4 +119,5 @@ Report only the facts (what has not changed). Do not infer a cause and do not in
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Source file for progress data does not exist | Skip tracking the relevant metric and report to the orchestrator |
 | Cost budget is not configured | Disable cost tracking and request the orchestrator to set the budget |
+| session-state.json does not exist | The measurement path is not running. Record in cost-log.json that measurement was unavailable and report to the orchestrator. **Never substitute an estimated consumption (MUST NOT)** |
 | All agents are unresponsive | Immediately report to the orchestrator. Delegate the recovery procedure decision |

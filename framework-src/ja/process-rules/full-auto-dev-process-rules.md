@@ -546,6 +546,8 @@ progress-monitor がAPIトークン消費を追跡し、CLAUDE.md「品質目標
 
 閾値の値は CLAUDE.md が唯一の正であり、本文書には数値を書かない。
 
+**計測経路が働かない場合がある。** `statusLine` は Claude Code がステータス行を描画する環境でのみ実行される。実行されなければ `session-state.json` は生成されず、コスト追跡とコンテキスト閾値の判定はどちらも成立しない。この場合、**欠測であることを cost-log.json とフェーズ報告に明記する。消費量を推測で埋めてはならない（MUST NOT）。**計測不能のまま黙って進むと、コスト超過もコンテキスト枯渇も検知されないまま進行する。
+
 **コスト追跡フォーマット (project-management/progress/cost-log.json):**
 
 ```json

@@ -546,6 +546,8 @@ progress-monitor tracks API token consumption and notifies the user once the ale
 
 CLAUDE.md is the single source of truth for the threshold value; no number is written in this document.
 
+**The measurement path does not always run.** `statusLine` executes only where Claude Code draws a status line. Where it does not, `session-state.json` is never produced, and neither cost tracking nor the context threshold check can be performed. In that case, **state the gap explicitly in cost-log.json and in the phase report. Never fill in an estimated consumption (MUST NOT).** Proceeding silently without measurement means neither a cost overrun nor context exhaustion is ever detected.
+
 **Cost Tracking Format (project-management/progress/cost-log.json):**
 
 ```json

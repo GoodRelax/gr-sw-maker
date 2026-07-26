@@ -128,7 +128,9 @@ Execute the following phases sequentially:
 ## Common Steps at the Completion of Every Phase (applies to all phases)
 Fa. Launch kotodama-kun and check terminology and naming across all Outs of that phase in one pass
 Fb. Launch progress-monitor to read project-management/progress/session-state.json and append that phase's token consumption and cost to cost-log.json
+    -> If session-state.json does not exist: record in cost-log.json that measurement was unavailable and report it to the user. **Never write an estimated consumption (MUST NOT)**
 Fc. If context_used_pct in session-state.json has reached the context handoff threshold in CLAUDE.md "Quality Targets", create a handoff and then interrupt the session
+    -> If session-state.json does not exist: the threshold cannot be evaluated. State that in the phase report and let the user decide whether to interrupt
 Fd. Launch orchestrator to update pipeline-state.md and executive-dashboard.md and report to the user
 Fe. Launch process-improver to run the retrospective and root cause analysis of defect patterns
 Ff. Only when the user has approved the improvements from Fe, launch decree-writer to apply them to the governance files

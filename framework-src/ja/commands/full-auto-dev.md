@@ -128,7 +128,9 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
 ## 各フェーズ完了時の共通手順（全フェーズに適用）
 Fa. kotodama-kun を起動し、当該フェーズの全 Out の用語・命名を一括チェックする
 Fb. progress-monitor を起動し、project-management/progress/session-state.json を読んで当該フェーズのトークン消費とコストを cost-log.json に追記する
+    → session-state.json が存在しない場合: 計測不能である旨を cost-log.json に記録し、ユーザーに報告する。**消費量を推測で書いてはならない（MUST NOT）**
 Fc. session-state.json の context_used_pct が CLAUDE.md「品質目標」のコンテキスト使用率の引継ぎ閾値に達していたら、handoff を作成してからセッションを中断する
+    → session-state.json が存在しない場合: 閾値判定はできない。その事実をフェーズ報告に明記し、中断の要否をユーザーに判断してもらう
 Fd. orchestrator を起動し、pipeline-state.md と executive-dashboard.md を更新してユーザーに報告する
 Fe. process-improver を起動し、ふりかえりと defect パターンの根本原因分析を実施する
 Ff. Fe の改善策がユーザーに承認された場合のみ、decree-writer を起動してガバナンスファイルに適用する

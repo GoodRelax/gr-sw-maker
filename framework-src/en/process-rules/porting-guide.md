@@ -80,6 +80,8 @@ The following depend on Claude Code features. **They may be omitted when porting
 
 **When omitted, the cost budget alert and gate enforcement do not operate.** State that in the project's CLAUDE.md equivalent and decide on a substitute.
 
+> **Even on Claude Code, `statusLine` runs only where a status line is drawn.** Where it is not, `session-state.json` is never produced and cost tracking falls back to manual recording, exactly as on a ported platform. The process side requires the gap to be stated (Process Rules §3.2.7).
+
 ### What gate-guard protects
 
 | Write destination | Gate that must have passed |

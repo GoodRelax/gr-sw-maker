@@ -132,6 +132,7 @@ AI がプロジェクト構成（`CLAUDE.md`）を自動生成し、あなたに
 
 - `tools/session-meter.mjs` が statusLine として動き、応答ごとにコンテキスト使用率とコストを `project-management/progress/session-state.json` に書く
 - progress-monitor がフェーズ境界でそれを読み、フェーズ別の実績を `project-management/progress/cost-log.json` に追記する
+- **statusLine は Claude Code がステータス行を描画する環境でのみ動きます。** 動かない場合 `session-state.json` は生成されず、プロセスは推測で埋めずに欠測として記録します
 
 **ユーザーが設定するもの**
 
