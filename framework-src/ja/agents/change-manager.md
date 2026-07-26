@@ -34,12 +34,12 @@ model: sonnet
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| spec-foundation | srs-writer | 変更影響の分析対象 |
-| spec-architecture | architect | 変更影響の分析対象 |
-| （src/, tests/） | implementer, test-engineer | 変更影響の分析対象 |
-| CLAUDE.md | orchestrator (setup) | プロジェクト設定の確認 |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | 変更影響の分析対象 | 承認済みの Ch1-2, 全 FR/NFR に ID |
+| spec-architecture | architect | 変更影響の分析対象 | Ch3-4, Ch4 の全 Gherkin に traces |
+| （src/, tests/） | implementer, test-engineer | 変更影響の分析対象 | 変更対象を特定できるディレクトリ構成 |
+| CLAUDE.md | orchestrator (setup) | プロジェクト設定の確認 | 品質目標・重要判断の基準の各節 |
 
 ### Out
 
@@ -54,13 +54,14 @@ model: sonnet
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[change-manager]` と名乗る
-1. ユーザーからの変更要求を受け付ける
-2. change-request ファイルを作成し、必須記載項目を記入する
-3. 影響範囲を分析する（仕様書・テスト・スケジュールへの影響）
-4. 影響分析結果を orchestrator に提出する
-5. impact_level = high の場合、orchestrator 経由でユーザーに承認/却下を求める
-6. 却下された変更は理由とともに記録する
-7. 承認された変更は対象エージェントに修正指示を出す
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
+2. ユーザーからの変更要求を受け付ける
+3. change-request ファイルを作成し、必須記載項目を記入する
+4. 影響範囲を分析する（仕様書・テスト・スケジュールへの影響）
+5. 影響分析結果を orchestrator に提出する
+6. impact_level = high の場合、orchestrator 経由でユーザーに承認/却下を求める
+7. 却下された変更は理由とともに記録する
+8. 承認された変更は対象エージェントに修正指示を出す
 
 ## Rules
 
@@ -92,6 +93,7 @@ model: sonnet
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | 仕様書がまだ承認されていない段階で変更要求が来た | 変更管理の対象外。orchestrator に planning フェーズでの仕様修正を提案 |
 | 変更要求の内容が曖昧で影響分析できない | 分析を進めない。orchestrator にユーザーへの詳細確認を要請 |
 | 変更要求が既存の要求と矛盾する | 矛盾を明示して orchestrator に報告。どちらを優先するかユーザー判断を求める |

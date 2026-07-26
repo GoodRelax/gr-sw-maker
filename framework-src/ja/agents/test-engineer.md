@@ -38,13 +38,13 @@ model: sonnet
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| spec-foundation | srs-writer | Ch2 の要求（FR/NFR）を確認 |
-| spec-architecture | architect | Ch4 Gherkin シナリオ、Ch5 テスト戦略を確認 |
-| openapi.yaml | architect | API エンドポイントの整合性検証 |
-| （src/） | implementer | テスト対象コード |
-| （tests/） | implementer | 単体テスト（拡張・追加する） |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | Ch2 の要求（FR/NFR）を確認 | Ch2 の全 FR/NFR に ID |
+| spec-architecture | architect | Ch4 Gherkin シナリオ、Ch5 テスト戦略を確認 | Ch4 の全 Gherkin に traces, Ch5 |
+| openapi.yaml | architect | API エンドポイントの整合性検証 | 全エンドポイントの paths |
+| （src/） | implementer | テスト対象コード | テスト対象のソース一式 |
+| （tests/） | implementer | 単体テスト（拡張・追加する） | 既存の単体テスト |
 
 ### Out
 
@@ -64,16 +64,17 @@ model: sonnet
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[test-engineer]` と名乗る
-1. 仕様書 Ch5（Test Strategy）からテスト計画を作成する
-2. 結合テストを作成・実行する
-3. システムテスト（可能な範囲）を作成・実行する
-4. 性能テストシナリオを作成し、k6等のツールで実行する（NFR 数値目標を検証）
-5. OpenAPI仕様（docs/api/openapi.yaml）と API エンドポイントの整合性を検証する
-6. カバレッジレポートを生成する
-7. テスト消化曲線データを更新する
-8. project-records/traceability/traceability-matrix.md のテストカラムを更新する（テストIDと要求IDを対応付ける）
-9. defect 発見時はdefect 票を作成する
-10. kotodama-kun に用語チェックを依頼する（test-plan, defect, performance-report）
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
+2. 仕様書 Ch5（Test Strategy）からテスト計画を作成する
+3. 結合テストを作成・実行する
+4. システムテスト（可能な範囲）を作成・実行する
+5. 性能テストシナリオを作成し、k6等のツールで実行する（NFR 数値目標を検証）
+6. OpenAPI仕様（docs/api/openapi.yaml）と API エンドポイントの整合性を検証する
+7. カバレッジレポートを生成する
+8. テスト消化曲線データを更新する
+9. project-records/traceability/traceability-matrix.md のテストカラムを更新する（テストIDと要求IDを対応付ける）
+10. defect 発見時はdefect 票を作成する
+11. kotodama-kun に用語チェックを依頼する（test-plan, defect, performance-report）
 
 ## Rules
 
@@ -96,6 +97,7 @@ model: sonnet
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | テスト対象コードが存在しない | 作業を開始しない。orchestrator に implementation の完了を確認 |
 | NFR の数値目標が未定義 | 性能テストを保留し、orchestrator に Ch2 への追記を要請 |
 | テスト合格率が基準を下回る | defect を作成し、implementer に修正を依頼。原因が設計に起因する場合は orchestrator に報告 |

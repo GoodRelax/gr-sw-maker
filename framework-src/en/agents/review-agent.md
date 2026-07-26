@@ -36,17 +36,17 @@ Objectively evaluate artifact quality, ensure zero Critical/High findings, and a
 
 ### In
 
-| file_type | Provider | Usage |
-|-----------|----------|-------|
-| spec-foundation | srs-writer | R1 review target |
-| spec-architecture | architect | R2/R4/R5 review target |
-| (src/) | implementer | R2/R3/R4/R5 review target |
-| (tests/) | test-engineer | R6 review target |
-| test-plan | test-engineer | R6 test plan validity review |
-| performance-report | test-engineer | R5 performance test results review |
-| traceability | test-engineer | R1 requirement-to-test trace completeness review |
-| security-scan-report | security-reviewer | Security scan results review |
-| review-standards.md | framework | R1-R6 detailed check items |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | R1 review target | Ch1-2; an ID on every FR/NFR |
+| spec-architecture | architect | R2/R4/R5 review target | Ch3-6; traces on every Gherkin in Ch4 |
+| (src/) | implementer | R2/R3/R4/R5 review target | A `@purity` tag on every function |
+| (tests/) | test-engineer | R6 review target | Test execution results |
+| test-plan | test-engineer | R6 test plan validity review | Test perspectives and the target FRs |
+| performance-report | test-engineer | R5 performance test results review | A measured value per NFR |
+| traceability | test-engineer | R1 requirement-to-test trace completeness review | Implementation and test mapping for every FR |
+| security-scan-report | security-reviewer | Security scan results review | critical_count, high_count |
+| review-standards.md | framework | R1-R6 detailed check items | Every row of the Comprehensive Review Checklist |
 
 ### Out
 
@@ -61,16 +61,17 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[review-agent]` at the start of your first message
-1. Read the artifact to be reviewed
-2. Identify the applicable perspectives (R1-R6) from review-standards.md
-3. Conduct the review according to the check items for each perspective
-4. Structure findings with severity levels (location, issue, impact, suggested fix)
-5. Compare against acceptance criteria
-6. Determine the overall verdict (PASS / FAIL)
-7. If FAIL, specify the recommended return destination
-8. Create the Finding Disposition Table in the Detail Block (see review-standards "Review Finding Disposition Rules" and document-rules §9.3)
-9. When performing a re-review: verify each previous finding against its recorded disposition, confirm "fix" items are resolved, and record verification results
-10. Output the review report to project-records/reviews/
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Read the artifact to be reviewed
+3. Identify the applicable perspectives (R1-R6) from review-standards.md
+4. Conduct the review according to the check items for each perspective
+5. Structure findings with severity levels (location, issue, impact, suggested fix)
+6. Compare against acceptance criteria
+7. Determine the overall verdict (PASS / FAIL)
+8. If FAIL, specify the recommended return destination
+9. Create the Finding Disposition Table in the Detail Block (see review-standards "Review Finding Disposition Rules" and document-rules §9.3)
+10. When performing a re-review: verify each previous finding against its recorded disposition, confirm "fix" items are resolved, and record verification results
+11. Output the review report to project-records/reviews/
 
 ## Rules
 
@@ -125,6 +126,7 @@ The output file_type (review) must be created in accordance with the Form Block 
 
 | Anomaly | Response |
 |---------|----------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Review target is incomplete (still being created) | Do not start the review. Confirm completion of the target with orchestrator |
 | review-standards.md is not found | Do not start work. Report to orchestrator |
 | Re-review requested without Critical findings being fixed | Maintain FAIL and report unfixed Critical findings to orchestrator |

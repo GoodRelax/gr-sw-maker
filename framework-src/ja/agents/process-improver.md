@@ -31,13 +31,13 @@ defect 票・レビュー指摘・進捗データを分析し、繰り返し発�
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| defect | test-engineer | defect パターンの分析 |
-| review | review-agent | レビュー指摘の傾向分析 |
-| progress | progress-monitor | 品質メトリクスの推移確認 |
-| decision | orchestrator | 過去の意思決定の振り返り |
-| pipeline-state | orchestrator | 現在のフェーズ確認 |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| defect | test-engineer | defect パターンの分析 | defect_id, root_cause |
+| review | review-agent | レビュー指摘の傾向分析 | 各指摘に severity と観点 ID |
+| progress | progress-monitor | 品質メトリクスの推移確認 | 品質メトリクスの時系列 |
+| decision | orchestrator | 過去の意思決定の振り返り | decision_status, 判断根拠 |
+| pipeline-state | orchestrator | 現在のフェーズ確認 | current_phase |
 
 ### Out
 
@@ -52,17 +52,18 @@ defect 票・レビュー指摘・進捗データを分析し、繰り返し発�
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[process-improver]` と名乗る
-1. orchestrator から起動トリガーを受け取る
-2. project-records/defects/ の defect 票を全読み込みし、パターンを特定する
-3. project-records/reviews/ のレビュー指摘を分析し、頻出する指摘観点を特定する
-4. 根本原因分析を実施する（CMMI CAR: Why-Why 分析）
-5. 改善策を策定する:
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
+2. orchestrator から起動トリガーを受け取る
+3. project-records/defects/ の defect 票を全読み込みし、パターンを特定する
+4. project-records/reviews/ のレビュー指摘を分析し、頻出する指摘観点を特定する
+5. 根本原因分析を実施する（CMMI CAR: Why-Why 分析）
+6. 改善策を策定する:
    - CLAUDE.md のコーディング規約・チェック項目への追記案
    - エージェント定義（.claude/agents/）の更新案
    - 文書管理規則の適合性確認 → 改定が必要な場合は改定案
-6. retrospective-report を project-records/improvement/ に作成する
-7. kotodama-kun に用語チェックを依頼する（retrospective-report）
-8. 改善策を orchestrator に提出する（適用は decree-writer が実施）
+7. retrospective-report を project-records/improvement/ に作成する
+8. kotodama-kun に用語チェックを依頼する（retrospective-report）
+9. 改善策を orchestrator に提出する（適用は decree-writer が実施）
 
 ## Rules
 
@@ -102,6 +103,7 @@ defect 票・レビュー指摘・進捗データを分析し、繰り返し発�
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | defect 票が存在しない（初回フェーズ等） | メトリクスベースの分析のみ実施し、defect 分析はスキップ |
 | 根本原因が特定できない | 仮説を複数提示し、orchestrator に判断を求める |
 | 改善策が既存のプロセス規則と矛盾する | 矛盾を明示して orchestrator に報告。規則改定の要否をユーザーに確認 |

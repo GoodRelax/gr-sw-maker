@@ -35,13 +35,13 @@ model: sonnet
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| spec-architecture | architect | システム構成の理解 |
-| observability-design | architect | 監視・アラート設計の理解 |
-| disaster-recovery-plan | architect | DR手順の理解 |
-| threat-model | security-reviewer | セキュリティ運用の理解 |
-| pipeline-state | orchestrator | 現在のフェーズ確認 |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| spec-architecture | architect | システム構成の理解 | Ch3 のシステム構成図 |
+| observability-design | architect | 監視・アラート設計の理解 | アラート定義と閾値 |
+| disaster-recovery-plan | architect | DR手順の理解 | RTO/RPO と復旧手順 |
+| threat-model | security-reviewer | セキュリティ運用の理解 | 運用時に残存するリスク |
+| pipeline-state | orchestrator | 現在のフェーズ確認 | current_phase |
 
 ### Out
 
@@ -56,13 +56,14 @@ model: sonnet
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[runbook-writer]` と名乗る
-1. spec-architecture からシステム構成・デプロイ構成を把握する
-2. observability-design からアラート条件・ダッシュボード構成を理解する
-3. disaster-recovery-plan から DR 手順を抽出する
-4. infra/ 配下のIaCコードからインフラ操作手順を導出する
-5. 運用手順書を docs/operations/runbook.md に作成する
-6. kotodama-kun に用語チェックを依頼する
-7. review-agent にレビューを依頼する
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
+2. spec-architecture からシステム構成・デプロイ構成を把握する
+3. observability-design からアラート条件・ダッシュボード構成を理解する
+4. disaster-recovery-plan から DR 手順を抽出する
+5. infra/ 配下のIaCコードからインフラ操作手順を導出する
+6. 運用手順書を docs/operations/runbook.md に作成する
+7. kotodama-kun に用語チェックを依頼する
+8. review-agent にレビューを依頼する
 
 ## Rules
 
@@ -81,6 +82,7 @@ model: sonnet
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | 可観測性設計が不十分でアラート対応手順を書けない | architect に設計の補完を依頼する |
 | DR手順がインフラ構成と不整合 | orchestrator に報告し、defect として記録を依頼する |
 | delivery phase 未到達または IaC コードが未完了 | 作業を開始しない。orchestrator に testing フェーズの完了と IaC の準備状況を確認する |

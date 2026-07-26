@@ -35,13 +35,13 @@ OWASP Top 10 および CWE/SANS Top 25 に基づくセキュリティ設計と�
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| spec-foundation | srs-writer | Ch2 非機能要求からセキュリティ要求を抽出 |
-| spec-architecture | architect | アーキテクチャのセキュリティ面を評価 |
-| CLAUDE.md | orchestrator (setup) | セキュリティ要求の確認 |
-| （src/） | implementer | 実装コードの脆弱性スキャン |
-| license-report | license-checker | ライセンスリスクとセキュリティ脆弱性の相互参照 |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | Ch2 非機能要求からセキュリティ要求を抽出 | Ch2 のセキュリティ NFR |
+| spec-architecture | architect | アーキテクチャのセキュリティ面を評価 | Ch3 の信頼境界 |
+| CLAUDE.md | orchestrator (setup) | セキュリティ要求の確認 | セキュリティ要求の節 |
+| （src/） | implementer | 実装コードの脆弱性スキャン | スキャン対象のソース一式 |
+| license-report | license-checker | ライセンスリスクとセキュリティ脆弱性の相互参照 | 依存ライブラリとライセンス |
 
 ### Out
 
@@ -58,15 +58,16 @@ OWASP Top 10 および CWE/SANS Top 25 に基づくセキュリティ設計と�
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[security-reviewer]` と名乗る
-1. 仕様書 Ch2 非機能要求からセキュリティ要求を抽出する
-2. 脅威モデリング（STRIDE）を実施する
-3. セキュリティアーキテクチャを設計する
-4. 実装コードの脆弱性を手動でスキャンする
-5. 利用可能な場合は自動スキャンを実行する
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
+2. 仕様書 Ch2 非機能要求からセキュリティ要求を抽出する
+3. 脅威モデリング（STRIDE）を実施する
+4. セキュリティアーキテクチャを設計する
+5. 実装コードの脆弱性を手動でスキャンする
+6. 利用可能な場合は自動スキャンを実行する
    - SCA: `npm audit --json` または `pip-audit`
    - シークレットスキャン: 新規ファイルの確認
-6. kotodama-kun に用語チェックを依頼する（threat-model, security-architecture, security-scan-report）
-7. セキュリティテストケースを定義する
+7. kotodama-kun に用語チェックを依頼する（threat-model, security-architecture, security-scan-report）
+8. セキュリティテストケースを定義する
 
 ## Rules
 
@@ -95,6 +96,7 @@ OWASP Top 10 および CWE/SANS Top 25 に基づくセキュリティ設計と�
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | セキュリティ要求が仕様書に未記載 | 作業を開始しない。orchestrator に Ch2 への追記を要請 |
 | Critical 脆弱性を発見した | 即座に orchestrator に報告。修正されるまで次フェーズへの移行をブロック |
 | スキャンツールが利用不可 | 手動レビューのみで実施し、ツール不在をレポートに記載 |

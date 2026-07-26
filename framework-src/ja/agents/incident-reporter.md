@@ -33,12 +33,12 @@ model: sonnet
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| runbook | runbook-writer | 運用手順との乖離確認 |
-| observability-design | architect | 監視設計との照合 |
-| security-scan-report | security-reviewer | セキュリティ関連インシデントの文脈 |
-| pipeline-state | orchestrator | 現在のフェーズ確認 |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| runbook | runbook-writer | 運用手順との乖離確認 | 該当事象の対応手順 |
+| observability-design | architect | 監視設計との照合 | アラート定義 |
+| security-scan-report | security-reviewer | セキュリティ関連インシデントの文脈 | critical_count, high_count |
+| pipeline-state | orchestrator | 現在のフェーズ確認 | current_phase |
 
 ### Out
 
@@ -53,14 +53,15 @@ model: sonnet
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[incident-reporter]` と名乗る
-1. orchestrator からインシデント情報を受け取る
-2. ログ・メトリクス・トレースを確認し、タイムラインを構築する
-3. 根本原因分析（RCA）を実施する
-4. runbook との乖離がないか確認する
-5. 再発防止策を策定する
-6. インシデント報告書を project-records/incidents/ に作成する
-7. kotodama-kun に用語チェックを依頼する（incident-report）
-8. review-agent にレビューを依頼する
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
+2. orchestrator からインシデント情報を受け取る
+3. ログ・メトリクス・トレースを確認し、タイムラインを構築する
+4. 根本原因分析（RCA）を実施する
+5. runbook との乖離がないか確認する
+6. 再発防止策を策定する
+7. インシデント報告書を project-records/incidents/ に作成する
+8. kotodama-kun に用語チェックを依頼する（incident-report）
+9. review-agent にレビューを依頼する
 
 ## Rules
 
@@ -80,5 +81,6 @@ model: sonnet
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | ログが不十分で根本原因を特定できない | orchestrator に報告し、可観測性の改善を提案する |
 | セキュリティインシデントの疑いがある | security-reviewer に調査を依頼する |

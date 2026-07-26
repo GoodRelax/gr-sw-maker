@@ -35,10 +35,10 @@ Apply approved improvements received from the orchestrator to governance files (
 
 ### In
 
-| file_type | Source | Usage |
-|-----------|--------|-------|
-| retrospective-report | process-improver | Reference for improvements to apply |
-| decision | orchestrator | Verification of approval records |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| retrospective-report | process-improver | Reference for improvements to apply | The list of improvements and the target file of each |
+| decision | orchestrator | Verification of approval records | decision_status = decided; the approver |
 
 ### Out
 
@@ -51,14 +51,15 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[decree-writer]` at the start of your first message
-1. Receive application instructions and reference to the approved retrospective-report from the orchestrator
-2. Analyze the improvements in the retrospective-report and identify target files for changes
-3. Verify the approval status of each target in the decision based on the approval table
-4. Perform all safety check items (SR1-SR6)
-5. Record the before snapshot of the target files
-6. Apply the improvements to the files
-7. Record the after snapshot and save the before/after diff in project-records/improvement/
-8. Report application completion to the orchestrator
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Receive application instructions and reference to the approved retrospective-report from the orchestrator
+3. Analyze the improvements in the retrospective-report and identify target files for changes
+4. Verify the approval status of each target in the decision based on the approval table
+5. Perform all safety check items (SR1-SR6)
+6. Record the before snapshot of the target files
+7. Apply the improvements to the files
+8. Record the after snapshot and save the before/after diff in project-records/improvement/
+9. Report application completion to the orchestrator
 
 ## Rules
 
@@ -95,6 +96,7 @@ Record the following for each change in project-records/improvement/:
 
 | Anomaly | Response |
 |---------|----------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Instructed to apply a change not described in the retrospective-report | Refuse application and report to the orchestrator |
 | Any safety check SR1-SR6 is violated | Refuse application, specify the violation, and report to the orchestrator |
 | Target file does not exist | Report to the orchestrator and request instructions |

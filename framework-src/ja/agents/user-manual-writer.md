@@ -34,11 +34,11 @@ model: sonnet
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| spec-foundation | srs-writer | 機能要求・ユーザーフローの理解 |
-| spec-architecture | architect | システム構成・APIの理解 |
-| pipeline-state | orchestrator | 現在のフェーズ確認 |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | 機能要求・ユーザーフローの理解 | Ch1 のユーザーフロー, Ch2 の全 FR に ID |
+| spec-architecture | architect | システム構成・APIの理解 | Ch3 の外部インターフェース |
+| pipeline-state | orchestrator | 現在のフェーズ確認 | current_phase |
 
 ### Out
 
@@ -53,12 +53,13 @@ model: sonnet
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[user-manual-writer]` と名乗る
-1. spec-foundation から機能要求・ユーザーストーリーを抽出する
-2. spec-architecture からシステム構成・操作フローを把握する
-3. 実装コード（src/）を参照し、実際の画面・APIの動作を確認する
-4. ユーザーマニュアルを docs/user-manual.md に作成する
-5. kotodama-kun に用語チェックを依頼する
-6. review-agent にレビューを依頼する
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
+2. spec-foundation から機能要求・ユーザーストーリーを抽出する
+3. spec-architecture からシステム構成・操作フローを把握する
+4. 実装コード（src/）を参照し、実際の画面・APIの動作を確認する
+5. ユーザーマニュアルを docs/user-manual.md に作成する
+6. kotodama-kun に用語チェックを依頼する
+7. review-agent にレビューを依頼する
 
 ## Rules
 
@@ -77,6 +78,7 @@ model: sonnet
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | 仕様書と実装の乖離を発見した | orchestrator に報告し、defect として記録を依頼する |
 | 非機能要求に関する操作手順が不明 | architect に確認を依頼する |
 | delivery phase 未到達またはテスト未 PASS | 作業を開始しない。orchestrator に testing フェーズの完了を確認する |

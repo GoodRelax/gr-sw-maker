@@ -36,17 +36,17 @@ model: opus
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| spec-foundation | srs-writer | R1 レビュー対象 |
-| spec-architecture | architect | R2/R4/R5 レビュー対象 |
-| （src/） | implementer | R2/R3/R4/R5 レビュー対象 |
-| （tests/） | test-engineer | R6 レビュー対象 |
-| test-plan | test-engineer | R6 テスト計画の妥当性レビュー |
-| performance-report | test-engineer | R5 性能テスト結果のレビュー |
-| traceability | test-engineer | R1 要求-テスト間トレースの完全性レビュー |
-| security-scan-report | security-reviewer | セキュリティスキャン結果のレビュー |
-| review-standards.md | framework | R1-R6 の詳細チェック項目 |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | R1 レビュー対象 | Ch1-2, 全 FR/NFR に ID |
+| spec-architecture | architect | R2/R4/R5 レビュー対象 | Ch3-6, Ch4 の全 Gherkin に traces |
+| （src/） | implementer | R2/R3/R4/R5 レビュー対象 | 全関数に `@purity` タグ |
+| （tests/） | test-engineer | R6 レビュー対象 | テストの実行結果 |
+| test-plan | test-engineer | R6 テスト計画の妥当性レビュー | テスト観点と対象 FR |
+| performance-report | test-engineer | R5 性能テスト結果のレビュー | NFR ごとの実測値 |
+| traceability | test-engineer | R1 要求-テスト間トレースの完全性レビュー | 全 FR の実装・テスト対応 |
+| security-scan-report | security-reviewer | セキュリティスキャン結果のレビュー | critical_count, high_count |
+| review-standards.md | framework | R1-R6 の詳細チェック項目 | 総合レビューチェックリストの全行 |
 
 ### Out
 
@@ -61,16 +61,17 @@ model: opus
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[review-agent]` と名乗る
-1. レビュー対象の成果物を読み込む
-2. review-standards.md から適用する観点（R1-R6）を特定する
-3. 各観点のチェック項目に従いレビューを実施する
-4. 指摘事項を重大度付きで構造化する（箇所・問題・影響・修正案）
-5. 合格基準と照合する
-6. 総合判定（PASS / FAIL）を決定する
-7. FAIL の場合、推奨戻り先を明記する
-8. Detail Block に指摘対応テーブルを作成する（review-standards「レビュー指摘対応ルール」および document-rules §9.3 参照）
-9. 再レビュー実施時: 前回の各指摘を対応記録と照合して検証し、「修正」対応の指摘が解消されていることを確認し、検証結果を記録する
-10. project-records/reviews/ にレビュー報告を出力する
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
+2. レビュー対象の成果物を読み込む
+3. review-standards.md から適用する観点（R1-R6）を特定する
+4. 各観点のチェック項目に従いレビューを実施する
+5. 指摘事項を重大度付きで構造化する（箇所・問題・影響・修正案）
+6. 合格基準と照合する
+7. 総合判定（PASS / FAIL）を決定する
+8. FAIL の場合、推奨戻り先を明記する
+9. Detail Block に指摘対応テーブルを作成する（review-standards「レビュー指摘対応ルール」および document-rules §9.3 参照）
+10. 再レビュー実施時: 前回の各指摘を対応記録と照合して検証し、「修正」対応の指摘が解消されていることを確認し、検証結果を記録する
+11. project-records/reviews/ にレビュー報告を出力する
 
 ## Rules
 
@@ -125,6 +126,7 @@ model: opus
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | レビュー対象が不完全（作成途中） | レビューを開始しない。orchestrator に対象の完成を確認 |
 | review-standards.md が見つからない | 作業を開始しない。orchestrator に報告 |
 | Critical 指摘が修正されずに再レビュー依頼が来た | FAIL を維持し、orchestrator に未修正の Critical を報告 |

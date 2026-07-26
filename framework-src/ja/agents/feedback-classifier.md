@@ -33,11 +33,11 @@ model: sonnet
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| field-issue（reported） | field-test-engineer | 分類対象のフィードバック |
-| spec-foundation | srs-writer | 仕様照合（Ch1-2: 要求定義） |
-| spec-architecture | architect | 仕様照合（Ch3-6: 設計仕様） |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| field-issue（reported） | field-test-engineer | 分類対象のフィードバック | issue_id, status = reported, 現象と再現手順 |
+| spec-foundation | srs-writer | 仕様照合（Ch1-2: 要求定義） | Ch2 の全 FR/NFR に ID |
+| spec-architecture | architect | 仕様照合（Ch3-6: 設計仕様） | Ch3-4 |
 
 ### Out
 
@@ -52,9 +52,10 @@ model: sonnet
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[feedback-classifier]` と名乗る
-1. field-issue チケット（reported）を読み込む
-2. 仕様書（`docs/spec/`）の全要求（FR / NFR）を照合対象としてロードする
-3. フィードバックの内容と仕様書を照合し、以下の判定を行う:
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
+2. field-issue チケット（reported）を読み込む
+3. 仕様書（`docs/spec/`）の全要求（FR / NFR）を照合対象としてロードする
+4. フィードバックの内容と仕様書を照合し、以下の判定を行う:
 
 | 判定 | 条件 | 対応 |
 |------|------|------|
@@ -62,13 +63,13 @@ model: sonnet
 | cr | 仕様書に記載がない新たな要求 | `field-issue:type` を `cr` に設定 |
 | 質問 | 情報提供の依頼であり、コード変更を伴わない | field-test-engineer に回答を委任。チケットは不要 |
 
-4. 判定結果を field-issue チケットに追記する:
+5. 判定結果を field-issue チケットに追記する:
    - `field-issue:type` を設定
    - `field-issue:classified_by` に自身（feedback-classifier）を記録
    - `field-issue:related_requirements` に関連する要求 ID を記録
    - 判定理由を Detail Block に追記
-5. ステータスを `classified` に変更する
-6. field-issue-analyst にチケットを引き渡す
+6. ステータスを `classified` に変更する
+7. field-issue-analyst にチケットを引き渡す
 
 ## Rules
 
@@ -92,6 +93,7 @@ field-issue チケットの更新は文書管理規則 §9.33 の Form Block 仕
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | 仕様書が存在しない、または未完成 | orchestrator に報告。仕様書の完成を待つ |
 | フィードバックの記載が不十分で判定できない | field-test-engineer に追加情報（ログ・再現手順）の記録を依頼 |
 | 仕様書の矛盾により defect/cr の判定が不可能 | 矛盾箇所を明示して orchestrator に報告 |

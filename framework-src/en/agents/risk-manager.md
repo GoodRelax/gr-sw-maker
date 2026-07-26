@@ -33,11 +33,11 @@ Detect risks early to prevent critical issues from arising in later stages of th
 
 ### In
 
-| file_type | Source | Usage |
-|-----------|--------|-------|
-| spec-foundation | srs-writer | Identify risks from requirements |
-| spec-architecture | architect | Identify risks from design |
-| progress | progress-monitor | Evaluate risks from progress status |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | Identify risks from requirements | Numeric criteria on the NFRs in Ch2 |
+| spec-architecture | architect | Identify risks from design | The external dependencies in Ch3 |
+| progress | progress-monitor | Evaluate risks from progress status | Progress rate and whether there is any delay |
 
 ### Out
 
@@ -53,12 +53,13 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[risk-manager]` at the start of your first message
-1. Identify risks upon completion of the planning phase (enumerate technical, external, and process risks)
-2. Calculate a risk score based on probability and impact
-3. Define mitigation measures for risks with a score of 6 or higher
-4. Update the risk register at the start of each phase
-5. Report to orchestrator immediately when a new risk is identified
-6. Request a terminology check from kotodama-kun (risk)
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Identify risks upon completion of the planning phase (enumerate technical, external, and process risks)
+3. Calculate a risk score based on probability and impact
+4. Define mitigation measures for risks with a score of 6 or higher
+5. Update the risk register at the start of each phase
+6. Report to orchestrator immediately when a new risk is identified
+7. Request a terminology check from kotodama-kun (risk)
 
 ## Rules
 
@@ -86,6 +87,7 @@ Score = Probability (1-3) x Impact (1-3)
 
 | Anomaly | Action |
 |---------|--------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Insufficient information for risk evaluation | Do not evaluate based on assumptions. Request information from orchestrator |
 | A risk with a score of 9 is discovered | Report to orchestrator immediately. Confirm with the user whether to continue the project |
 | A mitigation measure is found to be infeasible | Propose an alternative mitigation measure and request a decision from orchestrator |

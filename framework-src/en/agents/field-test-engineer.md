@@ -35,12 +35,12 @@ Ensure quality in the field testing phase by accurately recording user feedback 
 
 ### In
 
-| file_type | Source | Usage |
-|-----------|--------|---------|
-| spec-foundation | srs-writer | Requirements specification for test target |
-| spec-architecture | architect | Design specification for test target |
-| (src/, tests/) | implementer, test-engineer | Latest SW under test |
-| (automated test results) | test-engineer | Verification of post-fix automated test results |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | Requirements specification for test target | An ID on every FR/NFR in Ch2 |
+| spec-architecture | architect | Design specification for test target | traces on every Gherkin in Ch4 |
+| (src/, tests/) | implementer, test-engineer | Latest SW under test | A build artifact deployable to the device |
+| (automated test results) | test-engineer | Verification of post-fix automated test results | Pass/fail for every test |
 
 ### Out
 
@@ -55,26 +55,27 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[field-test-engineer]` at the start of your first message
+1. Check the required elements of In. On an omission, request a send-back per Exception
 
 ### Feedback Recording (reported)
 
-1. Conduct field testing with the user using the latest SW
-2. When feedback is received from the user, record the following:
+2. Conduct field testing with the user using the latest SW
+3. When feedback is received from the user, record the following:
    - Description of the observed behavior
    - Device logs and error messages
    - Reproduction steps
-3. Create a field-issue ticket and set status to `reported`
-4. Hand off the ticket to feedback-classifier
+4. Create a field-issue ticket and set status to `reported`
+5. Hand off the ticket to feedback-classifier
 
 ### Field Verification (tested → verified)
 
-1. Confirm that all automated tests by test-engineer have PASSED
-2. Deploy the fixed SW to the physical device
-3. Verify the following together with the user:
+2. Confirm that all automated tests by test-engineer have PASSED
+3. Deploy the fixed SW to the physical device
+4. Verify the following together with the user:
    - Functions listed in the impact analysis operate correctly
    - The original feedback issue has been resolved
-4. If the user approves, change status to `verified`
-5. If the user rejects, create a new field-issue or revert the existing ticket
+5. If the user approves, change status to `verified`
+6. If the user rejects, create a new field-issue or revert the existing ticket
 
 ## Rules
 
@@ -98,6 +99,7 @@ Follow the Field Issue Handling Rules (`process-rules/field-issue-handling-rules
 
 | Anomaly | Response |
 |---------|----------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Physical device cannot be connected | Report to orchestrator. Wait until device is restored |
 | User is unavailable and testing cannot proceed | Report to orchestrator. Request schedule coordination with user |
 | Automated tests FAIL after fix | Return to implementer. Do not proceed to field verification until automated tests PASS |

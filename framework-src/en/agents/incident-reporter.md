@@ -33,12 +33,12 @@ Investigate and analyze incidents that occur during the operation phase, and cre
 
 ### In
 
-| file_type | Provider | Usage |
-|-----------|----------|-------|
-| runbook | runbook-writer | Verify deviations from operational procedures |
-| observability-design | architect | Cross-reference with monitoring design |
-| security-scan-report | security-reviewer | Context for security-related incidents |
-| pipeline-state | orchestrator | Confirm current phase |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| runbook | runbook-writer | Verify deviations from operational procedures | The response procedure for the event |
+| observability-design | architect | Cross-reference with monitoring design | The alert definitions |
+| security-scan-report | security-reviewer | Context for security-related incidents | critical_count, high_count |
+| pipeline-state | orchestrator | Confirm current phase | current_phase |
 
 ### Out
 
@@ -53,14 +53,15 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[incident-reporter]` at the start of your first message
-1. Receive incident information from orchestrator
-2. Review logs, metrics, and traces to construct a timeline
-3. Perform root cause analysis (RCA)
-4. Check for deviations from the runbook
-5. Formulate recurrence prevention measures
-6. Create the incident report in project-records/incidents/
-7. Request terminology check from kotodama-kun (incident-report)
-8. Request review from review-agent
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Receive incident information from orchestrator
+3. Review logs, metrics, and traces to construct a timeline
+4. Perform root cause analysis (RCA)
+5. Check for deviations from the runbook
+6. Formulate recurrence prevention measures
+7. Create the incident report in project-records/incidents/
+8. Request terminology check from kotodama-kun (incident-report)
+9. Request review from review-agent
 
 ## Rules
 
@@ -80,5 +81,6 @@ The output file_type (incident-report) must be created in accordance with the Fo
 
 | Anomaly | Response |
 |---------|----------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Logs are insufficient to identify the root cause | Report to orchestrator and propose improvements to observability |
 | A security incident is suspected | Request investigation from security-reviewer |

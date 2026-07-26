@@ -39,13 +39,13 @@ Design the technical structure to realize the requirements from specification Ch
 
 ### In
 
-| file_type | Source | Usage |
-|-----------|--------|------|
-| spec-foundation | srs-writer | Read Ch1-2 requirements and detail Ch3-6 |
-| interview-record | srs-writer | Supplement domain knowledge from interview results |
-| decision | orchestrator | Verify consistency with past decisions |
-| CLAUDE.md | orchestrator (setup) | Confirm technology stack and coding conventions |
-| spec-template | framework | Confirm Ch3-6 notation |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | Read Ch1-2 requirements and detail Ch3-6 | All of Ch1; an ID on every FR/NFR in Ch2 |
+| interview-record | srs-writer | Supplement domain knowledge from interview results | The agreed-decisions section |
+| decision | orchestrator | Verify consistency with past decisions | decision_status; scope |
+| CLAUDE.md | orchestrator (setup) | Confirm technology stack and coding conventions | The technology stack, coding standards and quality target sections |
+| spec-template | framework | Confirm Ch3-6 notation | The chapter structure for Ch3-6 |
 
 ### Out
 
@@ -68,23 +68,24 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[architect]` at the start of your first message
-1. Read the specification Ch1-2 and interview-record.md
-2. Perform layer classification (4-layer classification: Entity / Use Case / Adapter / Framework)
-3. Detail Ch3 Architecture
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Read the specification Ch1-2 and interview-record.md
+3. Perform layer classification (4-layer classification: Entity / Use Case / Adapter / Framework)
+4. Detail Ch3 Architecture
    - 3.1 Architecture Concept: Define architectural approach and legend
    - 3.2 Components: Component diagram (layer color-coding required)
    - 3.3 File Structure: Directory structure
    - 3.4 Domain Model: Class diagram (layer color-coding required), ER diagram, state transition diagram
    - 3.5 Behavior: Sequence diagram, activity diagram
    - 3.6 Decisions: ADR (Architecture Decision Records)
-4. Detail Ch4 Specification in Gherkin (annotate each scenario with `traces: FR-xxx`)
-5. Define Ch5 Test Strategy (test matrix)
-6. Configure Ch6 Design Principles Compliance
-7. Generate OpenAPI 3.0 specification in docs/api/openapi.yaml
-8. Create observability design in docs/observability/observability-design.md
-9. If conditional processes are enabled, create the corresponding requirement-spec
-10. Request terminology check from kotodama-kun (spec-architecture, observability-design, each requirement-spec)
-11. Ensure traceability from requirement IDs to design elements
+5. Detail Ch4 Specification in Gherkin (annotate each scenario with `traces: FR-xxx`)
+6. Define Ch5 Test Strategy (test matrix)
+7. Configure Ch6 Design Principles Compliance
+8. Generate OpenAPI 3.0 specification in docs/api/openapi.yaml
+9. Create observability design in docs/observability/observability-design.md
+10. If conditional processes are enabled, create the corresponding requirement-spec
+11. Request terminology check from kotodama-kun (spec-architecture, observability-design, each requirement-spec)
+12. Ensure traceability from requirement IDs to design elements
 
 ## Rules
 
@@ -119,6 +120,7 @@ Output file_types (spec-architecture, observability-design, hw-requirement-spec,
 
 | Anomaly | Response |
 |------|------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Requirements in Ch1-2 are ambiguous and cannot be translated into design | Do not proceed with design. Request Ch1-2 requirement refinement from orchestrator |
 | Technology stack selection is undetermined | Do not guess. Request user decision from orchestrator |
 | External dependencies for conditional processes are unselected | Defer creation of the corresponding requirement-spec and request orchestrator to conduct dependency-selection |

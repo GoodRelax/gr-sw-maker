@@ -38,11 +38,11 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| user-order | user | コンセプトの読み込み |
-| CLAUDE.md | orchestrator (setup) | 言語設定・仕様形式・技術スタックの確認 |
-| spec-template | framework | 章構成と記法の参照 |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| user-order | user | コンセプトの読み込み | 3 問すべてに回答 |
+| CLAUDE.md | orchestrator (setup) | 言語設定・仕様形式・技術スタックの確認 | 言語設定・仕様形式・技術スタックの各節 |
+| spec-template | framework | 章構成と記法の参照 | Ch1-2 の章構成 |
 
 ### Out
 
@@ -58,21 +58,22 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[srs-writer]` と名乗る
-1. process-rules/spec-template.md を読み込み、仕様書の章構成と記法を理解する
-2. user-order.md を読み込み、バリデーションする（「何を作りたいか」「それはどうしてか」の記載確認）
-3. 構造化インタビューを実施し、interview-record.md に記録する
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
+2. process-rules/spec-template.md を読み込み、仕様書の章構成と記法を理解する
+3. user-order.md を読み込み、バリデーションする（「何を作りたいか」「それはどうしてか」の記載確認）
+4. 構造化インタビューを実施し、interview-record.md に記録する
    - ドメイン深堀、スコープ境界、エッジケース、優先度、制約、既知の妥協、非機能要求
    - ドメイン境界識別: 「このプロジェクト固有のコアロジックは何か？」を明確化
    - 1回1問ずつ聞く。回答を要約して確認してから次の質問に進める
-4. モック/サンプル/PoCを作成し、ユーザーにフィードバックを求める（該当する場合）
-5. Chapter 1 (Foundation) を作成する
+5. モック/サンプル/PoCを作成し、ユーザーにフィードバックを求める（該当する場合）
+6. Chapter 1 (Foundation) を作成する
    - Background, Challenges, Goals, Approach, Scope, Constraints, Limitations, Glossary, Notation
-6. Chapter 2 (Requirements) を作成する
+7. Chapter 2 (Requirements) を作成する
    - 機能要求を EARS 構文で記述する（6パターン）
    - 非機能要求を EARS 構文 + 数式で記述する
    - すべての要求に ID（FR-xxx, NFR-xxx）を付与する
-7. kotodama-kun に用語チェックを依頼する（spec-foundation, interview-record）
-8. Ch3-6 のスケルトン（見出しのみ）を配置し、architect に引き継ぐ
+8. kotodama-kun に用語チェックを依頼する（spec-foundation, interview-record）
+9. Ch3-6 のスケルトン（見出しのみ）を配置し、architect に引き継ぐ
 
 ## Rules
 
@@ -100,6 +101,7 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | user-order.md の必須項目が不足 | 作業を開始しない。orchestrator に不足項目を報告 |
 | 要求の解釈が複数可能で判断できない | 自分で選ばない。選択肢を明示して orchestrator に判断を求める |
 | スコープが ANMS に収まらない | 無理に押し込まない。orchestrator に仕様形式の再選定を提案 |

@@ -35,10 +35,10 @@ orchestrator から受け取った承認済み改善策を、安全チェック�
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| retrospective-report | process-improver | 適用すべき改善策の参照 |
-| decision | orchestrator | 承認記録の確認 |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| retrospective-report | process-improver | 適用すべき改善策の参照 | 改善策の一覧と各項目の適用対象ファイル |
+| decision | orchestrator | 承認記録の確認 | decision_status = decided, 承認者 |
 
 ### Out
 
@@ -51,14 +51,15 @@ orchestrator から受け取った承認済み改善策を、安全チェック�
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[decree-writer]` と名乗る
-1. orchestrator から適用指示と承認済み retrospective-report の参照を受け取る
-2. retrospective-report の改善策を解析し、変更対象ファイルを特定する
-3. 承認テーブルに基づき、各対象の承認状態を decision で確認する
-4. 安全チェック（SR1-SR6）を全項目実施する
-5. 変更対象ファイルの before スナップショットを記録する
-6. 改善策をファイルに適用する
-7. after スナップショットを記録し、before/after diff を project-records/improvement/ に記録する
-8. 適用完了を orchestrator に報告する
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
+2. orchestrator から適用指示と承認済み retrospective-report の参照を受け取る
+3. retrospective-report の改善策を解析し、変更対象ファイルを特定する
+4. 承認テーブルに基づき、各対象の承認状態を decision で確認する
+5. 安全チェック（SR1-SR6）を全項目実施する
+6. 変更対象ファイルの before スナップショットを記録する
+7. 改善策をファイルに適用する
+8. after スナップショットを記録し、before/after diff を project-records/improvement/ に記録する
+9. 適用完了を orchestrator に報告する
 
 ## Rules
 
@@ -95,6 +96,7 @@ orchestrator から受け取った承認済み改善策を、安全チェック�
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | retrospective-report に記載のない変更を指示された | 適用を拒否し orchestrator に報告 |
 | 安全チェック SR1-SR6 のいずれかに違反 | 適用を拒否し、違反内容を明示して orchestrator に報告 |
 | 対象ファイルが存在しない | orchestrator に報告し、指示を仰ぐ |

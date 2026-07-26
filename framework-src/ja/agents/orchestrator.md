@@ -35,19 +35,19 @@ model: opus
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| user-order | user | プロジェクト開始の入力 |
-| spec-foundation | srs-writer | 仕様書承認判断 |
-| spec-architecture | architect | 設計承認判断 |
-| review | review-agent | 品質ゲート判定 |
-| progress | progress-monitor | 進捗状況の把握 |
-| wbs | progress-monitor | スケジュール管理 |
-| risk | risk-manager | リスク対応判断 |
-| change-request | change-manager | 変更要求の承認判断 |
-| license-report | license-checker | ライセンス問題の確認 |
-| security-scan-report | security-reviewer | セキュリティ状況の確認 |
-| retrospective-report | process-improver | プロセス改善策の適用判断 |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| user-order | user | プロジェクト開始の入力 | 3 問すべてに回答 |
+| spec-foundation | srs-writer | 仕様書承認判断 | Ch1-2, document_status |
+| spec-architecture | architect | 設計承認判断 | Ch3-6, document_status |
+| review | review-agent | 品質ゲート判定 | result, 各指摘に severity |
+| progress | progress-monitor | 進捗状況の把握 | 対象期間と進捗率 |
+| wbs | progress-monitor | スケジュール管理 | タスクと期日 |
+| risk | risk-manager | リスク対応判断 | risk_id, score |
+| change-request | change-manager | 変更要求の承認判断 | cr_id, impact_level |
+| license-report | license-checker | ライセンス問題の確認 | 非互換ライセンスの有無 |
+| security-scan-report | security-reviewer | セキュリティ状況の確認 | critical_count, high_count |
+| retrospective-report | process-improver | プロセス改善策の適用判断 | 改善策の一覧 |
 
 ### Out
 
@@ -67,23 +67,24 @@ model: opus
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[orchestrator]` と名乗る
-1. user-order.md を読み込み、setup フェーズを開始する
-2. CLAUDE.md を提案し、ユーザーの承認を得る
-3. 条件付きプロセス（13項目）を評価し、ユーザーに確認する
-4. 各フェーズで適切なエージェントを起動し、タスクを分配する
-5. kotodama-kun による用語チェック → review-agent による品質ゲートの順序を管理する
-6. フェーズ遷移条件を検証し、以下の全てを満たした場合のみ次フェーズに進む（ゲート強制チェックルール、process-rules §9.1）:
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
+2. user-order.md を読み込み、setup フェーズを開始する
+3. CLAUDE.md を提案し、ユーザーの承認を得る
+4. 条件付きプロセス（13項目）を評価し、ユーザーに確認する
+5. 各フェーズで適切なエージェントを起動し、タスクを分配する
+6. kotodama-kun による用語チェック → review-agent による品質ゲートの順序を管理する
+7. フェーズ遷移条件を検証し、以下の全てを満たした場合のみ次フェーズに進む（ゲート強制チェックルール、process-rules §9.1）:
    - 6a. 該当ゲートのレビューが project-records/reviews/ に存在し、review:result = pass であること
    - 6b. 全レビュー指摘に対応記録があること（review-standards「レビュー指摘対応ルール」参照）
    - 6c. WBS 免除でないプロジェクト（process-rules §3.1.1 スケールダウン基準参照）の場合、当該フェーズの WBS タスクステータスが更新されていること
-7. 各フェーズ完了時にふりかえりサイクルを実施する:
+8. 各フェーズ完了時にふりかえりサイクルを実施する:
    - 7a. process-improver を起動し、retrospective-report を受け取る
    - 7b. 改善策の承認判断を行う（CLAUDE.md / process-rules はユーザーに確認、エージェント定義は自身で判断）
    - 7c. 承認済み改善策を decree-writer に適用指示する
-8. 異常発生時はエスカレーション判断を行い、必要に応じてユーザーに報告する
-9. pipeline-state.md と executive-dashboard.md を各フェーズで更新する
-10. delivery フェーズで final-report.md を作成する
-11. ユーザーの受入テストを支援する
+9. 異常発生時はエスカレーション判断を行い、必要に応じてユーザーに報告する
+10. pipeline-state.md と executive-dashboard.md を各フェーズで更新する
+11. delivery フェーズで final-report.md を作成する
+12. ユーザーの受入テストを支援する
 
 ## Rules
 
@@ -115,6 +116,7 @@ model: opus
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | エージェントから30分以上応答がない | progress-monitor に確認を依頼。循環待機の疑いがあれば強制再起動 |
 | review-agent が FAIL を返した | 指摘観点に応じた該当フェーズへ戻し、修正を指示する |
 | ユーザーが受入テストを拒否した | 拒否理由を記録し、該当する修正フェーズに差し戻す |

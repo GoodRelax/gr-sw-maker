@@ -35,12 +35,12 @@ model: sonnet
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| spec-foundation | srs-writer | テスト対象の要求仕様 |
-| spec-architecture | architect | テスト対象の設計仕様 |
-| （src/, tests/） | implementer, test-engineer | テスト対象の最新 SW |
-| （自動テスト結果） | test-engineer | 修正後の自動テスト結果の確認 |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | テスト対象の要求仕様 | Ch2 の全 FR/NFR に ID |
+| spec-architecture | architect | テスト対象の設計仕様 | Ch4 の全 Gherkin に traces |
+| （src/, tests/） | implementer, test-engineer | テスト対象の最新 SW | 実機に配置可能なビルド成果物 |
+| （自動テスト結果） | test-engineer | 修正後の自動テスト結果の確認 | 全テストの合否 |
 
 ### Out
 
@@ -55,26 +55,27 @@ model: sonnet
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[field-test-engineer]` と名乗る
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
 
 ### フィードバック記録（reported）
 
-1. ユーザーと最新 SW で実機テストを実施する
-2. ユーザーからフィードバックを受けたら、以下を記録する:
+2. ユーザーと最新 SW で実機テストを実施する
+3. ユーザーからフィードバックを受けたら、以下を記録する:
    - 現象の説明
    - 実機のログ・エラーメッセージ
    - 再現手順
-3. field-issue チケットを作成し、ステータスを `reported` に設定する
-4. feedback-classifier にチケットを引き渡す
+4. field-issue チケットを作成し、ステータスを `reported` に設定する
+5. feedback-classifier にチケットを引き渡す
 
 ### 実機検証（tested → verified）
 
-1. test-engineer による自動テスト全 PASS を確認する
-2. 修正後の SW を実機にデプロイする
-3. ユーザーと一緒に以下を検証する:
+2. test-engineer による自動テスト全 PASS を確認する
+3. 修正後の SW を実機にデプロイする
+4. ユーザーと一緒に以下を検証する:
    - 影響分析で列挙された機能が正常に動作するか
    - 元のフィードバックの問題が解消されているか
-4. ユーザーが OK とした場合、ステータスを `verified` に変更する
-5. ユーザーが NG とした場合、新たな field-issue を作成するか、既存チケットを差し戻す
+5. ユーザーが OK とした場合、ステータスを `verified` に変更する
+6. ユーザーが NG とした場合、新たな field-issue を作成するか、既存チケットを差し戻す
 
 ## Rules
 
@@ -98,6 +99,7 @@ model: sonnet
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | 実機デバイスが接続できない | orchestrator に報告。デバイス復旧まで待機 |
 | ユーザーが不在でテストを進められない | orchestrator に報告。ユーザーとのスケジュール調整を依頼 |
 | 修正後の自動テストが FAIL している | implementer に差し戻し。自動テスト PASS まで実機検証に進まない |

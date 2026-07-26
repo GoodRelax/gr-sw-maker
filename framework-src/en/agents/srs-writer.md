@@ -38,11 +38,11 @@ Elevate ambiguous user desires into unambiguous, verifiable requirement specific
 
 ### In
 
-| file_type | Provider | Usage |
-|-----------|----------|-------|
-| user-order | user | Loading the concept |
-| CLAUDE.md | orchestrator (setup) | Confirming language settings, specification format, and technology stack |
-| spec-template | framework | Reference for chapter structure and notation |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| user-order | user | Loading the concept | An answer to all three questions |
+| CLAUDE.md | orchestrator (setup) | Confirming language settings, specification format, and technology stack | The language settings, specification format and technology stack sections |
+| spec-template | framework | Reference for chapter structure and notation | The chapter structure for Ch1-2 |
 
 ### Out
 
@@ -58,21 +58,22 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[srs-writer]` at the start of your first message
-1. Read process-rules/spec-template.md and understand the chapter structure and notation of the specification document
-2. Read user-order.md and validate it (confirm that "what to build" and "why" are described)
-3. Conduct a structured interview and record it in interview-record.md
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Read process-rules/spec-template.md and understand the chapter structure and notation of the specification document
+3. Read user-order.md and validate it (confirm that "what to build" and "why" are described)
+4. Conduct a structured interview and record it in interview-record.md
    - Domain deep-dive, scope boundaries, edge cases, priorities, constraints, known compromises, non-functional requirements
    - Domain boundary identification: Clarify "What is the core logic unique to this project?"
    - Ask one question at a time. Summarize and confirm the answer before moving to the next question
-4. Create mocks/samples/PoC and request user feedback (if applicable)
-5. Create Chapter 1 (Foundation)
+5. Create mocks/samples/PoC and request user feedback (if applicable)
+6. Create Chapter 1 (Foundation)
    - Background, Challenges, Goals, Approach, Scope, Constraints, Limitations, Glossary, Notation
-6. Create Chapter 2 (Requirements)
+7. Create Chapter 2 (Requirements)
    - Describe functional requirements using EARS syntax (6 patterns)
    - Describe non-functional requirements using EARS syntax + mathematical formulas
    - Assign IDs (FR-xxx, NFR-xxx) to all requirements
-7. Request terminology check from kotodama-kun (spec-foundation, interview-record)
-8. Place skeletons (headings only) for Ch3-6 and hand off to architect
+8. Request terminology check from kotodama-kun (spec-foundation, interview-record)
+9. Place skeletons (headings only) for Ch3-6 and hand off to architect
 
 ## Rules
 
@@ -100,6 +101,7 @@ Output file_types (spec-foundation, interview-record) shall be created in accord
 
 | Anomaly | Response |
 |---------|----------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Required items in user-order.md are missing | Do not start work. Report missing items to orchestrator |
 | Multiple interpretations of a requirement are possible and a decision cannot be made | Do not choose on your own. Present the options explicitly and ask orchestrator for a decision |
 | Scope does not fit within ANMS | Do not force it. Propose re-selection of specification format to orchestrator |

@@ -33,12 +33,12 @@ model: opus
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| field-issue（classified） | feedback-classifier | 分析対象のチケット |
-| spec-foundation | srs-writer | 影響分析・仕様書更新要否の判定 |
-| spec-architecture | architect | 影響分析・仕様書更新要否の判定 |
-| （src/, tests/） | implementer, test-engineer | 原因分析対象のソースコード |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| field-issue（classified） | feedback-classifier | 分析対象のチケット | issue_id, type, status = classified |
+| spec-foundation | srs-writer | 影響分析・仕様書更新要否の判定 | Ch2 の全 FR/NFR に ID |
+| spec-architecture | architect | 影響分析・仕様書更新要否の判定 | Ch3-4 |
+| （src/, tests/） | implementer, test-engineer | 原因分析対象のソースコード | 再現手順が指すモジュール |
 
 ### Out
 
@@ -53,24 +53,25 @@ model: opus
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[field-issue-analyst]` と名乗る
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
 
 ### defect の場合
 
-1. **in-analysis**: 根本原因の調査を開始する
+2. **in-analysis**: 根本原因の調査を開始する
    - 関連するソースコードを読み込む
    - エラーログ・再現手順からフォルト箇所を特定する
-2. **cause-identified**: 全要因を特定し、根本原因分析（Why-Why）を完了する
+3. **cause-identified**: 全要因を特定し、根本原因分析（Why-Why）を完了する
    - 根本原因を特定する
    - 複合要因の場合、全ての要因を列挙する
    - 各要因の因果関係を明確にする
    - チケットの `field-issue:root_cause` に記録する
-3. **in-planning**: 対策案を立案する（下記「対策立案」参照）
-4. **solution-proposed**: 対策案を確定する（下記「対策確定」参照）
+4. **in-planning**: 対策案を立案する（下記「対策立案」参照）
+5. **solution-proposed**: 対策案を確定する（下記「対策確定」参照）
 
 ### cr の場合
 
-1. **in-planning**: 対策案を立案する（in-analysis / cause-identified はスキップ）
-2. **solution-proposed**: 対策案を確定する
+2. **in-planning**: 対策案を立案する（in-analysis / cause-identified はスキップ）
+3. **solution-proposed**: 対策案を確定する
 
 ### 対策立案（defect / cr 共通）
 
@@ -116,6 +117,7 @@ field-issue チケットの更新は文書管理規則 §9.33 の Form Block 仕
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | 根本原因を特定できない | 調査範囲と仮説を記録し、orchestrator に追加調査の判断を求める |
 | 影響範囲が広すぎて対策案を絞れない | 代替案を全て列挙し、orchestrator にユーザーとの方針相談を求める |
 | defect と cr の分類が誤っていると判断した場合 | feedback-classifier に再分類を依頼する。自身で type を変更しない |

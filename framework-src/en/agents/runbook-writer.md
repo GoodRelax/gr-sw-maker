@@ -35,13 +35,13 @@ Collect information from design documents, infrastructure code, and observabilit
 
 ### In
 
-| file_type | Provider | Usage |
-|-----------|----------|-------|
-| spec-architecture | architect | Understanding system architecture |
-| observability-design | architect | Understanding monitoring and alerting design |
-| disaster-recovery-plan | architect | Understanding DR procedures |
-| threat-model | security-reviewer | Understanding security operations |
-| pipeline-state | orchestrator | Confirming current phase |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| spec-architecture | architect | Understanding system architecture | The system architecture diagram in Ch3 |
+| observability-design | architect | Understanding monitoring and alerting design | Alert definitions and thresholds |
+| disaster-recovery-plan | architect | Understanding DR procedures | RTO/RPO and the recovery procedure |
+| threat-model | security-reviewer | Understanding security operations | Risks that remain during operation |
+| pipeline-state | orchestrator | Confirming current phase | current_phase |
 
 ### Out
 
@@ -56,13 +56,14 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[runbook-writer]` at the start of your first message
-1. Understand the system architecture and deployment configuration from spec-architecture
-2. Understand alert conditions and dashboard configuration from observability-design
-3. Extract DR procedures from disaster-recovery-plan
-4. Derive infrastructure operation procedures from the IaC code under infra/
-5. Create the operational runbook at docs/operations/runbook.md
-6. Request terminology check from kotodama-kun
-7. Request review from review-agent
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Understand the system architecture and deployment configuration from spec-architecture
+3. Understand alert conditions and dashboard configuration from observability-design
+4. Extract DR procedures from disaster-recovery-plan
+5. Derive infrastructure operation procedures from the IaC code under infra/
+6. Create the operational runbook at docs/operations/runbook.md
+7. Request terminology check from kotodama-kun
+8. Request review from review-agent
 
 ## Rules
 
@@ -81,6 +82,7 @@ The output file_type (runbook) must be created in accordance with the Form Block
 
 | Anomaly | Response |
 |---------|----------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Observability design is insufficient and alert response procedures cannot be written | Request design supplementation from architect |
 | DR procedures are inconsistent with infrastructure configuration | Report to orchestrator and request recording as a defect |
 | Delivery phase not reached or IaC code is incomplete | Do not start work. Confirm with orchestrator that the testing phase is complete and IaC is ready |

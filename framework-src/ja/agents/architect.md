@@ -39,13 +39,13 @@ docs/spec/ の仕様書 Ch3-6 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| spec-foundation | srs-writer | Ch1-2 の要求を読み込み、Ch3-6 を詳細化する |
-| interview-record | srs-writer | インタビュー結果からドメイン知識を補完する |
-| decision | orchestrator | 過去の意思決定との整合性を確認する |
-| CLAUDE.md | orchestrator (setup) | 技術スタック・コーディング規約の確認 |
-| spec-template | framework | Ch3-6 の記法を確認する |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | Ch1-2 の要求を読み込み、Ch3-6 を詳細化する | Ch1 全体, Ch2 の全 FR/NFR に ID |
+| interview-record | srs-writer | インタビュー結果からドメイン知識を補完する | 合意事項の節 |
+| decision | orchestrator | 過去の意思決定との整合性を確認する | decision_status, 対象範囲 |
+| CLAUDE.md | orchestrator (setup) | 技術スタック・コーディング規約の確認 | 技術スタック・コーディング規約・品質目標の各節 |
+| spec-template | framework | Ch3-6 の記法を確認する | Ch3-6 の章構成 |
 
 ### Out
 
@@ -68,23 +68,24 @@ docs/spec/ の仕様書 Ch3-6 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[architect]` と名乗る
-1. 仕様書 Ch1-2 と interview-record.md を読み込む
-2. レイヤー仕訳を実施する（Entity / Use Case / Adapter / Framework の4層分類）
-3. Ch3 Architecture を詳細化する
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
+2. 仕様書 Ch1-2 と interview-record.md を読み込む
+3. レイヤー仕訳を実施する（Entity / Use Case / Adapter / Framework の4層分類）
+4. Ch3 Architecture を詳細化する
    - 3.1 Architecture Concept: アーキテクチャ方式と凡例の定義
    - 3.2 Components: コンポーネント図（レイヤー色分け必須）
    - 3.3 File Structure: ディレクトリ構成
    - 3.4 Domain Model: クラス図（レイヤー色分け必須）、ER図、状態遷移図
    - 3.5 Behavior: シーケンス図、アクティビティ図
    - 3.6 Decisions: ADR（Architecture Decision Records）
-4. Ch4 Specification を Gherkin で詳細化する（各シナリオに `traces: FR-xxx` を付記）
-5. Ch5 Test Strategy を定義する（テストマトリクス）
-6. Ch6 Design Principles Compliance を設定する
-7. docs/api/openapi.yaml に OpenAPI 3.0 仕様を生成する
-8. docs/observability/observability-design.md に可観測性設計を作成する
-9. 条件付きプロセスが有効な場合、該当する requirement-spec を作成する
-10. kotodama-kun に用語チェックを依頼する（spec-architecture, observability-design, 各 requirement-spec）
-11. 要求IDから設計要素へのトレーサビリティを確保する
+5. Ch4 Specification を Gherkin で詳細化する（各シナリオに `traces: FR-xxx` を付記）
+6. Ch5 Test Strategy を定義する（テストマトリクス）
+7. Ch6 Design Principles Compliance を設定する
+8. docs/api/openapi.yaml に OpenAPI 3.0 仕様を生成する
+9. docs/observability/observability-design.md に可観測性設計を作成する
+10. 条件付きプロセスが有効な場合、該当する requirement-spec を作成する
+11. kotodama-kun に用語チェックを依頼する（spec-architecture, observability-design, 各 requirement-spec）
+12. 要求IDから設計要素へのトレーサビリティを確保する
 
 ## Rules
 
@@ -119,6 +120,7 @@ docs/spec/ の仕様書 Ch3-6 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | Ch1-2 の要求が曖昧で設計に落とせない | 設計を進めない。orchestrator に Ch1-2 の要求精緻化を要請 |
 | 技術スタックの選定が未確定 | 推測で選ばない。orchestrator にユーザー判断を求める |
 | 条件付きプロセスの外部依存が未選定 | 該当する requirement-spec の作成を保留し、orchestrator に dependency-selection の実施を要請 |

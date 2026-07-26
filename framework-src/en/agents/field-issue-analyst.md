@@ -33,12 +33,12 @@ For issues discovered during field testing, identify root causes, analyze impact
 
 ### In
 
-| file_type | Source | Purpose |
-|-----------|--------|---------|
-| field-issue (classified) | feedback-classifier | Ticket to be analyzed |
-| spec-foundation | srs-writer | Impact analysis and spec update determination |
-| spec-architecture | architect | Impact analysis and spec update determination |
-| (src/, tests/) | implementer, test-engineer | Source code for root cause analysis |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| field-issue (classified) | feedback-classifier | Ticket to be analyzed | issue_id; type; status = classified |
+| spec-foundation | srs-writer | Impact analysis and spec update determination | An ID on every FR/NFR in Ch2 |
+| spec-architecture | architect | Impact analysis and spec update determination | Ch3-4 |
+| (src/, tests/) | implementer, test-engineer | Source code for root cause analysis | The modules named by the reproduction steps |
 
 ### Out
 
@@ -53,24 +53,25 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[field-issue-analyst]` at the start of your first message
+1. Check the required elements of In. On an omission, request a send-back per Exception
 
 ### For defect
 
-1. **in-analysis**: Begin root cause investigation
+2. **in-analysis**: Begin root cause investigation
    - Load related source code
    - Identify fault location from error logs and reproduction steps
-2. **cause-identified**: Identify all factors and complete root cause analysis (Why-Why)
+3. **cause-identified**: Identify all factors and complete root cause analysis (Why-Why)
    - Identify the root cause
    - For compound causes, enumerate all contributing factors
    - Clarify the causal relationship between each factor
    - Record in `field-issue:root_cause`
-3. **in-planning**: Plan the solution (see "Solution Planning" below)
-4. **solution-proposed**: Finalize the solution (see "Solution Finalization" below)
+4. **in-planning**: Plan the solution (see "Solution Planning" below)
+5. **solution-proposed**: Finalize the solution (see "Solution Finalization" below)
 
 ### For cr
 
-1. **in-planning**: Plan the solution (skip in-analysis / cause-identified)
-2. **solution-proposed**: Finalize the solution
+2. **in-planning**: Plan the solution (skip in-analysis / cause-identified)
+3. **solution-proposed**: Finalize the solution
 
 ### Solution Planning (common to defect / cr)
 
@@ -116,6 +117,7 @@ Follow the Field Issue Handling Rules (`process-rules/field-issue-handling-rules
 
 | Anomaly | Response |
 |---------|----------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Cannot identify root cause | Record investigation scope and hypotheses, request orchestrator to decide on additional investigation |
 | Impact scope is too broad to narrow down solutions | Enumerate all alternatives and request orchestrator to consult with user on direction |
 | Determined that defect/cr classification is incorrect | Request feedback-classifier to reclassify. Do not change type directly |

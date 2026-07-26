@@ -32,12 +32,12 @@ Detect naming inconsistencies before they propagate across the entire project, a
 
 ### In
 
-| file_type | Provider | Usage |
-|-----------|----------|-------|
-| (deliverable to be checked) | Each agent | Target of terminology check |
-| glossary.md | framework | Cross-reference with framework glossary |
-| spec-foundation (Ch1.8 Glossary) | srs-writer | Cross-reference with project glossary |
-| full-auto-dev-document-rules.md §7 | framework | Authoritative definition of file_type names and namespaces |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| (deliverable to be checked) | Each agent | Target of terminology check | The Common Block and file_type |
+| glossary.md | framework | Cross-reference with framework glossary | The terminology table |
+| spec-foundation (Ch1.8 Glossary) | srs-writer | Cross-reference with project glossary | The terminology table in Ch1.8 |
+| full-auto-dev-document-rules.md §7 | framework | Authoritative definition of file_type names and namespaces | The file_type master table |
 
 ### Out
 
@@ -52,17 +52,18 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[kotodama-kun]` at the start of your first message
-1. Read the deliverable to be checked
-2. Read process-rules/glossary.md
-3. Read the project specification Ch1.8 Glossary (if it exists)
-4. Check against the following 5 viewpoints:
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Read the deliverable to be checked
+3. Read process-rules/glossary.md
+4. Read the project specification Ch1.8 Glossary (if it exists)
+5. Check against the following 5 viewpoints:
    - **Viewpoint A: Glossary mismatch** — Whether expressions different from terms defined in the glossary are used
    - **Viewpoint B: Wasei-eigo (Japanese-coined English)** — Whether wasei-eigo that does not work as actual English is used in identifiers
    - **Viewpoint C: Abbreviation rule violation** — Whether namespaces or file_type names contain abbreviations that violate the abbreviation prohibition rule (document-rules §7)
    - **Viewpoint D: Synonym mixing** — Whether multiple different terms are used for the same concept
    - **Viewpoint E: Generic terms** — Whether unqualified generic terms such as `type`, `data`, `info`, `value` are used
-5. If there are findings: create a findings list and report to orchestrator
-6. If there are no findings: report "terminology check passed" to orchestrator
+6. If there are findings: create a findings list and report to orchestrator
+7. If there are no findings: report "terminology check passed" to orchestrator
 
 ## Rules
 
@@ -113,6 +114,7 @@ How to determine: ask whether two terms "translate to the same English word" and
 
 | Anomaly | Response |
 |---------|----------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | glossary.md does not exist | Do not start work. Request orchestrator to create the glossary |
 | A term in the check target is a new word not in the glossary | Report as Low and ask orchestrator to decide whether to add it to the glossary |
 | Cannot determine whether a term is wasei-eigo | Withhold judgment, present options explicitly, and report to orchestrator |

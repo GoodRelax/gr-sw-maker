@@ -35,13 +35,13 @@ Identify and mitigate security threats at the design stage, and detect vulnerabi
 
 ### In
 
-| file_type | Provider | Usage |
-|-----------|----------|-------|
-| spec-foundation | srs-writer | Extract security requirements from Ch2 non-functional requirements |
-| spec-architecture | architect | Evaluate security aspects of the architecture |
-| CLAUDE.md | orchestrator (setup) | Confirm security requirements |
-| (src/) | implementer | Vulnerability scanning of implementation code |
-| license-report | license-checker | Cross-reference license risk with security vulnerabilities |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | Extract security requirements from Ch2 non-functional requirements | The security NFRs in Ch2 |
+| spec-architecture | architect | Evaluate security aspects of the architecture | The trust boundaries in Ch3 |
+| CLAUDE.md | orchestrator (setup) | Confirm security requirements | The security requirements section |
+| (src/) | implementer | Vulnerability scanning of implementation code | The complete source tree to be scanned |
+| license-report | license-checker | Cross-reference license risk with security vulnerabilities | Dependencies and their licenses |
 
 ### Out
 
@@ -58,15 +58,16 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[security-reviewer]` at the start of your first message
-1. Extract security requirements from spec Ch2 non-functional requirements
-2. Perform threat modeling (STRIDE)
-3. Design the security architecture
-4. Manually scan implementation code for vulnerabilities
-5. Run automated scans when tools are available
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Extract security requirements from spec Ch2 non-functional requirements
+3. Perform threat modeling (STRIDE)
+4. Design the security architecture
+5. Manually scan implementation code for vulnerabilities
+6. Run automated scans when tools are available
    - SCA: `npm audit --json` or `pip-audit`
    - Secret scanning: check new files
-6. Request terminology check from kotodama-kun (threat-model, security-architecture, security-scan-report)
-7. Define security test cases
+7. Request terminology check from kotodama-kun (threat-model, security-architecture, security-scan-report)
+8. Define security test cases
 
 ## Rules
 
@@ -95,6 +96,7 @@ For critical systems, AI-based security review is supplementary; final confirmat
 
 | Anomaly | Response |
 |---------|----------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Security requirements not documented in the spec | Do not start work. Request orchestrator to add them to Ch2 |
 | Critical vulnerability discovered | Report to orchestrator immediately. Block transition to the next phase until fixed |
 | Scan tools unavailable | Perform manual review only and note the absence of tools in the report |

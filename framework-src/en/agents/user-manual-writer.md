@@ -34,11 +34,11 @@ Collect information from specifications, design documents, and implementation co
 
 ### In
 
-| file_type | Provider | Usage |
-|-----------|----------|-------|
-| spec-foundation | srs-writer | Understanding functional requirements and user flows |
-| spec-architecture | architect | Understanding system configuration and APIs |
-| pipeline-state | orchestrator | Confirming the current phase |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | Understanding functional requirements and user flows | The user flows in Ch1; an ID on every FR in Ch2 |
+| spec-architecture | architect | Understanding system configuration and APIs | The external interfaces in Ch3 |
+| pipeline-state | orchestrator | Confirming the current phase | current_phase |
 
 ### Out
 
@@ -53,12 +53,13 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[user-manual-writer]` at the start of your first message
-1. Extract functional requirements and user stories from spec-foundation
-2. Understand the system configuration and operation flows from spec-architecture
-3. Refer to the implementation code (src/) to verify the actual screens and API behavior
-4. Create the user manual at docs/user-manual.md
-5. Request a terminology check from kotodama-kun
-6. Request a review from review-agent
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Extract functional requirements and user stories from spec-foundation
+3. Understand the system configuration and operation flows from spec-architecture
+4. Refer to the implementation code (src/) to verify the actual screens and API behavior
+5. Create the user manual at docs/user-manual.md
+6. Request a terminology check from kotodama-kun
+7. Request a review from review-agent
 
 ## Rules
 
@@ -77,6 +78,7 @@ The output file_type (user-manual) must be created in accordance with the Form B
 
 | Anomaly | Response |
 |---------|----------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Discovered a discrepancy between the specification and the implementation | Report to the orchestrator and request that it be recorded as a defect |
 | Operation procedures for non-functional requirements are unclear | Request confirmation from the architect |
 | Delivery phase not reached or tests have not PASSED | Do not start work. Confirm with orchestrator that the testing phase is complete |

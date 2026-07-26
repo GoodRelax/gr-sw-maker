@@ -33,11 +33,11 @@ Accurately classify user feedback based on the specification to route it to the 
 
 ### In
 
-| file_type | Source | Purpose |
-|-----------|--------|---------|
-| field-issue (reported) | field-test-engineer | Feedback to be classified |
-| spec-foundation | srs-writer | Spec comparison (Ch1-2: Requirements) |
-| spec-architecture | architect | Spec comparison (Ch3-6: Design) |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| field-issue (reported) | field-test-engineer | Feedback to be classified | issue_id; status = reported; observed behavior and reproduction steps |
+| spec-foundation | srs-writer | Spec comparison (Ch1-2: Requirements) | An ID on every FR/NFR in Ch2 |
+| spec-architecture | architect | Spec comparison (Ch3-6: Design) | Ch3-4 |
 
 ### Out
 
@@ -52,9 +52,10 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[feedback-classifier]` at the start of your first message
-1. Load the field-issue ticket (reported)
-2. Load all requirements (FR / NFR) from the specification (`docs/spec/`) as comparison targets
-3. Compare the feedback content against the specification and make the following determination:
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Load the field-issue ticket (reported)
+3. Load all requirements (FR / NFR) from the specification (`docs/spec/`) as comparison targets
+4. Compare the feedback content against the specification and make the following determination:
 
 | Determination | Condition | Action |
 |---------------|-----------|--------|
@@ -62,13 +63,13 @@ None
 | cr | New requirement not described in spec | Set `field-issue:type` to `cr` |
 | question | Information request that does not require code changes | Delegate response to field-test-engineer. No ticket needed |
 
-4. Append the determination result to the field-issue ticket:
+5. Append the determination result to the field-issue ticket:
    - Set `field-issue:type`
    - Record self (feedback-classifier) in `field-issue:classified_by`
    - Record related requirement IDs in `field-issue:related_requirements`
    - Append determination rationale to Detail Block
-5. Change status to `classified`
-6. Hand off the ticket to field-issue-analyst
+6. Change status to `classified`
+7. Hand off the ticket to field-issue-analyst
 
 ## Rules
 
@@ -92,6 +93,7 @@ Updates to field-issue tickets must follow the Form Block specification in Docum
 
 | Anomaly | Response |
 |---------|----------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Specification does not exist or is incomplete | Report to orchestrator. Wait for specification completion |
 | Feedback description is insufficient for determination | Request field-test-engineer to record additional information (logs, reproduction steps) |
 | Spec contradictions make defect/cr determination impossible | Explicitly identify contradictions and report to orchestrator |

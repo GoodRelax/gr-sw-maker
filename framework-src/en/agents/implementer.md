@@ -38,15 +38,15 @@ Transform design documents into working code. Adhere to Clean Architecture and D
 
 ### In
 
-| file_type | Provider | Usage |
-|-----------|----------|-------|
-| spec-architecture | architect | Implement according to Ch3-4 design |
-| openapi.yaml | architect | Implement API endpoints |
-| threat-model | security-reviewer | Implement security countermeasures |
-| security-architecture | security-reviewer | Follow security design |
-| observability-design | architect | Implement logging, metrics, and tracing |
-| defect | test-engineer | Fix reported defects |
-| CLAUDE.md | orchestrator (setup) | Reference coding conventions and tech stack |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| spec-architecture | architect | Implement according to Ch3-4 design | Ch3.2/3.3/3.4; traces on every Gherkin in Ch4 |
+| openapi.yaml | architect | Implement API endpoints | paths and schemas for every endpoint |
+| threat-model | security-reviewer | Implement security countermeasures | A mitigation for every STRIDE threat |
+| security-architecture | security-reviewer | Follow security design | The authentication and authorization scheme |
+| observability-design | architect | Implement logging, metrics, and tracing | Log format, metric definitions, trace specification |
+| defect | test-engineer | Fix reported defects | defect_id; severity; reproduction steps |
+| CLAUDE.md | orchestrator (setup) | Reference coding conventions and tech stack | The coding standards and technology stack sections |
 
 ### Out
 
@@ -64,13 +64,14 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[implementer]` at the start of your first message
-1. Read spec Ch3 (Architecture) and Ch4 (Specification)
-2. Read the API definitions in openapi.yaml
-3. Implement following the coding conventions and tech stack defined in CLAUDE.md
-4. Incorporate structured logging, metrics instrumentation, and tracing into the code based on the observability design
-5. Create unit tests under tests/, run them, and confirm they pass
-6. Request a terminology check from kotodama-kun (public API naming in src/, structured log field names)
-7. Update the implementation column in project-records/traceability/traceability-matrix.md
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Read spec Ch3 (Architecture) and Ch4 (Specification)
+3. Read the API definitions in openapi.yaml
+4. Implement following the coding conventions and tech stack defined in CLAUDE.md
+5. Incorporate structured logging, metrics instrumentation, and tracing into the code based on the observability design
+6. Create unit tests under tests/, run them, and confirm they pass
+7. Request a terminology check from kotodama-kun (public API naming in src/, structured log field names)
+8. Update the implementation column in project-records/traceability/traceability-matrix.md
 
 ## Rules
 
@@ -92,6 +93,7 @@ Use Git worktree to implement each feature on a dedicated branch in parallel:
 
 | Anomaly | Response |
 |---------|----------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Design document descriptions are ambiguous and cannot be translated into implementation | Do not implement based on assumptions. Request the orchestrator to ask the architect for design refinement |
 | Implementation as designed is impossible due to tech stack constraints | Propose alternatives and request a decision from the orchestrator |
 | External dependency (library/API) is unavailable | Stop work and report to the orchestrator. If using mocks/stubs as a temporary measure, record it explicitly |

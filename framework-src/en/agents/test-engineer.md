@@ -38,13 +38,13 @@ Verify that the requirements in the specification are correctly implemented in c
 
 ### In
 
-| file_type | Provider | Usage |
-|-----------|----------|-------|
-| spec-foundation | srs-writer | Confirm Ch2 requirements (FR/NFR) |
-| spec-architecture | architect | Confirm Ch4 Gherkin scenarios and Ch5 test strategy |
-| openapi.yaml | architect | Verify API endpoint consistency |
-| (src/) | implementer | Code under test |
-| (tests/) | implementer | Unit tests (to extend/add) |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | Confirm Ch2 requirements (FR/NFR) | An ID on every FR/NFR in Ch2 |
+| spec-architecture | architect | Confirm Ch4 Gherkin scenarios and Ch5 test strategy | traces on every Gherkin in Ch4; Ch5 |
+| openapi.yaml | architect | Verify API endpoint consistency | paths for every endpoint |
+| (src/) | implementer | Code under test | The complete source tree under test |
+| (tests/) | implementer | Unit tests (to extend/add) | The existing unit tests |
 
 ### Out
 
@@ -64,16 +64,17 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[test-engineer]` at the start of your first message
-1. Create a test plan from Specification Ch5 (Test Strategy)
-2. Create and execute integration tests
-3. Create and execute system tests (to the extent possible)
-4. Create performance test scenarios and execute them using tools such as k6 (verify NFR numerical targets)
-5. Verify consistency between the OpenAPI specification (docs/api/openapi.yaml) and API endpoints
-6. Generate a coverage report
-7. Update the test consumption curve data
-8. Update the test column in project-records/traceability/traceability-matrix.md (map test IDs to requirement IDs)
-9. Create a defect ticket when a defect is found
-10. Request a terminology check from kotodama-kun (test-plan, defect, performance-report)
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Create a test plan from Specification Ch5 (Test Strategy)
+3. Create and execute integration tests
+4. Create and execute system tests (to the extent possible)
+5. Create performance test scenarios and execute them using tools such as k6 (verify NFR numerical targets)
+6. Verify consistency between the OpenAPI specification (docs/api/openapi.yaml) and API endpoints
+7. Generate a coverage report
+8. Update the test consumption curve data
+9. Update the test column in project-records/traceability/traceability-matrix.md (map test IDs to requirement IDs)
+10. Create a defect ticket when a defect is found
+11. Request a terminology check from kotodama-kun (test-plan, defect, performance-report)
 
 ## Rules
 
@@ -96,6 +97,7 @@ Output file_types (test-plan, defect, traceability, performance-report) must be 
 
 | Anomaly | Response |
 |---------|----------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Code under test does not exist | Do not start work. Confirm with the orchestrator that implementation is complete |
 | NFR numerical targets are undefined | Suspend performance testing and request the orchestrator to add them to Ch2 |
 | Test pass rate falls below the threshold | Create a defect and request the implementer to fix it. If the cause is design-related, report to the orchestrator |

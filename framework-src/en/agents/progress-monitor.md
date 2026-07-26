@@ -35,14 +35,14 @@ Visualize project progress and quality with numerical data, detect anomalies ear
 
 ### In
 
-| file_type | Provider | Usage |
-|-----------|----------|-------|
-| review | review-agent | Obtain quality metrics from review results |
-| defect | test-engineer | Track defect counts |
-| performance-report | test-engineer | Track performance test results |
-| test-progress.json | test-engineer | Test execution curve data |
-| defect-curve.json | test-engineer | Defect discovery/fix data |
-| cost-log.json | framework | API cost tracking |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| review | review-agent | Obtain quality metrics from review results | result; finding counts by severity |
+| defect | test-engineer | Track defect counts | defect_id, status |
+| performance-report | test-engineer | Track performance test results | A measured value per NFR |
+| test-progress.json | test-engineer | Test execution curve data | Date and completed count |
+| defect-curve.json | test-engineer | Defect discovery/fix data | Date, found count and fixed count |
+| cost-log.json | framework | API cost tracking | Token consumption per phase |
 
 ### Out
 
@@ -58,15 +58,16 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[progress-monitor]` at the start of your first message
-1. Create or update the WBS (Work Breakdown Structure)
-2. Generate a Gantt chart (in Mermaid format)
-3. Visualize and monitor the test execution curve
-4. Visualize and monitor the defect curve (cumulative discovery/fix curves)
-5. Track coverage trends
-6. Track costs (API token consumption)
-7. Identify bottleneck areas and report to the orchestrator
-8. Monitor agent responses (detect timeouts and circular waits)
-9. Request terminology checks from kotodama-kun (progress, wbs)
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Create or update the WBS (Work Breakdown Structure)
+3. Generate a Gantt chart (in Mermaid format)
+4. Visualize and monitor the test execution curve
+5. Visualize and monitor the defect curve (cumulative discovery/fix curves)
+6. Track coverage trends
+7. Track costs (API token consumption)
+8. Identify bottleneck areas and report to the orchestrator
+9. Monitor agent responses (detect timeouts and circular waits)
+10. Request terminology checks from kotodama-kun (progress, wbs)
 
 ## Rules
 
@@ -97,6 +98,7 @@ If the following conditions overlap, immediately report to the orchestrator and 
 
 | Anomaly | Response |
 |---------|----------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Source file for progress data does not exist | Skip tracking the relevant metric and report to the orchestrator |
 | Cost budget is not configured | Disable cost tracking and request the orchestrator to set the budget |
 | All agents are unresponsive | Immediately report to the orchestrator. Delegate the recovery procedure decision |

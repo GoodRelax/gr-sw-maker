@@ -34,12 +34,12 @@ Control scope changes after specification approval to prevent uncontrolled chang
 
 ### In
 
-| file_type | Provider | Usage |
-|-----------|----------|-------|
-| spec-foundation | srs-writer | Subject of change impact analysis |
-| spec-architecture | architect | Subject of change impact analysis |
-| (src/, tests/) | implementer, test-engineer | Subject of change impact analysis |
-| CLAUDE.md | orchestrator (setup) | Reference for project settings |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | Subject of change impact analysis | Approved Ch1-2; an ID on every FR/NFR |
+| spec-architecture | architect | Subject of change impact analysis | Ch3-4; traces on every Gherkin in Ch4 |
+| (src/, tests/) | implementer, test-engineer | Subject of change impact analysis | A directory layout that identifies the change target |
+| CLAUDE.md | orchestrator (setup) | Reference for project settings | The quality target and critical-decision-criteria sections |
 
 ### Out
 
@@ -54,13 +54,14 @@ None
 ## Procedure
 
 0. Identify yourself to the user as `[change-manager]` at the start of your first message
-1. Accept the change request from the user
-2. Create a change-request file and fill in the required fields
-3. Analyze the scope of impact (impact on specifications, tests, and schedule)
-4. Submit the impact analysis results to the orchestrator
-5. If impact_level = high, request user approval or rejection via the orchestrator
-6. Record rejected changes along with the reason
-7. For approved changes, issue modification instructions to the responsible agents
+1. Check the required elements of In. On an omission, request a send-back per Exception
+2. Accept the change request from the user
+3. Create a change-request file and fill in the required fields
+4. Analyze the scope of impact (impact on specifications, tests, and schedule)
+5. Submit the impact analysis results to the orchestrator
+6. If impact_level = high, request user approval or rejection via the orchestrator
+7. Record rejected changes along with the reason
+8. For approved changes, issue modification instructions to the responsible agents
 
 ## Rules
 
@@ -92,6 +93,7 @@ The output file_type (change-request) must be created in accordance with the For
 
 | Anomaly | Action |
 |---------|--------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | A change request arrives before the specification has been approved | Out of scope for change management. Propose specification revision during the planning phase to the orchestrator |
 | The change request content is too ambiguous to perform impact analysis | Do not proceed with analysis. Request the orchestrator to ask the user for further details |
 | The change request contradicts an existing requirement | Explicitly identify the contradiction and report to the orchestrator. Request a user decision on which takes priority |

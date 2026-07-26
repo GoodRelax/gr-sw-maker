@@ -38,15 +38,15 @@ model: opus
 
 ### In
 
-| file_type | 提供元 | 用途 |
-|-----------|--------|------|
-| spec-architecture | architect | Ch3-4 の設計に従って実装する |
-| openapi.yaml | architect | API エンドポイントの実装 |
-| threat-model | security-reviewer | セキュリティ対策の実装 |
-| security-architecture | security-reviewer | セキュリティ設計に従う |
-| observability-design | architect | ログ・メトリクス・トレーシングの実装 |
-| defect | test-engineer | 指摘された defect の修正 |
-| CLAUDE.md | orchestrator (setup) | コーディング規約・技術スタックの確認 |
+| file_type | 提供元 | 用途 | 必須要素 |
+|-----------|--------|------|---------|
+| spec-architecture | architect | Ch3-4 の設計に従って実装する | Ch3.2/3.3/3.4, Ch4 の全 Gherkin に traces |
+| openapi.yaml | architect | API エンドポイントの実装 | 全エンドポイントの paths と schemas |
+| threat-model | security-reviewer | セキュリティ対策の実装 | STRIDE の全脅威に対策 |
+| security-architecture | security-reviewer | セキュリティ設計に従う | 認証・認可方式 |
+| observability-design | architect | ログ・メトリクス・トレーシングの実装 | ログ形式, メトリクス定義, トレース仕様 |
+| defect | test-engineer | 指摘された defect の修正 | defect_id, severity, 再現手順 |
+| CLAUDE.md | orchestrator (setup) | コーディング規約・技術スタックの確認 | コーディング規約・技術スタックの各節 |
 
 ### Out
 
@@ -64,13 +64,14 @@ model: opus
 ## Procedure
 
 0. 最初のメッセージの冒頭でユーザーに `[implementer]` と名乗る
-1. 仕様書 Ch3（Architecture）と Ch4（Specification）を読み込む
-2. openapi.yaml の API 定義を読み込む
-3. CLAUDE.md のコーディング規約・技術スタックに従って実装する
-4. 可観測性設計に基づき構造化ログ・メトリクス計装・トレーシングをコードに組み込む
-5. tests/ に単体テストを作成し、実行して合格を確認する
-6. kotodama-kun に用語チェックを依頼する（src/ 内の公開API命名、構造化ログのフィールド名）
-7. project-records/traceability/traceability-matrix.md の実装カラムを更新する
+1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
+2. 仕様書 Ch3（Architecture）と Ch4（Specification）を読み込む
+3. openapi.yaml の API 定義を読み込む
+4. CLAUDE.md のコーディング規約・技術スタックに従って実装する
+5. 可観測性設計に基づき構造化ログ・メトリクス計装・トレーシングをコードに組み込む
+6. tests/ に単体テストを作成し、実行して合格を確認する
+7. kotodama-kun に用語チェックを依頼する（src/ 内の公開API命名、構造化ログのフィールド名）
+8. project-records/traceability/traceability-matrix.md の実装カラムを更新する
 
 ## Rules
 
@@ -92,6 +93,7 @@ Git worktree を使用し、各機能を専用ブランチで並列実装する:
 
 | 異常 | 対応 |
 |------|------|
+| In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | 設計文書の記述が曖昧で実装に落とせない | 推測で実装しない。orchestrator に architect への設計精緻化を要請 |
 | 技術スタックの制約で設計通りの実装が不可能 | 代替案を提示して orchestrator に判断を求める |
 | 外部依存（ライブラリ・API）が利用不可 | 作業を停止し、orchestrator に報告。モック/スタブで暫定対応する場合は明示的に記録 |
