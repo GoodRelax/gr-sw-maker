@@ -12,6 +12,8 @@
 3. **Separate normal and abnormal flows.** Procedure is for the normal flow, Exception is for the abnormal flow
 4. **Unify section names with abstract concepts.** Do not use names of specific remediation methods as section names
 5. **Agent = Function.** In (arguments) → Procedure → Out (return values). Work is local variables; delete them once Out is produced
+6. **An agent never launches another agent.** Launching is the sole prerogative of the main session. When another agent's work is needed, the agent **returns the request as part of its completion report**. This is the same relation as a function that does not call another function but returns a value to its caller (see §3.4)
+7. **Contracts are checked at the entrance.** In specifies not only "which file" but "what must be inside it". Filling a gap by guessing is how a handoff degrades silently (see §3.3 and §3.6)
 
 ---
 
@@ -126,6 +128,23 @@ Criteria for judging work completion. Checklist format. Complete when all condit
 **Rules:**
 - Each item in End Conditions MUST correspond to an Out in Ownership
 - The orchestrator agent verifies End Conditions during phase transitions
+- **An agent active across multiple phases MUST list its End Conditions per phase**
+
+**Per-phase End Conditions:**
+
+A single checklist covering several phases mixes in conditions that cannot possibly be met in the phase at hand. Verify it strictly and work cannot proceed; verify it loosely and the check becomes theatre. Either way the gate stops working.
+
+```markdown
+### End Conditions
+
+| Phase | Completion criteria |
+|-------|--------------------|
+| design | - [ ] {condition achievable in this phase} |
+| testing | - [ ] {condition achievable in this phase}<br>- [ ] {second one} |
+```
+
+- Each phase row states **only conditions verifiable at the end of that phase**
+- An agent active in a single phase may keep the plain checklist form
 
 ### 3.3 S3: Ownership
 
@@ -138,10 +157,24 @@ Files that exist at work start. This agent only reads them and does not modify t
 ```markdown
 ### In
 
-| file_type | Provider | Usage |
-|-----------|--------|------|
-| {file_type} | {Creator: user / agent name / framework} | {What it is read for} |
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| {file_type} | {Creator: user / agent name / framework} | {What it is read for} | {What must be present before work can start} |
 ```
+
+**Rules for required elements:**
+
+- **The required-elements column is mandatory (MUST).** A contract stated at file-name level leaves the downstream agent unable to notice an upstream omission. Unable to notice it, it fills the gap by guessing, and the handoff degrades one round trip at a time
+- State it at a granularity that can be judged by reading: "chapter/section", "field name", "IDs assigned". Do not use undecidable phrasing such as "sufficient information" (MUST NOT)
+- Procedure step 1 begins with "check the required elements of In"
+- On an omission, follow the common Exception row in §3.6. **Do not fill it in yourself**
+
+**Example:**
+
+| file_type | Provider | Usage | Required elements |
+|-----------|--------|------|---------|
+| spec-foundation | srs-writer | Judge consistency with requirements | All of Ch1; an ID on every FR/NFR in Ch2 |
+| review | review-agent | Input to the gate decision | result; a severity on every finding |
 
 #### Out (Output)
 
@@ -198,7 +231,19 @@ Temporary files used only during work. Document only when they exist.
 - Write in numbered steps
 - Each step begins with a verb
 - Procedure covers normal flow only. Write abnormal-case branches in Exception
+- **Step 1 begins with "check the required elements of In" (MUST).** Contract violations are detected at the entrance
 - **Self-identification rule (all agents):** When communicating with the user for the first time, the agent MUST state its name in bracket notation (e.g., `[orchestrator]`, `[review-agent]`). This enables the user to identify which agent is speaking, aids debugging, and improves session transcript readability
+
+**Launching other agents (Design Principle 6):**
+
+An agent never launches another agent. Launching is the sole prerogative of the main session.
+
+| Never write | Write instead |
+|---|---|
+| "Launch kotodama-kun to check terminology" | "Return the terminology-check request in the completion report" |
+| "Ask review-agent to review it" | "Return the review request in the completion report" |
+
+**Why:** a sub-agent cannot launch another sub-agent. An instruction that says "launch" is not executed, and **it is skipped silently rather than raising an error**. Whoever wrote it believes it ran, so the omission never surfaces. Carrying the request in the return value lets the main session decide on the launch, and makes whether it happened observable.
 
 ### 3.5 S5: Rules
 
@@ -216,6 +261,40 @@ Temporary files used only during work. Document only when they exist.
 - Subsection structure is free per agent
 - Optionally add `### Constraints` (things that must not be done) as a subsection
 - Separate large rule systems into external documents and link to them (e.g., review-agent → review-standards.md)
+- **An agent that consults a rule document MUST include `### Rule sections to read`**
+- **An agent whose Out is consumed mechanically MUST include `### Output example`**
+
+#### `### Rule sections to read`
+
+Loaded in full, a rule document runs to thousands of lines. State in a table which section to read for which decision, so that **the full text is never loaded**.
+
+```markdown
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| {kind of decision} | {document name} §{section number} ({section title}) |
+
+Read only the sections above, not the full rule document.
+```
+
+- Specify down to the section number. A reference to a document alone means the same thing as loading it whole
+- Confirm the reference exists. Pointing at a section that does not exist sends the agent to read the full text instead
+
+#### `### Output example`
+
+When Out is **aggregated mechanically** downstream, as with `review:critical_count`, an abstract output instruction lets the shape of the table drift from run to run, and the aggregation breaks silently.
+
+```markdown
+### Output example
+
+{Out file_type name}:
+
+(One or more complete examples in the exact shape produced. No ellipses.)
+```
+
+- At least one example (MUST). Show field names, column layout, and enum values in their real form
+- Do not abbreviate with `...` or "and so on". What is abbreviated is exactly what drifts between runs
 
 ### 3.6 S6: Exception
 
@@ -231,8 +310,21 @@ Temporary files used only during work. Document only when they exist.
 
 **Common principle:** When uncertain, do not proceed by guessing. Report to orchestrator.
 
+**Common Exception row (mandatory for all agents):**
+
+Every agent MUST carry the following row in its Exception table, covering a contract violation in In.
+
+| Abnormality | Response |
+|------|------|
+| The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
+
+**Why:** Document Rules §9 gives Form Blocks a strict type, but **a type whose violations nobody is responsible for detecting is the same as no type at all**. The only place a check can sit is the side that receives the input. Proceeding on the assumption that a non-conforming input "probably means this" propagates the corruption downstream, and where it broke can no longer be traced.
+
+Listing the violating fields is required so that the sender knows what to fix. "Invalid input" alone only adds round trips.
+
 **Rules:**
 - Cover three categories: Start Conditions unmet, unexpected situations during Procedure, and End Conditions unachievable
+- Always include the common Exception row above (MUST)
 - The default report target is orchestrator. Whether orchestrator asks the user is orchestrator's decision
 - Responses describe "actions that err on the side of safety" (stop, delegate the decision, present options, etc.)
 
@@ -247,7 +339,7 @@ Temporary files used only during work. Document only when they exist.
 | S2: Activation | Yes | The work contract. Without it, the agent cannot function as a function |
 | S3: Ownership | Yes | Definition of In/Out/Work. The single source of truth for file_type ownership |
 | S4: Procedure | Yes | The body of work instructions |
-| S5: Rules | Optional | Domain-specific. Some agents may not have any |
+| S5: Rules | Conditional | Domain-specific. In practice mandatory, since an agent that consults a rule document needs `### Rule sections to read` and an agent whose Out is consumed mechanically needs `### Output example` |
 | S6: Exception | Yes | Undefined abnormal flows lead to runaway behavior |
 
 ---
