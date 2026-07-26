@@ -360,24 +360,32 @@ When the project scale is small, certain Mandatory and Recommended processes may
 | **Micro** | Completes within a single session (< 1 hour). Single module, no external dependencies | Dice app, calculator, simple CLI tool |
 | **Small** | Completes within 1 day. Few modules, minimal external dependencies | Simple web app, utility library |
 | **Standard** | Exceeds 1 day. Multiple modules or external dependencies | API service, desktop app with DB |
+| **Large** | Exceeds 1 week. Parallel implementation at multi-team scale, integration with external systems | Enterprise systems, microservice fleets |
+| **Critical** | Any size, where failure bears directly on safety, money or personal data | Medical device integration, payment systems, identity platforms |
+
+> **Critical is a tier of nature, not of size.** A project the size of a Micro one is still Critical if a failure reaches people, money or personal data. The determination is made on the nature of the impact, not on project scale.
 
 **Exemption Matrix:**
 
-| Process / Artifact | Micro | Small | Standard |
-|--------------------|:-----:|:-----:|:--------:|
-| WBS / Gantt chart | Exempt | Exempt | Required |
-| Progress reports (progress/) | Exempt | Exempt | Required |
-| Cost log (cost-log.json) | Exempt | Optional | Required |
-| pipeline-state.md | Exempt | Optional | Required |
-| executive-dashboard.md | Exempt | Optional | Required |
-| stakeholder-register.md | Exempt | Exempt | Required (if multi-stakeholder) |
-| Performance testing (k6 etc.) | Exempt (if no NFR) | Optional | Required |
-| Observability design | Exempt | Optional | Required |
-| R3 Code review (separate report) | Merged into final review | Required | Required |
-| R6 Test review (separate report) | Merged into final review | Required | Required |
+| Process / Artifact | Micro | Small | Standard | Large | Critical |
+|--------------------|:-----:|:-----:|:--------:|:-----:|:--------:|
+| WBS / Gantt chart | Exempt | Exempt | Required | Required | Required |
+| Progress reports (progress/) | Exempt | Exempt | Required | Required | Required |
+| Cost log (cost-log.json) | Exempt | Optional | Required | Required | Required |
+| pipeline-state | **Required** | **Required** | Required | Required | Required |
+| executive-dashboard.md | Exempt | Optional | Required | Required | Required |
+| stakeholder-register.md | Exempt | Exempt | Required (if multi-stakeholder) | Required | Required |
+| Performance testing (k6 etc.) | Exempt (if no NFR) | Optional | Required | Required | Required |
+| Observability design | Exempt | Optional | Required | Required | Required |
+| R3 Code review (separate report) | Merged into final review | Required | Required | Required | Required |
+| R6 Test review (separate report) | Merged into final review | Required | Required | Required | Required |
+| Functional safety analysis (HARA/FMEA/FTA) | Exempt | Exempt | Conditional | Conditional | **Required** |
+| Threat modeling (STRIDE) | Conditional | Conditional | Required | Required | Required |
+
+> **pipeline-state is required regardless of scale.** It is the only state record that makes resuming an interrupted session possible; exempting it removes the means of resumption itself (§4.0).
 
 **Rules:**
-- Quality gates (R1, R2/R4/R5, final R1-R7) are NEVER exempt regardless of scale. Reviews may be merged (e.g., Micro: single final review covering R1-R7) but never skipped
+- **Every gate listed in §9.4 is NEVER exempt, regardless of scale.** Reviews may be merged (e.g., Micro: a single final review covering R1-R7) but never skipped. What may be relaxed is the form and granularity of the record, never the decision itself
 - defect/CR recording, risk management, traceability, and change management remain Mandatory at all scales — but the recording format may be simplified for Micro tier (inline in session-transcript with a summary table)
 - Exemptions MUST be recorded in CLAUDE.md during setup. Unrecorded exemptions are violations
 
@@ -458,14 +466,43 @@ stateDiagram-v2
     state "in-fix" as InFix
     state "in-retest" as InRetest
     state "closed" as Closed
+    state "rejected" as Rejected
+    state "cannot-reproduce" as CannotReproduce
     [*] --> Open: defect Detected
     Open --> InAnalysis: Assignee Allocated
+    Open --> Rejected: Judged as specified behavior
     InAnalysis --> InFix: Cause Identified
+    InAnalysis --> Rejected: Judged as specified behavior
+    InAnalysis --> CannotReproduce: All reproduction attempts failed
     InFix --> InRetest: Fix Complete
     InRetest --> Closed: Retest Passed
     InRetest --> InFix: Retest Failed
+    CannotReproduce --> Open: Reproduction condition found
+    Rejected --> Open: Evidence overturning the judgment appeared
+    Closed --> Open: The same behavior recurred
     Closed --> [*]
+    Rejected --> [*]
+    CannotReproduce --> [*]
 ```
+
+**Distinguishing the three terminals:**
+
+| Terminal | Meaning | Metric aggregation |
+|----------|---------|--------------------|
+| `closed` | Fixed and passed retest | Included |
+| `rejected` | Judged to be behavior as specified, not a defect | **Excluded** (§9.1.4) |
+| `cannot-reproduce` | Reproduction was attempted exhaustively and did not occur | **Excluded** (§9.1.4) |
+
+**A reproduction-attempt report is mandatory before `cannot-reproduce` (MUST).** All six items below must be recorded. If even one is missing, the ticket cannot become `cannot-reproduce` and stays `open`.
+
+1. Number of attempts (`reproduction_attempt_count`)
+2. Environment attempted (OS / runtime / dependency versions)
+3. Inputs and data conditions attempted
+4. Difference from the original report (what could not be reproduced)
+5. How the non-reproduction was confirmed (the relevant logs and metrics)
+6. Reopen condition (`reopen_trigger`: what would put it back to open)
+
+**Reopening is possible from all three terminals.** A design in which a closed judgment cannot be overturned makes a wrong judgment permanent.
 
 **Output:** `project-records/defects/defect-{NNN}-{YYYYMMDD}-{HHMMSS}.md` (defect ticket with Common Block + defect: Form Block): Includes reproduction steps, severity, root cause, and recurrence prevention measures. The defect:id field records DEF-NNN.
 
@@ -503,7 +540,11 @@ Track the licenses of OSS libraries used and verify compatibility.
 
 #### 3.2.7 Token Cost Management
 
-The progress-monitor agent tracks API token consumption and notifies the user when 80% of the budget is reached.
+progress-monitor tracks API token consumption and notifies the user once the alert threshold in CLAUDE.md "Quality Targets" is reached.
+
+**How it is measured:** a model cannot observe its own token consumption. `tools/session-meter.mjs`, registered as the `statusLine`, updates `project-management/progress/session-state.json` after every response, and progress-monitor reads it at each phase boundary and appends to `cost-log.json`. Because statusLine runs on every response, that file is never more than one turn stale.
+
+CLAUDE.md is the single source of truth for the threshold value; no number is written in this document.
 
 **Cost Tracking Format (project-management/progress/cost-log.json):**
 
@@ -603,7 +644,7 @@ The process-improver agent handles retrospectives and root cause analysis, while
 | Trigger | Condition | Initiated By |
 |---------|------|--------|
 | Phase completion | After each phase's quality gate PASS | orchestrator |
-| defect surge | defect discovery rate exceeds 200% compared to previous day | progress-monitor -> orchestrator |
+| defect surge | Cumulative discovered exceeds twice cumulative fixed (a condition observable at a single point in time; **day-over-day comparison is not used**) | progress-monitor -> orchestrator |
 | Review rejection | Same perspective flagged 3 or more times consecutively | review-agent -> orchestrator |
 | User request | User explicitly requests a retrospective | orchestrator |
 
@@ -622,9 +663,10 @@ Also see the retrospective command in Chapter 8, Section 8.3 for execution metho
 
 **Reference Standards:** ISO/IEC 12207 Documentation Process
 
-- Naming convention: `{document-name}-v{major}.{minor}.md` (e.g., `taskapp-spec-v1.2.md`)
+- **The file name is immutable; the version number lives in the `document_version` field of the Common Block.** This removes the need for every reference to follow a file rename (Document Rules §10)
 - At specification approval or major specification changes: Increment major version
 - For minor description corrections or additions: Increment minor version
+- A version is put into the file name only when moving it to `old/` (e.g., `old/taskapp-spec-v1.1.md`)
 - Deprecated documents are moved to `old/` in the same directory, recording the deprecation date and successor document (see document-rules Section 3.10 old/ directory rules)
 
 #### 3.3.5 User Documentation and Manual Creation
@@ -678,6 +720,26 @@ For systems that expose APIs externally, define the following during the design 
 | **Operations and Maintenance** | - Operating a service in production<br>- Post-release defect fixes and patch application required<br>- SLA (uptime, response time) guarantees required | setup phase<br>(decision to activate the operation phase) |
 | **Field Testing** | - HW integration project requiring field device integration testing<br>- User-attended verification of actual device behavior needed<br>- Verification of device-specific behavior not reproducible with mocks | setup phase<br>(additional evaluation when HW integration is enabled) |
 
+**Canonical flag names for conditional processes (all 13):**
+
+The item names written into the CLAUDE.md "Conditional Processes" section are fixed by the table below. If the wording drifts, whoever evaluates the flag cannot find the item, and the conditional process silently stays disabled.
+
+| # | Canonical flag name | Corresponding criterion |
+|:-:|---------------------|-------------------------|
+| 1 | Legal research | Compliance with regulations or industry standards is required |
+| 2 | Patent research | The implementation approach may touch existing patents |
+| 3 | Technology trend research | Technology selection requires awareness of external trends |
+| 4 | Functional safety (HARA/FMEA/FTA) | A failure bears directly on people or major loss |
+| 5 | Accessibility (WCAG 2.1) | The product has a UI with public reach |
+| 6 | HW integration | It connects to a physical device |
+| 7 | AI/LLM integration | The product calls an AI/LLM |
+| 8 | Framework requirement definition | A dependency on an external framework is being selected |
+| 9 | HW production process management | It involves mass production of hardware |
+| 10 | Product i18n/l10n | Multilingual support is a product requirement |
+| 11 | Certification acquisition | A public certification must be obtained |
+| 12 | Operations and maintenance | Production operation takes place (enables the operation phase) |
+| 13 | Field testing | Integration testing on real devices is required |
+
 #### 3.4.2 setup Phase Evaluation Process
 
 During the setup phase of the full-auto-dev command, the lead agent automatically evaluates the following (see Chapter 8, Section 8.1).
@@ -694,13 +756,47 @@ During the setup phase of the full-auto-dev command, the lead agent automaticall
 10. Product i18n/l10n -> If applicable, add i18n requirements to the NFR in specification Ch2 and include message catalog design in the design phase
 11. Certification Acquisition -> In addition to legal research, add certification submission document creation and certification body interaction to the WBS. Create `project-records/legal/certification/`
 12. Operations and Maintenance -> If operating in production, activate the operation phase. Include RPO/RTO, backup strategy, and monitoring infrastructure in the design phase
-13. Field Testing -> When HW integration is enabled and user-attended testing is required. Activate field-test-engineer / feedback-classifier / field-issue-analyst in testing phase. Feedback management follows [Field Issue Handling Rules](field-issue-handling-rules.md)
+13. Field Testing -> When HW integration is enabled, **or** when device-specific behavior that a mock cannot reproduce must be verified (matching the OR condition in 3.4.1). Activate field-test-engineer / feedback-classifier / field-issue-analyst in testing phase. Feedback management follows [Field Issue Handling Rules](field-issue-handling-rules.md)
 
 ---
 
 # Part 2: Phase Details
 
 ## Chapter 4: Development Workflow
+
+### 4.0 Session Management and Resumption
+
+Nearly-fully-automated development does not necessarily complete in a single session. An interruption can come from a context limit, the user stepping away, or the runtime stopping. **Treat interruption as a normal operating state, not an anomaly.**
+
+#### 4.0.1 Obligation to Record State
+
+`pipeline-state` is **required regardless of scale** (§3.1.1) and MUST be updated at each of the following points:
+
+- At the start and the completion of every phase
+- When a quality gate verdict is received
+- When something is escalated to the user
+- When work is interrupted
+
+What `pipeline-state` records is **the minimum needed to resume**: the current phase, the deliverables completed, the tasks outstanding, and the next action to take. The course of the conversation is not recorded, because it can be reconstructed.
+
+#### 4.0.2 Resumption Procedure
+
+1. Read `pipeline-state` and identify the current phase and the outstanding tasks
+2. Inspect the deliverable directories for that phase and detect any difference between the record and reality
+3. Where they differ, **reality wins, not the record.** Update pipeline-state to match reality
+4. Resume from the first outstanding task
+
+The record and reality diverge when the interruption landed before the update. Reality wins because the only order in which this can happen is that the deliverable was actually produced and the record failed to catch up.
+
+#### 4.0.3 Creating a Handoff
+
+When context usage reaches the threshold in CLAUDE.md "Quality Targets", create a `handoff` before interrupting. Usage is judged by reading `context_used_pct` from `project-management/progress/session-state.json` (§3.2.7).
+
+#### 4.0.4 The `aborted` State
+
+When the user decides to cancel the project, set the `pipeline-state` status to `aborted` and record the reason and the extent completed at that point. **`aborted` is not completion.** No final-report is produced, and the project is left in a resumable state.
+
+---
 
 ### 4.1 setup Phase: Conditional Process Evaluation (Mandatory)
 
@@ -722,7 +818,7 @@ Select the specification format based on project scale:
 |:------:|------|----------|---------|
 | 1 | ANMS | AI-Native Minimal Spec | Entire project fits within 1 context window |
 | 2 | ANPS | AI-Native Plural Spec | Does not fit, but GraphDB not needed |
-| 3 | ANGS | AI-Native Graph Spec | Large-scale (uses GraphDB) |
+| 3 | ANGS | AI-Native Graph Spec | Large-scale (uses GraphDB). **Research stage; NOT selectable in the current version** |
 
 Record the selection result in the "Specification Format Selection" section of CLAUDE.md.
 
@@ -895,7 +991,7 @@ claude "Specification Ch1-2 has been approved. Execute the following in parallel
 3. Define specification Ch5 (Test Strategy) in docs/spec/
 4. Configure specification Ch6 (Design Principles Compliance) in docs/spec/
 5. Generate OpenAPI 3.0 specification in docs/api/openapi.yaml
-6. Create security design in docs/security/
+6. Launch security-reviewer to produce `docs/security/threat-model.md` (STRIDE threat modeling) and `docs/security/security-architecture.md`. **Do this even when security requirements are absent from spec Ch2** - the absence itself becomes a Critical finding
 7. Create observability design in docs/observability/observability-design.md
 8. Create WBS and Gantt chart in project-management/progress/wbs.md
 9. Create risk register with risk-manager
@@ -1566,6 +1662,9 @@ Agreed with the user during setup. All agents and quality gates reference this s
 | Coding convention compliance | 0 violations | Linter execution results |
 | Cost budget alert threshold | [e.g., 80%] of budget | Triggers user notification |
 | Patch response time | Critical: [e.g., 48h], High: [e.g., 1 week] | operation phase only |
+| SLA availability | [e.g., 99.5%] or higher | operation phase only |
+| Patch application rate | [e.g., 100%] of published Critical/High patches | operation phase only |
+| Dependency freshness | No more than [e.g., 2] major versions behind | operation phase only |
 
 ## API Documentation
 
@@ -1699,98 +1798,14 @@ Frequently used workflows can be defined as slash commands, enabling complex pro
 
 ### 8.1 Full Auto Development Start Command
 
-**.claude/commands/full-auto-dev.md:**
+**Authoritative source:** `framework-src/{lang}/commands/full-auto-dev.md`
 
-```markdown
-Read user-order.md and start the nearly fully automated software development.
+> **Do not transcribe the command body into this section.** Transcribing it means keeping two places in sync, and they had in fact drifted. What follows summarizes its purpose; only the authoritative source defines what is executed.
 
-Execute the following phases sequentially:
+Reads user-order.md and runs the phases in order from setup through delivery. Each phase launches the agents it needs by name, and whether a transition may proceed is judged by the gate conditions in 9.4.1.
 
-## Phase 0: Conditional Process Evaluation (Mandatory - execute before specification creation)
-0a. Read user-order.md
-0b. user-order.md validation: Verify the following required items are documented
-    - What to build (What), and why (Why)
-    -> If items are missing: Supplement through dialogue with the user before proceeding
-0b2. Propose CLAUDE.md based on user-order.md content (project name, technology stack, coding conventions, security policy, branch strategy, etc.)
-    -> Place CLAUDE.md after user approval
-0c. Evaluate the need for functional safety (impact on human life/infrastructure, safety standards compliance)
-    -> If applicable: Immediately request user confirmation and finalize safety requirements before proceeding
-0d. Evaluate the need for legal research (personal information, healthcare, finance, communications, EU market, public sector)
-    -> If applicable: Add to CLAUDE.md and include regulatory requirements in the specification's non-functional requirements
-0e. Evaluate the need for patent research (novel algorithms, AI models, commercial sales)
-    -> If applicable: Add a patent research task before the design phase start in the WBS
-0f. Evaluate the need for technology trend research (over 6 months, rapidly changing technology domains, approaching EOL)
-    -> If applicable: Add technology trend check steps to the WBS at each phase start
-0g. Evaluate the need for accessibility (WCAG 2.1) (web apps, EU market, etc.)
-    -> If applicable: Add to CLAUDE.md and include accessibility requirements in the specification's NFR
-0h. Report evaluation results to the user and request confirmation regarding additional conditional processes
+For the same reason, the bodies of the commands in 8.2 through 8.5 are not transcribed into this document either.
 
-## Phase 1: Planning
-1. Analyze user-order.md
-2. Refer to process-rules/spec-template.md and create the specification in docs/spec/ (Ch1-2: Foundation & Requirements, following the ANMS/ANPS/ANGS format selected in the setup phase)
-3. Place Ch3-6 skeleton (headings only) in the same file
-4. Report specification overview to the user and request approval
-5. Conduct quality review (R1 perspective) of specification Ch1-2 with review-agent, proceed after PASS
-
-## Phase 2: External Dependency Selection (Conditional — when any of HW integration, AI/LLM integration, or framework requirement definition is enabled)
-6. Extract requirements for external dependencies from the interview record and create a requirement-spec draft (Ch1-2)
-7. Conduct candidate research, technical evaluation, cost analysis, and license verification
-8. Present evaluation results to the user and request selection approval
-9. After approval, complete the requirement-spec Ch3-6
-10. If procurement is needed, confirm availability timelines and reflect in the WBS
-    -> If all are disabled: Skip and proceed to the design phase
-
-## Phase 3: Design (after specification Ch1-2 approval)
-11. Elaborate specification Ch3 (Architecture) in docs/spec/
-12. Elaborate specification Ch4 (Specification) in Gherkin in docs/spec/
-13. Define specification Ch5 (Test Strategy) in docs/spec/
-14. Configure specification Ch6 (Design Principles Compliance) in docs/spec/
-15. Generate OpenAPI 3.0 specification in docs/api/openapi.yaml
-16. Create security design in docs/security/
-17. Create observability design (logs, metrics, tracing, alerts) in docs/observability/observability-design.md
-18. Create WBS and Gantt chart in project-management/progress/wbs.md
-19. Create risk register with risk-manager
-20. Conduct quality review (R2/R4/R5 perspectives) of specification Ch3-4 and design with review-agent, proceed after PASS
-
-## Phase 4: Implementation
-21. Implement code under src/ based on the specification (parallel implementation with Git worktree)
-22. Based on the observability design, incorporate structured logs, metrics instrumentation, and tracing into the code
-23. Create and execute unit tests under tests/
-24. Conduct implementation code review (R2/R3/R4/R5 perspectives) with review-agent, proceed after PASS
-25. Execute SCA scan (npm audit, etc.) with security-reviewer and confirm Critical/High vulnerabilities are zero
-26. Conduct license verification with license-checker
-
-## Phase 5: Testing
-27. Create and execute integration tests
-28. Create and execute system tests to the extent possible
-29. Execute performance tests based on specification Ch2 NFR numerical targets and record results in project-records/performance/
-30. Update test progress curve and defect curve
-31. Conduct test code review (R6 perspective) with review-agent
-32. Evaluate quality criteria
-32a. [If field testing is enabled] Conduct user-attended field testing. Feedback management follows field-issue-handling-rules.md
-
-## Phase 6: Delivery
-33. Conduct final review of all deliverables (all R1-R7 perspectives) with review-agent
-    -> If FAILED: Return to the corresponding phase based on the finding's perspective and make corrections
-34. Build container image and verify IaC configuration in infra/
-35. Execute deployment and verify basic operation with smoke tests
-36. Verify that monitoring and alert configurations match the observability design
-37. Verify and document rollback procedure
-38. Create final report in project-management/progress/final-report.md
-39. Create acceptance testing procedure guide
-40. Report completion to the user
-
-Report progress at each phase completion.
-Request user confirmation when critical decisions are needed.
-Make minor technical decisions autonomously.
-```
-
-Usage:
-
-```bash
-claude
-> /project:full-auto-dev
-```
 
 ### 8.2 Progress Check Command
 
@@ -1953,11 +1968,55 @@ Each review gate is automatically executed by review-agent. Phase transitions ar
 2. All review findings have a recorded disposition (see Section 9.5 Review Finding Tracking)
 3. If the project is not exempt from WBS (see Section 3.1.1), WBS task statuses for the current phase are updated
 
-If any condition is not met, the orchestrator MUST NOT proceed to the next phase. Missing reviews must be executed; missing dispositions must be recorded. There are no exceptions to this rule.
+If any condition is not met, the phase MUST NOT advance. Missing reviews must be executed; missing dispositions must be recorded. **The only exception to this rule is a waiver, and a waiver is valid only when all three conditions in "Gate Retry Policy" below are satisfied.**
+
+The decision is made by technical-authority. The orchestrator receives that verdict (the `verdict` in tech-decision) and decides whether to proceed after adding the cost, schedule and risk perspective.
+
+#### 9.1.1 Gate Retry Policy
+
+| FAIL count | Response |
+|:---------:|----------|
+| 1st-2nd | technical-authority determines the send-back target and requests the fix |
+| 3rd | Escalate to the user. Decide whether a waiver is warranted |
+
+**Conditions for granting a waiver (all three MUST hold):**
+
+1. The user has approved it
+2. The reason, blast radius and re-evaluation timing are recorded in tech-decision
+3. It has been carried into "Known issues" in final-report
+
+A waiver missing any of these is invalid and the gate remains FAIL. **"It is the third attempt" is not a reason.** What the third FAIL produces is an escalation, not an automatic pass.
+
+#### 9.1.2 Severity Ruling Criteria
+
+Map the Level column of the Comprehensive Review Checklist in the Review Standards onto severity.
+
+| Level | Default severity | Exception |
+|-------|------------------|-----------|
+| MUST | High | Critical when it bears directly on safety or data integrity |
+| SHOULD | Medium | — |
+
+When departing from the default in either direction, technical-authority records the rationale in tech-decision.
+
+#### 9.1.3 Send-Back Ruling Criteria
+
+| Judgment | Send back to |
+|----------|--------------|
+| Recurs unless spec Ch3-4 is corrected | design |
+| Resolved by code alone | implementation |
+| Both are needed | Prioritize design and link the code fix as a follow-up task |
+
+The destination given by review-agent is a recommendation; technical-authority makes the decision (§4.7.1).
+
+#### 9.1.4 Exclusions from Metric Aggregation
+
+Among `defect` and `field-issue` records, those whose `closed_reason` is `rejected` / `cannot-reproduce` / `withdrawn` are **excluded from defect density, fix rate and quality metric aggregation.** They are not product defects, and including them makes the quality indicators diverge from reality.
+
+Report the excluded count separately in the progress report; never hide it.
 
 ### 9.2 Review Perspectives (R1-R7)
 
-Six perspectives applied by review-agent. **For detailed checklists, refer to `process-rules/review-standards.md` (Review Standards Specification).** The following is a summary of each perspective.
+Seven perspectives applied by review-agent. **For detailed checklists, refer to `process-rules/review-standards.md` (Review Standards Specification).** The following is a summary of each perspective.
 
 | Perspective | Content | Applicable To |
 | --- | --- | --- |
@@ -1967,6 +2026,7 @@ Six perspectives applied by review-agent. **For detailed checklists, refer to `p
 | **R4: Concurrency and State Transitions** | Deadlocks (resource acquisition order, long-held locks), race conditions (Check-Then-Act, DB Read-Modify-Write, Promise races), glitches (non-atomic updates, intermediate state exposure) | Specification Ch3-4, Code |
 | **R5: Performance** | Algorithm complexity (O(n^2) and above), N+1 queries, memory leaks, unnecessary serialization, network/frontend optimization (overfetching, unnecessary re-rendering) | Specification Ch3-4, Code |
 | **R6: Test Quality** | Test independence, boundary values, error cases, flaky tests, requirements coverage, NFR coverage in performance testing | Test code |
+| **R7: Purity and Structure** | Purity classification (pure / semi-pure-a / semi-pure-b / non-pure), non-pure effects mixed into computation logic, separation of collect and process, `@purity` tag coverage, structural separation by purity | Specification Ch3-4, Code |
 
 ### 9.3 Quality Metrics Definition
 
@@ -1986,6 +2046,10 @@ Numeric thresholds for each metric are defined in the project's **CLAUDE.md "Qua
 ### 9.4 Phase-Specific KPIs (Key Performance Indicators)
 
 Define KPIs to track for each phase. progress-monitor reflects these KPIs in the executive-dashboard at each phase completion.
+
+**Distinguish KPIs (trend monitoring) from gate conditions (pass/fail).** The KPIs in this section exist to observe trends; on their own they never halt a phase transition. Whether a transition may proceed is decided by the gate conditions in 9.1.
+
+**An unfalsifiable criterion MUST NOT be used as a gate.** A criterion such as "quality is sufficient" or "the user is satisfied", for which one cannot define what counts as unmet, will always pass once placed on a gate. Gate conditions are limited to what can be judged by a number or by the presence or absence of an artifact.
 
 | Phase | KPI | Target/Criteria | Measurement Method |
 |---------|-----|----------|---------|
@@ -2016,6 +2080,29 @@ Define KPIs to track for each phase. progress-monitor reflects these KPIs in the
 | operation | Incident count/MTTR | P1/P2: Trending downward, MTTR: Trending shorter | incident-report aggregation |
 | operation | Patch application rate | Per CLAUDE.md Quality Targets | security-scan-report |
 | operation | Dependency freshness | Major dependencies within latest minor version | Periodic SCA scan |
+
+#### 9.4.1 Gate Conditions (pass/fail for phase transitions)
+
+**This section is the single source of truth for gate conditions.** Descriptions of gates appearing elsewhere summarize this section; on any discrepancy, this section wins.
+
+| Gate ID | Transition | Condition | Artifacts used for the decision |
+|---------|------------|-----------|--------------------------------|
+| GATE-PLANNING | planning → dependency-selection | R1 PASS; user approval of Ch1-2 | review, tech-decision |
+| GATE-INTERVIEW | planning → dependency-selection | interview-record exists with no unresolved questions | interview-record |
+| GATE-DEPENDENCY | dependency-selection → design | User approval of the dependency selection; Adapter layer conforms to DIP | decision, tech-decision |
+| GATE-DESIGN | design → implementation | R2/R4/R5 PASS; threat-model exists with `unmitigated_critical_count` = 0; deployment-design exists | review, threat-model, tech-decision |
+| GATE-IMPL | implementation → testing | R2/R3/R4/R5 PASS; SCA/SAST Critical/High = 0; no incompatible license in license-report | review, security-scan-report, license-report |
+| GATE-TEST | testing → delivery | R6 PASS; coverage target met; performance NFRs satisfied; every FR in traceability has a test | review, performance-report, traceability |
+| GATE-DELIVERY | delivery → operation | Final R1-R7 PASS; acceptance testing passed; runbook and user-manual exist | review, final-report |
+| GATE-EOL | operation → end | Migration to a successor system is complete, or the user has approved EOL, with data migration and retention agreed | decision |
+
+**Completion conditions for GATE-EOL:** the operation phase runs indefinitely. It does not end on its own, so it is ended explicitly once either of the following holds.
+
+1. Migration to a successor system is complete and the user has approved shutting this system down
+2. The user has decided on EOL, with the destination for the data and the retention period agreed
+
+In either case, record it in decision and append the final state to final-report.
+
 
 ### 9.5 Review Finding Tracking
 
@@ -2375,7 +2462,7 @@ Design alert rules during the design phase and define them in `docs/observabilit
 | HighErrorRate | Error rate > 1% (sustained 5 min) | Critical | Immediate investigation, consider rollback |
 | HighLatency | P99 > SLA latency (sustained 5 min) | High | Bottleneck investigation |
 | LowDiskSpace | Disk usage > 85% | Medium | Verify log rotation |
-| AgentTimeout | Agent unresponsive for over 30 min | High | progress-monitor reports to lead agent |
+| AgentStalled | Neither the pipeline-state phase, the WBS completed count, nor the deliverables have changed since the previous launch | High | progress-monitor reports the facts only to the orchestrator. **Elapsed time is not used as a condition** (an agent cannot measure time) |
 
 ### 11.3 Production Release Checklist
 

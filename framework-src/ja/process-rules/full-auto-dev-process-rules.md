@@ -360,24 +360,32 @@ flowchart TD
 | **Micro** | 単一セッション内で完了（1時間未満）。単一モジュール、外部依存なし | サイコロアプリ、電卓、簡易CLIツール |
 | **Small** | 1日以内で完了。少数モジュール、外部依存は最小限 | シンプルなWebアプリ、ユーティリティライブラリ |
 | **Standard** | 1日超。複数モジュールまたは外部依存あり | APIサービス、DB連携デスクトップアプリ |
+| **Large** | 1週間超。複数チーム相当の並列実装、外部システム連携あり | 業務システム、マイクロサービス群 |
+| **Critical** | 規模を問わず、安全性・金銭・個人情報のいずれかに直結する | 医療機器連携、決済システム、認証基盤 |
+
+> **Critical は規模区分ではなく性質区分である。** Micro 相当の規模でも、故障が人身・金銭・個人情報に直結するなら Critical として扱う。判定はプロジェクト規模ではなく影響の性質で行う。
 
 **免除マトリクス:**
 
-| プロセス / 成果物 | Micro | Small | Standard |
-|-------------------|:-----:|:-----:|:--------:|
-| WBS / ガントチャート | 免除 | 免除 | 必須 |
-| 進捗レポート（progress/） | 免除 | 免除 | 必須 |
-| コストログ（cost-log.json） | 免除 | 任意 | 必須 |
-| pipeline-state.md | 免除 | 任意 | 必須 |
-| executive-dashboard.md | 免除 | 任意 | 必須 |
-| stakeholder-register.md | 免除 | 免除 | 必須（複数ステークホルダー時） |
-| 性能テスト（k6等） | 免除（NFRなし時） | 任意 | 必須 |
-| 可観測性設計 | 免除 | 任意 | 必須 |
-| R3 コードレビュー（個別レポート） | 最終レビューに統合 | 必須 | 必須 |
-| R6 テストレビュー（個別レポート） | 最終レビューに統合 | 必須 | 必須 |
+| プロセス / 成果物 | Micro | Small | Standard | Large | Critical |
+|-------------------|:-----:|:-----:|:--------:|:-----:|:--------:|
+| WBS / ガントチャート | 免除 | 免除 | 必須 | 必須 | 必須 |
+| 進捗レポート（progress/） | 免除 | 免除 | 必須 | 必須 | 必須 |
+| コストログ（cost-log.json） | 免除 | 任意 | 必須 | 必須 | 必須 |
+| pipeline-state | **必須** | **必須** | 必須 | 必須 | 必須 |
+| executive-dashboard.md | 免除 | 任意 | 必須 | 必須 | 必須 |
+| stakeholder-register.md | 免除 | 免除 | 必須（複数ステークホルダー時） | 必須 | 必須 |
+| 性能テスト（k6等） | 免除（NFRなし時） | 任意 | 必須 | 必須 | 必須 |
+| 可観測性設計 | 免除 | 任意 | 必須 | 必須 | 必須 |
+| R3 コードレビュー（個別レポート） | 最終レビューに統合 | 必須 | 必須 | 必須 | 必須 |
+| R6 テストレビュー（個別レポート） | 最終レビューに統合 | 必須 | 必須 | 必須 | 必須 |
+| 機能安全分析（HARA/FMEA/FTA） | 免除 | 免除 | 条件付き | 条件付き | **必須** |
+| 脅威モデリング（STRIDE） | 条件付き | 条件付き | 必須 | 必須 | 必須 |
+
+> **pipeline-state は規模によらず必須である。** これはセッション中断からの再開に必要な唯一の状態記録であり、免除すると再開手段そのものが失われる（§4.0）。
 
 **ルール:**
-- 品質ゲート（R1、R2/R4/R5、最終 R1-R7）は規模にかかわらず**絶対に免除しない**。レビューは統合してよい（例: Micro では R1-R7 を網羅する単一の最終レビュー）が、スキップは禁止
+- **§9.4 に現れるすべてのゲートは規模にかかわらず絶対に免除しない。** レビューは統合してよい（例: Micro では R1-R7 を網羅する単一の最終レビュー）が、スキップは禁止。免除できるのは記録の形式と粒度であって、判定そのものではない
 - defect/CR 記録、リスク管理、トレーサビリティ、変更管理は全規模で必須 — ただし Micro 区分では記録形式を簡略化してよい（session-transcript 内にサマリーテーブルとしてインライン記録）
 - 免除事項は setup フェーズで CLAUDE.md に必ず記録する。記録なき免除は規則違反とする
 
@@ -458,14 +466,43 @@ stateDiagram-v2
     state "in-fix" as InFix
     state "in-retest" as InRetest
     state "closed" as Closed
+    state "rejected" as Rejected
+    state "cannot-reproduce" as CannotReproduce
     [*] --> Open: defect 検出
     Open --> InAnalysis: 担当割当
+    Open --> Rejected: 仕様どおりと判定
     InAnalysis --> InFix: 原因特定
+    InAnalysis --> Rejected: 仕様どおりと判定
+    InAnalysis --> CannotReproduce: 再現試行が全件失敗
     InFix --> InRetest: 修正完了
     InRetest --> Closed: 再テスト合格
     InRetest --> InFix: 再テスト失敗
+    CannotReproduce --> Open: 再現条件が判明
+    Rejected --> Open: 判定を覆す根拠が出た
+    Closed --> Open: 同一事象が再発
     Closed --> [*]
+    Rejected --> [*]
+    CannotReproduce --> [*]
 ```
+
+**3 つの終端の区別:**
+
+| 終端 | 意味 | メトリクス集計 |
+|------|------|---------------|
+| `closed` | 修正し、再テストに合格した | 対象 |
+| `rejected` | 仕様どおりの動作であり defect ではないと判定した | **対象外**（§9.1.4） |
+| `cannot-reproduce` | 再現試行を尽くしたが再現しなかった | **対象外**（§9.1.4） |
+
+**`cannot-reproduce` にするには再現試行レポートが必須である（MUST）。** 以下 6 項目をすべて記録すること。1 つでも欠ければ `cannot-reproduce` にはできず、`open` のまま残す。
+
+1. 試行回数（`reproduction_attempt_count`）
+2. 試行した環境（OS / ランタイム / 依存バージョン）
+3. 試行した入力とデータ条件
+4. 元の報告との差分（何を再現できなかったか）
+5. 再現しなかったことの確認手段（ログ・メトリクスの該当箇所）
+6. 再オープン条件（`reopen_trigger`。何が起きたら再び open にするか）
+
+**再オープンは 3 終端すべてから可能である。** 一度閉じた判断を覆せない設計にすると、誤判定が恒久化する。
 
 **出力:** `project-records/defects/defect-{NNN}-{YYYYMMDD}-{HHMMSS}.md`（defect 票、Common Block + defect: Form Block付き）：再現手順・深刻度・根本原因・再発防止策を含む。defect:id フィールドに DEF-NNN を記録する。
 
@@ -503,7 +540,11 @@ stateDiagram-v2
 
 #### 3.2.7 コスト管理（Token Cost Management）
 
-progress-monitorエージェントがAPIトークン消費を追跡し、予算の80%到達時にユーザーに通知する。
+progress-monitor がAPIトークン消費を追跡し、CLAUDE.md「品質目標」のアラート閾値に到達した時点でユーザーに通知する。
+
+**計測方法:** モデル自身は自らのトークン消費量を観測できない。`statusLine` に登録した `tools/session-meter.mjs` が応答ごとに `project-management/progress/session-state.json` を更新し、progress-monitor がフェーズ境界でこれを読んで `cost-log.json` に追記する。statusLine は応答ごとに走るため、このファイルは最大 1 ターン分しか古くならない。
+
+閾値の値は CLAUDE.md が唯一の正であり、本文書には数値を書かない。
 
 **コスト追跡フォーマット (project-management/progress/cost-log.json):**
 
@@ -603,7 +644,7 @@ process-improver エージェントがふりかえりと根本原因分析を担
 | トリガー | 条件 | 起動元 |
 |---------|------|--------|
 | フェーズ完了 | 各フェーズの品質ゲート PASS 後 | orchestrator |
-| defect 多発 | defect 発見率が前日比 200% 超 | progress-monitor → orchestrator |
+| defect 多発 | 累積発見数が累積修正数の 2 倍を超えた（単一時点で観測可能な条件とする。**前日比などの経時比較は用いない**） | progress-monitor → orchestrator |
 | レビュー差戻し | 同一観点の指摘が 3 回以上連続 | review-agent → orchestrator |
 | ユーザー要求 | ユーザーが明示的にふりかえりを要求 | orchestrator |
 
@@ -622,9 +663,10 @@ process-improver エージェントがふりかえりと根本原因分析を担
 
 **参照標準:** ISO/IEC 12207 ドキュメントプロセス
 
-- 命名規則: `{文書名}-v{メジャー}.{マイナー}.md`（例: `taskapp-spec-v1.2.md`）
+- **ファイル名は不変とし、版番号は Common Block の `document_version` フィールドで管理する。** 参照側がファイル名の変更に追随する必要をなくすためである（文書管理規則 §10）
 - 仕様書承認時・重大な仕様変更時: メジャーバージョンをインクリメント
 - 軽微な記述修正・追記: マイナーバージョンをインクリメント
+- ファイル名に版を付けるのは `old/` へ退避するときのみ（例: `old/taskapp-spec-v1.1.md`）
 - 廃止文書は同ディレクトリの `old/` に移動し、廃止日と後継文書を記録する（document-rules §3.10 old/ ディレクトリルール参照）
 
 #### 3.3.5 ユーザードキュメント・マニュアル作成
@@ -678,6 +720,26 @@ process-improver エージェントがふりかえりと根本原因分析を担
 | **運用・保守** | ・本番環境でサービスを運用する<br>・リリース後のdefect 修正・パッチ適用が必要<br>・SLA（稼働率・応答時間）の保証が必要 | setup フェーズ<br>（operation フェーズの有効化判断） |
 | **実機テスト** | ・HW連携プロジェクトで実機デバイスとの結合テストが必要<br>・ユーザー立会のもとで実機動作を確認する必要がある<br>・モックでは再現できない実機固有の動作検証が必要 | setup フェーズ<br>（HW連携が有効な場合に追加判断） |
 
+**条件付きプロセスの正規フラグ名（全 13 項目）:**
+
+CLAUDE.md「条件付きプロセス」に記載する項目名は下表で固定する。表記が揺れると、有効判定を行う側が該当項目を見つけられず、条件付きプロセスが黙って無効のまま進む。
+
+| # | 正規フラグ名 | 対応する判断基準 |
+|:-:|-------------|-----------------|
+| 1 | 法的調査 | 法規制・業界標準への準拠が必要 |
+| 2 | 特許調査 | 実装方式が既存特許に抵触しうる |
+| 3 | 技術動向調査 | 技術選定に外部動向の把握が要る |
+| 4 | 機能安全(HARA/FMEA/FTA) | 故障が人身・重大損害に直結する |
+| 5 | アクセシビリティ(WCAG 2.1) | 公共性のある UI を持つ |
+| 6 | HW連携 | 物理デバイスと接続する |
+| 7 | AI/LLM連携 | 製品が AI/LLM を呼び出す |
+| 8 | フレームワーク要求定義 | 外部フレームワークへの依存を選定する |
+| 9 | HW生産工程管理 | HW の量産工程を伴う |
+| 10 | 製品i18n/l10n | 多言語対応が製品要求である |
+| 11 | 認証取得 | 公的認証の取得が必要 |
+| 12 | 運用・保守 | 本番運用を行う（operation フェーズの有効化） |
+| 13 | 実機テスト | 実機での結合テストが必要 |
+
 #### 3.4.2 setup フェーズ 評価プロセス
 
 full-auto-dev コマンドの setup フェーズで、リードエージェントが以下を自動評価する（第8章8.1参照）。
@@ -694,13 +756,47 @@ full-auto-dev コマンドの setup フェーズで、リードエージェン�
 10. 製品i18n/l10n → 該当する場合は仕様書 Ch2 のNFRにi18n要求を追加し、design フェーズでメッセージカタログ設計を含める
 11. 認証取得 → 法規調査に加え、認証取得に必要な提出文書作成・認証機関対応をWBSに追加する。`project-records/legal/certification/` を作成する
 12. 運用・保守 → 本番運用する場合はoperation フェーズを有効化する。design フェーズでRPO/RTO・バックアップ戦略・監視体制を設計に含める
-13. 実機テスト → HW連携が有効かつユーザー立会テストが必要な場合に追加。testing フェーズで field-test-engineer / feedback-classifier / field-issue-analyst をアクティベートする。フィードバック管理は [実機テスト フィードバック管理規則](field-issue-handling-rules.md) に従う
+13. 実機テスト → HW連携が有効な場合、**または**モックでは再現できない実機固有の動作検証が必要な場合に追加（§3.4.1 の OR 条件に一致させる）。testing フェーズで field-test-engineer / feedback-classifier / field-issue-analyst をアクティベートする。フィードバック管理は [実機テスト フィードバック管理規則](field-issue-handling-rules.md) に従う
 
 ---
 
 # 第2部: フェーズ詳細
 
 ## 第4章 開発ワークフロー
+
+### 4.0 セッション管理と再開
+
+全自動開発は単一のセッションで完結するとは限らない。コンテキスト上限、ユーザーの離席、実行環境の停止のいずれによっても中断は起きる。**中断は異常ではなく通常の運用状態として扱う。**
+
+#### 4.0.1 状態の記録義務
+
+`pipeline-state` は**規模によらず必須**であり（§3.1.1）、以下の時点で必ず更新する（MUST）:
+
+- 各フェーズの開始時と完了時
+- 品質ゲートの判定を受け取った時
+- ユーザーへエスカレーションした時
+- 作業を中断する時
+
+`pipeline-state` に記録するのは、**再開に必要な最小限**である。すなわち現在のフェーズ、完了した成果物、未完了のタスク、次に取るべき行動。会話の経緯は記録しない（再構築できるため）。
+
+#### 4.0.2 再開手順
+
+1. `pipeline-state` を読み、現在のフェーズと未完了タスクを特定する
+2. 該当フェーズの成果物ディレクトリを確認し、記録と実体の差分を検出する
+3. 差分がある場合、**記録ではなく実体を正とする**。pipeline-state を実体に合わせて更新する
+4. 未完了タスクの先頭から再開する
+
+記録と実体が食い違うのは、中断が更新の前に起きた場合である。実体を正とするのは、成果物は実際に作られたが記録が追いつかなかった、という順序でしか起こりえないためである。
+
+#### 4.0.3 引き継ぎの作成
+
+コンテキスト使用率が CLAUDE.md「品質目標」の閾値に到達した場合、`handoff` を作成してから中断する。使用率は `project-management/progress/session-state.json` の `context_used_pct` を読んで判定する（§3.2.7）。
+
+#### 4.0.4 `aborted` 状態
+
+ユーザーがプロジェクトの中止を決めた場合、`pipeline-state` の状態を `aborted` とし、中止理由と中止時点の完了範囲を記録する。**`aborted` は完了ではない。** final-report は作成せず、再開可能な状態のまま残す。
+
+---
 
 ### 4.1 setup フェーズ: 条件付きプロセス評価（必須）
 
@@ -722,7 +818,7 @@ setup フェーズは全自動開発の**最初のステップ**であり、仕�
 |:------:|------|----------|---------|
 | 1 | ANMS | AI-Native Minimal Spec | プロジェクト全体が1コンテキストウィンドウに収まる |
 | 2 | ANPS | AI-Native Plural Spec | 収まらないが、GraphDB不要 |
-| 3 | ANGS | AI-Native Graph Spec | 大規模（GraphDB活用） |
+| 3 | ANGS | AI-Native Graph Spec | 大規模（GraphDB活用）。**研究段階であり、現バージョンでは選択できない** |
 
 選定結果は CLAUDE.md の「仕様形式の選択」セクションに記録する。
 
@@ -895,7 +991,7 @@ claude "仕様書 Ch1-2 が承認されました。以下を並列で実行し�
 3. docs/spec/ の仕様書 Ch5 (Test Strategy) を定義する
 4. docs/spec/ の仕様書 Ch6 (Design Principles Compliance) を設定する
 5. docs/api/openapi.yaml にOpenAPI 3.0仕様を生成する
-6. docs/security/ にセキュリティ設計を作成する
+6. security-reviewer を起動し、`docs/security/threat-model.md`（STRIDE による脅威モデリング）と `docs/security/security-architecture.md` を作成させる。**セキュリティ要求が仕様書 Ch2 に未記載であっても実施する**（未記載であること自体が Critical 指摘となる）
 7. docs/observability/observability-design.md に可観測性設計を作成する
 8. project-management/progress/wbs.md にWBSとガントチャートを作成する
 9. risk-managerでリスク台帳を作成する
@@ -1566,6 +1662,9 @@ setup フェーズでユーザーと合意する。全エージェントおよ�
 | コーディング規約準拠 | 違反 0 件 | Linter 実行結果 |
 | コスト予算アラート閾値 | 予算の [例: 80%] | ユーザー通知をトリガー |
 | パッチ対応時間 | Critical: [例: 48h], High: [例: 1週間] | operation フェーズのみ |
+| SLA 稼働率 | [例: 99.5%] 以上 | operation フェーズのみ |
+| パッチ適用率 | 公開済み Critical/High パッチの [例: 100%] | operation フェーズのみ |
+| 依存関係の鮮度 | メジャー版が [例: 2世代] 以上遅れない | operation フェーズのみ |
 
 ## APIドキュメント
 
@@ -1665,7 +1764,7 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 
 # 運用・保守: [有効/無効] - 理由: [記載]
 
-# フィールドテスト: [有効/無効] - 理由: [記述]
+# 実機テスト: [有効/無効] - 理由: [記述]
 ```
 
 このテンプレートはバージョン管理にコミットし、チーム全員が共有する。
@@ -1699,98 +1798,14 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 
 ### 8.1 全自動開発開始コマンド
 
-**.claude/commands/full-auto-dev.md:**
+**正本:** `framework-src/{lang}/commands/full-auto-dev.md`
 
-```markdown
-user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始してください。
+> **本節にコマンド本文を転記しない。** 転記すると正本と本文書の 2 箇所を同期する必要が生じ、実際に乖離していた。以下は用途の要約であり、実行される内容は正本のみが定める。
 
-以下のフェーズを順次実行します:
+user-order.md を読み、setup フェーズから delivery フェーズまでを順に実行する。各フェーズで必要なエージェントを名指しで起動し、フェーズ遷移の可否は §9.4.1 のゲート条件で判定する。
 
-## Phase 0: 条件付きプロセスの評価（必須・仕様書作成前に実行）
-0a. user-order.md を読み込む
-0b. user-order.mdのバリデーション: 以下の必須項目が記載されているか確認する
-    - 何を作りたいか（What）、それはどうしてか（Why）
-    → 不足項目がある場合: ユーザーに対話で補完してから次へ進む
-0b2. user-order.md の内容を基に CLAUDE.md を提案する（プロジェクト名、技術スタック、コーディング規約、セキュリティ方針、ブランチ戦略など）
-    → ユーザーの承認後に CLAUDE.md を配置する
-0c. 機能安全の要否を評価する（人命・インフラへの影響、安全規格準拠）
-    → 該当する場合: 即座にユーザーに確認を求め、安全要求を確定してから次へ進む
-0d. 法規調査の要否を評価する（個人情報・医療・金融・通信・EU市場・公共）
-    → 該当する場合: CLAUDE.mdに追記し、仕様書の非機能要求に規制要求を含める
-0e. 特許調査の要否を評価する（新規アルゴリズム・AIモデル・商用販売）
-    → 該当する場合: WBSの design フェーズ開始前に特許調査タスクを追加する
-0f. 技術動向調査の要否を評価する（6ヶ月超・急変技術領域・EOL近接）
-    → 該当する場合: 各フェーズ開始時に技術動向確認ステップをWBSに追加する
-0g. アクセシビリティ（WCAG 2.1）の要否を評価する（Webアプリ・EU市場向け等）
-    → 該当する場合: CLAUDE.mdに追記し、仕様書のNFRにアクセシビリティ要求を含める
-0h. 評価結果をユーザーに報告し、条件付きプロセスの追加について確認を求める
+同じ理由により、§8.2〜§8.5 の各コマンドについても本文書に本文を転記しない。
 
-## Phase 1: 企画
-1. user-order.md を解析する
-2. process-rules/spec-template.md を参照し、仕様書を docs/spec/ に作成する（Ch1-2: Foundation・Requirements、形式はsetupフェーズで選定したANMS/ANPS/ANGSに従う）
-3. Ch3-6 のスケルトン（見出しのみ）を同一ファイルに配置する
-4. 仕様書の概要をユーザーに報告し承認を求める
-5. review-agentで仕様書 Ch1-2 の品質レビュー（R1観点）を実施し、PASS後に次へ進む
-
-## Phase 2: 外部依存の選定（条件付き — HW連携・AI/LLM連携・フレームワーク要求定義のいずれかが有効な場合）
-6. インタビュー記録から外部依存への要求を抽出し、requirement-specのドラフト（Ch1-2）を作成する
-7. 候補の調査・技術評価・コスト分析・ライセンス確認を実施する
-8. 評価結果をユーザーに提示し、選定の承認を求める
-9. 承認後、requirement-specのCh3-6を完成させる
-10. 調達が必要な場合は可用性タイムラインを確認し、WBSに反映する
-    → すべて無効の場合: スキップして design フェーズに進む
-
-## Phase 3: 設計（仕様書 Ch1-2 承認後）
-11. docs/spec/ の仕様書 Ch3 (Architecture) を詳細化する
-12. docs/spec/ の仕様書 Ch4 (Specification) を Gherkin で詳細化する
-13. docs/spec/ の仕様書 Ch5 (Test Strategy) を定義する
-14. docs/spec/ の仕様書 Ch6 (Design Principles Compliance) を設定する
-15. docs/api/openapi.yaml にOpenAPI 3.0仕様を生成する
-16. docs/security/ にセキュリティ設計を作成する
-17. docs/observability/observability-design.md に可観測性設計（ログ・メトリクス・トレーシング・アラート）を作成する
-18. project-management/progress/wbs.md にWBSとガントチャートを作成する
-19. risk-managerでリスク台帳を作成する
-20. review-agentで仕様書 Ch3-4・設計の品質レビュー（R2/R4/R5観点）を実施し、PASS後に次へ進む
-
-## Phase 4: 実装
-21. 仕様書に基づきsrc/にコードを実装する（Git worktreeで並列実装）
-22. 可観測性設計に基づき構造化ログ・メトリクス計装・トレーシングをコードに組み込む
-23. tests/に単体テストを作成・実行する
-24. review-agentで実装コードのレビュー（R2/R3/R4/R5観点）を実施し、PASS後に次へ進む
-25. security-reviewerでSCAスキャン（npm audit等）を実行し、Critical/High脆弱性がゼロか確認する
-26. license-checkerでライセンス確認を実施する
-
-## Phase 5: テスト
-27. 結合テストを作成・実行する
-28. システムテストを可能な範囲で作成・実行する
-29. 性能テストを仕様書 Ch2 のNFR数値目標に基づき実行し、結果をproject-records/performance/に記録する
-30. テスト消化曲線とdefect curveを更新する
-31. review-agentでテストコードのレビュー（R6観点）を実施する
-32. 品質基準を評価する
-32a. [実機テストが有効な場合] ユーザー立会の実機テストを実施する。フィードバック管理は field-issue-handling-rules.md に従う
-
-## Phase 6: 納品
-33. review-agentで全成果物の最終レビュー（R1〜R7全観点）を実施する
-    → FAILした場合: 指摘の観点に応じた該当フェーズへ戻り修正する
-34. コンテナイメージをビルドし、infra/のIaC構成を確認する
-35. デプロイメントを実行し、スモークテストで基本動作を確認する
-36. 監視・アラート設定が可観測性設計と一致しているか確認する
-37. ロールバック手順を確認・文書化する
-38. project-management/progress/final-report.md に最終レポートを作成する
-39. 受入テスト手順書を作成する
-40. ユーザーに完了報告する
-
-各フェーズ完了時に進捗を報告してください。
-重要な判断が必要な場合はユーザーに確認を求めてください。
-軽微な技術的判断は自律的に行ってください。
-```
-
-使用方法:
-
-```bash
-claude
-> /project:full-auto-dev
-```
 
 ### 8.2 進捗確認コマンド
 
@@ -1953,11 +1968,55 @@ flowchart TD
 2. 全レビュー指摘に対応記録があること（9.5節 レビュー指摘対応追跡 を参照）
 3. WBS 免除でないプロジェクト（3.1.1節参照）の場合、当該フェーズの WBS タスクステータスが更新されていること
 
-いずれかの条件が未充足の場合、orchestrator は次フェーズへ遷移してはならない。未実施のレビューは実行し、未記録の対応記録は記録すること。本ルールに例外はない。
+いずれかの条件が未充足の場合、次フェーズへ遷移してはならない。未実施のレビューは実行し、未記録の対応記録は記録すること。**本ルールの例外は waiver のみであり、waiver は下記「ゲート再試行ポリシー」の 3 条件をすべて満たした場合に限る。**
+
+判定の主体は technical-authority である。orchestrator はその判定結果（tech-decision の `verdict`）を受け取り、コスト・スケジュール・リスクの観点を加えて進行可否を決める。
+
+#### 9.1.1 ゲート再試行ポリシー
+
+| FAIL 回数 | 対応 |
+|:--------:|------|
+| 1-2 回目 | technical-authority が戻し先を決定し、修正を要請する |
+| 3 回目 | ユーザーへエスカレーションする。waiver の要否を判断する |
+
+**waiver を認める条件（3 つすべてを満たすこと。MUST）:**
+
+1. ユーザーの承認を得ている
+2. tech-decision に理由・影響範囲・再評価時期が記録されている
+3. final-report の「既知の問題」に転記されている
+
+いずれかを欠く waiver は無効であり、ゲートは FAIL のままとする。**「3 回目だから通す」は理由にならない。** 3 回目に発生するのはエスカレーションであって自動的な通過ではない。
+
+#### 9.1.2 重大度の裁定基準
+
+レビュー観点規約「総合レビューチェックリスト」の Level 列から重大度へ写像する。
+
+| Level | 既定の重大度 | 例外 |
+|-------|------------|------|
+| MUST | High | 安全性・データ整合性に直結する場合は Critical |
+| SHOULD | Medium | — |
+
+既定から上下させる場合は technical-authority が tech-decision に根拠を記録する。
+
+#### 9.1.3 戻し先の裁定基準
+
+| 判定 | 戻し先 |
+|------|--------|
+| 仕様書 Ch3-4 を修正しなければ再発する | design |
+| コードのみで解消する | implementation |
+| 両方必要 | design を優先し、実装修正を後続タスクとして紐付ける |
+
+review-agent が出す戻り先は推奨であり、確定は technical-authority が行う（§4.7.1）。
+
+#### 9.1.4 メトリクス集計の除外
+
+`defect` および `field-issue` のうち、`closed_reason` が `rejected` / `cannot-reproduce` / `withdrawn` のものは、**defect 密度・修正率・品質メトリクスの集計対象から除外する。** これらは製品の欠陥ではないため、含めると品質指標が実態から乖離する。
+
+除外した件数は progress レポートに別掲し、隠さない。
 
 ### 9.2 レビュー観点（R1〜R7）
 
-review-agentが適用する6つの観点。**詳細なチェックリストは `process-rules/review-standards.md`（レビュー観点規約書）を参照すること。** 以下は各観点の要約。
+review-agentが適用する7つの観点。**詳細なチェックリストは `process-rules/review-standards.md`（レビュー観点規約書）を参照すること。** 以下は各観点の要約。
 
 | 観点                     | 内容                                                                                                                                                            | 適用対象                  |
 | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
@@ -1967,6 +2026,7 @@ review-agentが適用する6つの観点。**詳細なチェックリストは `
 | **R4: 並行性・状態遷移** | デッドロック（リソース取得順序・長時間ロック）、レースコンディション（Check-Then-Act・DB Read-Modify-Write・Promise競合）、グリッジ（非原子更新・中間状態露出） | 仕様書 Ch3-4・コード      |
 | **R5: パフォーマンス**   | アルゴリズム計算量（O(n²)以上）、N+1クエリ、メモリリーク、不要な直列化、ネットワーク/フロントエンド最適化（overfetching・不要な再レンダリング） | 仕様書 Ch3-4・コード      |
 | **R6: テスト品質**       | テスト独立性・境界値・異常系・フレーキーテスト・要求カバレッジ・性能テストのNFR網羅                                                                             | テストコード              |
+| **R7: 純粋性・構造**     | 純粋性の分類（pure / semi-pure-a / semi-pure-b / non-pure）、計算ロジックへの副作用混在、収集と処理の分離、`@purity` タグ付与率、純粋性による構造分離 | 仕様書 Ch3-4・コード      |
 
 ### 9.3 品質メトリクス定義
 
@@ -1986,6 +2046,10 @@ review-agentが適用する6つの観点。**詳細なチェックリストは `
 ### 9.4 フェーズ別KPI（Key Performance Indicators）
 
 各フェーズで押さえるべきKPIを定義する。progress-monitor は各フェーズ完了時にこれらのKPIを executive-dashboard に反映する。
+
+**KPI（傾向監視）とゲート条件（合否判定）を区別する。** 本節の KPI は傾向を見るための指標であり、これ単独でフェーズ遷移を止めることはしない。遷移の可否は §9.1 のゲート条件で決まる。
+
+**反証不可能な基準はゲートに用いない（MUST NOT）。** 「品質が十分である」「ユーザーが満足している」のように、何をもって未達とするかを定義できない基準は、ゲートに置くと必ず通過する。ゲート条件は数値または存在の有無で判定できるものに限る。
 
 | フェーズ | KPI | 目標/基準 | 測定方法 |
 |---------|-----|----------|---------|
@@ -2016,6 +2080,29 @@ review-agentが適用する6つの観点。**詳細なチェックリストは `
 | operation | incident 件数/MTTR | P1/P2: 減少傾向、MTTR: 短縮傾向 | incident-report 集計 |
 | operation | パッチ適用率 | CLAUDE.md 品質目標に準拠 | security-scan-report |
 | operation | 依存関係の鮮度 | 主要依存が最新マイナーバージョン以内 | SCA定期スキャン |
+
+#### 9.4.1 ゲート条件（フェーズ遷移の合否判定）
+
+**ゲート条件の正本は本節である。** 他の節に現れるゲートの記述は本節の要約であり、齟齬があれば本節を正とする。
+
+| ゲート ID | 遷移 | 条件 | 判定に用いる成果物 |
+|-----------|------|------|-------------------|
+| GATE-PLANNING | planning → dependency-selection | R1 PASS、Ch1-2 のユーザー承認 | review, tech-decision |
+| GATE-INTERVIEW | planning → dependency-selection | interview-record が存在し、未解決の質問が残っていない | interview-record |
+| GATE-DEPENDENCY | dependency-selection → design | 外部依存の選定にユーザー承認がある、Adapter 層が DIP に適合 | decision, tech-decision |
+| GATE-DESIGN | design → implementation | R2/R4/R5 PASS、threat-model が存在し `unmitigated_critical_count` = 0、deployment-design が存在 | review, threat-model, tech-decision |
+| GATE-IMPL | implementation → testing | R2/R3/R4/R5 PASS、SCA/SAST の Critical/High = 0、license-report に非互換ライセンスなし | review, security-scan-report, license-report |
+| GATE-TEST | testing → delivery | R6 PASS、カバレッジ目標達成、性能 NFR 充足、traceability の全 FR にテスト対応がある | review, performance-report, traceability |
+| GATE-DELIVERY | delivery → operation | R1-R7 最終 PASS、受入テスト合格、runbook と user-manual が存在 | review, final-report |
+| GATE-EOL | operation → 終了 | 後継システムへの移行完了、またはユーザーが EOL を承認、データ移行と保管期間の合意がある | decision |
+
+**GATE-EOL の完了条件:** operation フェーズは無期限に続く。終了は自動的には訪れないため、以下のいずれかを満たした時点で明示的に終了させる。
+
+1. 後継システムへ移行が完了し、本システムの停止をユーザーが承認した
+2. ユーザーが EOL（提供終了）を決定し、データの移行先と保管期間が合意されている
+
+いずれの場合も decision に記録し、final-report に最終状態を追記する。
+
 
 ### 9.5 レビュー指摘対応追跡
 
@@ -2375,7 +2462,7 @@ async function login(email, password) {
 | HighErrorRate | エラーレート > 1%（5分継続）   | Critical | 即時調査・ロールバック検討                 |
 | HighLatency   | P99 > SLAレイテンシ（5分継続） | High     | ボトルネック調査                           |
 | LowDiskSpace  | ディスク使用率 > 85%           | Medium   | ログローテーション確認                     |
-| AgentTimeout  | エージェント無応答30分超       | High     | progress-monitorがリードエージェントに報告 |
+| AgentStalled  | pipeline-state の phase・WBS 完了数・成果物のいずれも前回起動時から変化がない | High | progress-monitor が事実のみを orchestrator に報告する。**経過時間は条件にしない**（エージェントは時間を計測できない） |
 
 ### 11.3 本番リリースチェックリスト
 
