@@ -377,6 +377,7 @@ When the project scale is small, certain Mandatory and Recommended processes may
 | stakeholder-register.md | Exempt | Exempt | Required (if multi-stakeholder) | Required | Required |
 | Performance testing (k6 etc.) | Exempt (if no NFR) | Optional | Required | Required | Required |
 | Observability design | Exempt | Optional | Required | Required | Required |
+| deployment-design | Exempt (distribution only) | Optional | Required | Required | Required |
 | R3 Code review (separate report) | Merged into final review | Required | Required | Required | Required |
 | R6 Test review (separate report) | Merged into final review | Required | Required | Required | Required |
 | Functional safety analysis (HARA/FMEA/FTA) | Exempt | Exempt | Conditional | Conditional | **Required** |
@@ -2092,7 +2093,7 @@ Define KPIs to track for each phase. progress-monitor reflects these KPIs in the
 | GATE-PLANNING | planning → dependency-selection | R1 PASS; user approval of Ch1-2 | review, tech-decision |
 | GATE-INTERVIEW | planning → dependency-selection | interview-record exists with no unresolved questions | interview-record |
 | GATE-DEPENDENCY | dependency-selection → design | User approval of the dependency selection; Adapter layer conforms to DIP | decision, tech-decision |
-| GATE-DESIGN | design → implementation | R2/R4/R5/R7 PASS; threat-model exists with `unmitigated_critical_count` = 0; deployment-design exists | review, threat-model, tech-decision |
+| GATE-DESIGN | design → implementation | R2/R4/R5/R7 PASS; threat-model exists with `unmitigated_critical_count` = 0; deployment-design exists (when exempted under §3.1.1, the record of the exemption satisfies this) | review, threat-model, tech-decision |
 | GATE-IMPL | implementation → testing | R2/R3/R4/R5/R7 PASS; SCA/SAST Critical/High = 0; no incompatible license in license-report | review, security-scan-report, license-report |
 | GATE-TEST | testing → delivery | R6 PASS; coverage target met; performance NFRs satisfied; every FR in traceability has a test | review, performance-report, traceability |
 | GATE-DELIVERY | delivery → operation | Final R1-R7 PASS; acceptance testing passed; runbook and user-manual exist | review, final-report |

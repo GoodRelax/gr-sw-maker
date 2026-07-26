@@ -948,7 +948,7 @@ external-dependency-spec（抽象テンプレート）
 | pipeline-state:blocked_by | string | No | ブロッキング条件 | — |
 | pipeline-state:needs_human | boolean | Yes | ユーザー待ちか？ | true / false |
 | pipeline-state:human_action | string | No | ユーザーが行うべきアクション | — |
-| pipeline-state:current_gate | string | No | 活性中の品質ゲート | — |
+| pipeline-state:current_gate | list | No | 活性中の品質ゲート。**1 つの遷移が複数のゲートを持つ場合はタグを繰り返す**（planning → の遷移は GATE-INTERVIEW と GATE-PLANNING の 2 つ）。カンマ区切りの単一文字列にしない | — |
 | pipeline-state:gate_result | enum | No | ゲート結果 | pending / pass / fail |
 | pipeline-state:gate_fail_target | string | No | ゲート失敗時の戻り先フェーズ | — |
 | pipeline-state:latest_handoff | string | No | 最新の引継ぎファイルパス | — |
@@ -1534,7 +1534,7 @@ external-dependency-spec 共通章構成に従う。非標準I/Fの詳細仕様�
 
 | フィールド | 型 | 必須 | 説明 | 値域・制約 |
 |-----------|------|------|------|-----------|
-| retrospective-report:phase | enum | Yes | ふりかえり対象フェーズ | planning / dependency-selection / design / implementation / testing / delivery / operation |
+| retrospective-report:phase | enum | Yes | ふりかえり対象フェーズ | setup / planning / dependency-selection / design / implementation / testing / delivery / operation |
 | retrospective-report:defect_pattern_count | int | Yes | 分析した defect パターン数 | 0以上 |
 | retrospective-report:improvement_count | int | Yes | 提案した改善策の数 | 0以上 |
 | retrospective-report:approval_status | enum | Yes | 改善策の承認状態 | proposed / approved / applied / rejected |

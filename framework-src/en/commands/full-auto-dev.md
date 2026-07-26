@@ -54,7 +54,7 @@ Execute the following phases sequentially:
 1f. srs-writer places skeletons (headings only) for Ch3-6 in the same file
 1g. Report the specification overview to the user and request approval
 1h. Conduct quality review of specification Ch1-2 with review-agent (R1 perspective: R1a structural quality + R1b expression quality)
-1i. Launch technical-authority to decide GATE-PLANNING (Process Rules section 9.4.1). Proceed after PASS
+1i. Launch technical-authority to decide GATE-INTERVIEW and GATE-PLANNING (Process Rules section 9.4.1). **This transition has two gates.** Proceed after PASS
 
 ## Phase 2: External Dependency Selection (Conditional — Only When HW/AI/Framework Integration Exists)
 2a. Check Phase 0 conditional process evaluation results
@@ -124,6 +124,7 @@ Execute the following phases sequentially:
 7c. Verify SLA monitoring (alerting and dashboards based on the observability design)
 7d. Plan recovery procedure drills based on the disaster-recovery-plan
 7e. When a production incident occurs, launch incident-reporter to create the incident-report and conduct root cause analysis
+7f. When closing the project, launch technical-authority to decide GATE-EOL (Process Rules section 9.4.1)
 
 ## Common Steps at the Completion of Every Phase (applies to all phases)
 Fa. Launch kotodama-kun and check terminology and naming across all Outs of that phase in one pass

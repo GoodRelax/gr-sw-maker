@@ -948,7 +948,7 @@ When defining a new Form Block, the following 2-section structure MUST be follow
 | pipeline-state:blocked_by | string | No | Blocking condition | — |
 | pipeline-state:needs_human | boolean | Yes | Waiting for user? | true / false |
 | pipeline-state:human_action | string | No | Action the user should take | — |
-| pipeline-state:current_gate | string | No | Active quality gate | — |
+| pipeline-state:current_gate | list | No | Active quality gate. **Repeat the tag when one transition carries several gates** (the transition out of planning carries both GATE-INTERVIEW and GATE-PLANNING). Do not use a single comma-separated string | — |
 | pipeline-state:gate_result | enum | No | Gate result | pending / pass / fail |
 | pipeline-state:gate_fail_target | string | No | Fallback phase on gate failure | — |
 | pipeline-state:latest_handoff | string | No | Path to the latest handoff file | — |
@@ -1534,7 +1534,7 @@ Describe stakeholder list table (name/role, interests, influence level, communic
 
 | Field | Type | Required | Description | Value Range / Constraints |
 |-----------|------|------|------|-----------|
-| retrospective-report:phase | enum | Yes | Phase subject to retrospective | planning / dependency-selection / design / implementation / testing / delivery / operation |
+| retrospective-report:phase | enum | Yes | Phase subject to retrospective | setup / planning / dependency-selection / design / implementation / testing / delivery / operation |
 | retrospective-report:defect_pattern_count | int | Yes | Number of analyzed defect patterns | 0 or more |
 | retrospective-report:improvement_count | int | Yes | Number of proposed improvements | 0 or more |
 | retrospective-report:approval_status | enum | Yes | Improvement approval status | proposed / approved / applied / rejected |

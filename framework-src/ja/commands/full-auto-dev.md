@@ -54,7 +54,7 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
 1f. srs-writer が Ch3-6 のスケルトン（見出しのみ）を同一ファイルに配置する
 1g. 仕様書の概要をユーザーに報告し承認を求める
 1h. review-agentで仕様書 Ch1-2 の品質レビュー（R1観点: R1a構造品質 + R1b表現品質）を実施する
-1i. technical-authority を起動し GATE-PLANNING を判定する（プロセス規則 §9.4.1）。PASS後に次へ進む
+1i. technical-authority を起動し GATE-INTERVIEW と GATE-PLANNING を判定する（プロセス規則 §9.4.1）。**この遷移は 2 つのゲートを持つ。**PASS後に次へ進む
 
 ## Phase 2: 外部依存選定（条件付き — HW/AI/Framework連携がある場合のみ）
 2a. Phase 0 の条件付きプロセス評価結果を確認する
@@ -124,6 +124,7 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
 7c. SLA 監視（可観測性設計に基づくアラート・ダッシュボード）を確認する
 7d. disaster-recovery-plan に基づく復旧手順の訓練を計画する
 7e. 本番 incident 発生時は incident-reporter を起動し、incident-report の作成と根本原因分析を実施する
+7f. プロジェクトを終了する場合は technical-authority を起動し GATE-EOL を判定する（プロセス規則 §9.4.1）
 
 ## 各フェーズ完了時の共通手順（全フェーズに適用）
 Fa. kotodama-kun を起動し、当該フェーズの全 Out の用語・命名を一括チェックする

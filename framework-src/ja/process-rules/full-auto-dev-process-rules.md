@@ -377,6 +377,7 @@ flowchart TD
 | stakeholder-register.md | 免除 | 免除 | 必須（複数ステークホルダー時） | 必須 | 必須 |
 | 性能テスト（k6等） | 免除（NFRなし時） | 任意 | 必須 | 必須 | 必須 |
 | 可観測性設計 | 免除 | 任意 | 必須 | 必須 | 必須 |
+| deployment-design | 免除（配布のみ） | 任意 | 必須 | 必須 | 必須 |
 | R3 コードレビュー（個別レポート） | 最終レビューに統合 | 必須 | 必須 | 必須 | 必須 |
 | R6 テストレビュー（個別レポート） | 最終レビューに統合 | 必須 | 必須 | 必須 | 必須 |
 | 機能安全分析（HARA/FMEA/FTA） | 免除 | 免除 | 条件付き | 条件付き | **必須** |
@@ -2092,7 +2093,7 @@ review-agentが適用する7つの観点。**詳細なチェックリストは `
 | GATE-PLANNING | planning → dependency-selection | R1 PASS、Ch1-2 のユーザー承認 | review, tech-decision |
 | GATE-INTERVIEW | planning → dependency-selection | interview-record が存在し、未解決の質問が残っていない | interview-record |
 | GATE-DEPENDENCY | dependency-selection → design | 外部依存の選定にユーザー承認がある、Adapter 層が DIP に適合 | decision, tech-decision |
-| GATE-DESIGN | design → implementation | R2/R4/R5/R7 PASS、threat-model が存在し `unmitigated_critical_count` = 0、deployment-design が存在 | review, threat-model, tech-decision |
+| GATE-DESIGN | design → implementation | R2/R4/R5/R7 PASS、threat-model が存在し `unmitigated_critical_count` = 0、deployment-design が存在（§3.1.1 で免除した場合は免除の記録をもって充足とする） | review, threat-model, tech-decision |
 | GATE-IMPL | implementation → testing | R2/R3/R4/R5/R7 PASS、SCA/SAST の Critical/High = 0、license-report に非互換ライセンスなし | review, security-scan-report, license-report |
 | GATE-TEST | testing → delivery | R6 PASS、カバレッジ目標達成、性能 NFR 充足、traceability の全 FR にテスト対応がある | review, performance-report, traceability |
 | GATE-DELIVERY | delivery → operation | R1-R7 最終 PASS、受入テスト合格、runbook と user-manual が存在 | review, final-report |
