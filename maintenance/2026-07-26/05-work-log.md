@@ -122,3 +122,52 @@ node setup.js ja
 **判断基準:** 文書の*主題*がファイルレイアウトそのものであるものは、部分置換すると内部で矛盾するため、Step 6 で 1 文書ずつ書き直す。パスを*引用しているだけ*の文書は段階1でパスを直した。
 
 **触らないもの:** `project-records/reviews/*`（22 箇所）は過去のレビュー記録であり、当時の状態を記述している。書き換えれば記録の改竄になる。
+
+---
+
+## Step 1 段階2 — 配布スクリプトと足場
+
+### 手順
+
+| # | 内容 |
+|:-:|---|
+| 1-7 | `create.js` の削除対象に `LICENSE` / `README-ja.md` / `essays/` / `tools/` / `maintenance/` / `.github/` を追加。`framework-src/` は残す |
+| 1-8 | ダウンロード処理を修正（`close` 待ち・`error` ハンドラ・リダイレクト上限 5・タイムアウト 30 秒・`execSync` の stderr 出力） |
+| 1-9 | `--ref` オプションを追加 |
+| 1-10 | `.gitkeep` を 28 ディレクトリに配置 |
+
+### `.gitkeep` の対象（計画は 18、実測 28）
+
+対象はフレームワーク文書が出力先として記載しているディレクトリから導出した。`docs/en/`（翻訳成果物の置き場）のみ除外。
+
+| 親 | 数 | 内訳 |
+|---|---:|---|
+| `project-records/` | 16 | change-requests, decisions, defects, field-issues, improvement, incidents, legal, licenses, performance, release, reviews, risks, safety, security, snapshots, traceability |
+| `project-management/` | 2 | handoff, progress |
+| `docs/` | 9 | ai, api, framework, gherkin, hardware, observability, operations, security, spec |
+| `infra/` | 1 | — |
+
+**全部作る理由:** `create.js` の `cleanDir()` は `.gitkeep` 以外のファイルを消すため、`.gitkeep` を置かないディレクトリはユーザープロジェクトで空になり git に載らない（D8-c）。条件付きプロセスでしか使わないディレクトリ（legal, safety, hardware 等）も、後から必要になった時点で構造が失われているより、空で存在するほうがよい。
+
+### 計画との差分
+
+| # | 差分 | 理由 |
+|:-:|---|---|
+| 1 | `.gitkeep` を 18 → 28 ディレクトリに | 計画の 18 は概算。実測した出力先は 28 |
+| 2 | `.mcp.json` を `create.js` の削除対象に加えなかった | Step 0 でリポジトリから削除済みのため、削除対象に挙げても到達しない |
+| 3 | `.github/` を削除対象に追加（計画外） | 7-8 でフレームワーク CI を追加する。CI は `framework-src` のパリティとエージェント台帳を検査するもので、ユーザープロジェクトの責務ではない。Step 7 で追加してから気づくと配布済みになる |
+| 4 | `infra/migrations/` は作らなかった | architect が必要時に生成する下位ディレクトリであり、足場ではない |
+
+### 検証証跡
+
+| 検査 | 結果 |
+|---|---|
+| 構文 | `node --check create-gr-sw-maker/bin/create.js` → PASS |
+| 引数解析 | 引数なし → usage、`--bogus` → `Unknown option`、`--ref` 値なし → エラー、余分な位置引数 → エラー |
+| E2E（実ネットワーク） | `create.js my-app --ref review-fixes` → ダウンロード・展開・成功 |
+| 配布物の除去 | `LICENSE` / `README-ja.md` / `essays` / `tools` / `maintenance` / `create-gr-sw-maker` / `package.json` / `gitignore-user.template` すべて除去を確認 |
+| `framework-src/` の保持 | `ja` / `en` とも残存を確認 |
+| `.gitignore` の設置 | ユーザー用テンプレートが `.gitignore` として設置され、テンプレート本体は削除 |
+| `README.md` の生成 | プロジェクト名で置換されることを確認 |
+| 生成プロジェクトでの `setup.js` | agents 21 / commands 5 / process-rules 11 / CLAUDE.md / user-order.md が展開 |
+| 失敗時のクリーンアップ | `--ref no-such-ref-xyz` → HTTP 404 で失敗し、作成途中のディレクトリが削除される |
