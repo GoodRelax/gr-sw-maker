@@ -67,6 +67,16 @@ None
 
 The output file_type (user-manual) must be created in accordance with the Form Block specification in Document Management Rules Section 9.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.27 (user-manual) |
+| delivery phase procedure | Process Rules §4.7 (delivery Phase) |
+| Terminology consistency | Glossary §1 (Intentionally Selected Terms) |
+
+Read only the sections above, not the full rule document.
+
 ### Writing Guidelines
 
 - Write from the end user's perspective (avoid developer-oriented terminology)

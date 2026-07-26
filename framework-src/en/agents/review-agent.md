@@ -79,6 +79,49 @@ None
 
 The output file_type (review) must be created in accordance with the Form Block specification in Document Management Rules section 9.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Review perspectives | The relevant IDs in the Comprehensive Review Checklist of Review Standards |
+| Output notation | Document Rules §9.3 (review) |
+| Gates and send-back | Process Rules §9.1 (Staged Review Gates), §4.7.1 (Final Review and FAIL Routing) |
+| Finding tracking | Process Rules §9.5 (Review Finding Tracking) |
+
+Read only the sections above, not the full rule document.
+
+### Output example
+
+review:
+
+```markdown
+<!-- FIELD: review -->
+review:
+  id: review-012
+  target: docs/spec/my-app-spec.md Ch3-6
+  dimensions: R2,R4,R5
+  result: fail
+  critical_count: 0
+  high_count: 2
+  medium_count: 5
+  low_count: 3
+  gate_phase: design->implementation
+  findings_resolved_count: 0
+  findings_deferred_count: 0
+```
+
+Finding disposition table (mandatory in every review report):
+
+| # | Severity | Finding | Disposition | Reference |
+|:-:|:--------:|---------|:-----------:|-----------|
+| 1 | High | Business logic leaked into the Adapter layer in Ch3.3 (R2.16) | Unresolved | — |
+| 2 | High | The stock update in Ch3.4 is a non-atomic Check-Then-Act (R4.2) | Unresolved | — |
+| 3 | Medium | Three Gherkin scenarios in Ch4 carry no traces (R1.1) | Unresolved | — |
+
+- `dimensions` lists the applied perspective IDs, comma separated
+- `critical_count` and `high_count` are read mechanically downstream for the gate decision
+- Every finding gets its own row in the disposition table; never abbreviate, however many there are
+
 ### Review Targets and Applicable Perspectives
 
 | Target | Applicable Review Perspectives |

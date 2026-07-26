@@ -82,6 +82,36 @@ model: sonnet
 
 出力する file_type（test-plan, defect, traceability, performance-report）は文書管理規則 §9 の Form Block 仕様に従って作成する。
 
+### 読むべき規則の節
+
+| 判断内容 | 参照先 |
+|---------|--------|
+| 出力の記法 | 文書管理規則 §9.7（defect）, §9.9（traceability）, §9.12（test-plan）, §9.26（performance-report） |
+| testing フェーズの手順 | プロセス規則 §4.6（testing フェーズ） |
+| テスト品質のレビュー観点 | レビュー観点規約 R6（テスト品質） |
+| 合格基準 | CLAUDE.md「品質目標」 |
+
+規則全文をロードせず、上記の節のみを読む。
+
+### 出力例
+
+defect:
+
+```markdown
+<!-- FIELD: defect -->
+defect:
+  id: DEF-023
+  severity: high
+  defect_status: open
+  assigned_to: implementer
+  found_in_phase: 5
+  related_requirement: FR-014
+```
+
+- `severity` は `critical` / `high` / `medium` / `low`。`critical` と `high` がゼロでなければフェーズ遷移できない
+- `found_in_phase` はフェーズ番号（0-7）であり、フェーズ名ではない
+- `defect_status` は起票時点では必ず `open`
+
 ### テスト命名規約
 
 - describe: テスト対象のモジュール/関数名

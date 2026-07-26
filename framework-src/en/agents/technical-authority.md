@@ -85,7 +85,7 @@ tech-decision is created per the Form Block specification in Document Rules §9.
 
 | Decision | Reference |
 |---------|--------|
-| Gate decision | Process Rules §9.1 (gate enforcement check rules), §9.4 (phase gates) |
+| Gate decision | Process Rules §9.1 (Staged Review Gates), §9.5 (Review Finding Tracking) |
 | Severity ruling | The Level column of the Comprehensive Review Checklist in Review Standards |
 | Send-back ruling | Process Rules §4.7.1 |
 | Purity inspection | Review Standards R7 |

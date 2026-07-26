@@ -92,6 +92,17 @@ model: opus
 
 出力する file_type（pipeline-state, executive-dashboard, final-report, decision, handoff, stakeholder-register）は文書管理規則 §9 の Form Block 仕様に従って作成する。
 
+### 読むべき規則の節
+
+| 判断内容 | 参照先 |
+|---------|--------|
+| 出力の記法 | 文書管理規則 §9.1（pipeline-state）, §9.2（handoff）, §9.4（decision）, §9.22（executive-dashboard）, §9.23（final-report） |
+| フェーズ遷移とゲート | プロセス規則 §2.2（開発フェーズフロー）, §9.1（段階的レビューゲート） |
+| エスカレーション基準 | CLAUDE.md「重要判断の基準」 |
+| 指摘対応の追跡 | プロセス規則 §9.5（レビュー指摘対応追跡） |
+
+規則全文をロードせず、上記の節のみを読む。
+
 ### フェーズ遷移条件
 
 | 遷移 | 条件 |

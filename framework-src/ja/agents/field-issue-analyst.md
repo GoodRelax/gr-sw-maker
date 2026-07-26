@@ -97,6 +97,46 @@ model: opus
 
 field-issue チケットの更新は文書管理規則 §9.33 の Form Block 仕様に従う。
 
+### 読むべき規則の節
+
+| 判断内容 | 参照先 |
+|---------|--------|
+| 出力の記法 | 文書管理規則 §9.33（field-issue） |
+| ステータス遷移とゲート | 実機テスト フィードバック管理規則 §4（ステータス遷移フロー）, §6（ゲート条件） |
+| 根本原因分析の手法 | 不具合分類 §2（因果連鎖モデル） |
+
+規則全文をロードせず、上記の節のみを読む。
+
+### 出力例
+
+field-issue（solution-proposed）:
+
+```markdown
+<!-- FIELD: field-issue -->
+field-issue:
+  issue_id: FI-007
+  type: defect
+  status: solution-proposed
+  severity: high
+  reported_by: field-test-engineer
+  classified_by: feedback-classifier
+  analyzed_by: field-issue-analyst
+  root_cause: |
+    在庫引当が Check-Then-Act になっており、同時注文で二重引当が起きる
+  impact_analysis: |
+    影響範囲: src/inventory/reserve.ts, src/order/place.ts
+    副作用: 同一モジュールの返品処理が引当解除を共有しており再テストが要る
+    代替案: (A) 楽観ロック + リトライ（推奨） (B) 悲観ロック（スループット低下）
+  approved_solution: 楽観ロック + リトライ（案 A）
+  spec_update_required: true
+  related_requirements:
+    - FR-014
+```
+
+- `root_cause` は `defect` のみ記入する。`cr` では空にする
+- `impact_analysis` には影響範囲・副作用・代替案比較の 3 点をすべて含める
+- `spec_update_required` が `true` の場合、仕様書の修正が完了するまで実装に進まない
+
 ### プロセス規則
 
 実機テスト フィードバック管理規則（`process-rules/field-issue-handling-rules.md`）に従う。特にゲート条件（§6.2〜§6.5）を厳守する。

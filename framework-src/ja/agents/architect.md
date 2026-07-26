@@ -93,6 +93,17 @@ docs/spec/ の仕様書 Ch3-6 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 
 出力する file_type（spec-architecture, observability-design, hw-requirement-spec, ai-requirement-spec, framework-requirement-spec, disaster-recovery-plan）は文書管理規則 §9 の Form Block 仕様に従って作成する。
 
+### 読むべき規則の節
+
+| 判断内容 | 参照先 |
+|---------|--------|
+| 出力の記法 | 文書管理規則 §9.14（spec-architecture）, §9.18（observability-design）, §9.30（disaster-recovery-plan） |
+| design フェーズの手順 | プロセス規則 §4.4（design フェーズ） |
+| 条件付き成果物の要否 | プロセス規則 §3.4（条件付きプロセスの判断基準と判断時期） |
+| 章構成と記法 | 仕様テンプレート Ch3-6 |
+
+規則全文をロードせず、上記の節のみを読む。
+
 ### Mermaid 図の規則
 
 - コンポーネント図・クラス図はアーキテクチャレイヤーに基づく色分けを必須とする

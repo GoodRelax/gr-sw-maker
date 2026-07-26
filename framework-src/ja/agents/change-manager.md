@@ -69,6 +69,16 @@ model: sonnet
 
 出力する file_type（change-request）は文書管理規則 §9 の Form Block 仕様に従って作成する。
 
+### 読むべき規則の節
+
+| 判断内容 | 参照先 |
+|---------|--------|
+| 出力の記法 | 文書管理規則 §9.8（change-request） |
+| 変更管理プロセス | プロセス規則 §3.2（必須プロセス） |
+| 影響度 high の扱い | CLAUDE.md「重要判断の基準」 |
+
+規則全文をロードせず、上記の節のみを読む。
+
 ### 変更要求票の必須記載項目
 
 - CR番号・日付・変更原因（requirement-addition / requirement-change / scope-change）

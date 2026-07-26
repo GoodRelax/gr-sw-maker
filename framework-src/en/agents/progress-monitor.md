@@ -75,6 +75,16 @@ None
 
 Output file_types (progress, wbs) must be created in accordance with the Form Block specification in Document Management Rules section 9.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.6 (progress), §9.11 (wbs) |
+| Quality metrics and KPIs | Process Rules §9.3 (Quality Metrics Definition), §9.4 (Phase-Specific KPIs) |
+| Cost management | Process Rules §12.2 (Cost Management Guidelines) |
+
+Read only the sections above, not the full rule document.
+
 ### Anomaly Detection Thresholds
 
 | Condition | Report To |

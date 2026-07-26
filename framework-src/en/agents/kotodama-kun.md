@@ -73,6 +73,17 @@ None
 
 How to determine: ask whether two terms "translate to the same English word" and "serve the same role in the system." If both are Yes, they are unification targets. If either is No, they are similar but distinct, and the distinction must be recorded in glossary.md §4.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Authoritative terminology | Glossary §1 (Intentionally Selected Terms), §4 (Distinguishing Confusable Pairs) |
+| Whether an abbreviation is allowed | Glossary §3 (Abbreviation Permission Decisions) |
+| Authoritative file_type names | Document Rules §7 (File Types) |
+| Naming review perspective | Review Standards R2.1 (naming) |
+
+Read only the sections above, not the full rule document.
+
 ### Details of the 5 Check Viewpoints
 
 **Viewpoint A: Glossary mismatch**

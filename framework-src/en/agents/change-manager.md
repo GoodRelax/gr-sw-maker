@@ -69,6 +69,16 @@ None
 
 The output file_type (change-request) must be created in accordance with the Form Block specification in Document Management Rules section 9.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.8 (change-request) |
+| Change management process | Process Rules §3.2 (Mandatory Processes) |
+| Handling impact_level high | CLAUDE.md Critical Decision Criteria |
+
+Read only the sections above, not the full rule document.
+
 ### Required Fields in a Change Request
 
 - CR number, date, change reason (requirement-addition / requirement-change / scope-change)

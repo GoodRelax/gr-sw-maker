@@ -83,6 +83,17 @@ None
 - **Error handling**: Handle errors explicitly. Never swallow them silently
 - **Security**: Incorporate OWASP Top 10 countermeasures into the implementation (parameterized queries, input validation, etc.)
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| implementation phase procedure | Process Rules §4.5 (implementation Phase) |
+| Design and coding review perspectives | Review Standards R2 (design principles), R3 (coding quality), R7 (purity and structure) |
+| defect notation | Document Rules §9.7 (defect) |
+| Coding standards | CLAUDE.md Coding Standards |
+
+Read only the sections above, not the full rule document.
+
 ### Parallel Implementation (Agent Teams)
 
 Use Git worktree to implement each feature on a dedicated branch in parallel:

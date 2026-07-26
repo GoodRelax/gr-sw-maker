@@ -71,6 +71,39 @@ defect 票・レビュー指摘・進捗データを分析し、繰り返し発�
 
 出力する file_type（retrospective-report）は文書管理規則 §9 の Form Block 仕様に従って作成する。
 
+### 読むべき規則の節
+
+| 判断内容 | 参照先 |
+|---------|--------|
+| 出力の記法 | 文書管理規則 §9.32（retrospective-report） |
+| 根本原因分析の手法 | 不具合分類 §2（因果連鎖モデル） |
+| 品質メトリクスの定義 | プロセス規則 §9.3（品質メトリクス定義） |
+
+規則全文をロードせず、上記の節のみを読む。
+
+### 出力例
+
+retrospective-report:
+
+```markdown
+<!-- FIELD: retrospective-report -->
+retrospective-report:
+  phase: implementation
+  defect_pattern_count: 3
+  improvement_count: 2
+  approval_status: proposed
+```
+
+改善策（承認後に decree-writer が適用する）:
+
+| # | 対象ファイル | 変更内容 | 期待効果 |
+|:-:|---|---|---|
+| 1 | framework-src/{lang}/agents/implementer.md | Procedure に「境界値の単体テストを先に書く」を追加 | 境界値起因の defect（3 件中 2 件）を実装時に検出 |
+| 2 | CLAUDE.md | コーディング規約に Null 安全の項を追加 | Null 起因の defect の再発を防ぐ |
+
+- `approval_status` は提案時点では必ず `proposed`。承認と適用は orchestrator と decree-writer が更新する
+- 改善策は対象ファイル・変更内容・期待効果の 3 列をすべて埋める。埋まらないものは提案しない
+
 ### 起動トリガー
 
 | トリガー | 条件 | 起動元 |

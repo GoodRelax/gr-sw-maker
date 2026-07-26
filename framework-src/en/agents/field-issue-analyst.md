@@ -97,6 +97,46 @@ Ensure all of the following are met before changing status to `solution-proposed
 
 Updates to field-issue tickets must follow the Form Block specification in Document Rules §9.33.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.33 (field-issue) |
+| Status transitions and gates | Field Issue Handling Rules §4 (Status Transition Flow), §6 (Gate Conditions) |
+| Root cause analysis method | Defect Taxonomy §2 (Causal Chain Model) |
+
+Read only the sections above, not the full rule document.
+
+### Output example
+
+field-issue (solution-proposed):
+
+```markdown
+<!-- FIELD: field-issue -->
+field-issue:
+  issue_id: FI-007
+  type: defect
+  status: solution-proposed
+  severity: high
+  reported_by: field-test-engineer
+  classified_by: feedback-classifier
+  analyzed_by: field-issue-analyst
+  root_cause: |
+    Stock reservation is a Check-Then-Act, so concurrent orders double-reserve
+  impact_analysis: |
+    Impact scope: src/inventory/reserve.ts, src/order/place.ts
+    Side effects: returns handling in the same module shares the release path and needs retesting
+    Alternatives: (A) optimistic lock + retry (recommended) (B) pessimistic lock (lower throughput)
+  approved_solution: Optimistic lock + retry (option A)
+  spec_update_required: true
+  related_requirements:
+    - FR-014
+```
+
+- `root_cause` is filled in for `defect` only; leave it empty for `cr`
+- `impact_analysis` covers all three: impact scope, side effects, and the alternative comparison
+- When `spec_update_required` is `true`, implementation does not start until the spec correction is complete
+
 ### Process Rules
 
 Follow the Field Issue Handling Rules (`process-rules/field-issue-handling-rules.md`). Strictly observe gate conditions (§6.2–§6.5).

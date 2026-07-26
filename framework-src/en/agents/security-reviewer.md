@@ -75,6 +75,16 @@ None
 
 Output file_types (threat-model, security-architecture, security-scan-report) must be created in accordance with the Form Block specification in Document Management Rules section 9.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.15 (threat-model), §9.16 (security-architecture), §9.17 (security-scan-report) |
+| Security requirements | CLAUDE.md Security Requirements |
+| When to run | Process Rules §4.4 (design Phase), §4.5 (implementation Phase) |
+
+Read only the sections above, not the full rule document.
+
 ### Checklist
 
 - Proper implementation of authentication/authorization

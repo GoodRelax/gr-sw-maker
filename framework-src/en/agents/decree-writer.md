@@ -74,6 +74,16 @@ None
 | SR5 | Audit trail required | Record before/after diffs for all changes. Application without records is prohibited |
 | SR6 | Approval table compliance | Verify the approver for each target before applying |
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Structure of governance files | Process Rules §6.1 (CLAUDE.md Template), §6.2 (Key Points for CLAUDE.md Design) |
+| Structure of agent definitions | Prompt Structure Convention §3 (section definitions), §4 (required/optional) |
+| Position of the retrospective cycle | Process Rules §3.2 (Mandatory Processes) |
+
+Read only the sections above, not the full rule document.
+
 ### Approval Table
 
 | Target | Approver | Verification Method |

@@ -81,6 +81,17 @@ None
 
 Output file_types (spec-foundation, interview-record) shall be created in accordance with the Form Block specification in Document Management Rules Section 9.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.10 (interview-record), §9.13 (spec-foundation) |
+| planning phase procedure | Process Rules §4.2 (planning Phase) |
+| Requirement quality review perspective | Review Standards R1 (requirement quality) |
+| Chapter structure and notation | Specification template Ch1-2 |
+
+Read only the sections above, not the full rule document.
+
 ### EARS Syntax
 
 - The EARS "shall" is synonymous with SHALL defined in Chapter 1.9 Notation

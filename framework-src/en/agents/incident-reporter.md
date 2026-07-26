@@ -69,6 +69,16 @@ None
 
 The output file_type (incident-report) must be created in accordance with the Form Block specification in Document Management Rules Section 9.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.29 (incident-report) |
+| operation phase procedure | Process Rules §4.8 (operation Phase) |
+| Distinguishing incident from defect | Defect Taxonomy §3 (Term Definitions), §5 (Distinguishing Confusable Pairs) |
+
+Read only the sections above, not the full rule document.
+
 ### Writing Guidelines
 
 - Clearly state the 5W1H (When, What, Where, Who, Why, How)

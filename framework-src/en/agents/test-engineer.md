@@ -82,6 +82,36 @@ None
 
 Output file_types (test-plan, defect, traceability, performance-report) must be created in accordance with the Form Block specification in Document Management Rules section 9.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.7 (defect), §9.9 (traceability), §9.12 (test-plan), §9.26 (performance-report) |
+| testing phase procedure | Process Rules §4.6 (testing Phase) |
+| Test quality review perspective | Review Standards R6 (test quality) |
+| Pass criteria | CLAUDE.md Quality Targets |
+
+Read only the sections above, not the full rule document.
+
+### Output example
+
+defect:
+
+```markdown
+<!-- FIELD: defect -->
+defect:
+  id: DEF-023
+  severity: high
+  defect_status: open
+  assigned_to: implementer
+  found_in_phase: 5
+  related_requirement: FR-014
+```
+
+- `severity` is `critical` / `high` / `medium` / `low`. A phase cannot advance unless `critical` and `high` are zero
+- `found_in_phase` is the phase number (0-7), not the phase name
+- `defect_status` is always `open` when the ticket is raised
+
 ### Test naming conventions
 
 - describe: Name of the module/function under test

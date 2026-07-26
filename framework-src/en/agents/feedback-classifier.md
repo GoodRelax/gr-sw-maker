@@ -77,6 +77,37 @@ None
 
 Updates to field-issue tickets must follow the Form Block specification in Document Rules §9.33.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.33 (field-issue) |
+| Classification and gate conditions | Field Issue Handling Rules §5 (Status Definitions), §6 (Gate Conditions) |
+| Distinguishing defect from CR | Field Issue Handling Rules §7 (Difference Rules Between defect and CR), Defect Taxonomy §3 (Term Definitions) |
+
+Read only the sections above, not the full rule document.
+
+### Output example
+
+field-issue (classified):
+
+```markdown
+<!-- FIELD: field-issue -->
+field-issue:
+  issue_id: FI-007
+  type: defect
+  status: classified
+  severity: high
+  reported_by: field-test-engineer
+  classified_by: feedback-classifier
+  related_requirements:
+    - FR-014
+```
+
+- `type` is either `defect` or `cr`: `defect` when the spec defines the behavior and the product differs, `cr` when the spec defines nothing
+- `status` is always `classified` once classification is complete
+- `related_requirements` lists the requirement IDs checked against. When none match and the verdict is `cr`, state the grounds in the Detail Block
+
 ### Classification Principles
 
 - When in doubt, classify as `defect` (err on the side of caution)

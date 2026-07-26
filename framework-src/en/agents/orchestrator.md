@@ -92,6 +92,17 @@ None
 
 All output file_types (pipeline-state, executive-dashboard, final-report, decision, handoff, stakeholder-register) must be created in accordance with the Form Block specification in Document Management Rules section 9.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.1 (pipeline-state), §9.2 (handoff), §9.4 (decision), §9.22 (executive-dashboard), §9.23 (final-report) |
+| Phase transitions and gates | Process Rules §2.2 (Development Phase Flow), §9.1 (Staged Review Gates) |
+| Escalation criteria | CLAUDE.md Critical Decision Criteria |
+| Finding tracking | Process Rules §9.5 (Review Finding Tracking) |
+
+Read only the sections above, not the full rule document.
+
 ### Phase Transition Conditions
 
 | Transition | Conditions |

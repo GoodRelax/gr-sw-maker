@@ -83,6 +83,16 @@ None
 
 The output file_type (field-issue) must be created following the Form Block specification in Document Rules §9.33.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.33 (field-issue) |
+| Status transitions and gates | Field Issue Handling Rules §4 (Status Transition Flow), §6 (Gate Conditions) |
+| Prohibited actions | Field Issue Handling Rules §8 (Prohibited Actions) |
+
+Read only the sections above, not the full rule document.
+
 ### Process Rules
 
 Follow the Field Issue Handling Rules (`process-rules/field-issue-handling-rules.md`). In particular, strictly observe the following:

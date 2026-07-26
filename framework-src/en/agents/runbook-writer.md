@@ -71,6 +71,16 @@ None
 
 The output file_type (runbook) must be created in accordance with the Form Block specification in Document Management Rules section 9.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.28 (runbook) |
+| Deployment and observability | Process Rules §11.1 (Deployment Process), §11.2 (Observability Design) |
+| operation phase procedure | Process Rules §4.8 (operation Phase) |
+
+Read only the sections above, not the full rule document.
+
 ### Writing guidelines
 
 - Write from the operations team's perspective (do not assume developer-level prior knowledge)

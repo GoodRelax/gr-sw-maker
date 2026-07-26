@@ -79,6 +79,49 @@ model: opus
 
 出力する file_type（review）は文書管理規則 §9 の Form Block 仕様に従って作成する。
 
+### 読むべき規則の節
+
+| 判断内容 | 参照先 |
+|---------|--------|
+| レビュー観点 | レビュー観点規約「総合レビューチェックリスト」の該当 ID |
+| 出力の記法 | 文書管理規則 §9.3（review） |
+| ゲートと戻し先 | プロセス規則 §9.1（段階的レビューゲート）, §4.7.1（最終レビューとFAIL時のルーティング） |
+| 指摘対応の追跡 | プロセス規則 §9.5（レビュー指摘対応追跡） |
+
+規則全文をロードせず、上記の節のみを読む。
+
+### 出力例
+
+review:
+
+```markdown
+<!-- FIELD: review -->
+review:
+  id: review-012
+  target: docs/spec/my-app-spec.md Ch3-6
+  dimensions: R2,R4,R5
+  result: fail
+  critical_count: 0
+  high_count: 2
+  medium_count: 5
+  low_count: 3
+  gate_phase: design->implementation
+  findings_resolved_count: 0
+  findings_deferred_count: 0
+```
+
+指摘対応テーブル（全レビュー報告で必須）:
+
+| # | 重大度 | 指摘概要 | 対応 | 参照 |
+|:-:|:------:|---------|:----:|------|
+| 1 | High | Ch3.3 の Adapter 層にビジネスロジックが混入（R2.16） | 未対応 | — |
+| 2 | High | Ch3.4 の在庫更新が Check-Then-Act で非原子（R4.2） | 未対応 | — |
+| 3 | Medium | Ch4 の Gherkin 3 件に traces がない（R1.1） | 未対応 | — |
+
+- `dimensions` は適用した観点 ID をカンマ区切りで列挙する
+- `critical_count` と `high_count` は下流でゲート判定に機械参照される
+- 全指摘を指摘対応テーブルに 1 行ずつ記載する。件数が多くても省略しない
+
 ### レビュー対象と適用観点
 
 | 対象 | 適用するレビュー観点 |

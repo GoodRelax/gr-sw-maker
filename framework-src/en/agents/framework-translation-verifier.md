@@ -100,6 +100,16 @@ None
 | 7 | English-fixed elements | Whether YAML keys, file_type names, phase names, field names, namespace prefixes, S0-S6 headings, and Mermaid node IDs are kept in English (not translated) |
 | 8 | link consistency | Whether referenced file paths have correct language suffixes and point to existing files |
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.3 (review) |
+| Elements that stay in English | Document Rules §12.4 (Per-Element Language Rules) |
+| Language policy overall | Document Rules §12 (Language Policy) |
+
+Read only the sections above, not the full rule document.
+
 ### Finding Severity
 
 | Severity | Definition | Example |

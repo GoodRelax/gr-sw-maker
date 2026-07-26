@@ -67,6 +67,16 @@ None
 
 Output file_type (risk) must be created in accordance with the Form Block specification in Document Management Rules §9.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.5 (risk) |
+| Risk management process | Process Rules §3.2 (Mandatory Processes) |
+| Score requiring notification | CLAUDE.md Critical Decision Criteria |
+
+Read only the sections above, not the full rule document.
+
 ### Risk evaluation matrix
 
 Score = Probability (1-3) x Impact (1-3)

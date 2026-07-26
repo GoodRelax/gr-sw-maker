@@ -71,6 +71,39 @@ None
 
 The output file_type (retrospective-report) must be created in accordance with the Form Block specification in document management rules section 9.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.32 (retrospective-report) |
+| Root cause analysis method | Defect Taxonomy §2 (Causal Chain Model) |
+| Quality metric definitions | Process Rules §9.3 (Quality Metrics Definition) |
+
+Read only the sections above, not the full rule document.
+
+### Output example
+
+retrospective-report:
+
+```markdown
+<!-- FIELD: retrospective-report -->
+retrospective-report:
+  phase: implementation
+  defect_pattern_count: 3
+  improvement_count: 2
+  approval_status: proposed
+```
+
+Improvements (applied by decree-writer once approved):
+
+| # | Target file | Change | Expected effect |
+|:-:|---|---|---|
+| 1 | framework-src/{lang}/agents/implementer.md | Add "write boundary-value unit tests first" to Procedure | Catch boundary-value defects (2 of 3) at implementation time |
+| 2 | CLAUDE.md | Add a null-safety clause to the coding standards | Prevent recurrence of null-origin defects |
+
+- `approval_status` is always `proposed` at proposal time; orchestrator and decree-writer update approval and application
+- Every improvement fills all three columns: target file, change, expected effect. Do not propose one that cannot
+
 ### Activation Triggers
 
 | Trigger | Condition | Initiated By |

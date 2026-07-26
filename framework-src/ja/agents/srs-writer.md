@@ -81,6 +81,17 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 
 出力する file_type（spec-foundation, interview-record）は文書管理規則 §9 の Form Block 仕様に従って作成する。
 
+### 読むべき規則の節
+
+| 判断内容 | 参照先 |
+|---------|--------|
+| 出力の記法 | 文書管理規則 §9.10（interview-record）, §9.13（spec-foundation） |
+| planning フェーズの手順 | プロセス規則 §4.2（planning フェーズ） |
+| 要求品質のレビュー観点 | レビュー観点規約 R1（要求品質） |
+| 章構成と記法 | 仕様テンプレート Ch1-2 |
+
+規則全文をロードせず、上記の節のみを読む。
+
 ### EARS 構文
 
 - EARS の shall は Chapter 1.9 Notation に定義する SHALL と同義

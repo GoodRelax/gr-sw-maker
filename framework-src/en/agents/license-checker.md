@@ -65,6 +65,16 @@ None
 
 Output file_type (license-report) shall be created in accordance with the Form Block specification in Document Management Rules section 9.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.25 (license-report) |
+| When to run | Process Rules §4.5 (implementation Phase), §4.7 (delivery Phase) |
+| License policy | CLAUDE.md Mandatory Process Configuration |
+
+Read only the sections above, not the full rule document.
+
 ### License compatibility matrix
 
 | License | Commercial use | Attribution | Source disclosure obligation | Verdict |

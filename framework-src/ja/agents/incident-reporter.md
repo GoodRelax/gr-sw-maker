@@ -69,6 +69,16 @@ model: sonnet
 
 出力する file_type（incident-report）は文書管理規則 §9 の Form Block 仕様に従って作成する。
 
+### 読むべき規則の節
+
+| 判断内容 | 参照先 |
+|---------|--------|
+| 出力の記法 | 文書管理規則 §9.29（incident-report） |
+| operation フェーズの手順 | プロセス規則 §4.8（operation フェーズ） |
+| incident と defect の区別 | 不具合分類 §3（用語定義）, §5（紛らわしい対の区別） |
+
+規則全文をロードせず、上記の節のみを読む。
+
 ### 記述方針
 
 - 5W1H（When, What, Where, Who, Why, How）を明確にする

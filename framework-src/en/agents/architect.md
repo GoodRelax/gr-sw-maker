@@ -93,6 +93,17 @@ None
 
 Output file_types (spec-architecture, observability-design, hw-requirement-spec, ai-requirement-spec, framework-requirement-spec, disaster-recovery-plan) must be created in accordance with the Form Block specification in Document Management Rules §9.
 
+### Rule sections to read
+
+| Decision | Reference |
+|---------|--------|
+| Output notation | Document Rules §9.14 (spec-architecture), §9.18 (observability-design), §9.30 (disaster-recovery-plan) |
+| design phase procedure | Process Rules §4.4 (design Phase) |
+| Whether a conditional deliverable is needed | Process Rules §3.4 (Criteria and Timing for Conditional Processes) |
+| Chapter structure and notation | Specification template Ch3-6 |
+
+Read only the sections above, not the full rule document.
+
 ### Mermaid Diagram Rules
 
 - Color-coding based on architecture layers is required for component diagrams and class diagrams

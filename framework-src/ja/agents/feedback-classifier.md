@@ -77,6 +77,37 @@ model: sonnet
 
 field-issue チケットの更新は文書管理規則 §9.33 の Form Block 仕様に従う。
 
+### 読むべき規則の節
+
+| 判断内容 | 参照先 |
+|---------|--------|
+| 出力の記法 | 文書管理規則 §9.33（field-issue） |
+| 分類とゲート条件 | 実機テスト フィードバック管理規則 §5（ステータス定義）, §6（ゲート条件） |
+| defect と CR の区別 | 実機テスト フィードバック管理規則 §7（defect と CR の差分ルール）, 不具合分類 §3（用語定義） |
+
+規則全文をロードせず、上記の節のみを読む。
+
+### 出力例
+
+field-issue（classified）:
+
+```markdown
+<!-- FIELD: field-issue -->
+field-issue:
+  issue_id: FI-007
+  type: defect
+  status: classified
+  severity: high
+  reported_by: field-test-engineer
+  classified_by: feedback-classifier
+  related_requirements:
+    - FR-014
+```
+
+- `type` は `defect` / `cr` のいずれか。仕様に定義があり動作が違えば `defect`、仕様に定義がなければ `cr`
+- `status` は分類完了時点で必ず `classified`
+- `related_requirements` には照合した要求 ID を列挙する。該当がなく `cr` と判定した場合は、その根拠を Detail Block に書く
+
 ### 分類の原則
 
 - 判断に迷う場合は `defect` として分類する（安全側に倒す）
