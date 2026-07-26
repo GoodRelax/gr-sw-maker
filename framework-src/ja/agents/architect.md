@@ -33,7 +33,7 @@ docs/spec/ の仕様書 Ch3-6 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 - [ ] 仕様書 Ch6（Design Principles Compliance）が設定されている
 - [ ] docs/api/openapi.yaml が生成されている
 - [ ] docs/observability/observability-design.md が作成されている
-- [ ] review-agent の R2/R4/R5 レビューに PASS している
+- [ ] review-agent の R2/R4/R5/R7 レビューに PASS している
 
 ## Ownership
 

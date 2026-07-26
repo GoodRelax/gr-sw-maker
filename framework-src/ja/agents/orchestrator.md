@@ -115,8 +115,8 @@ model: opus
 | setup → planning | CLAUDE.md 確定、条件付きプロセス評価完了 | （技術ゲートなし） |
 | planning → dependency-selection | 仕様書 Ch1-2 のユーザー承認。条件付きプロセス該当なしの場合は design へスキップ | tech-decision（R1） |
 | dependency-selection → design | 外部依存選定のユーザー承認、予算内であること | tech-decision（DIP 適合） |
-| design → implementation | WBS 更新済み、スケジュール逸脱なし | tech-decision（R2/R4/R5, threat-model） |
-| implementation → testing | WBS 更新済み、コスト予算内 | tech-decision（R2/R3/R4/R5, SCA/SAST） |
+| design → implementation | WBS 更新済み、スケジュール逸脱なし | tech-decision（R2/R4/R5/R7, threat-model） |
+| implementation → testing | WBS 更新済み、コスト予算内 | tech-decision（R2/R3/R4/R5/R7, SCA/SAST） |
 | testing → delivery | WBS 完了、残リスクがユーザー受容範囲内 | tech-decision（R6, 性能 NFR） |
 
 **技術条件と PM 条件のいずれかが未達なら遷移しない。** 技術条件が未達の場合、戻し先は technical-authority が決める。

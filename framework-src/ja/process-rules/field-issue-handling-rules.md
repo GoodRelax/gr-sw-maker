@@ -123,9 +123,9 @@ flowchart TD
 | `solution-proposed` | 対策確定・承認待ち | 対策確定・承認待ち |
 | `approved` | 修正着手 OK | 実装着手 OK |
 | `spec-updated` | 仕様書更新済み（必要時のみ） | 仕様書更新済み（必須） |
-| `spec-reviewed` | 仕様書レビュー PASS（R2/R4/R5） | 同左 |
+| `spec-reviewed` | 仕様書レビュー PASS（R2/R4/R5/R7） | 同左 |
 | `fixed` | コード修正完了 | コード修正完了 |
-| `code-reviewed` | コードレビュー PASS（R2/R3/R4/R5） | 同左 |
+| `code-reviewed` | コードレビュー PASS（R2/R3/R4/R5/R7） | 同左 |
 | `tested` | 自動テスト全テスト PASS | 同左 |
 | `verified` | 実機検証 PASS | 同左 |
 
@@ -247,7 +247,7 @@ field-issue は `verified` だけで終わるわけではない。**3 つの終�
 | 項目 | 内容 |
 |---|---|
 | 担当 | review-agent |
-| 実施内容 | 更新された仕様書の品質レビュー（R2/R4/R5 観点）を行う |
+| 実施内容 | 更新された仕様書の品質レビュー（R2/R4/R5/R7 観点）を行う |
 | ゲート条件 | Critical / High 指摘が 0 件であること |
 | 出力 | レビュー報告（`project-records/reviews/`） |
 
@@ -269,7 +269,7 @@ field-issue は `verified` だけで終わるわけではない。**3 つの終�
 | 項目 | 内容 |
 |---|---|
 | 担当 | review-agent |
-| 実施内容 | 修正コードの品質レビュー（R2/R3/R4/R5 観点）を行う |
+| 実施内容 | 修正コードの品質レビュー（R2/R3/R4/R5/R7 観点）を行う |
 | ゲート条件 | Critical / High 指摘が 0 件であること |
 | 出力 | レビュー報告（`project-records/reviews/`） |
 

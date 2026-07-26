@@ -22,7 +22,7 @@ model: opus
 
 ### Start Conditions
 
-- [ ] 仕様書 Ch3-6 が architect により完成し、R2/R4/R5 PASS 済み
+- [ ] 仕様書 Ch3-6 が architect により完成し、R2/R4/R5/R7 PASS 済み
 - [ ] docs/api/openapi.yaml が生成されている
 - [ ] CLAUDE.md のコーディング規約・技術スタックが確定している
 
@@ -31,7 +31,7 @@ model: opus
 - [ ] src/ にソースコードが実装されている
 - [ ] tests/ に単体テストが作成され、合格率が CLAUDE.md「品質目標」の閾値を満たしている
 - [ ] project-records/traceability/ の実装カラムが更新されている
-- [ ] review-agent の R2/R3/R4/R5 レビューに PASS している
+- [ ] review-agent の R2/R3/R4/R5/R7 レビューに PASS している
 - [ ] SCA/SAST スキャンで Critical/High ゼロ
 
 ## Ownership

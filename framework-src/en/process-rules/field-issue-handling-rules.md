@@ -123,9 +123,9 @@ flowchart TD
 | `solution-proposed` | Solution finalized; awaiting approval | Solution finalized; awaiting approval |
 | `approved` | Fix authorized to proceed | Implementation authorized to proceed |
 | `spec-updated` | Spec updated (only when necessary) | Spec updated (mandatory) |
-| `spec-reviewed` | Spec review PASS (R2/R4/R5) | Same |
+| `spec-reviewed` | Spec review PASS (R2/R4/R5/R7) | Same |
 | `fixed` | Code fix complete | Code fix complete |
-| `code-reviewed` | Code review PASS (R2/R3/R4/R5) | Same |
+| `code-reviewed` | Code review PASS (R2/R3/R4/R5/R7) | Same |
 | `tested` | All automated tests PASS | Same |
 | `verified` | Field verification PASS | Same |
 
@@ -247,7 +247,7 @@ Each status transition MUST satisfy the following gate conditions.
 | Item | Details |
 |---|---|
 | Responsible | review-agent |
-| Activities | Perform quality review of the updated specification (R2/R4/R5 perspectives) |
+| Activities | Perform quality review of the updated specification (R2/R4/R5/R7 perspectives) |
 | Gate condition | Zero Critical / High findings |
 | Output | Review report (`project-records/reviews/`) |
 
@@ -269,7 +269,7 @@ Each status transition MUST satisfy the following gate conditions.
 | Item | Details |
 |---|---|
 | Responsible | review-agent |
-| Activities | Perform quality review of the fixed code (R2/R3/R4/R5 perspectives) |
+| Activities | Perform quality review of the fixed code (R2/R3/R4/R5/R7 perspectives) |
 | Gate condition | Zero Critical / High findings |
 | Output | Review report (`project-records/reviews/`) |
 

@@ -31,8 +31,8 @@ model: opus
 |---------|---------|
 | planning | - [ ] R1 ゲートの判定が tech-decision に記録されている |
 | dependency-selection | - [ ] Adapter 層の抽象化が DIP に適合していることを判定した |
-| design | - [ ] R2/R4/R5 ゲートの判定が記録されている<br>- [ ] threat-model と security-architecture の存在を確認した<br>- [ ] deployment-design の存在を確認した |
-| implementation | - [ ] R2/R3/R4/R5 ゲートおよび SCA/SAST の判定が記録されている<br>- [ ] infra/ が deployment-design に適合していることを判定した |
+| design | - [ ] R2/R4/R5/R7 ゲートの判定が記録されている<br>- [ ] threat-model と security-architecture の存在を確認した<br>- [ ] deployment-design の存在を確認した |
+| implementation | - [ ] R2/R3/R4/R5/R7 ゲートおよび SCA/SAST の判定が記録されている<br>- [ ] infra/ が deployment-design に適合していることを判定した |
 | testing | - [ ] R6 ゲートの判定が記録されている<br>- [ ] 性能 NFR の充足を判定した |
 | delivery | - [ ] R1-R7 最終ゲートの判定が記録されている |
 
@@ -100,7 +100,7 @@ tech-decision:
 <!-- FIELD: tech-decision -->
 tech-decision:
   id: TD-004
-  title: design フェーズ R2/R4/R5 ゲート判定
+  title: design フェーズ R2/R4/R5/R7 ゲート判定
   decision_status: decided
   phase: design
   gate: GATE-DESIGN
@@ -130,8 +130,8 @@ tech-decision:
 |------|---------|
 | planning → dependency-selection | R1 PASS |
 | dependency-selection → design | Adapter 層が DIP に適合 |
-| design → implementation | R2/R4/R5 PASS、threat-model 存在、unmitigated_critical_count = 0 |
-| implementation → testing | R2/R3/R4/R5 PASS、SCA/SAST の Critical/High = 0 |
+| design → implementation | R2/R4/R5/R7 PASS、threat-model 存在、unmitigated_critical_count = 0 |
+| implementation → testing | R2/R3/R4/R5/R7 PASS、SCA/SAST の Critical/High = 0 |
 | testing → delivery | R6 PASS、カバレッジ目標達成、性能 NFR 充足 |
 
 コスト・スケジュール・リスクを理由とする遷移可否は orchestrator の管轄であり、本エージェントは判断しない。

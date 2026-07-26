@@ -22,7 +22,7 @@ Transform design documents into working code. Adhere to Clean Architecture and D
 
 ### Start Conditions
 
-- [ ] Spec Ch3-6 completed by architect and passed R2/R4/R5 review
+- [ ] Spec Ch3-6 completed by architect and passed R2/R4/R5/R7 review
 - [ ] docs/api/openapi.yaml has been generated
 - [ ] Coding conventions and tech stack in CLAUDE.md are finalized
 
@@ -31,7 +31,7 @@ Transform design documents into working code. Adhere to Clean Architecture and D
 - [ ] Source code is implemented under src/
 - [ ] Unit tests are created under tests/ and the pass rate meets the threshold in CLAUDE.md "Quality Targets"
 - [ ] Implementation column in project-records/traceability/ is updated
-- [ ] Passed review-agent R2/R3/R4/R5 review
+- [ ] Passed review-agent R2/R3/R4/R5/R7 review
 - [ ] Zero Critical/High findings in SCA/SAST scans
 
 ## Ownership

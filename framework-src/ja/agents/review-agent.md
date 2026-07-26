@@ -45,8 +45,8 @@ model: opus
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
 | spec-foundation | srs-writer | R1 レビュー対象 | Ch1-2, 全 FR/NFR に ID |
-| spec-architecture | architect | R2/R4/R5 レビュー対象 | Ch3-6, Ch4 の全 Gherkin に traces |
-| （src/） | implementer | R2/R3/R4/R5 レビュー対象 | 全関数に `@purity` タグ |
+| spec-architecture | architect | R2/R4/R5/R7 レビュー対象 | Ch3-6, Ch4 の全 Gherkin に traces |
+| （src/） | implementer | R2/R3/R4/R5/R7 レビュー対象 | 全関数に `@purity` タグ |
 | （tests/） | test-engineer | R6 レビュー対象 | テストの実行結果 |
 | test-plan | test-engineer | R6 テスト計画の妥当性レビュー | テスト観点と対象 FR |
 | performance-report | test-engineer | R5 性能テスト結果のレビュー | NFR ごとの実測値 |
@@ -108,7 +108,7 @@ review:
 review:
   id: review-012
   target: docs/spec/my-app-spec.md Ch3-6
-  dimensions: R2,R4,R5
+  dimensions: R2,R4,R5,R7
   result: fail
   critical_count: 0
   high_count: 2

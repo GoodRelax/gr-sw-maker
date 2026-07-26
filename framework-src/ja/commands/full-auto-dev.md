@@ -82,7 +82,7 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
     - safety requirement を spec-foundation Ch2 NFR に追加
     - FMEA: Ch3 確定後にコンポーネント別 failure mode 分析を実施 → project-records/safety/fmea-*.md
     - FTA: ASIL C 以上の hazard がある場合、原因の論理構造を分析 → project-records/safety/fta-*.md
-3k. review-agentで仕様書 Ch3-4・設計の品質レビュー（R2/R4/R5観点）を実施する
+3k. review-agentで仕様書 Ch3-4・設計の品質レビュー（R2/R4/R5/R7観点）を実施する
 3l. technical-authority を起動し GATE-DESIGN を判定する（プロセス規則 §9.4.1）。PASS後に次へ進む
 
 ## Phase 4: 実装
@@ -90,7 +90,7 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
 4b. implementer が可観測性設計に基づき構造化ログ・メトリクス計装・トレーシングをコードに組み込む
 4c. implementer が tests/に単体テストを作成・実行する
 4c2. implementer が deployment-design に基づき infra/ の IaC コードを実装する
-4d. review-agentで実装コードのレビュー（R2/R3/R4/R5観点）を実施し、PASS後に次へ進む
+4d. review-agentで実装コードのレビュー（R2/R3/R4/R5/R7観点）を実施し、PASS後に次へ進む
 4e. security-reviewerでSCAスキャン（npm audit等）を実行し、Critical/High脆弱性がゼロか確認する
 4f. license-checkerでライセンス確認を実施する
 4g. technical-authority を起動し GATE-IMPL を判定する（プロセス規則 §9.4.1）

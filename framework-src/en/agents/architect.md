@@ -33,7 +33,7 @@ Design the technical structure to realize the requirements from specification Ch
 - [ ] Specification Ch6 (Design Principles Compliance) is configured
 - [ ] docs/api/openapi.yaml has been generated
 - [ ] docs/observability/observability-design.md has been created
-- [ ] Passed R2/R4/R5 review by review-agent
+- [ ] Passed R2/R4/R5/R7 review by review-agent
 
 ## Ownership
 

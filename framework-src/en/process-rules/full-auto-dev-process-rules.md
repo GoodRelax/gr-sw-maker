@@ -276,7 +276,7 @@ flowchart TD
         P3DB["AI: Security Design"]
         P3DC["AI: WBS and Risk Management"]
         P3DE["AI: OpenAPI and Observability Design"]
-        P3DD["AI: Design Review (R2/R4/R5)"]
+        P3DD["AI: Design Review (R2/R4/R5/R7)"]
         P3DA -->|"Design Complete"| P3DD
         P3DB -->|"Design Complete"| P3DD
         P3DC -->|"Design Complete"| P3DD
@@ -316,7 +316,7 @@ flowchart TD
     Phase0 -->|"Approved"| Phase1
     Phase1 -->|"R1 PASS"| Phase2
     Phase2 -->|"Selection Complete"| Phase3
-    Phase3 -->|"R2/R4/R5 PASS"| Phase4
+    Phase3 -->|"R2/R4/R5/R7 PASS"| Phase4
     Phase4 -->|"Scan OK"| Phase5
     Phase5 -->|"R6 PASS"| Phase6
 
@@ -1003,7 +1003,7 @@ claude "Specification Ch1-2 has been approved. Execute the following in parallel
     b. Add safety requirements to spec-foundation Ch2 NFR
     c. After Ch3 finalization, conduct FMEA and record in project-records/safety/fmea-*.md
     d. If ASIL C or higher (SIL 3 or higher) hazards exist, conduct FTA and record in project-records/safety/fta-*.md
-14. Conduct design review with review-agent on R2/R4/R5 perspectives, and proceed once PASSED
+14. Conduct design review with review-agent on R2/R4/R5/R7 perspectives, and proceed once PASSED
 After completion, report the design overview and WBS."
 ```
 
@@ -1035,7 +1035,7 @@ gantt
     Security Design                    : p3b, after p2m, 2d
     Observability Design               : p3f, after p2m, 1d
     WBS and Risk Management            : p3c, after p2m, 1d
-    Design Review (R2/R4/R5)           : p3d, after p3a, 1d
+    Design Review (R2/R4/R5/R7)           : p3d, after p3a, 1d
 
     section Phase4_Implementation
     Module A Implementation            : p4a, after p3d, 5d
@@ -1095,7 +1095,7 @@ flowchart TD
 claude "Based on the specification, start parallel implementation with Agent Teams.
 Implementation Agents implement code under src/ (each Agent uses a dedicated branch via Git worktree),
 Test Agents create and execute tests under tests/,
-Review Agent conducts code reviews (R2/R3/R4/R5 perspectives),
+Review Agent conducts code reviews (R2/R3/R4/R5/R7 perspectives),
 and PM Agent tracks progress.
 Each agent focuses on its assigned module from the specification,
 and separates responsible directories to avoid file conflicts.
@@ -1285,8 +1285,8 @@ When the PM Agent detects anomalies, the lead agent automatically takes the foll
 claude "Testing is complete. Conduct a final review of all deliverables with review-agent (all R1-R7 perspectives).
 If FAILED, return to the corresponding phase based on the finding's perspective and make corrections:
 - R1 findings -> Specification Ch1-2 corrections (equivalent to planning phase)
-- R2/R4/R5 design findings -> Specification Ch3-4 corrections (equivalent to design phase)
-- R3/R5 implementation findings -> Code corrections (equivalent to implementation phase)
+- R2/R4/R5/R7 design findings -> Specification Ch3-4 corrections (equivalent to design phase)
+- R3/R5/R7 implementation findings -> Code corrections (equivalent to implementation phase)
 - R6 test findings -> Test corrections (equivalent to testing phase)
 Once all PASS, begin deployment."
 ```
@@ -1909,9 +1909,9 @@ flowchart TD
     Spec1["Specification Ch1-2 Creation Complete"]
     Spec1_Review{"R1 Review<br/>PASS?"}
     Spec2["Specification Ch3-6+OpenAPI+Observability Design Complete"]
-    Spec2_Review{"R2/R4/R5 Review<br/>PASS?"}
+    Spec2_Review{"R2/R4/R5/R7 Review<br/>PASS?"}
     Impl["Implementation+SCA Complete"]
-    Code_Review{"R2/R3/R4/R5 Review<br/>PASS?"}
+    Code_Review{"R2/R3/R4/R5/R7 Review<br/>PASS?"}
     UT["Unit Testing Complete"]
     UT_Gate{"Unit Test<br/>Pass Rate 95%+?"}
     IT["Integration Testing Complete"]
@@ -1954,8 +1954,8 @@ flowchart TD
     TR -->|"No"| R6Fail
     R6Fail -->|"After Correction"| ST
     Final -->|"R1 Findings"| R1Fail
-    Final -->|"R2/R4/R5 Design Findings"| R2Fail
-    Final -->|"R3/R5 Implementation Findings"| R3Fail
+    Final -->|"R2/R4/R5/R7 Design Findings"| R2Fail
+    Final -->|"R3/R5/R7 Implementation Findings"| R3Fail
     Final -->|"R6 Findings"| R6Fail
     Final -->|"All PASS"| Deploy
     Deploy -->|"Smoke OK"| Done
@@ -2062,7 +2062,7 @@ Define KPIs to track for each phase. progress-monitor reflects these KPIs in the
 | dependency-selection | Candidate evaluation completion rate | Candidate list and evaluation complete for all external dependencies | requirement-spec |
 | dependency-selection | Selection approval rate | User-approved | decision record |
 | design | Ch3-6 completion rate | All 4 chapters complete | Specification Ch3-6 |
-| design | R2/R4/R5 PASS rate | Per CLAUDE.md Quality Targets | review-agent report |
+| design | R2/R4/R5/R7 PASS rate | Per CLAUDE.md Quality Targets | review-agent report |
 | design | WBS creation complete | Critical path identified | wbs.md |
 | design | Risk register creation complete | All risks evaluated | risk-register.md |
 | implementation | Code implementation progress rate | WBS tasks completed / total | wbs.md |
@@ -2090,8 +2090,8 @@ Define KPIs to track for each phase. progress-monitor reflects these KPIs in the
 | GATE-PLANNING | planning → dependency-selection | R1 PASS; user approval of Ch1-2 | review, tech-decision |
 | GATE-INTERVIEW | planning → dependency-selection | interview-record exists with no unresolved questions | interview-record |
 | GATE-DEPENDENCY | dependency-selection → design | User approval of the dependency selection; Adapter layer conforms to DIP | decision, tech-decision |
-| GATE-DESIGN | design → implementation | R2/R4/R5 PASS; threat-model exists with `unmitigated_critical_count` = 0; deployment-design exists | review, threat-model, tech-decision |
-| GATE-IMPL | implementation → testing | R2/R3/R4/R5 PASS; SCA/SAST Critical/High = 0; no incompatible license in license-report | review, security-scan-report, license-report |
+| GATE-DESIGN | design → implementation | R2/R4/R5/R7 PASS; threat-model exists with `unmitigated_critical_count` = 0; deployment-design exists | review, threat-model, tech-decision |
+| GATE-IMPL | implementation → testing | R2/R3/R4/R5/R7 PASS; SCA/SAST Critical/High = 0; no incompatible license in license-report | review, security-scan-report, license-report |
 | GATE-TEST | testing → delivery | R6 PASS; coverage target met; performance NFRs satisfied; every FR in traceability has a test | review, performance-report, traceability |
 | GATE-DELIVERY | delivery → operation | Final R1-R7 PASS; acceptance testing passed; runbook and user-manual exist | review, final-report |
 | GATE-EOL | operation → end | Migration to a successor system is complete, or the user has approved EOL, with data migration and retention agreed | decision |
@@ -2690,7 +2690,7 @@ sequenceDiagram
     Arch->>Koto: Request Terminology Check for spec-architecture
     Koto->>Arch: Return Check Results
     Arch->>Orch: Report Ch3-6 + OpenAPI + observability-design Completion
-    Orch->>Review: Request R2/R4/R5 Review of Ch3-6
+    Orch->>Review: Request R2/R4/R5/R7 Review of Ch3-6
     Review->>Orch: Report Review Results (PASS)
     Orch->>PI: Request design Phase Retrospective
     PI->>Orch: Submit retrospective-report

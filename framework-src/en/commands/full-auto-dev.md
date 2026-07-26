@@ -82,7 +82,7 @@ Execute the following phases sequentially:
     - Add safety requirements to spec-foundation Ch2 NFR
     - FMEA: After Ch3 is finalized, perform component-level failure mode analysis → project-records/safety/fmea-*.md
     - FTA: If hazards with ASIL C or higher exist, analyze logical structure of causes → project-records/safety/fta-*.md
-3k. Conduct quality review of specification Ch3-4 and design with review-agent (R2/R4/R5 perspectives)
+3k. Conduct quality review of specification Ch3-4 and design with review-agent (R2/R4/R5/R7 perspectives)
 3l. Launch technical-authority to decide GATE-DESIGN (Process Rules section 9.4.1). Proceed after PASS
 
 ## Phase 4: Implementation
@@ -90,7 +90,7 @@ Execute the following phases sequentially:
 4b. implementer incorporates structured logging, metrics instrumentation, and tracing into code based on the observability design
 4c. implementer creates and executes unit tests in tests/
 4c2. implementer implements the IaC code in infra/ based on the deployment-design
-4d. Conduct implementation code review with review-agent (R2/R3/R4/R5 perspectives), proceed after PASS
+4d. Conduct implementation code review with review-agent (R2/R3/R4/R5/R7 perspectives), proceed after PASS
 4e. Execute SCA scan (npm audit, etc.) with security-reviewer and confirm zero Critical/High vulnerabilities
 4f. Conduct license verification with license-checker
 4g. Launch technical-authority to decide GATE-IMPL (Process Rules section 9.4.1)

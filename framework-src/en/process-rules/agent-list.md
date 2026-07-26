@@ -422,8 +422,8 @@ Which agents are activated in which phases.
 | setup | orchestrator | CLAUDE.md approval |
 | planning | orchestrator, srs-writer, kotodama-kun, review-agent, technical-authority, process-improver, decree-writer | R1 PASS -> spec approval |
 | dependency-selection | orchestrator, architect, kotodama-kun, license-checker, technical-authority | User selection approval |
-| design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5 PASS |
-| implementation | orchestrator, implementer, test-engineer (unit), security-reviewer (SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5 PASS, SCA clear |
+| design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5/R7 PASS |
+| implementation | orchestrator, implementer, test-engineer (unit), security-reviewer (SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5/R7 PASS, SCA clear |
 | testing | orchestrator, test-engineer, kotodama-kun, review-agent, technical-authority, progress-monitor, process-improver, decree-writer, field-test-engineer (conditional), feedback-classifier (conditional), field-issue-analyst (conditional) | R6 PASS, all tests PASS |
 | delivery | orchestrator, kotodama-kun, review-agent, technical-authority, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R7 all PASS, translation consistency verification PASS, user acceptance |
 | operation | orchestrator, security-reviewer (patching), progress-monitor, incident-reporter, process-improver, decree-writer | SLA achieved |

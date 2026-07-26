@@ -31,8 +31,8 @@ Guarantee that specification, design, implementation and test fit together, and 
 |-------|--------------------|
 | planning | - [ ] The R1 gate decision is recorded in tech-decision |
 | dependency-selection | - [ ] Ruled that the Adapter layer abstraction conforms to DIP |
-| design | - [ ] The R2/R4/R5 gate decisions are recorded<br>- [ ] Confirmed that threat-model and security-architecture exist<br>- [ ] Confirmed that deployment-design exists |
-| implementation | - [ ] The R2/R3/R4/R5 gate and SCA/SAST decisions are recorded<br>- [ ] Ruled that infra/ conforms to deployment-design |
+| design | - [ ] The R2/R4/R5/R7 gate decisions are recorded<br>- [ ] Confirmed that threat-model and security-architecture exist<br>- [ ] Confirmed that deployment-design exists |
+| implementation | - [ ] The R2/R3/R4/R5/R7 gate and SCA/SAST decisions are recorded<br>- [ ] Ruled that infra/ conforms to deployment-design |
 | testing | - [ ] The R6 gate decision is recorded<br>- [ ] Ruled on satisfaction of the performance NFRs |
 | delivery | - [ ] The final R1-R7 gate decision is recorded |
 
@@ -100,7 +100,7 @@ tech-decision:
 <!-- FIELD: tech-decision -->
 tech-decision:
   id: TD-004
-  title: design phase R2/R4/R5 gate decision
+  title: design phase R2/R4/R5/R7 gate decision
   decision_status: decided
   phase: design
   gate: GATE-DESIGN
@@ -130,8 +130,8 @@ tech-decision:
 |------|---------|
 | planning → dependency-selection | R1 PASS |
 | dependency-selection → design | Adapter layer conforms to DIP |
-| design → implementation | R2/R4/R5 PASS, threat-model exists, unmitigated_critical_count = 0 |
-| implementation → testing | R2/R3/R4/R5 PASS, SCA/SAST Critical/High = 0 |
+| design → implementation | R2/R4/R5/R7 PASS, threat-model exists, unmitigated_critical_count = 0 |
+| implementation → testing | R2/R3/R4/R5/R7 PASS, SCA/SAST Critical/High = 0 |
 | testing → delivery | R6 PASS, coverage target met, performance NFRs satisfied |
 
 Whether a transition may proceed for reasons of cost, schedule or risk is orchestrator's jurisdiction; this agent does not rule on it.

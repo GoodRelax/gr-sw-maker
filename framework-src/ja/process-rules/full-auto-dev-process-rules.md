@@ -276,7 +276,7 @@ flowchart TD
         P3DB["AI: セキュリティ設計"]
         P3DC["AI: WBS・リスク管理"]
         P3DE["AI: OpenAPI・可観測性設計"]
-        P3DD["AI: 設計レビュー(R2/R4/R5)"]
+        P3DD["AI: 設計レビュー(R2/R4/R5/R7)"]
         P3DA -->|"設計完了"| P3DD
         P3DB -->|"設計完了"| P3DD
         P3DC -->|"設計完了"| P3DD
@@ -316,7 +316,7 @@ flowchart TD
     Phase0 -->|"承認"| Phase1
     Phase1 -->|"R1 PASS"| Phase2
     Phase2 -->|"選定完了"| Phase3
-    Phase3 -->|"R2/R4/R5 PASS"| Phase4
+    Phase3 -->|"R2/R4/R5/R7 PASS"| Phase4
     Phase4 -->|"スキャンOK"| Phase5
     Phase5 -->|"R6 PASS"| Phase6
 
@@ -1003,7 +1003,7 @@ claude "仕様書 Ch1-2 が承認されました。以下を並列で実行し�
     b. safety requirement を spec-foundation Ch2 の NFR に追加する
     c. Ch3 確定後、FMEA を実施し project-records/safety/fmea-*.md に記録する
     d. ASIL C 以上（SIL 3 以上）の hazard がある場合、FTA を実施し project-records/safety/fta-*.md に記録する
-14. review-agentでR2/R4/R5観点の設計レビューを実施し、PASSしたら次へ進む
+14. review-agentでR2/R4/R5/R7観点の設計レビューを実施し、PASSしたら次へ進む
 完了後、設計の概要とWBSを報告してください。"
 ```
 
@@ -1035,7 +1035,7 @@ gantt
     セキュリティ設計               : p3b, after p2m, 2d
     可観測性設計                   : p3f, after p2m, 1d
     WBS・リスク管理               : p3c, after p2m, 1d
-    設計レビュー(R2/R4/R5)        : p3d, after p3a, 1d
+    設計レビュー(R2/R4/R5/R7)        : p3d, after p3a, 1d
 
     section Phase4_実装
     モジュールA実装               : p4a, after p3d, 5d
@@ -1095,7 +1095,7 @@ flowchart TD
 claude "仕様書に基づき、Agent Teamsで並列実装を開始してください。
 Implementation Agentがsrc/配下にコードを実装し（各AgentはGit worktreeで専用ブランチを使用）、
 Test Agentがtests/配下にテストを作成・実行し、
-Review Agentがコードレビュー（R2/R3/R4/R5観点）を行い、
+Review Agentがコードレビュー（R2/R3/R4/R5/R7観点）を行い、
 PM Agentが進捗を追跡してください。
 各エージェントは仕様書の割り当てモジュールに専念し、
 ファイル競合が起きないよう担当ディレクトリを分けてください。
@@ -1285,8 +1285,8 @@ PM Agentが異常を検知した場合、リードエージェントは自動的
 claude "テストが完了しました。review-agentで全成果物の最終レビュー（R1〜R7全観点）を実施してください。
 FAILした場合は、指摘の観点に応じて該当フェーズへ戻り修正してください:
 - R1指摘 → 仕様書 Ch1-2 修正（planning フェーズ相当）
-- R2/R4/R5設計指摘 → 仕様書 Ch3-4 修正（design フェーズ相当）
-- R3/R5実装指摘 → コード修正（implementation フェーズ相当）
+- R2/R4/R5/R7設計指摘 → 仕様書 Ch3-4 修正（design フェーズ相当）
+- R3/R5/R7実装指摘 → コード修正（implementation フェーズ相当）
 - R6テスト指摘 → テスト修正（testing フェーズ相当）
 すべてPASSしたらデプロイメントを開始してください。"
 ```
@@ -1909,9 +1909,9 @@ flowchart TD
     Spec1["仕様書 Ch1-2 作成完了"]
     Spec1_Review{"R1レビュー<br/>PASS?"}
     Spec2["仕様書 Ch3-6+OpenAPI+可観測性設計 完了"]
-    Spec2_Review{"R2/R4/R5レビュー<br/>PASS?"}
+    Spec2_Review{"R2/R4/R5/R7レビュー<br/>PASS?"}
     Impl["実装+SCA完了"]
-    Code_Review{"R2/R3/R4/R5レビュー<br/>PASS?"}
+    Code_Review{"R2/R3/R4/R5/R7レビュー<br/>PASS?"}
     UT["単体テスト完了"]
     UT_Gate{"単体テスト<br/>合格率 95%以上?"}
     IT["結合テスト完了"]
@@ -1954,8 +1954,8 @@ flowchart TD
     TR -->|"No"| R6Fail
     R6Fail -->|"修正後"| ST
     Final -->|"R1指摘"| R1Fail
-    Final -->|"R2/R4/R5設計指摘"| R2Fail
-    Final -->|"R3/R5実装指摘"| R3Fail
+    Final -->|"R2/R4/R5/R7設計指摘"| R2Fail
+    Final -->|"R3/R5/R7実装指摘"| R3Fail
     Final -->|"R6指摘"| R6Fail
     Final -->|"全PASS"| Deploy
     Deploy -->|"スモークOK"| Done
@@ -2062,7 +2062,7 @@ review-agentが適用する7つの観点。**詳細なチェックリストは `
 | dependency-selection | 候補評価完了率 | 全外部依存に対し候補一覧・評価完了 | requirement-spec |
 | dependency-selection | 選定承認率 | ユーザー承認済み | decision 記録 |
 | design | Ch3-6 完成率 | 4章すべて完成 | 仕様書 Ch3-6 |
-| design | R2/R4/R5 PASS率 | CLAUDE.md 品質目標に準拠 | review-agent レポート |
+| design | R2/R4/R5/R7 PASS率 | CLAUDE.md 品質目標に準拠 | review-agent レポート |
 | design | WBS 作成完了 | クリティカルパス特定済み | wbs.md |
 | design | リスク台帳作成完了 | 全リスク評価済み | risk-register.md |
 | implementation | コード実装進捗率 | WBSタスク完了/全体 | wbs.md |
@@ -2090,8 +2090,8 @@ review-agentが適用する7つの観点。**詳細なチェックリストは `
 | GATE-PLANNING | planning → dependency-selection | R1 PASS、Ch1-2 のユーザー承認 | review, tech-decision |
 | GATE-INTERVIEW | planning → dependency-selection | interview-record が存在し、未解決の質問が残っていない | interview-record |
 | GATE-DEPENDENCY | dependency-selection → design | 外部依存の選定にユーザー承認がある、Adapter 層が DIP に適合 | decision, tech-decision |
-| GATE-DESIGN | design → implementation | R2/R4/R5 PASS、threat-model が存在し `unmitigated_critical_count` = 0、deployment-design が存在 | review, threat-model, tech-decision |
-| GATE-IMPL | implementation → testing | R2/R3/R4/R5 PASS、SCA/SAST の Critical/High = 0、license-report に非互換ライセンスなし | review, security-scan-report, license-report |
+| GATE-DESIGN | design → implementation | R2/R4/R5/R7 PASS、threat-model が存在し `unmitigated_critical_count` = 0、deployment-design が存在 | review, threat-model, tech-decision |
+| GATE-IMPL | implementation → testing | R2/R3/R4/R5/R7 PASS、SCA/SAST の Critical/High = 0、license-report に非互換ライセンスなし | review, security-scan-report, license-report |
 | GATE-TEST | testing → delivery | R6 PASS、カバレッジ目標達成、性能 NFR 充足、traceability の全 FR にテスト対応がある | review, performance-report, traceability |
 | GATE-DELIVERY | delivery → operation | R1-R7 最終 PASS、受入テスト合格、runbook と user-manual が存在 | review, final-report |
 | GATE-EOL | operation → 終了 | 後継システムへの移行完了、またはユーザーが EOL を承認、データ移行と保管期間の合意がある | decision |
@@ -2690,7 +2690,7 @@ sequenceDiagram
     Arch->>Koto: spec-architecture の用語チェックを依頼
     Koto->>Arch: チェック結果を返却
     Arch->>Orch: Ch3-6+OpenAPI+observability-design 完成を報告
-    Orch->>Review: Ch3-6 の R2/R4/R5 レビューを依頼
+    Orch->>Review: Ch3-6 の R2/R4/R5/R7 レビューを依頼
     Review->>Orch: レビュー結果（PASS）を報告
     Orch->>PI: design フェーズのふりかえりを依頼
     PI->>Orch: retrospective-report を提出

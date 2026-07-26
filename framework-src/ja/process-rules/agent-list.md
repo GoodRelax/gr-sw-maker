@@ -422,8 +422,8 @@ kotodama-kun を**使用しない**エージェント:
 | setup | orchestrator | CLAUDE.md 承認 |
 | planning | orchestrator, srs-writer, kotodama-kun, review-agent, technical-authority, process-improver, decree-writer | R1 PASS → 仕様書承認 |
 | dependency-selection | orchestrator, architect, kotodama-kun, license-checker, technical-authority | ユーザー選定承認 |
-| design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5 PASS |
-| implementation | orchestrator, implementer, test-engineer(単体), security-reviewer(SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5 PASS, SCA クリア |
+| design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5/R7 PASS |
+| implementation | orchestrator, implementer, test-engineer(単体), security-reviewer(SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5/R7 PASS, SCA クリア |
 | testing | orchestrator, test-engineer, kotodama-kun, review-agent, technical-authority, progress-monitor, process-improver, decree-writer, field-test-engineer(条件付き), feedback-classifier(条件付き), field-issue-analyst(条件付き) | R6 PASS, 全テスト PASS |
 | delivery | orchestrator, kotodama-kun, review-agent, technical-authority, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R7 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
 | operation | orchestrator, security-reviewer(パッチ), progress-monitor, incident-reporter, process-improver, decree-writer | SLA 達成 |

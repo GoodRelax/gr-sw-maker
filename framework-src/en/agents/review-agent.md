@@ -45,8 +45,8 @@ Common to every phase: the review states an overall verdict (PASS / FAIL) and, o
 | file_type | Provider | Usage | Required elements |
 |-----------|--------|------|---------|
 | spec-foundation | srs-writer | R1 review target | Ch1-2; an ID on every FR/NFR |
-| spec-architecture | architect | R2/R4/R5 review target | Ch3-6; traces on every Gherkin in Ch4 |
-| (src/) | implementer | R2/R3/R4/R5 review target | A `@purity` tag on every function |
+| spec-architecture | architect | R2/R4/R5/R7 review target | Ch3-6; traces on every Gherkin in Ch4 |
+| (src/) | implementer | R2/R3/R4/R5/R7 review target | A `@purity` tag on every function |
 | (tests/) | test-engineer | R6 review target | Test execution results |
 | test-plan | test-engineer | R6 test plan validity review | Test perspectives and the target FRs |
 | performance-report | test-engineer | R5 performance test results review | A measured value per NFR |
@@ -108,7 +108,7 @@ review:
 review:
   id: review-012
   target: docs/spec/my-app-spec.md Ch3-6
-  dimensions: R2,R4,R5
+  dimensions: R2,R4,R5,R7
   result: fail
   critical_count: 0
   high_count: 2

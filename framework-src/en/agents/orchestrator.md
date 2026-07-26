@@ -115,8 +115,8 @@ Technical conditions are ruled on by technical-authority and arrive as the `verd
 | setup → planning | CLAUDE.md finalized, conditional process evaluation completed | (no technical gate) |
 | planning → dependency-selection | User approval of spec Ch1-2. Skip to design if no conditional processes apply | tech-decision (R1) |
 | dependency-selection → design | User approval of the dependency selection; within budget | tech-decision (DIP conformance) |
-| design → implementation | WBS updated, no schedule slip | tech-decision (R2/R4/R5, threat-model) |
-| implementation → testing | WBS updated, within cost budget | tech-decision (R2/R3/R4/R5, SCA/SAST) |
+| design → implementation | WBS updated, no schedule slip | tech-decision (R2/R4/R5/R7, threat-model) |
+| implementation → testing | WBS updated, within cost budget | tech-decision (R2/R3/R4/R5/R7, SCA/SAST) |
 | testing → delivery | WBS complete, residual risk within what the user accepts | tech-decision (R6, performance NFRs) |
 
 **The phase does not advance unless both the technical and the PM conditions are met.** When a technical condition is unmet, technical-authority decides where it goes back to.
