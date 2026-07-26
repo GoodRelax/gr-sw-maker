@@ -39,18 +39,7 @@
 
 process-rules/ 配下の全ファイル（本文書を含む）に適用する改訂ルール。
 
-**対象ファイル:**
-
-| ファイル | 内容 |
-|---------|------|
-| full-auto-dev-process-rules.md | プロセス規則 |
-| full-auto-dev-document-rules.md | 文書管理規則（本文書） |
-| review-standards.md | レビュー観点規約 |
-| prompt-structure.md | プロンプト構造規約 |
-| agent-list.md | エージェント一覧 |
-| glossary.md | 用語集 |
-| defect-taxonomy.md | 不具合系用語の体系（因果連鎖・fault origin・機能安全用語） |
-| spec-template.md | 仕様書テンプレート |
+**対象:** `framework-src/{lang}/process-rules/` 配下の全 `.md` ファイル。個別に列挙しない（列挙すると規則文書を追加するたびに更新漏れが起きる）。
 
 **改訂区分:**
 
@@ -379,7 +368,7 @@ security-reviewer が脅威モデルを作成。他のエージェントはこ�
 | ファイルの目的 | Common? Form? | **Common** (`doc:purpose`) | 全ファイルタイプ共通フィールド |
 | 採用した脅威分析手法（STRIDE, DREAD等） | Form? Detail? | **Form Block** (`threat-model:methodology`) | エージェントがパースして手法を判断。dashboardにも表示可能 |
 | 特定された脅威の総数 | Form? Detail? | **Form Block** (`threat-model:threat_count`) | 数値メトリクス。progress-monitorが集計 |
-| 未軽減の高リスク脅威数 | Form? Detail? | **Form Block** (`threat-model:unmitigated_high_count`) | review-agentがゲート判断に使う（0でないとfail） |
+| 未軽減の高リスク脅威数 | Form? Detail? | **Form Block** (`threat-model:unmitigated_high_count`) | technical-authority がゲート判断に使う（→ §9.4.1 GATE-DESIGN） |
 | 脅威ごとの詳細（攻撃ベクター、影響、軽減策） | Form? Detail? | **Detail Block** | 詳細な分析内容。パースして判断はしない |
 
 **判断ポイント:** 「脅威の総数」はDetail Blockの表を数えればわかるが、Form Blockに正規化した数値を持つことで確実に機械読取可能になる。
@@ -432,7 +421,7 @@ srs-writerがCh1-2を作成、architectがCh3-6を詳細化。
 
 | 情報 | 候補 | 判断 | 理由 |
 |------|------|------|------|
-| 仕様形式（ANMS/ANPS） | Form? Detail? | **Form Block** (`spec-foundation:format`) | エージェントが読取方法を判断 |
+| 仕様形式（ANMS/ANPS） | Form? Detail? | **Form Block** (`spec-foundation:spec_format`) | エージェントが読取方法を判断 |
 | 完成済みチャプター（Ch1-2内） | Form? Detail? | **Form Block** (`spec-foundation:completed_chapters`) | architectが引継ぎ可能か判断。doc:document_statusとは別概念（文書全体 vs チャプター単位） |
 | 完成済みチャプター | Form? Detail? | **Form Block** (`spec-architecture:completed_chapters`) | architectが作業開始位置を判断 |
 | 機能要求数 / 非機能要求数 | Form? Detail? | **Form Block** (`spec-foundation:fr_count`, `spec-foundation:nfr_count`) | traceabilityカバレッジ算出の母数 |
@@ -532,9 +521,9 @@ stateDiagram-v2
 
 ```
 ── 識別（何をどう読むか）──
-schema_version → file_type → form_block_cardinality → language
+schema_version → file_type → language
 ── 状態（触っていいか）──
-→ document_status
+→ document_status → document_version
 ── ワークフロー（自分の仕事か）──
 → owner → commissioned_by → consumed_by
 ── コンテキスト（何の話か）──
@@ -551,12 +540,12 @@ schema_version → file_type → form_block_cardinality → language
 |-----------|------|------|---------|------|
 | schema_version | string | Yes | 識別 | スキーマバージョン（現在 "0.0"） |
 | file_type | enum | Yes | 識別 | 登録済みファイルタイプの1つ（第7章参照） |
-| form_block_cardinality | enum: single / multiple | Yes | 識別 | このファイルのForm Blockが単一か複数か |
 | language | string (ISO 639-1) | Yes | 識別 | このファイルの記述言語（例: `ja`, `en`, `fr`） |
 | document_status | enum: draft / in-review / approved / archived | Yes | 状態 | 文書のライフサイクルステータス |
+| document_version | string | Yes | 状態 | `{メジャー}.{マイナー}` 形式の版番号（例: `1.2`）。**ファイル名は不変とし、版はこのフィールドで管理する** |
 | owner | string | Yes | ワークフロー | 書込み権限を持つエージェント |
 | commissioned_by | string | Yes | ワークフロー | この文書の作成トリガー（値: `user`, `orchestrator`, `phase-{name}`, または `{agent-name}`） |
-| consumed_by | string | Yes | ワークフロー | この文書を次に利用するエージェント |
+| consumed_by | list | Yes | ワークフロー | この文書を次に利用するエージェント。**消費者が複数の場合はタグを繰り返す**（`<doc:consumed_by>a</doc:consumed_by><doc:consumed_by>b</doc:consumed_by>`）。カンマ区切りの単一文字列にしない |
 | project | string | Yes | コンテキスト | プロジェクト名 |
 | purpose | string | Yes | コンテキスト | このファイルが存在する理由と期待されるアクション |
 | summary | string | Yes | コンテキスト | ファイル内容の簡潔な説明 |
@@ -581,10 +570,6 @@ schema_version → file_type → form_block_cardinality → language
 
 <doc:file_type>{file_type}</doc:file_type>
 
-<!-- FIELD: form_block_cardinality | type: enum | values: single,multiple | required: true -->
-
-<doc:form_block_cardinality>{single_or_multiple}</doc:form_block_cardinality>
-
 <!-- FIELD: language | type: string (ISO 639-1) | required: true -->
 
 <doc:language>{language_code}</doc:language>
@@ -594,6 +579,10 @@ schema_version → file_type → form_block_cardinality → language
 <!-- FIELD: document_status | type: enum | values: draft,in-review,approved,archived | required: true -->
 
 <doc:document_status>draft</doc:document_status>
+
+<!-- FIELD: document_version | type: string | required: true -->
+
+<doc:document_version>0.1</doc:document_version>
 
 ## Workflow
 
@@ -702,45 +691,55 @@ Footerは全ファイルタイプ共通。エージェントは書込みのた�
 
 **名前空間命名規則:** 名前空間はfile_type名をそのまま使用する。略称は禁止（例: ~~`cr:`~~ → `change-request:`）。原則2単語以下、最大3単語。`doc:` はCommon Block + Footer専用で予約済み。カテゴリにサブタイプがある場合はカテゴリを先頭に置く（例: `spec-foundation:`, `spec-architecture:`）。
 
-| file_type | 名前空間 | 目的 | ディレクトリ | シングルトン? |
-|-----------|---------|------|-------------|:----------:|
-| pipeline-state | `pipeline-state:` | パイプラインオーケストレーション状態 | `project-management/` | Yes |
-| handoff | `handoff:` | エージェント間タスク引継ぎ | `project-management/handoff/` | No |
-| progress | `progress:` | プロジェクト進捗とメトリクス | `project-management/progress/` | No |
-| interview-record | `interview-record:` | インタビュー記録 | `project-management/` | Yes |
-| wbs | `wbs:` | WBS・ガントチャート | `project-management/progress/` | Yes |
-| test-plan | `test-plan:` | テスト計画 | `project-management/` | Yes |
-| review | `review:` | コード/設計レビュー結果 | `project-records/reviews/` | No |
-| decision | `decision:` | アーキテクチャ意思決定記録 | `project-records/decisions/` | No |
-| tech-decision | `tech-decision:` | 技術裁定・品質ゲート判定の記録 | `project-records/tech-decisions/` | No |
-| governance-change-log | `governance-change-log:` | ガバナンスファイルへの適用記録 | `project-records/governance/` | No |
-| deployment-design | `deployment-design:` | デプロイ設計（環境・手順・ロールバック） | `docs/operations/` | Yes |
-| risk-register | `risk-register:` | リスク台帳（個別 risk の集約） | `project-records/risks/` | Yes |
-| risk | `risk:` | リスクエントリおよび台帳 | `project-records/risks/` | No |
-| defect | `defect:` | defect tracking | `project-records/defects/` | No |
-| change-request | `change-request:` | 変更要求管理 | `project-records/change-requests/` | No |
-| traceability | `traceability:` | 要求-テスト間トレース | `project-records/traceability/` | Yes |
-| license-report | `license-report:` | ライセンス互換性レポート | `project-records/licenses/` | Yes |
-| performance-report | `performance-report:` | 性能テスト結果レポート | `project-records/performance/` | No |
-| spec-foundation | `spec-foundation:` | 仕様書 Ch1-2（Foundation・Requirements） | `docs/spec/` | Yes |
-| spec-architecture | `spec-architecture:` | 仕様書 Ch3-6（Architecture・Specification・Test Strategy・Design Principles） | `docs/spec/` | Yes |
-| threat-model | `threat-model:` | 脅威モデル | `docs/security/` | Yes |
-| security-architecture | `security-architecture:` | セキュリティ設計 | `docs/security/` | Yes |
-| observability-design | `observability-design:` | 可観測性設計 | `docs/observability/` | Yes |
-| hw-requirement-spec | `hw-requirement-spec:` | HW要求仕様（条件付き。external-dependency-spec継承） | `docs/hardware/` | Yes |
-| ai-requirement-spec | `ai-requirement-spec:` | AI/LLM要求仕様（条件付き。external-dependency-spec継承） | `docs/ai/` | Yes |
-| framework-requirement-spec | `framework-requirement-spec:` | フレームワーク要求仕様（条件付き。external-dependency-spec継承） | `docs/framework/` | Yes |
-| executive-dashboard | `executive-dashboard:` | プロジェクト全体ダッシュボード | ルート | Yes |
-| final-report | `final-report:` | プロジェクト総括レポート | ルート | Yes |
-| user-order | `user-order:` | ユーザー入力仕様（3問形式） | ルート | Yes |
-| user-manual | `user-manual:` | エンドユーザー向け操作マニュアル | `docs/` | Yes |
-| security-scan-report | `security-scan-report:` | セキュリティスキャン結果（SAST/SCA/DAST/手動） | `project-records/security/` | No |
-| runbook | `runbook:` | 運用手順書（日常運用・incident 対応） | `docs/operations/` | Yes |
-| incident-report | `incident-report:` | 本番 incident 記録・事後分析 | `project-records/incidents/` | No |
-| disaster-recovery-plan | `disaster-recovery-plan:` | 災害復旧計画（RPO/RTO・復旧手順） | `docs/operations/` | Yes |
-| stakeholder-register | `stakeholder-register:` | ステークホルダー登録簿（推奨プロセス） | `project-management/` | Yes |
-| retrospective-report | `retrospective-report:` | ふりかえり・プロセス改善記録 | `project-records/improvement/` | No |
-| field-issue | `field-issue:` | 実機テストフィードバック管理（defect / CR 統合）。条件付き: 実機テスト有効時 | `project-records/field-issues/` | No |
+**Tier の意味:**
+
+| Tier | 意味 |
+|------|------|
+| Core | 全プロジェクトで必ず作成する。規模による免除の対象外 |
+| Standard | 標準プロセスで作成する。§3.1.1 の免除マトリクスに従う |
+| Conditional | 該当する条件付きプロセスが有効な場合にのみ作成する |
+
+37 の file_type を一度に覚える必要はない。**Core の 9 種を理解すれば全自動開発は回る。**
+
+| file_type | 名前空間 | 目的 | ディレクトリ | シングルトン? | Tier |
+|-----------|---------|------|-------------|:----------:|:----:|
+| pipeline-state | `pipeline-state:` | パイプラインオーケストレーション状態 | `project-management/` | Yes | Core |
+| handoff | `handoff:` | エージェント間タスク引継ぎ | `project-management/handoff/` | No | Standard |
+| progress | `progress:` | プロジェクト進捗とメトリクス | `project-management/progress/` | No | Standard |
+| interview-record | `interview-record:` | インタビュー記録 | `project-management/` | Yes | Standard |
+| wbs | `wbs:` | WBS・ガントチャート | `project-management/progress/` | Yes | Standard |
+| test-plan | `test-plan:` | テスト計画 | `project-management/` | Yes | Standard |
+| review | `review:` | コード/設計レビュー結果 | `project-records/reviews/` | No | Core |
+| decision | `decision:` | アーキテクチャ意思決定記録 | `project-records/decisions/` | No | Core |
+| tech-decision | `tech-decision:` | 技術裁定・品質ゲート判定の記録 | `project-records/tech-decisions/` | No | Core |
+| governance-change-log | `governance-change-log:` | ガバナンスファイルへの適用記録 | `project-records/governance/` | No | Standard |
+| deployment-design | `deployment-design:` | デプロイ設計（環境・手順・ロールバック） | `docs/operations/` | Yes | Standard |
+| risk-register | `risk-register:` | リスク台帳（個別 risk の集約） | `project-records/risks/` | Yes | Standard |
+| risk | `risk:` | リスクエントリおよび台帳 | `project-records/risks/` | No | Standard |
+| defect | `defect:` | defect tracking | `project-records/defects/` | No | Core |
+| change-request | `change-request:` | 変更要求管理 | `project-records/change-requests/` | No | Standard |
+| traceability | `traceability:` | 要求-テスト間トレース | `project-records/traceability/` | Yes | Standard |
+| license-report | `license-report:` | ライセンス互換性レポート | `project-records/licenses/` | Yes | Standard |
+| performance-report | `performance-report:` | 性能テスト結果レポート | `project-records/performance/` | No | Standard |
+| spec-foundation | `spec-foundation:` | 仕様書 Ch1-2（Foundation・Requirements） | `docs/spec/` | Yes | Core |
+| spec-architecture | `spec-architecture:` | 仕様書 Ch3-6（Architecture・Specification・Test Strategy・Design Principles） | `docs/spec/` | Yes | Core |
+| threat-model | `threat-model:` | 脅威モデル | `docs/security/` | Yes | Standard |
+| security-architecture | `security-architecture:` | セキュリティ設計 | `docs/security/` | Yes | Standard |
+| observability-design | `observability-design:` | 可観測性設計 | `docs/observability/` | Yes | Standard |
+| hw-requirement-spec | `hw-requirement-spec:` | HW要求仕様（条件付き。external-dependency-spec継承） | `docs/hardware/` | Yes | Conditional |
+| ai-requirement-spec | `ai-requirement-spec:` | AI/LLM要求仕様（条件付き。external-dependency-spec継承） | `docs/ai/` | Yes | Conditional |
+| framework-requirement-spec | `framework-requirement-spec:` | フレームワーク要求仕様（条件付き。external-dependency-spec継承） | `docs/framework/` | Yes | Conditional |
+| executive-dashboard | `executive-dashboard:` | プロジェクト全体ダッシュボード | ルート | Yes | Standard |
+| final-report | `final-report:` | プロジェクト総括レポート | ルート | Yes | Core |
+| user-order | `user-order:` | ユーザー入力仕様（3問形式） | ルート | Yes | Core |
+| user-manual | `user-manual:` | エンドユーザー向け操作マニュアル | `docs/` | Yes | Standard |
+| security-scan-report | `security-scan-report:` | セキュリティスキャン結果（SAST/SCA/DAST/手動） | `project-records/security/` | No | Standard |
+| runbook | `runbook:` | 運用手順書（日常運用・incident 対応） | `docs/operations/` | Yes | Standard |
+| incident-report | `incident-report:` | 本番 incident 記録・事後分析 | `project-records/incidents/` | No | Standard |
+| disaster-recovery-plan | `disaster-recovery-plan:` | 災害復旧計画（RPO/RTO・復旧手順） | `docs/operations/` | Yes | Conditional |
+| stakeholder-register | `stakeholder-register:` | ステークホルダー登録簿（推奨プロセス） | `project-management/` | Yes | Conditional |
+| retrospective-report | `retrospective-report:` | ふりかえり・プロセス改善記録 | `project-records/improvement/` | No | Standard |
+| field-issue | `field-issue:` | 実機テストフィードバック管理（defect / CR 統合）。条件付き: 実機テスト有効時 | `project-records/field-issues/` | No | Conditional |
 
 ### external-dependency-spec（外部依存要求仕様テンプレート）
 
@@ -921,7 +920,7 @@ external-dependency-spec（抽象テンプレート）
 | file_type, owner | Common Block | 全タイプ共通フィールド |
 | document_status | Common Block | 全タイプ共通フィールド |
 | commissioned_by, consumed_by | Common Block | 全タイプ共通フィールド |
-| form_block_cardinality | Common Block | 全タイプ共通フィールド |
+| document_version | Common Block | 全タイプ共通フィールド |
 | 名前空間、シングルトン、ディレクトリ | §7 file_type テーブル | タイプの登録情報 |
 
 **Fields テーブルの「値域・制約」列の記述ルール:**
@@ -929,7 +928,7 @@ external-dependency-spec（抽象テンプレート）
 - enum値: スラッシュ区切りで列挙する（例: `open / in-fix / closed`）
 - 数値範囲: 範囲を明示する（例: `0-100`）
 - トリガー条件: `→` で結果を記述する（例: `≧6 → ユーザーに通知`）
-- ゲート条件: `= 0 required for phase transition` のように記述する
+- ゲート条件: **プロセス規則 §9.4.1 のゲート ID を参照する**（例: `→ プロセス規則 §9.4.1 GATE-DESIGN`）。閾値そのものをここに書かない。ゲート条件の正本は §9.4.1 であり、複数箇所に書くと必ず乖離する
 
 ---
 
@@ -992,8 +991,8 @@ external-dependency-spec（抽象テンプレート）
 | review:gate | string | No | このレビューが判定するゲート | GATE-XXX |
 | review:purity_tag_coverage_pct | int | No | `@purity` タグの付与率（実装コードをレビューした場合は必須） | 0-100。R7.6 では 100 が要求される |
 | review:result | enum | Yes | レビュー結果 | pass / fail |
-| review:critical_count | int | Yes | Critical指摘の件数 | = 0 required for phase transition |
-| review:high_count | int | Yes | High指摘の件数 | = 0 required for phase transition |
+| review:critical_count | int | Yes | Critical指摘の件数 | → プロセス規則 §9.4.1（各 GATE の条件） |
+| review:high_count | int | Yes | High指摘の件数 | → プロセス規則 §9.4.1（各 GATE の条件） |
 | review:medium_count | int | Yes | Medium指摘の件数 | — |
 | review:low_count | int | Yes | Low指摘の件数 | — |
 | review:gate_phase | string | No | このレビューがゲートするフェーズ遷移（例: "1->2"） | — |
@@ -1002,7 +1001,7 @@ external-dependency-spec（抽象テンプレート）
 
 ### Detail Block Guidance
 
-レビュー指摘の詳細（指摘箇所、重大度、修正提案）を記載する。品質ゲートルール: フェーズ遷移には CLAUDE.md 品質目標で定義された閾値を満たし、かつ全指摘に対応記録があることが必要（process-rules §9.5 参照）。
+レビュー指摘の詳細（指摘箇所、重大度、修正提案）を記載する。ゲート条件はプロセス規則 §9.4.1 が正本であり、本文書には閾値を書かない。指摘の対応追跡はプロセス規則 §9.5 に従う。
 
 **指摘対応テーブル（全レビュー報告で必須）:**
 
@@ -1077,6 +1076,9 @@ Michael NygardのADR形式: Status / Context / Decision / Consequences を記載
 | defect:assigned_to | string | Yes | 修正担当エージェント | — |
 | defect:found_in_phase | int | Yes | defect が発見されたフェーズ | 0-7 |
 | defect:related_requirement | string | No | 要求ID（例: FR-001）。追跡可能な場合 | — |
+| defect:closed_reason | enum | No | 終端の理由（`closed` 以外で終端した場合は必須） | fixed / rejected / cannot-reproduce / withdrawn |
+| defect:reproduction_attempt_count | int | No | 再現試行の回数（`cannot-reproduce` の場合は必須） | 1 以上 |
+| defect:reopen_trigger | text | No | 再オープンの条件（`rejected` / `cannot-reproduce` の場合は必須） | — |
 
 ### Detail Block Guidance
 
@@ -1178,6 +1180,8 @@ WBSテーブル（タスクID、タスク名、担当エージェント、依存
 
 ## 9.12 test-plan（名前空間: test-plan:）
 
+> **仕様書 Ch5 との責務境界:** Ch5「テスト戦略」は**何をどこまで検証するか**（テストレベル・カバレッジ方針・受入基準）を定める設計判断であり、architect が所有する。`test-plan` は**それをいつ誰がどの順で実行するか**（工程・担当・スケジュール・環境）を定める実行計画であり、test-engineer が所有する。同じ内容を両方に書かない。Ch5 が変われば test-plan を更新し、逆はしない。
+
 ### Fields
 
 | フィールド | 型 | 必須 | 説明 | 値域・制約 |
@@ -1200,7 +1204,7 @@ WBSテーブル（タスクID、タスク名、担当エージェント、依存
 
 | フィールド | 型 | 必須 | 説明 | 値域・制約 |
 |-----------|------|------|------|-----------|
-| spec-foundation:spec_format | enum | Yes | 仕様書形式 | ANMS / ANPS / ANGS |
+| spec-foundation:spec_format | enum | Yes | 仕様書形式 | ANMS / ANPS（ANGS は研究段階であり値域に含めない） |
 | spec-foundation:fr_count | int | Yes | 機能要求の総数 | — |
 | spec-foundation:nfr_count | int | Yes | 非機能要求の総数 | — |
 | spec-foundation:completed_chapters | string | Yes | 完了済みチャプター（カンマ区切り） | 1 / 2 |
@@ -1237,7 +1241,7 @@ WBSテーブル（タスクID、タスク名、担当エージェント、依存
 | threat-model:methodology | enum | Yes | 脅威モデリング手法 | STRIDE / PASTA / other |
 | threat-model:threat_count | int | Yes | 特定済み脅威数 | — |
 | threat-model:mitigated_count | int | Yes | 軽減策実装済みの脅威数 | — |
-| threat-model:unmitigated_critical_count | int | Yes | 未軽減のCritical脅威数 | = 0 required for implementation transition |
+| threat-model:unmitigated_critical_count | int | Yes | 未軽減のCritical脅威数 | → プロセス規則 §9.4.1 GATE-DESIGN |
 
 ### Detail Block Guidance
 
@@ -1397,7 +1401,7 @@ external-dependency-spec 共通章構成に従う。非標準I/Fの詳細仕様�
 
 | フィールド | 型 | 必須 | 説明 | 値域・制約 |
 |-----------|------|------|------|-----------|
-| user-order:format | enum | Yes | 選定された仕様書形式 | ANMS / ANPS / ANGS |
+| user-order:format | enum | Yes | 選定された仕様書形式 | ANMS / ANPS（ANGS は研究段階であり値域に含めない） |
 | user-order:question_count | int | Yes | 3問形式の回答済み問数 | 3（固定） |
 
 ### Detail Block Guidance
@@ -1558,6 +1562,9 @@ external-dependency-spec 共通章構成に従う。非標準I/Fの詳細仕様�
 | field-issue:spec_update_required | boolean | No | 仕様書更新の要否 | — |
 | field-issue:related_requirements | list | No | 関連する要求 ID | — |
 | field-issue:related_defect_id | string | No | 自動テストで先に発見された defect との関連付け | DEF-NNN |
+| field-issue:closed_reason | enum | No | 終端の理由（`verified` 以外で終端した場合は必須） | verified / rejected / cannot-reproduce / withdrawn |
+| field-issue:reproduction_attempt_count | int | No | 再現試行の回数（`cannot-reproduce` の場合は必須） | 1 以上 |
+| field-issue:reopen_trigger | text | No | 再オープンの条件（`rejected` / `cannot-reproduce` の場合は必須） | — |
 
 ### Detail Block Guidance
 
@@ -1659,10 +1666,15 @@ owner は architect である。`infra/` の実装は implementer が行い、�
 **ステータス別ルール:**
 
 ```
-draft     → ファイルを上書き（アーカイブなし）
-approved  → 現ファイルを old/ へ移動 → 新ファイルを作成
-released  → 現ファイルを old/ へ移動 → 新ファイルを作成
+draft      → ファイルを上書きし、document_version のマイナーを +1
+in-review  → ファイルを上書きし、document_version のマイナーを +1
+approved   → 現ファイルを old/{名前}-v{旧版}.md へ退避 → 同名で新版を作成し、メジャーを +1
+archived   → 変更しない（参照専用）
 ```
+
+**`document_status` の値域は draft / in-review / approved / archived の 4 つである。** `released` はこの値域に存在しないため、バージョニング規則から除外した。
+
+**ファイル名は変えない。** 版番号は `document_version` が持つ。ファイル名に版を付けるのは `old/` へ退避するときのみであり、参照側がリネームに追随する必要をなくすためである。
 
 **シングルトンファイル**（pipeline-state.md, risk-register.md, traceability-matrix.md）:
 
@@ -1756,6 +1768,8 @@ CLAUDE.md に以下を設定する（setup フェーズで AI が提案）:
 | 要素 | 言語 | カスタマイズ | 理由 |
 |------|------|:-----------:|------|
 | フィールド名・名前空間プレフィックス | 英語固定 | No | 機械パース可能性 |
+| `owner` / `commissioned_by` / `consumed_by` の値 | 英語固定 | No | エージェント名は英語固定であり、翻訳するとデータフローの突合が壊れる |
+| `document_status` / `file_type` の値 | 英語固定 | No | enum 値であり機械が判定する |
 | HTMLコメント（FIELD注釈） | 英語固定 | No | 機械パース可能性 |
 | Common Block フィールド値（purpose, summary等） | プロジェクト主言語 | Yes | 人間とエージェントが読む |
 | Form Block フィールド名 | 英語固定 | No | 機械パース可能性 |

@@ -39,18 +39,7 @@ The `doc:schema_version` of managed files records the **MAJOR.MINOR** of this do
 
 Revision rules applicable to all files under process-rules/ (including this document).
 
-**Target files:**
-
-| File | Content |
-|---------|------|
-| full-auto-dev-process-rules.md | Process rules |
-| full-auto-dev-document-rules.md | Document management rules (this document) |
-| review-standards.md | Review standards |
-| prompt-structure.md | Prompt structure conventions |
-| agent-list.md | Agent list |
-| glossary.md | Glossary |
-| defect-taxonomy.md | Defect terminology taxonomy (causal chains, fault origin, functional safety terms) |
-| spec-template.md | Specification template |
+**Target:** every `.md` file under `framework-src/{lang}/process-rules/`. They are not listed individually, because a list goes stale every time a rule document is added.
 
 **Revision categories:**
 
@@ -379,7 +368,7 @@ security-reviewer creates a threat model. Other agents reference it for implemen
 | File purpose | Common? Form? | **Common** (`doc:purpose`) | Field shared across all file types |
 | Adopted threat analysis methodology (STRIDE, DREAD, etc.) | Form? Detail? | **Form Block** (`threat-model:methodology`) | Agent parses to determine methodology. Can also be displayed on dashboard |
 | Total number of identified threats | Form? Detail? | **Form Block** (`threat-model:threat_count`) | Numeric metric. Aggregated by progress-monitor |
-| Number of unmitigated high-risk threats | Form? Detail? | **Form Block** (`threat-model:unmitigated_high_count`) | Used by review-agent for gate decisions (fail if not 0) |
+| Number of unmitigated high-risk threats | Form? Detail? | **Form Block** (`threat-model:unmitigated_high_count`) | Used by technical-authority for the gate decision (-> §9.4.1 GATE-DESIGN) |
 | Per-threat details (attack vectors, impact, mitigations) | Form? Detail? | **Detail Block** | Detailed analysis content. Not parsed for decisions |
 
 **Decision point:** The "total number of threats" could be counted from Detail Block tables, but having a normalized value in Form Block ensures reliable machine readability.
@@ -432,7 +421,7 @@ srs-writer creates Ch1-2, architect details Ch3-6.
 
 | Information | Candidates | Decision | Rationale |
 |------|------|------|------|
-| Specification format (ANMS/ANPS) | Form? Detail? | **Form Block** (`spec-foundation:format`) | Agent determines reading method |
+| Specification format (ANMS/ANPS) | Form? Detail? | **Form Block** (`spec-foundation:spec_format`) | Agent determines reading method |
 | Completed chapters (within Ch1-2) | Form? Detail? | **Form Block** (`spec-foundation:completed_chapters`) | architect determines if handoff is possible. Different concept from doc:document_status (entire document vs. chapter-level) |
 | Completed chapters | Form? Detail? | **Form Block** (`spec-architecture:completed_chapters`) | architect determines work start position |
 | Functional requirement count / Non-functional requirement count | Form? Detail? | **Form Block** (`spec-foundation:fr_count`, `spec-foundation:nfr_count`) | Denominator for traceability coverage calculation |
@@ -532,9 +521,9 @@ Field order is fixed. Agents MUST NOT reorder fields or omit required fields.
 
 ```
 ── Identification (what and how to read) ──
-schema_version → file_type → form_block_cardinality → language
+schema_version → file_type → language
 ── State (is it safe to touch?) ──
-→ document_status
+→ document_status → document_version
 ── Workflow (is this my job?) ──
 → owner → commissioned_by → consumed_by
 ── Context (what is this about?) ──
@@ -551,12 +540,12 @@ schema_version → file_type → form_block_cardinality → language
 |-----------|------|------|---------|------|
 | schema_version | string | Yes | Identification | Schema version (currently "0.0") |
 | file_type | enum | Yes | Identification | One of the registered file types (see Chapter 7) |
-| form_block_cardinality | enum: single / multiple | Yes | Identification | Whether this file has a single or multiple Form Blocks |
 | language | string (ISO 639-1) | Yes | Identification | Language of this file (e.g., `ja`, `en`, `fr`) |
 | document_status | enum: draft / in-review / approved / archived | Yes | State | Document lifecycle status |
+| document_version | string | Yes | State | Version number in `{major}.{minor}` form (e.g. `1.2`). **The file name is immutable; the version lives in this field** |
 | owner | string | Yes | Workflow | Agent with write permission |
 | commissioned_by | string | Yes | Workflow | Trigger for this document's creation (values: `user`, `orchestrator`, `phase-{name}`, or `{agent-name}`) |
-| consumed_by | string | Yes | Workflow | Agent that will use this document next |
+| consumed_by | list | Yes | Workflow | Agents that will use this document next. **Repeat the tag when there are several consumers** (`<doc:consumed_by>a</doc:consumed_by><doc:consumed_by>b</doc:consumed_by>`). Do not use a single comma-separated string |
 | project | string | Yes | Context | Project name |
 | purpose | string | Yes | Context | Why this file exists and what action is expected |
 | summary | string | Yes | Context | Brief description of file contents |
@@ -581,10 +570,6 @@ schema_version → file_type → form_block_cardinality → language
 
 <doc:file_type>{file_type}</doc:file_type>
 
-<!-- FIELD: form_block_cardinality | type: enum | values: single,multiple | required: true -->
-
-<doc:form_block_cardinality>{single_or_multiple}</doc:form_block_cardinality>
-
 <!-- FIELD: language | type: string (ISO 639-1) | required: true -->
 
 <doc:language>{language_code}</doc:language>
@@ -594,6 +579,10 @@ schema_version → file_type → form_block_cardinality → language
 <!-- FIELD: document_status | type: enum | values: draft,in-review,approved,archived | required: true -->
 
 <doc:document_status>draft</doc:document_status>
+
+<!-- FIELD: document_version | type: string | required: true -->
+
+<doc:document_version>0.1</doc:document_version>
 
 ## Workflow
 
@@ -702,45 +691,55 @@ The Footer is shared across all file types. Agents MUST append a new `<entry>` t
 
 **Namespace naming convention:** Namespaces use the file_type name as-is. Abbreviations are prohibited (e.g., ~~`cr:`~~ -> `change-request:`). As a rule, 2 words or fewer, maximum 3 words. `doc:` is reserved exclusively for Common Block + Footer. When a category has sub-types, place the category first (e.g., `spec-foundation:`, `spec-architecture:`).
 
-| file_type | Namespace | Purpose | Directory | Singleton? |
-|-----------|---------|------|-------------|:----------:|
-| pipeline-state | `pipeline-state:` | Pipeline orchestration state | `project-management/` | Yes |
-| handoff | `handoff:` | Inter-agent task handoff | `project-management/handoff/` | No |
-| progress | `progress:` | Project progress and metrics | `project-management/progress/` | No |
-| interview-record | `interview-record:` | Interview record | `project-management/` | Yes |
-| wbs | `wbs:` | WBS / Gantt chart | `project-management/progress/` | Yes |
-| test-plan | `test-plan:` | Test plan | `project-management/` | Yes |
-| review | `review:` | Code/design review results | `project-records/reviews/` | No |
-| decision | `decision:` | Architecture decision record | `project-records/decisions/` | No |
-| tech-decision | `tech-decision:` | Technical ruling and quality gate decision record | `project-records/tech-decisions/` | No |
-| governance-change-log | `governance-change-log:` | Record of changes applied to governance files | `project-records/governance/` | No |
-| deployment-design | `deployment-design:` | Deployment design (environments, procedure, rollback) | `docs/operations/` | Yes |
-| risk-register | `risk-register:` | Risk register (aggregate of individual risks) | `project-records/risks/` | Yes |
-| risk | `risk:` | Risk entry and register | `project-records/risks/` | No |
-| defect | `defect:` | defect tracking | `project-records/defects/` | No |
-| change-request | `change-request:` | Change request management | `project-records/change-requests/` | No |
-| traceability | `traceability:` | Requirement-to-test tracing | `project-records/traceability/` | Yes |
-| license-report | `license-report:` | License compatibility report | `project-records/licenses/` | Yes |
-| performance-report | `performance-report:` | Performance test results report | `project-records/performance/` | No |
-| spec-foundation | `spec-foundation:` | Specification Ch1-2 (Foundation, Requirements) | `docs/spec/` | Yes |
-| spec-architecture | `spec-architecture:` | Specification Ch3-6 (Architecture, Specification, Test Strategy, Design Principles) | `docs/spec/` | Yes |
-| threat-model | `threat-model:` | Threat model | `docs/security/` | Yes |
-| security-architecture | `security-architecture:` | Security design | `docs/security/` | Yes |
-| observability-design | `observability-design:` | Observability design | `docs/observability/` | Yes |
-| hw-requirement-spec | `hw-requirement-spec:` | HW requirement specification (conditional; inherits external-dependency-spec) | `docs/hardware/` | Yes |
-| ai-requirement-spec | `ai-requirement-spec:` | AI/LLM requirement specification (conditional; inherits external-dependency-spec) | `docs/ai/` | Yes |
-| framework-requirement-spec | `framework-requirement-spec:` | Framework requirement specification (conditional; inherits external-dependency-spec) | `docs/framework/` | Yes |
-| executive-dashboard | `executive-dashboard:` | Project-wide dashboard | Root | Yes |
-| final-report | `final-report:` | Project final report | Root | Yes |
-| user-order | `user-order:` | User input specification (3-question format) | Root | Yes |
-| user-manual | `user-manual:` | End-user operation manual | `docs/` | Yes |
-| security-scan-report | `security-scan-report:` | Security scan results (SAST/SCA/DAST/manual) | `project-records/security/` | No |
-| runbook | `runbook:` | Runbook (daily operations, incident response) | `docs/operations/` | Yes |
-| incident-report | `incident-report:` | Production incident record and post-mortem | `project-records/incidents/` | No |
-| disaster-recovery-plan | `disaster-recovery-plan:` | Disaster recovery plan (RPO/RTO, recovery procedures) | `docs/operations/` | Yes |
-| stakeholder-register | `stakeholder-register:` | Stakeholder register (recommended process) | `project-management/` | Yes |
-| retrospective-report | `retrospective-report:` | Retrospective and process improvement record | `project-records/improvement/` | No |
-| field-issue | `field-issue:` | Field testing feedback management (defect / CR unified). Conditional: field testing enabled | `project-records/field-issues/` | No |
+**What the tiers mean:**
+
+| Tier | Meaning |
+|------|---------|
+| Core | Always produced, in every project. Never exempt by scale |
+| Standard | Produced by the standard process. Follows the exemption matrix in §3.1.1 |
+| Conditional | Produced only when the corresponding conditional process is enabled |
+
+There is no need to learn all 37 file_types at once. **Understanding the nine Core ones is enough to run the pipeline.**
+
+| file_type | Namespace | Purpose | Directory | Singleton? | Tier |
+|-----------|---------|------|-------------|:----------:|:----:|
+| pipeline-state | `pipeline-state:` | Pipeline orchestration state | `project-management/` | Yes | Core |
+| handoff | `handoff:` | Inter-agent task handoff | `project-management/handoff/` | No | Standard |
+| progress | `progress:` | Project progress and metrics | `project-management/progress/` | No | Standard |
+| interview-record | `interview-record:` | Interview record | `project-management/` | Yes | Standard |
+| wbs | `wbs:` | WBS / Gantt chart | `project-management/progress/` | Yes | Standard |
+| test-plan | `test-plan:` | Test plan | `project-management/` | Yes | Standard |
+| review | `review:` | Code/design review results | `project-records/reviews/` | No | Core |
+| decision | `decision:` | Architecture decision record | `project-records/decisions/` | No | Core |
+| tech-decision | `tech-decision:` | Technical ruling and quality gate decision record | `project-records/tech-decisions/` | No | Core |
+| governance-change-log | `governance-change-log:` | Record of changes applied to governance files | `project-records/governance/` | No | Standard |
+| deployment-design | `deployment-design:` | Deployment design (environments, procedure, rollback) | `docs/operations/` | Yes | Standard |
+| risk-register | `risk-register:` | Risk register (aggregate of individual risks) | `project-records/risks/` | Yes | Standard |
+| risk | `risk:` | Risk entry and register | `project-records/risks/` | No | Standard |
+| defect | `defect:` | defect tracking | `project-records/defects/` | No | Core |
+| change-request | `change-request:` | Change request management | `project-records/change-requests/` | No | Standard |
+| traceability | `traceability:` | Requirement-to-test tracing | `project-records/traceability/` | Yes | Standard |
+| license-report | `license-report:` | License compatibility report | `project-records/licenses/` | Yes | Standard |
+| performance-report | `performance-report:` | Performance test results report | `project-records/performance/` | No | Standard |
+| spec-foundation | `spec-foundation:` | Specification Ch1-2 (Foundation, Requirements) | `docs/spec/` | Yes | Core |
+| spec-architecture | `spec-architecture:` | Specification Ch3-6 (Architecture, Specification, Test Strategy, Design Principles) | `docs/spec/` | Yes | Core |
+| threat-model | `threat-model:` | Threat model | `docs/security/` | Yes | Standard |
+| security-architecture | `security-architecture:` | Security design | `docs/security/` | Yes | Standard |
+| observability-design | `observability-design:` | Observability design | `docs/observability/` | Yes | Standard |
+| hw-requirement-spec | `hw-requirement-spec:` | HW requirement specification (conditional; inherits external-dependency-spec) | `docs/hardware/` | Yes | Conditional |
+| ai-requirement-spec | `ai-requirement-spec:` | AI/LLM requirement specification (conditional; inherits external-dependency-spec) | `docs/ai/` | Yes | Conditional |
+| framework-requirement-spec | `framework-requirement-spec:` | Framework requirement specification (conditional; inherits external-dependency-spec) | `docs/framework/` | Yes | Conditional |
+| executive-dashboard | `executive-dashboard:` | Project-wide dashboard | Root | Yes | Standard |
+| final-report | `final-report:` | Project final report | Root | Yes | Core |
+| user-order | `user-order:` | User input specification (3-question format) | Root | Yes | Core |
+| user-manual | `user-manual:` | End-user operation manual | `docs/` | Yes | Standard |
+| security-scan-report | `security-scan-report:` | Security scan results (SAST/SCA/DAST/manual) | `project-records/security/` | No | Standard |
+| runbook | `runbook:` | Runbook (daily operations, incident response) | `docs/operations/` | Yes | Standard |
+| incident-report | `incident-report:` | Production incident record and post-mortem | `project-records/incidents/` | No | Standard |
+| disaster-recovery-plan | `disaster-recovery-plan:` | Disaster recovery plan (RPO/RTO, recovery procedures) | `docs/operations/` | Yes | Conditional |
+| stakeholder-register | `stakeholder-register:` | Stakeholder register (recommended process) | `project-management/` | Yes | Conditional |
+| retrospective-report | `retrospective-report:` | Retrospective and process improvement record | `project-records/improvement/` | No | Standard |
+| field-issue | `field-issue:` | Field testing feedback management (defect / CR unified). Conditional: field testing enabled | `project-records/field-issues/` | No | Conditional |
 
 ### external-dependency-spec (External Dependency Requirement Specification Template)
 
@@ -921,7 +920,7 @@ When defining a new Form Block, the following 2-section structure MUST be follow
 | file_type, owner | Common Block | Fields shared across all types |
 | document_status | Common Block | Fields shared across all types |
 | commissioned_by, consumed_by | Common Block | Fields shared across all types |
-| form_block_cardinality | Common Block | Fields shared across all types |
+| document_version | Common Block | Fields shared across all types |
 | Namespace, singleton, directory | Section 7 file_type table | Type registration information |
 
 **Rules for the "Value Range / Constraints" column in the Fields table:**
@@ -929,7 +928,7 @@ When defining a new Form Block, the following 2-section structure MUST be follow
 - Enum values: List with slash separation (e.g., `open / in-fix / closed`)
 - Numeric range: Specify the range explicitly (e.g., `0-100`)
 - Trigger conditions: Describe the result with `->` (e.g., `>=6 -> notify user`)
-- Gate conditions: Describe as `= 0 required for phase transition`
+- Gate conditions: **reference the gate ID in Process Rules §9.4.1** (e.g. `-> Process Rules §9.4.1 GATE-DESIGN`). Do not write the threshold itself here. §9.4.1 is the single source of truth for gate conditions, and writing them in several places guarantees drift
 
 ---
 
@@ -992,8 +991,8 @@ Describe deliverables, human intervention requirements, and quality gate results
 | review:gate | string | No | The gate this review decides | GATE-XXX |
 | review:purity_tag_coverage_pct | int | No | `@purity` tag coverage (required when implementation code was reviewed) | 0-100. R7.6 requires 100 |
 | review:result | enum | Yes | Review result | pass / fail |
-| review:critical_count | int | Yes | Number of Critical findings | = 0 required for phase transition |
-| review:high_count | int | Yes | Number of High findings | = 0 required for phase transition |
+| review:critical_count | int | Yes | Number of Critical findings | -> Process Rules §9.4.1 (per-GATE conditions) |
+| review:high_count | int | Yes | Number of High findings | -> Process Rules §9.4.1 (per-GATE conditions) |
 | review:medium_count | int | Yes | Number of Medium findings | — |
 | review:low_count | int | Yes | Number of Low findings | — |
 | review:gate_phase | string | No | Phase transition this review gates (e.g., "1->2") | — |
@@ -1002,7 +1001,7 @@ Describe deliverables, human intervention requirements, and quality gate results
 
 ### Detail Block Guidance
 
-Describe review finding details (location, severity, proposed fix). Quality gate rule: Phase transition requires thresholds defined in CLAUDE.md Quality Targets to be met and all findings to have a recorded disposition (see process-rules §9.5).
+Describe review finding details (location, severity, proposed fix). Process Rules §9.4.1 is the single source of truth for gate conditions; no threshold is written in this document. Finding disposition tracking follows Process Rules §9.5.
 
 **Finding Disposition Table (required in all review reports):**
 
@@ -1077,6 +1076,9 @@ Describe progress summary narrative, recent milestone achievements, and outlook 
 | defect:assigned_to | string | Yes | Agent assigned to fix | — |
 | defect:found_in_phase | int | Yes | Phase in which the defect was found | 0-7 |
 | defect:related_requirement | string | No | Requirement ID (e.g., FR-001). When traceable | — |
+| defect:closed_reason | enum | No | Reason for the terminal state (required when it ends anywhere other than `closed`) | fixed / rejected / cannot-reproduce / withdrawn |
+| defect:reproduction_attempt_count | int | No | Number of reproduction attempts (required for `cannot-reproduce`) | 1 or greater |
+| defect:reopen_trigger | text | No | Condition for reopening (required for `rejected` / `cannot-reproduce`) | — |
 
 ### Detail Block Guidance
 
@@ -1178,6 +1180,8 @@ Describe WBS table (task ID, task name, assigned agent, dependencies, status, es
 
 ## 9.12 test-plan (Namespace: test-plan:)
 
+> **Boundary against spec Ch5:** Ch5 "Test Strategy" defines **what is verified and to what extent** (test levels, coverage policy, acceptance criteria) - a design decision owned by architect. `test-plan` defines **when, by whom and in what order it is executed** (steps, assignment, schedule, environments) - an execution plan owned by test-engineer. The same content is never written in both. When Ch5 changes, test-plan is updated; never the reverse.
+
 ### Fields
 
 | Field | Type | Required | Description | Value Range / Constraints |
@@ -1200,7 +1204,7 @@ Describe scope and strategy per test level, test case list (ID, target requireme
 
 | Field | Type | Required | Description | Value Range / Constraints |
 |-----------|------|------|------|-----------|
-| spec-foundation:spec_format | enum | Yes | Specification format | ANMS / ANPS / ANGS |
+| spec-foundation:spec_format | enum | Yes | Specification format | ANMS / ANPS (ANGS is at research stage and is not in the domain) |
 | spec-foundation:fr_count | int | Yes | Total number of functional requirements | — |
 | spec-foundation:nfr_count | int | Yes | Total number of non-functional requirements | — |
 | spec-foundation:completed_chapters | string | Yes | Completed chapters (comma-separated) | 1 / 2 |
@@ -1237,7 +1241,7 @@ Describe Specification Ch3 (Architecture: system architecture diagram, layer def
 | threat-model:methodology | enum | Yes | Threat modeling methodology | STRIDE / PASTA / other |
 | threat-model:threat_count | int | Yes | Number of identified threats | — |
 | threat-model:mitigated_count | int | Yes | Number of threats with mitigations implemented | — |
-| threat-model:unmitigated_critical_count | int | Yes | Number of unmitigated Critical threats | = 0 required for implementation transition |
+| threat-model:unmitigated_critical_count | int | Yes | Number of unmitigated Critical threats | -> Process Rules §9.4.1 GATE-DESIGN |
 
 ### Detail Block Guidance
 
@@ -1397,7 +1401,7 @@ Describe project summary (goal achievement assessment, scope fulfillment, qualit
 
 | Field | Type | Required | Description | Value Range / Constraints |
 |-----------|------|------|------|-----------|
-| user-order:format | enum | Yes | Selected specification format | ANMS / ANPS / ANGS |
+| user-order:format | enum | Yes | Selected specification format | ANMS / ANPS (ANGS is at research stage and is not in the domain) |
 | user-order:question_count | int | Yes | Number of answered questions in 3-question format | 3 (fixed) |
 
 ### Detail Block Guidance
@@ -1560,6 +1564,9 @@ Describe the body of the retrospective analysis. Include root cause analysis of 
 | field-issue:spec_update_required | boolean | No | Whether spec update is needed | — |
 | field-issue:related_requirements | list | No | Related requirement IDs | — |
 | field-issue:related_defect_id | string | No | Link to defect found in automated testing | DEF-NNN |
+| field-issue:closed_reason | enum | No | Reason for the terminal state (required when it ends anywhere other than `verified`) | verified / rejected / cannot-reproduce / withdrawn |
+| field-issue:reproduction_attempt_count | int | No | Number of reproduction attempts (required for `cannot-reproduce`) | 1 or greater |
+| field-issue:reopen_trigger | text | No | Condition for reopening (required for `rejected` / `cannot-reproduce`) | — |
 
 ### Detail Block Guidance
 
@@ -1661,10 +1668,15 @@ Versioning is determined by the document **status** at the time of change.
 **Rules by status:**
 
 ```
-draft     → Overwrite the file (no archiving)
-approved  → Move current file to old/ → Create new file
-released  → Move current file to old/ → Create new file
+draft      → Overwrite the file and increment the minor of document_version
+in-review  → Overwrite the file and increment the minor of document_version
+approved   → Move the current file to old/{name}-v{old}.md, create the new version under the same name, increment the major
+archived   → Do not modify (reference only)
 ```
+
+**The value domain of `document_status` is draft / in-review / approved / archived - four values.** `released` is not in that domain, so it is removed from the versioning rules.
+
+**The file name does not change.** The version lives in `document_version`. A version is put into the file name only when moving it to `old/`, so that no reference has to follow a rename.
 
 **Singleton files** (pipeline-state.md, risk-register.md, traceability-matrix.md):
 
@@ -1758,6 +1770,8 @@ The primary language file always has no suffix. Agents always read/write the fil
 | Element | Language | Customizable | Rationale |
 |------|------|:-----------:|------|
 | Field names and namespace prefixes | English (fixed) | No | Machine parsability |
+| Values of `owner` / `commissioned_by` / `consumed_by` | English (fixed) | No | Agent names are fixed in English; translating them breaks data-flow matching |
+| Values of `document_status` / `file_type` | English (fixed) | No | They are enum values, judged by machine |
 | HTML comments (FIELD annotations) | English (fixed) | No | Machine parsability |
 | Common Block field values (purpose, summary, etc.) | Project primary language | Yes | Read by humans and agents |
 | Form Block field names | English (fixed) | No | Machine parsability |

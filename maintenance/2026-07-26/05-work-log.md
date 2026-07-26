@@ -740,3 +740,66 @@ Step 6 は 55 項目だが、前倒し 6 件（6-29〜6-33, 6-39）と Step 0 �
 | ゲート ID | GATE- の出現が ja/en とも 9（定義 8 + 正本宣言 1） |
 | 規模区分 | Large / Critical が ja/en とも 2 |
 | 参照の実在 | 189 件すべて解決 |
+
+---
+
+## Step 6b — 文書管理規則の修正（6-21 〜 6-28, 6-34 〜 6-37）
+
+### 版管理の一本化（6-21, 6-22）
+
+| 変更 | 内容 |
+|---|---|
+| `document_version` を Common Block に新設 | `{メジャー}.{マイナー}` 形式。状態グループに配置 |
+| `form_block_cardinality` を削除 | write-only フィールドだった（C10-d）。**書かせているが誰も読まない**フィールドは、書き手の負担だけを増やす |
+| §10 バージョニング規則を 4 ステータスに整合 | `released` は `document_status` の値域に存在しない値だった。除外した |
+
+**ファイル名は不変とし、版は `document_version` が持つ。** 従来はファイル名に版番号を含めていたため、版が上がるたびに参照側がリネームに追随する必要があった。ファイル名に版を付けるのは `old/` へ退避するときのみとした。
+
+### file_type の Tier 化（6-27）
+
+37 の file_type すべてに **Tier 列**（Core / Standard / Conditional）を付与した。
+
+| Tier | 意味 | 件数 |
+|------|------|---:|
+| Core | 全プロジェクトで必ず作成。規模による免除の対象外 | 9 |
+| Standard | 標準プロセスで作成。§3.1.1 の免除マトリクスに従う | 22 |
+| Conditional | 該当する条件付きプロセスが有効な場合のみ | 6 |
+
+**「37 を一度に覚える必要はない。Core の 9 種を理解すれば全自動開発は回る」**と明記した。C7 の「file_type の学習コスト」に対し、削除ではなく段階的必須化で応えている（議題1 の課題整理どおり）。
+
+`stakeholder-register` と `disaster-recovery-plan` は Conditional に降格した。
+
+### ゲート条件の参照化（6-37）
+
+閾値を各所に直書きしていたものを、**プロセス規則 §9.4.1 のゲート ID 参照**に置換した（6 箇所）。
+
+> 変更前: `review:critical_count` … 値域・制約 = `= 0 required for phase transition`
+> 変更後: `review:critical_count` … 値域・制約 = `→ プロセス規則 §9.4.1（各 GATE の条件）`
+
+Fields 表の記述規約自体にも「**閾値そのものをここに書かない。ゲート条件の正本は §9.4.1 であり、複数箇所に書くと必ず乖離する**」を追加した。実際に乖離していたのが C3 の指摘である。
+
+### その他
+
+| # | 内容 |
+|:-:|---|
+| 6-23 | `consumed_by` を `string` → `list` に変更。消費者が複数の場合はタグを繰り返す（カンマ区切り文字列にしない） |
+| 6-24 | §12.4 に「`owner` / `commissioned_by` / `consumed_by` / `document_status` / `file_type` の値は英語固定」を追加。翻訳するとデータフローの突合が壊れる |
+| 6-25 | `spec-foundation:format` → `spec-foundation:spec_format`（誤フィールド名） |
+| 6-26 | §1.2 の対象ファイル表（8 件を列挙）を削除し「`process-rules/` 配下の全 `.md`」に統一。列挙は規則文書を追加するたびに更新漏れが起きる |
+| 6-28 | §9.12 に test-plan と仕様書 Ch5 の責務境界を明記。Ch5 =「何をどこまで検証するか」（architect 所有）、test-plan =「いつ誰がどの順で実行するか」（test-engineer 所有） |
+| 6-34 | `defect` / `field-issue` に `closed_reason` / `reproduction_attempt_count` / `reopen_trigger` を追加 |
+| 6-36 | `spec_format` / `user-order:format` の値域から ANGS を除外 |
+
+### 検証証跡
+
+| 検査 | 結果 |
+|---|---|
+| ja/en 構造パリティ | 見出し 175 / 表行 707 / フェンス 36 で完全一致 |
+| Tier 列の付与 | ja/en とも 37 行すべてに付与 |
+| §9.4.1 参照 | ja/en とも 6 箇所で一致 |
+| `form_block_cardinality` の残存 | **0 件**（framework-src 全体） |
+| `released` の残存 | 1 件（削除したことを説明する文そのもの） |
+| 参照の実在 | 189 件すべて解決 |
+| デプロイ | 22 体 |
+
+**行数差について:** `document-rules` の ja/en には 2 行の差が以前から存在する（Step 3 で報告済み。構造カウントは一致）。6b の編集は ja/en 同数の増減であり、差を増やしていない。
