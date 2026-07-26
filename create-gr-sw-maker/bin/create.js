@@ -103,15 +103,16 @@ async function main() {
       fs.rmSync(scaffoldDir, { recursive: true, force: true });
     }
 
-    // Clean .gitignore — remove framework-repo-only rules
-    // Everything below the marker line is for the framework repo only.
-    // In user projects, suffix-less files (CLAUDE.md, agents/*.md, etc.) ARE the working files.
-    const gitignorePath = path.join(targetDir, ".gitignore");
-    if (fs.existsSync(gitignorePath)) {
-      let gi = fs.readFileSync(gitignorePath, "utf8");
-      gi = gi.replace(/\n# === Framework repo only[\s\S]*$/, "\n");
-      fs.writeFileSync(gitignorePath, gi.trimEnd() + "\n");
+    // Install the user-project .gitignore.
+    // The framework repo's own .gitignore ignores setup.js output, which in a
+    // user project ARE the working files, so the two cannot be shared. They ship
+    // as separate files so that editing one can never silently break the other.
+    const userIgnore = path.join(targetDir, "gitignore-user.template");
+    if (!fs.existsSync(userIgnore)) {
+      throw new Error("gitignore-user.template is missing from the template");
     }
+    fs.copyFileSync(userIgnore, path.join(targetDir, ".gitignore"));
+    fs.unlinkSync(userIgnore);
 
     // Generate README.md template for the user's project
     const readmePath = path.join(targetDir, "README.md");

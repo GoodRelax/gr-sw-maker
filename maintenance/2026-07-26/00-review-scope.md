@@ -120,6 +120,7 @@
 | `02-triage-and-order.md` | 指摘の整理と、判断の順序をどう決めたか |
 | `03-decisions.md` | 9 議題の判断結果と根拠、却下案と却下理由 |
 | `04-work-plan.md` | 実装順序、全修正項目、新設エージェントの定義ドラフト |
+| `05-work-log.md` | 各 Step の作業記録。手順・結果・検証証跡・復旧手順・計画との差分 |
 | `ref-claude-code-constraints.md` | Claude Code の技術的制約（複数の判断の根拠。実装中にも参照する） |
 
 **検討過程の詳細**（決定分析の採点根拠、却下案の詳細比較など）は `maintenance/temporary/` に残してある。同ディレクトリは `.gitignore` 対象であり、実装完了まで保持する。

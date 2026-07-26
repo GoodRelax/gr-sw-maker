@@ -1,0 +1,25 @@
+# This file becomes the .gitignore of a project created with
+# "npm init gr-sw-maker". create.js installs it and removes this template.
+#
+# It is deliberately separate from the framework repo's own .gitignore:
+# there, the suffix-less files under .claude/ and process-rules/ are setup.js
+# output and must NOT be committed, while here they ARE the working files and
+# must be committed. One file cannot express both.
+
+# Dependencies
+node_modules/
+
+# Test coverage
+coverage/
+
+# Secrets and keys
+.env
+.env.*
+*.pem
+*.key
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Scratch
+old/

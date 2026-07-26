@@ -98,7 +98,7 @@ field-issue チケットの更新は文書管理規則 §9.33 の Form Block 仕
 
 ### プロセス規則
 
-[実機テスト フィードバック管理規則](../../process-rules/field-issue-handling-rules.md) に従う。特にゲート条件（§6.2〜§6.5）を厳守する。
+実機テスト フィードバック管理規則（`process-rules/field-issue-handling-rules.md`）に従う。特にゲート条件（§6.2〜§6.5）を厳守する。
 
 ### 分析の原則
 

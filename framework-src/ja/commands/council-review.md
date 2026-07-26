@@ -12,10 +12,11 @@
 
 | カテゴリ | glob パターン | 想定ペア数 |
 |----------|---------------|:----------:|
-| プロセス規則 | `process-rules/*-ja.md` ↔ `*-en.md` | 11 |
-| エージェント定義 | `.claude/agents/*-ja.md` ↔ `*-en.md` | 21 |
-| プロジェクト指示テンプレート | `CLAUDE-ja.md` ↔ `CLAUDE-en.md` | 1 |
-| カスタムコマンド | `.claude/commands/*-ja.md` ↔ `*-en.md` | 5 |
+| プロセス規則 | `framework-src/ja/process-rules/*.md` ↔ `framework-src/en/process-rules/*.md` | 11 |
+| エージェント定義 | `framework-src/ja/agents/*.md` ↔ `framework-src/en/agents/*.md` | 21 |
+| プロジェクト指示テンプレート | `framework-src/ja/CLAUDE.md` ↔ `framework-src/en/CLAUDE.md` | 1 |
+| カスタムコマンド | `framework-src/ja/commands/*.md` ↔ `framework-src/en/commands/*.md` | 5 |
+| ユーザー要求テンプレート | `framework-src/ja/user-order.md` ↔ `framework-src/en/user-order.md` | 1 |
 | 論文 | `essays/anms-essay-ja.md` ↔ `-en.md`, `essays/angs-essay-ja.md` ↔ `-en.md` | 2 |
 
 ### チェック基準（translate-framework §2 + §6 準拠）
@@ -62,21 +63,21 @@ Phase 0 を通過した場合、日英の内容は一致しているため、以
 
 | # | パス | 内容 |
 |:-:|------|------|
-| F01 | `CLAUDE-en.md` | プロジェクト指示テンプレート |
-| F02 | `process-rules/full-auto-dev-process-rules-en.md` | プロセス規則 |
-| F03 | `process-rules/full-auto-dev-document-rules-en.md` | 文書管理規則 |
-| F04 | `process-rules/agent-list-en.md` | エージェント一覧（Single Source of Truth） |
-| F05 | `process-rules/glossary-en.md` | 用語集 |
-| F06 | `process-rules/defect-taxonomy-en.md` | 不具合分類 |
-| F07 | `process-rules/review-standards-en.md` | レビュー基準（R1-R6） |
-| F08 | `process-rules/prompt-structure-en.md` | プロンプト構造規約（S0-S6） |
-| F09 | `process-rules/spec-template-en.md` | 仕様テンプレート |
-| F10 | `process-rules/porting-guide-en.md` | 移植ガイド |
-| F11 | `.claude/agents/*-en.md` | エージェント定義 |
-| F12 | `.claude/commands/*-en.md` | カスタムコマンド |
+| F01 | `framework-src/en/CLAUDE.md` | プロジェクト指示テンプレート |
+| F02 | `framework-src/en/process-rules/full-auto-dev-process-rules.md` | プロセス規則 |
+| F03 | `framework-src/en/process-rules/full-auto-dev-document-rules.md` | 文書管理規則 |
+| F04 | `framework-src/en/process-rules/agent-list.md` | エージェント一覧（Single Source of Truth） |
+| F05 | `framework-src/en/process-rules/glossary.md` | 用語集 |
+| F06 | `framework-src/en/process-rules/defect-taxonomy.md` | 不具合分類 |
+| F07 | `framework-src/en/process-rules/review-standards.md` | レビュー基準（R1-R6） |
+| F08 | `framework-src/en/process-rules/prompt-structure.md` | プロンプト構造規約（S0-S6） |
+| F09 | `framework-src/en/process-rules/spec-template.md` | 仕様テンプレート |
+| F10 | `framework-src/en/process-rules/porting-guide.md` | 移植ガイド |
+| F11 | `framework-src/en/agents/*.md` | エージェント定義 |
+| F12 | `framework-src/en/commands/*.md` | カスタムコマンド |
 | F13 | `essays/anms-essay-en.md` | ANMS 論文 |
 | F14 | `essays/angs-essay-en.md` | ANGS 論文 |
-| F15 | `user-order.md` | ユーザー要求テンプレート |
+| F15 | `framework-src/en/user-order.md` | ユーザー要求テンプレート |
 
 > **スコープ外:** `essays/research/*.md`（調査レポート）、`prompt/next-session-handoff.md`（作業メモ）
 
@@ -100,9 +101,9 @@ gr-sw-maker フレームワークの全エージェント定義ファイル（EN
 
 ## 読み込むファイル
 
-1. process-rules/agent-list-en.md の §1（エージェント一覧テーブル）と §2（オーナーシップ全セクション）
-2. process-rules/prompt-structure-en.md（S0-S6 構造規約）
-3. .claude/agents/*-en.md 全ファイル（ファイル数は agent-list §1 と一致すること）
+1. framework-src/en/process-rules/agent-list.md の §1（エージェント一覧テーブル）と §2（オーナーシップ全セクション）
+2. framework-src/en/process-rules/prompt-structure.md（S0-S6 構造規約）
+3. framework-src/en/agents/*.md 全ファイル（ファイル数は agent-list §1 と一致すること）
 
 ## チェック項目
 
@@ -140,16 +141,16 @@ gr-sw-maker フレームワークの全エージェント定義ファイル（EN
 ```
 gr-sw-maker フレームワーク全体で用語の機械的一致性をチェックする。
 コードを書く必要はない。Grep/Glob/Read での検索と分析のみ。
-EN 版ファイルを主対象とする（CLAUDE-en.md を使用）。
+EN 版ファイルを主対象とする（framework-src/en/CLAUDE.md を使用）。
 
 ## チェック項目
 
 ### C1: エージェント数の一致
 agent-list §1 テーブルの実際の行数を数え、全ファイルでエージェント数に関する記載がその実数と一致しているか確認する。
-対象: CLAUDE-en.md, process-rules/*-en.md, essays/anms-essay-en.md, essays/angs-essay-en.md
+対象: framework-src/en/CLAUDE.md, framework-src/en/process-rules/*.md, essays/anms-essay-en.md, essays/angs-essay-en.md
 
 ### C2: file_type 名の一致
-process-rules/full-auto-dev-document-rules-en.md §7 の file_type マスターテーブルと process-rules/agent-list-en.md §2 のオーナーシップセクションで、file_type 名が完全一致するか突合する。
+framework-src/en/process-rules/full-auto-dev-document-rules.md §7 の file_type マスターテーブルと framework-src/en/process-rules/agent-list.md §2 のオーナーシップセクションで、file_type 名が完全一致するか突合する。
 
 ### C3: フレームワーク名の使い分け
 全ファイルで以下を検索する:
@@ -159,7 +160,7 @@ process-rules/full-auto-dev-document-rules-en.md §7 の file_type マスター�
 対象: 全 .md ファイル
 
 ### C4: フェーズ名の一致
-process-rules/full-auto-dev-process-rules-en.md §2 の8フェーズ名（setup, planning, dependency-selection, design, implementation, testing, delivery, operation）が process-rules/agent-list-en.md §4 アクティベーションマップで一致しているか。
+framework-src/en/process-rules/full-auto-dev-process-rules.md §2 の8フェーズ名（setup, planning, dependency-selection, design, implementation, testing, delivery, operation）が framework-src/en/process-rules/agent-list.md §4 アクティベーションマップで一致しているか。
 
 ### C5: file_type 数の一致
 full-auto-dev-document-rules §7 の file_type マスターテーブルの実際の行数を数え、全ファイルで file_type 数に関する記載がその実数と一致しているか検索する。

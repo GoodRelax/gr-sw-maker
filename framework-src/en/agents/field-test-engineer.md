@@ -84,7 +84,7 @@ The output file_type (field-issue) must be created following the Form Block spec
 
 ### Process Rules
 
-Follow [Field Issue Handling Rules](../../process-rules/field-issue-handling-rules.md). In particular, strictly observe the following:
+Follow the Field Issue Handling Rules (`process-rules/field-issue-handling-rules.md`). In particular, strictly observe the following:
 
 - MUST NOT report a fix as complete without running tests
 - All feedback must be recorded as field-issue tickets (except questions)

@@ -12,10 +12,11 @@ If discrepancies are detected, halt the review and ask the user for a decision.
 
 | Category | Glob Pattern | Expected Pairs |
 |----------|--------------|:--------------:|
-| Process rules | `process-rules/*-ja.md` ↔ `*-en.md` | 11 |
-| Agent definitions | `.claude/agents/*-ja.md` ↔ `*-en.md` | 21 |
-| Project instruction template | `CLAUDE-ja.md` ↔ `CLAUDE-en.md` | 1 |
-| Custom commands | `.claude/commands/*-ja.md` ↔ `*-en.md` | 5 |
+| Process rules | `framework-src/ja/process-rules/*.md` ↔ `framework-src/en/process-rules/*.md` | 11 |
+| Agent definitions | `framework-src/ja/agents/*.md` ↔ `framework-src/en/agents/*.md` | 21 |
+| Project instruction template | `framework-src/ja/CLAUDE.md` ↔ `framework-src/en/CLAUDE.md` | 1 |
+| Custom commands | `framework-src/ja/commands/*.md` ↔ `framework-src/en/commands/*.md` | 5 |
+| User requirement template | `framework-src/ja/user-order.md` ↔ `framework-src/en/user-order.md` | 1 |
 | Essays | `essays/anms-essay-ja.md` ↔ `-en.md`, `essays/angs-essay-ja.md` ↔ `-en.md` | 2 |
 
 ### Check Criteria (per translate-framework §2 + §6)
@@ -62,21 +63,21 @@ If Phase 0 passes, JA and EN content is confirmed consistent. From this point, *
 
 | # | Path | Content |
 |:-:|------|---------|
-| F01 | `CLAUDE-en.md` | Project instruction template |
-| F02 | `process-rules/full-auto-dev-process-rules-en.md` | Process rules |
-| F03 | `process-rules/full-auto-dev-document-rules-en.md` | Document management rules |
-| F04 | `process-rules/agent-list-en.md` | Agent list (Single Source of Truth) |
-| F05 | `process-rules/glossary-en.md` | Glossary |
-| F06 | `process-rules/defect-taxonomy-en.md` | Defect taxonomy |
-| F07 | `process-rules/review-standards-en.md` | Review standards (R1-R6) |
-| F08 | `process-rules/prompt-structure-en.md` | Prompt structure conventions (S0-S6) |
-| F09 | `process-rules/spec-template-en.md` | Specification template |
-| F10 | `process-rules/porting-guide-en.md` | Porting guide |
-| F11 | `.claude/agents/*-en.md` | Agent definitions |
-| F12 | `.claude/commands/*-en.md` | Custom commands |
+| F01 | `framework-src/en/CLAUDE.md` | Project instruction template |
+| F02 | `framework-src/en/process-rules/full-auto-dev-process-rules.md` | Process rules |
+| F03 | `framework-src/en/process-rules/full-auto-dev-document-rules.md` | Document management rules |
+| F04 | `framework-src/en/process-rules/agent-list.md` | Agent list (Single Source of Truth) |
+| F05 | `framework-src/en/process-rules/glossary.md` | Glossary |
+| F06 | `framework-src/en/process-rules/defect-taxonomy.md` | Defect taxonomy |
+| F07 | `framework-src/en/process-rules/review-standards.md` | Review standards (R1-R6) |
+| F08 | `framework-src/en/process-rules/prompt-structure.md` | Prompt structure conventions (S0-S6) |
+| F09 | `framework-src/en/process-rules/spec-template.md` | Specification template |
+| F10 | `framework-src/en/process-rules/porting-guide.md` | Porting guide |
+| F11 | `framework-src/en/agents/*.md` | Agent definitions |
+| F12 | `framework-src/en/commands/*.md` | Custom commands |
 | F13 | `essays/anms-essay-en.md` | ANMS essay |
 | F14 | `essays/angs-essay-en.md` | ANGS essay |
-| F15 | `user-order.md` | User requirement template |
+| F15 | `framework-src/en/user-order.md` | User requirement template |
 
 > **Out of scope:** `essays/research/*.md` (research reports), `prompt/next-session-handoff.md` (working notes)
 
@@ -100,9 +101,9 @@ No code needs to be written. Read and analyze only.
 
 ## Files to Read
 
-1. process-rules/agent-list-en.md §1 (agent list table) and §2 (all ownership sections)
-2. process-rules/prompt-structure-en.md (S0-S6 structure conventions)
-3. .claude/agents/*-en.md all files (count should match agent-list §1)
+1. framework-src/en/process-rules/agent-list.md §1 (agent list table) and §2 (all ownership sections)
+2. framework-src/en/process-rules/prompt-structure.md (S0-S6 structure conventions)
+3. framework-src/en/agents/*.md all files (count should match agent-list §1)
 
 ## Check Items
 
@@ -140,16 +141,16 @@ Severity definitions:
 ```
 Check mechanical terminology consistency across the entire gr-sw-maker framework.
 No code needs to be written. Search and analyze using Grep/Glob/Read only.
-Target EN version files primarily (use CLAUDE-en.md).
+Target EN version files primarily (use framework-src/en/CLAUDE.md).
 
 ## Check Items
 
 ### C1: Agent Count Consistency
 Count the actual rows in agent-list §1 table, then verify all files referencing agent count match that number.
-Targets: CLAUDE-en.md, process-rules/*-en.md, essays/anms-essay-en.md, essays/angs-essay-en.md
+Targets: framework-src/en/CLAUDE.md, framework-src/en/process-rules/*.md, essays/anms-essay-en.md, essays/angs-essay-en.md
 
 ### C2: file_type Name Consistency
-Cross-check that file_type names in the file_type master table in process-rules/full-auto-dev-document-rules-en.md §7 exactly match those in the ownership sections of process-rules/agent-list-en.md §2.
+Cross-check that file_type names in the file_type master table in framework-src/en/process-rules/full-auto-dev-document-rules.md §7 exactly match those in the ownership sections of framework-src/en/process-rules/agent-list.md §2.
 
 ### C3: Framework Name Usage
 Search all files for the following:
@@ -159,7 +160,7 @@ Search all files for the following:
 Targets: all .md files
 
 ### C4: Phase Name Consistency
-Verify that the 8 phase names in process-rules/full-auto-dev-process-rules-en.md §2 (setup, planning, dependency-selection, design, implementation, testing, delivery, operation) match the activation map in process-rules/agent-list-en.md §4.
+Verify that the 8 phase names in framework-src/en/process-rules/full-auto-dev-process-rules.md §2 (setup, planning, dependency-selection, design, implementation, testing, delivery, operation) match the activation map in framework-src/en/process-rules/agent-list.md §4.
 
 ### C5: file_type Count Consistency
 Count the actual rows in full-auto-dev-document-rules §7 file_type master table, then verify all files referencing file_type count match that number.

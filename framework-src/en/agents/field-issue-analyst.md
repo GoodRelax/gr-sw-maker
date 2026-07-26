@@ -98,7 +98,7 @@ Updates to field-issue tickets must follow the Form Block specification in Docum
 
 ### Process Rules
 
-Follow [Field Issue Handling Rules](../../process-rules/field-issue-handling-rules.md). Strictly observe gate conditions (§6.2–§6.5).
+Follow the Field Issue Handling Rules (`process-rules/field-issue-handling-rules.md`). Strictly observe gate conditions (§6.2–§6.5).
 
 ### Analysis Principles
 

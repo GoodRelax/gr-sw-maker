@@ -84,7 +84,7 @@ model: sonnet
 
 ### プロセス規則
 
-[実機テスト フィードバック管理規則](../../process-rules/field-issue-handling-rules.md) に従う。特に以下を厳守する:
+実機テスト フィードバック管理規則（`process-rules/field-issue-handling-rules.md`）に従う。特に以下を厳守する:
 
 - テスト未実行のまま修正完了を報告してはならない（MUST NOT）
 - フィードバックは全て field-issue チケットとして記録する（質問を除く）

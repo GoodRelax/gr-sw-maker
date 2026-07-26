@@ -1,9 +1,6 @@
 # Old
 old/
 
-# Claude Code local settings
-.claude/settings.local.json
-
 # Dependencies
 node_modules/
 
@@ -16,22 +13,18 @@ coverage/
 *.pem
 *.key
 
-# === Framework repo only (create.js removes everything below this line) ===
+# Claude Code local settings
+.claude/settings.local.json
 
 # Framework development private files (not distributed)
 prompt/
 maintenance/temporary/
-CLAUDE.md
 
-# setup.js deploy outputs (suffix-less copies of -ja/-en originals)
-# In user projects, these ARE the working files — create.js removes these rules.
-.claude/agents/*.md
-!.claude/agents/*-ja.md
-!.claude/agents/*-en.md
-.claude/commands/*.md
-!.claude/commands/*-ja.md
-!.claude/commands/*-en.md
-process-rules/*.md
-!process-rules/*-ja.md
-!process-rules/*-en.md
-user-order.md
+# setup.js deploy outputs.
+# The originals live under framework-src/{lang}/ and ARE tracked.
+# The leading "/" anchors each rule to the repo root so framework-src/ is untouched.
+/.claude/agents/
+/.claude/commands/
+/process-rules/
+/CLAUDE.md
+/user-order.md
