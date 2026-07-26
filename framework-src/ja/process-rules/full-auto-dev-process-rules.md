@@ -59,7 +59,7 @@
 
 - [第9章 品質管理フレームワーク](#第9章-品質管理フレームワーク)
   - 9.1 段階的レビューゲート
-  - 9.2 レビュー観点（R1〜R6）
+  - 9.2 レビュー観点（R1〜R7）
   - 9.3 品質基準テーブル
 - [第10章 ヘッドレスモードとCI/CD連携](#第10章-ヘッドレスモードとcicd連携)
   - 10.1 ヘッドレスモードの基本
@@ -304,7 +304,7 @@ flowchart TD
     end
 
     subgraph Phase6["Phase 6: 納品"]
-        P6A["AI: 最終レビュー(R1-R6)"]
+        P6A["AI: 最終レビュー(R1-R7)"]
         P6B["AI: デプロイ・スモークテスト"]
         P6C["AI: 最終レポート"]
         P6D["ユーザー: 受入テスト"]
@@ -377,7 +377,7 @@ flowchart TD
 | R6 テストレビュー（個別レポート） | 最終レビューに統合 | 必須 | 必須 |
 
 **ルール:**
-- 品質ゲート（R1、R2/R4/R5、最終 R1-R6）は規模にかかわらず**絶対に免除しない**。レビューは統合してよい（例: Micro では R1-R6 を網羅する単一の最終レビュー）が、スキップは禁止
+- 品質ゲート（R1、R2/R4/R5、最終 R1-R7）は規模にかかわらず**絶対に免除しない**。レビューは統合してよい（例: Micro では R1-R7 を網羅する単一の最終レビュー）が、スキップは禁止
 - defect/CR 記録、リスク管理、トレーサビリティ、変更管理は全規模で必須 — ただし Micro 区分では記録形式を簡略化してよい（session-transcript 内にサマリーテーブルとしてインライン記録）
 - 免除事項は setup フェーズで CLAUDE.md に必ず記録する。記録なき免除は規則違反とする
 
@@ -955,7 +955,7 @@ gantt
     テストレビュー(R6)             : p5c, after p5g, 1d
 
     section Phase6_納品
-    最終レビュー(R1-R6)            : p6a, after p5c, 1d
+    最終レビュー(R1-R7)            : p6a, after p5c, 1d
     コンテナビルド・デプロイ        : p6b, after p6a, 1d
     最終レポート作成               : p6c, after p6b, 1d
     受入テスト                    : milestone, p6d, after p6c, 0d
@@ -1186,7 +1186,7 @@ PM Agentが異常を検知した場合、リードエージェントは自動的
 #### 4.7.1 最終レビューとFAIL時のルーティング
 
 ```bash
-claude "テストが完了しました。review-agentで全成果物の最終レビュー（R1〜R6全観点）を実施してください。
+claude "テストが完了しました。review-agentで全成果物の最終レビュー（R1〜R7全観点）を実施してください。
 FAILした場合は、指摘の観点に応じて該当フェーズへ戻り修正してください:
 - R1指摘 → 仕様書 Ch1-2 修正（planning フェーズ相当）
 - R2/R4/R5設計指摘 → 仕様書 Ch3-4 修正（design フェーズ相当）
@@ -1231,7 +1231,7 @@ claude "以下の最終工程を実行してください:
    - テスト結果サマリー（カバレッジ、合格率）
    - 性能テスト結果（NFR達成状況）
    - テスト消化曲線・defect curveの最終状態
-   - レビュー結果サマリー（R1〜R6）
+   - レビュー結果サマリー（R1〜R7）
    - セキュリティ評価結果（SAST/SCA含む）
    - APIドキュメント（openapi.yaml）の最終版確認
    - 可観測性設定の確認結果
@@ -1590,7 +1590,7 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 - **Security Agent（security-reviewer）**: docs/security/ にセキュリティ設計を作成。実装コードの脆弱性レビューを行う。スキャン結果はproject-records/security/にsecurity-scan-reportとして記録する
 - **Implementer Agent（implementer）**: src/ 配下にコードを実装する。設計文書に従い、Clean Architecture・DIPを遵守する。単体テストも作成する
 - **Test Agent（test-engineer）**: tests/ 配下にテストを作成・実行する。カバレッジレポートを生成する
-- **Review Agent（review-agent）**: project-records/reviews/ にレビュー報告を出力する。R1〜R6の観点（SW工学原則・並行性・パフォーマンス）でレビューし、Critical/High指摘がゼロになるまで次フェーズへの移行をブロックする
+- **Review Agent（review-agent）**: project-records/reviews/ にレビュー報告を出力する。R1〜R7の観点（SW工学原則・並行性・パフォーマンス）でレビューし、Critical/High指摘がゼロになるまで次フェーズへの移行をブロックする
 - **PM Agent（progress-monitor）**: project-management/progress/ に進捗レポートを出力する。WBS/defect curve/コストを管理する
 - **Change Manager Agent（change-manager）**: 仕様書承認後のユーザー起点の変更要求をproject-records/change-requests/に記録し、影響分析を行う。impact_level=highはユーザー承認必須。AI側の技術的変更はdefect/decisionで管理する
 - **Risk Manager Agent（risk-manager）**: project-records/risks/にリスクエントリを記録し、risk-register.mdを管理する。score≧6はユーザーに通知
@@ -1770,7 +1770,7 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
 32a. [実機テストが有効な場合] ユーザー立会の実機テストを実施する。フィードバック管理は field-issue-handling-rules.md に従う
 
 ## Phase 6: 納品
-33. review-agentで全成果物の最終レビュー（R1〜R6全観点）を実施する
+33. review-agentで全成果物の最終レビュー（R1〜R7全観点）を実施する
     → FAILした場合: 指摘の観点に応じた該当フェーズへ戻り修正する
 34. コンテナイメージをビルドし、infra/のIaC構成を確認する
 35. デプロイメントを実行し、スモークテストで基本動作を確認する
@@ -1905,7 +1905,7 @@ flowchart TD
     Perf_Gate{"NFR数値目標<br/>達成?"}
     ST["システムテスト完了"]
     TR["R6テストレビュー<br/>PASS?"]
-    Final["最終R1-R6レビュー"]
+    Final["最終R1-R7レビュー"]
     R1Fail["仕様書 Ch1-2 修正<br/>Phase 1相当"]
     R2Fail["仕様書 Ch3-4 修正<br/>Phase 3相当"]
     R3Fail["コード修正<br/>Phase 4相当"]
@@ -1955,7 +1955,7 @@ flowchart TD
 
 いずれかの条件が未充足の場合、orchestrator は次フェーズへ遷移してはならない。未実施のレビューは実行し、未記録の対応記録は記録すること。本ルールに例外はない。
 
-### 9.2 レビュー観点（R1〜R6）
+### 9.2 レビュー観点（R1〜R7）
 
 review-agentが適用する6つの観点。**詳細なチェックリストは `process-rules/review-standards.md`（レビュー観点規約書）を参照すること。** 以下は各観点の要約。
 
@@ -2009,7 +2009,7 @@ review-agentが適用する6つの観点。**詳細なチェックリストは `
 | testing | 性能テスト NFR達成率 | CLAUDE.md 品質目標に準拠 | performance-report |
 | testing | defect open 数（Critical/High） | CLAUDE.md 品質目標に準拠 | defect 集計 |
 | testing | defect curve収束 | 新規検出が減少傾向 | defect-curve.json |
-| delivery | 最終レビュー PASS | R1-R6 全PASS（CLAUDE.md 品質目標に準拠） | review-agent レポート |
+| delivery | 最終レビュー PASS | R1-R7 全PASS（CLAUDE.md 品質目標に準拠） | review-agent レポート |
 | delivery | 受入テスト合格 | ユーザー承認 | final-report |
 | delivery | デプロイ完了 | スモークテスト合格 | デプロイログ |
 | operation | SLA達成率 | CLAUDE.md 品質目標に準拠 | 監視メトリクス |
@@ -2386,7 +2386,7 @@ delivery フェーズのデプロイメント前に以下の全項目を確認�
 
 ## 品質ゲート
 
-- [ ] 最終レビュー（R1〜R6）: Critical/High ゼロ件
+- [ ] 最終レビュー（R1〜R7）: Critical/High ゼロ件
 - [ ] 全品質メトリクスが CLAUDE.md 品質目標の閾値を満たすこと
 
 ## セキュリティ
@@ -2633,7 +2633,7 @@ sequenceDiagram
     Orch->>Review: performance-report の R6 レビューを依頼
     Review->>Orch: R6 レビュー結果を報告
     PM->>Orch: progress レポートを提出
-    Orch->>Review: 最終 R1-R6 レビューを依頼
+    Orch->>Review: 最終 R1-R7 レビューを依頼
     Review->>Orch: 最終レビュー（PASS）を報告
     Orch->>PI: testing フェーズのふりかえりを依頼
     PI->>Orch: retrospective-report を提出
@@ -2767,7 +2767,7 @@ PM Agent はこのスキーマに従って `project-management/progress/progress
 | `security-reviewer`               | セキュリティ設計・脆弱性レビュー・SCA                                 | opus   | コア         |
 | `implementer`                     | ソースコード実装、単体テスト作成                                      | opus   | コア         |
 | `test-engineer`                   | テスト作成・実行・性能テスト・カバレッジ計測                          | sonnet | コア         |
-| `review-agent`                    | SW工学原則・並行性・パフォーマンス観点のレビュー（R1〜R6）            | opus   | コア         |
+| `review-agent`                    | SW工学原則・並行性・パフォーマンス観点のレビュー（R1〜R7）            | opus   | コア         |
 | `progress-monitor`                | 進捗管理・WBS・品質メトリクス・コスト追跡・エージェント監視           | sonnet | コア         |
 | `change-manager`                  | 変更要求の受付・影響分析・記録                                        | sonnet | プロセス管理 |
 | `risk-manager`                    | リスク特定・評価・軽減策管理                                          | sonnet | プロセス管理 |

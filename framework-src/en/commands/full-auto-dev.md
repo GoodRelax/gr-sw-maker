@@ -95,7 +95,7 @@ Execute the following phases sequentially:
 5f. Evaluate quality criteria
 
 ## Phase 6: Delivery
-6a. Conduct final review of all deliverables with review-agent (all R1-R6 perspectives)
+6a. Conduct final review of all deliverables with review-agent (all R1-R7 perspectives)
     → If FAIL: Return to the corresponding phase based on the review perspective and fix
 6b. Build container images and verify IaC configuration in infra/
 6c. Execute deployment and confirm basic operation with smoke tests

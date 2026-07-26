@@ -22,7 +22,7 @@
 | `project-records/` | レビュー・意思決定・リスク記録 |
 | `process-rules/glossary-ja.md` | 用語集 |
 | `process-rules/defect-taxonomy-ja.md` | 不具合分類 |
-| `process-rules/review-standards-ja.md` | レビュー基準（R1-R6） |
+| `process-rules/review-standards-ja.md` | レビュー基準（R1-R7） |
 | `process-rules/spec-template-*.md` | 仕様テンプレート |
 | `process-rules/prompt-structure-ja.md` | プロンプト構造規約（S0-S6） |
 | `user-order.md` | ユーザー要求（3問形式） |

@@ -95,7 +95,7 @@ Revision rules applicable to all files under process-rules/ (including this docu
     prompt-structure-en.md
     glossary-ja.md                       # Glossary
     glossary-en.md
-    review-standards-ja.md               # Review standards (R1-R6)
+    review-standards-ja.md               # Review standards (R1-R7)
     review-standards-en.md
     spec-template-ja.md                  # Specification template
     spec-template-en.md
@@ -988,7 +988,9 @@ Describe deliverables, human intervention requirements, and quality gate results
 |-----------|------|------|------|-----------|
 | review:id | string | Yes | review-NNN | — |
 | review:target | string | Yes | Review target (file path or description) | — |
-| review:dimensions | string | Yes | Applied R1-R6 dimensions (e.g., "R1" or "R2,R4,R5") | — |
+| review:dimensions | string | Yes | Applied perspectives (e.g., "R1" / "R2,R4,R5,R7" / "T1-T9") | R1-R7 (quality), T1-T9 (translation consistency) |
+| review:gate | string | No | The gate this review decides | GATE-XXX |
+| review:purity_tag_coverage_pct | int | No | `@purity` tag coverage (required when implementation code was reviewed) | 0-100. R7.6 requires 100 |
 | review:result | enum | Yes | Review result | pass / fail |
 | review:critical_count | int | Yes | Number of Critical findings | = 0 required for phase transition |
 | review:high_count | int | Yes | Number of High findings | = 0 required for phase transition |

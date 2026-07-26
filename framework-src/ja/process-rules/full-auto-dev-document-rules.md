@@ -95,7 +95,7 @@ process-rules/ 配下の全ファイル（本文書を含む）に適用する�
     prompt-structure-en.md
     glossary-ja.md                       # 用語集
     glossary-en.md
-    review-standards-ja.md               # レビュー観点規約書（R1〜R6）
+    review-standards-ja.md               # レビュー観点規約書（R1〜R7）
     review-standards-en.md
     spec-template-ja.md                  # 仕様書テンプレート
     spec-template-en.md
@@ -988,7 +988,9 @@ external-dependency-spec（抽象テンプレート）
 |-----------|------|------|------|-----------|
 | review:id | string | Yes | review-NNN | — |
 | review:target | string | Yes | レビュー対象（ファイルパスまたは説明） | — |
-| review:dimensions | string | Yes | 適用したR1-R6次元（例: "R1" または "R2,R4,R5"） | — |
+| review:dimensions | string | Yes | 適用した観点（例: "R1" / "R2,R4,R5,R7" / "T1-T9"） | R1-R7（品質観点）, T1-T9（翻訳一致性観点） |
+| review:gate | string | No | このレビューが判定するゲート | GATE-XXX |
+| review:purity_tag_coverage_pct | int | No | `@purity` タグの付与率（実装コードをレビューした場合は必須） | 0-100。R7.6 では 100 が要求される |
 | review:result | enum | Yes | レビュー結果 | pass / fail |
 | review:critical_count | int | Yes | Critical指摘の件数 | = 0 required for phase transition |
 | review:high_count | int | Yes | High指摘の件数 | = 0 required for phase transition |

@@ -27,7 +27,7 @@
   - process-rules/prompt-structure.md（プロンプト構造規約: S0-S6）
   - process-rules/glossary.md（用語集: 選定理由・略称判定・紛らわしい対の区別）
   - process-rules/defect-taxonomy.md（不具合系用語の体系: error/fault/failure/defect/incident/hazard の定義と使い分け）
-  - process-rules/review-standards.md（レビュー観点規約: R1-R6）
+  - process-rules/review-standards.md（レビュー観点規約: R1-R7）
   - process-rules/field-issue-handling-rules.md（実機テスト フィードバック管理規則: 条件付き）
 
 ## 言語設定
@@ -133,7 +133,7 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 - **Security Agent（security-reviewer）**: docs/security/ にセキュリティ設計を作成。実装コードの脆弱性レビューを行う。スキャン結果はproject-records/security/にsecurity-scan-reportとして記録する
 - **Implementer Agent（implementer）**: src/ 配下にコードを実装する。設計文書に従い、Clean Architecture・DIPを遵守する。単体テストも作成する
 - **Test Agent（test-engineer）**: tests/ 配下にテストを作成・実行する。カバレッジレポートを生成する
-- **Review Agent（review-agent）**: project-records/reviews/ にレビュー報告を出力する。R1〜R6の観点（SW工学原則・並行性・パフォーマンス）でレビューし、Critical/High指摘がゼロになるまで次フェーズへの移行をブロックする
+- **Review Agent（review-agent）**: project-records/reviews/ にレビュー報告を出力する。R1〜R7の観点（SW工学原則・並行性・パフォーマンス）でレビューし、Critical/High指摘がゼロになるまで次フェーズへの移行をブロックする
 - **PM Agent（progress-monitor）**: project-management/progress/ に進捗レポートを出力する。WBS/defect curve/コストを管理する
 - **Change Manager Agent（change-manager）**: 仕様書承認後のユーザー起点の変更要求をproject-records/change-requests/に記録し、影響分析を行う。impact_level=highはユーザー承認必須。AI側の技術的変更はdefect/decisionで管理する
 - **Risk Manager Agent（risk-manager）**: project-records/risks/にリスクエントリを記録し、risk-register.mdを管理する。score≧6はユーザーに通知

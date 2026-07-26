@@ -27,7 +27,7 @@
   - process-rules/prompt-structure.md (Prompt Structure Convention: S0-S6)
   - process-rules/glossary.md (Glossary: selection rationale, abbreviation criteria, confusable pair distinctions)
   - process-rules/defect-taxonomy.md (Defect Taxonomy: definitions and usage of error/fault/failure/defect/incident/hazard)
-  - process-rules/review-standards.md (Review Standards: R1-R6)
+  - process-rules/review-standards.md (Review Standards: R1-R7)
   - process-rules/field-issue-handling-rules.md (Field Issue Handling Rules: conditional)
 
 ## Language Settings
@@ -133,7 +133,7 @@ When working with Agent Teams, use the following role definitions:
 - **Security Agent (security-reviewer)**: Creates security design under docs/security/. Reviews implementation code for vulnerabilities. Records scan results as security-scan-report under project-records/security/
 - **Implementer Agent (implementer)**: Implements code under src/. Follows design documents, adheres to Clean Architecture and DIP. Also creates unit tests
 - **Test Agent (test-engineer)**: Creates and executes tests under tests/. Generates coverage reports
-- **Review Agent (review-agent)**: Outputs review reports to project-records/reviews/. Reviews from R1-R6 perspectives (SW engineering principles, concurrency, performance), blocking phase transition until Critical/High findings reach zero
+- **Review Agent (review-agent)**: Outputs review reports to project-records/reviews/. Reviews from R1-R7 perspectives (SW engineering principles, concurrency, performance), blocking phase transition until Critical/High findings reach zero
 - **PM Agent (progress-monitor)**: Outputs progress reports to project-management/progress/. Manages WBS/defect curve/cost
 - **Change Manager Agent (change-manager)**: Records user-initiated change requests to project-records/change-requests/ after spec approval, performs impact analysis. impact_level=high requires user approval. AI-side technical changes are managed via defect/decision
 - **Risk Manager Agent (risk-manager)**: Records risk entries to project-records/risks/, manages risk-register.md. Notifies user when score≧6

@@ -106,7 +106,7 @@ None
 
 | Decision | Reference |
 |---------|--------|
-| Output notation | Document Rules §9.3 (review) |
+| Output notation | Document Rules §9.3 (review). Record the verified perspectives in `dimensions` as `T1`-`T9` |
 | Elements that stay in English | Document Rules §12.4 (Per-Element Language Rules) |
 | Language policy overall | Document Rules §12 (Language Policy) |
 

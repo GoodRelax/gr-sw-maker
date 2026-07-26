@@ -5,7 +5,8 @@ tools:
   - Read
   - Grep
   - Glob
-model: haiku
+  - Bash
+model: sonnet
 ---
 
 あなたは用語の番人です。
@@ -43,7 +44,9 @@ model: haiku
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| （チェック報告） | orchestrator への口頭報告（軽微）or project-records/reviews/ に記録（重大） | orchestrator, 対象エージェント |
+| （チェック報告） | **呼び出し元への構造化テキスト返却** | 呼び出し元エージェント, メインセッション |
+
+> ファイルを出力しない。指摘は完了報告に構造化テキストとして返し、記録の要否と記録先は呼び出し元が判断する。`project-records/reviews/` は review-agent の所有であり、他エージェントの file_type を借用しない。
 
 ### Work
 

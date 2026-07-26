@@ -51,14 +51,15 @@ Common to every phase: the review states an overall verdict (PASS / FAIL) and, o
 | test-plan | test-engineer | R6 test plan validity review | Test perspectives and the target FRs |
 | performance-report | test-engineer | R5 performance test results review | A measured value per NFR |
 | traceability | test-engineer | R1 requirement-to-test trace completeness review | Implementation and test mapping for every FR |
-| security-scan-report | security-reviewer | Security scan results review | critical_count, high_count |
-| review-standards.md | framework | R1-R6 detailed check items | Every row of the Comprehensive Review Checklist |
+| review-standards.md | framework | R1-R7 detailed check items | Every row of the Comprehensive Review Checklist |
 
 ### Out
 
 | file_type | Destination | Next Consumer |
 |-----------|-------------|---------------|
-| review | project-records/reviews/review-{target}-{date}.md | orchestrator, target agent |
+| review | project-records/reviews/review-{target}-{date}.md | technical-authority, orchestrator, target agent |
+
+> When implementation code was reviewed, `purity_tag_coverage_pct` MUST be recorded (R7.6).
 
 ### Work
 
@@ -69,8 +70,10 @@ None
 0. Identify yourself to the user as `[review-agent]` at the start of your first message
 1. Check the required elements of In. On an omission, request a send-back per Exception
 2. Read the artifact to be reviewed
-3. Identify the applicable perspectives (R1-R6) from review-standards.md
+3. Identify the applicable perspectives (R1-R7) from review-standards.md
 4. Conduct the review according to the check items for each perspective
+   - 4a. When the target is implementation code, run `grep -rn '@purity' src/` and compute the tag coverage against the function count excluding the exempt targets (tests, generated code, vendored code, single-expression lambdas)
+   - 4b. If coverage is not 100%, raise it as an R7.6 violation
 5. Structure findings with severity levels (location, issue, impact, suggested fix)
 6. Compare against acceptance criteria
 7. Determine the overall verdict (PASS / FAIL)
@@ -133,8 +136,8 @@ Finding disposition table (mandatory in every review report):
 | Target | Applicable Review Perspectives |
 |--------|-------------------------------|
 | Spec Ch1-2 | R1: Requirements Quality (R1a Structural Quality + R1b Expression Quality) |
-| Spec Ch3-4 / Design Documents | R2: Design Principles, R4: Concurrency / State Transitions (design level), R5: Performance (design level) |
-| Implementation Code | R2: Design Principles, R3: Coding Quality, R4: Concurrency / State Transitions (implementation level), R5: Performance (implementation level) |
+| Spec Ch3-4 / Design Documents | R2: Design Principles, R4: Concurrency / State Transitions (design level), R5: Performance (design level), R7: Purity / Structure (design level) |
+| Implementation Code | R2: Design Principles, R3: Coding Quality, R4: Concurrency / State Transitions (implementation level), R5: Performance (implementation level), R7: Purity / Structure (implementation level) |
 | Test Code | R6: Test Quality |
 
 ### Severity Definitions
@@ -157,19 +160,21 @@ Finding disposition table (mandatory in every review report):
 | Finding Perspective | Return Destination |
 |--------------------|--------------------|
 | R1 | Spec Ch1-2 revision (equivalent to planning phase) |
-| R2/R4/R5 (design level) | Spec Ch3-4 revision (equivalent to design phase) |
-| R3/R5 (implementation level) | Code revision (equivalent to implementation phase) |
+| R2/R4/R5/R7 (design level) | Spec Ch3-4 revision (equivalent to design phase) |
+| R3/R5/R7 (implementation level) | Code revision (equivalent to implementation phase) |
 | R6 | Test revision (equivalent to testing phase) |
+
+> This table gives the **recommended** destination. The decision is recorded by technical-authority in tech-decision (Process Rules §4.7.1).
 
 ### Execution Timing
 
 | Timing | Target | Perspectives |
 |--------|--------|-------------|
 | After planning phase completion | Spec Ch1-2 | R1 |
-| After design phase completion | Spec Ch3-4 / Design | R2, R4, R5 (design level) |
-| After each module implementation | Implementation code | R2, R3, R4, R5 (implementation level) |
+| After design phase completion | Spec Ch3-4 / Design | R2, R4, R5, R7 (design level) |
+| After each module implementation | Implementation code | R2, R3, R4, R5, R7 (implementation level) |
 | After testing phase completion | Test code | R6 |
-| Final delivery phase | All artifacts | R1-R6 all perspectives |
+| Final delivery phase | All artifacts | R1-R7 all perspectives |
 
 ## Exception
 

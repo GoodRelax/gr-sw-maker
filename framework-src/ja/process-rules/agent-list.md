@@ -16,17 +16,19 @@
 | 4 | security-reviewer | 脅威モデリング、セキュリティ設計、脆弱性スキャン | opus | design, implementation |
 | 5 | implementer | ソースコード実装、単体テスト作成 | opus | implementation |
 | 6 | test-engineer | テスト計画・実行、カバレッジ計測、性能テスト | sonnet | testing |
-| 7 | review-agent | R1-R6 観点での品質レビュー、品質ゲート判定 | opus | 全フェーズ（ゲート時） |
+| 7 | review-agent | R1-R7 観点での品質レビュー、重大度付き指摘の起票 | opus | 全フェーズ（ゲート時） |
 | 8 | progress-monitor | WBS管理、進捗追跡、品質メトリクス監視、異常検知 | sonnet | design 以降 |
 | 9 | change-manager | ユーザー起点の変更要求の受付・影響分析・記録 | sonnet | planning 以降（仕様承認後） |
 | 10 | risk-manager | リスク特定・評価・監視、リスク台帳管理 | sonnet | planning 以降 |
 | 11 | license-checker | OSS ライセンス互換性確認、帰属表示管理 | haiku | implementation, delivery |
-| 12 | kotodama-kun | 用語・命名の整合性チェック（フレームワーク用語集 + プロジェクト用語集） | haiku | 全フェーズ（Out 生成時） |
+| 12 | kotodama-kun | 用語・命名の整合性チェック（フレームワーク用語集 + プロジェクト用語集） | sonnet | 全フェーズ（Out 生成時） |
 | 13 | framework-translation-verifier | フレームワーク文書の多言語間翻訳一致性を検証 | sonnet | delivery（リリース前） |
 | 14 | user-manual-writer | ユーザーマニュアルの作成 | sonnet | delivery |
 | 15 | runbook-writer | 運用手順書（Runbook）の作成 | sonnet | delivery |
 | 16 | incident-reporter | インシデント報告書の作成 | sonnet | operation |
 | 17 | process-improver | ふりかえり・根本原因分析・プロセス改善策の提案 | sonnet | 全フェーズ（フェーズ完了時） |
+
+> **model 割当の根拠:** kotodama-kun は和製英語の判定と文書横断の同義語検出を行う。いずれも意味理解を要し、かつ全エージェントの Out 生成時に呼ばれるため呼出頻度が最も高い。誤検出と見逃しの双方がフレームワーク全体に波及するため sonnet を割り当てる。
 | 18 | decree-writer | 承認済み改善策のガバナンスファイルへの安全な適用 | sonnet | 全フェーズ（フェーズ完了時） |
 | 19 | field-test-engineer | ユーザーとの実機テスト、フィードバック記録、修正後の実機検証 | sonnet | testing（条件付き: 実機テスト有効時） |
 | 20 | feedback-classifier | フィードバックを仕様書と照合し defect / CR / 質問に分類、チケット起票 | sonnet | testing（条件付き: 実機テスト有効時） |
@@ -109,6 +111,8 @@
 |-----------|------------|:-----:|------------|
 | review | project-records/reviews/ | 連 | 全フェーズ（ゲート時） |
 
+> review は指摘の起票までを担う。ゲートの合否判定と戻し先の確定は technical-authority が tech-decision に記録する。
+
 ### progress-monitor
 
 | file_type | ディレクトリ | 単/連 | 主要フェーズ |
@@ -137,7 +141,7 @@
 
 ### kotodama-kun
 
-> kotodama-kun は file_type を所有しない。チェック報告は軽微な場合 orchestrator への口頭報告、重大な場合 review として project-records/reviews/ に記録する（review-agent の file_type を借用）。
+> kotodama-kun は file_type を所有せず、ファイルも出力しない。チェック報告は呼び出し元への構造化テキストとして返し、記録の要否と記録先は呼び出し元が判断する。他エージェントの file_type を借用しない。
 
 | 入力 | 提供元 | 用途 |
 |------|--------|------|
@@ -421,12 +425,24 @@ kotodama-kun を**使用しない**エージェント:
 | design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5 PASS |
 | implementation | orchestrator, implementer, test-engineer(単体), security-reviewer(SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5 PASS, SCA クリア |
 | testing | orchestrator, test-engineer, kotodama-kun, review-agent, technical-authority, progress-monitor, process-improver, decree-writer, field-test-engineer(条件付き), feedback-classifier(条件付き), field-issue-analyst(条件付き) | R6 PASS, 全テスト PASS |
-| delivery | orchestrator, kotodama-kun, review-agent, technical-authority, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R6 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
+| delivery | orchestrator, kotodama-kun, review-agent, technical-authority, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R7 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
 | operation | orchestrator, security-reviewer(パッチ), progress-monitor, incident-reporter, process-improver, decree-writer | SLA 達成 |
 
 ---
 
-## 5. 新規エージェント追加手順
+## 5. file_type の総数
+
+| 分類 | 件数 |
+|---|---:|
+| Common Block 管理対象の file_type（文書管理規則 §7） | 37 |
+| うち条件付き（該当プロセス有効時のみ） | field-issue, hw-requirement-spec, ai-requirement-spec, framework-requirement-spec |
+| file_type ではない生成物 | openapi.yaml, src/, tests/, infra/, cost-log.json, test-progress.json, defect-curve.json |
+
+件数の正は文書管理規則 §7 のテーブルであり、本節はその要約である。齟齬があれば §7 を正とする。
+
+---
+
+## 6. 新規エージェント追加手順
 
 1. 本名簿の §1 にエージェントを追加する
 2. 担当する file_type を §2 に追加する（既存エージェントとの重複がないことを確認）

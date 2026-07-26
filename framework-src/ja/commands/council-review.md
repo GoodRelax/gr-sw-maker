@@ -13,7 +13,7 @@
 | カテゴリ | glob パターン | 想定ペア数 |
 |----------|---------------|:----------:|
 | プロセス規則 | `framework-src/ja/process-rules/*.md` ↔ `framework-src/en/process-rules/*.md` | 11 |
-| エージェント定義 | `framework-src/ja/agents/*.md` ↔ `framework-src/en/agents/*.md` | 21 |
+| エージェント定義 | `framework-src/ja/agents/*.md` ↔ `framework-src/en/agents/*.md` | 22 |
 | プロジェクト指示テンプレート | `framework-src/ja/CLAUDE.md` ↔ `framework-src/en/CLAUDE.md` | 1 |
 | カスタムコマンド | `framework-src/ja/commands/*.md` ↔ `framework-src/en/commands/*.md` | 5 |
 | ユーザー要求テンプレート | `framework-src/ja/user-order.md` ↔ `framework-src/en/user-order.md` | 1 |
@@ -69,7 +69,7 @@ Phase 0 を通過した場合、日英の内容は一致しているため、以
 | F04 | `framework-src/en/process-rules/agent-list.md` | エージェント一覧（Single Source of Truth） |
 | F05 | `framework-src/en/process-rules/glossary.md` | 用語集 |
 | F06 | `framework-src/en/process-rules/defect-taxonomy.md` | 不具合分類 |
-| F07 | `framework-src/en/process-rules/review-standards.md` | レビュー基準（R1-R6） |
+| F07 | `framework-src/en/process-rules/review-standards.md` | レビュー基準（R1-R7） |
 | F08 | `framework-src/en/process-rules/prompt-structure.md` | プロンプト構造規約（S0-S6） |
 | F09 | `framework-src/en/process-rules/spec-template.md` | 仕様テンプレート |
 | F10 | `framework-src/en/process-rules/porting-guide.md` | 移植ガイド |
@@ -198,7 +198,7 @@ full-auto-dev-document-rules §7 の file_type マスターテーブルの実際
 
 **検証項目:**
 - [ ] 8フェーズ（setup→operation）の遷移条件が F02 内で矛盾していないか
-- [ ] 品質ゲート（R1-R6）の適用フェーズが F02 と F07 で一致しているか
+- [ ] 品質ゲート（R1-R7）の適用フェーズが F02 と F07 で一致しているか
 - [ ] エスカレーション基準（リスク≧6、コスト80%、impact_level=high）が F02 と F01 で一致しているか
 - [ ] 変更管理フロー（F02 §3.2）の記述が一貫しているか
 - [ ] defect 状態遷移（F02 stateDiagram）が定義されているか
@@ -247,7 +247,7 @@ full-auto-dev-document-rules §7 の file_type マスターテーブルの実際
 | X05 | F04 §4 アクティベーションマップ ↔ F02 §2 フェーズ定義 | フェーズ名、起動エージェントの整合 |
 | X06 | F04 §3 データフロー図 ↔ F11 各エージェントの In/Out | file_type の流れの整合（必要なエージェント定義のみ読み込む） |
 | X08 | F05 用語集 ↔ F06 不具合分類 | 用語定義の矛盾なし |
-| X09 | F02 §3.3 品質管理 ↔ F07 レビュー基準 R1-R6 | 観点・対象フェーズの整合 |
+| X09 | F02 §3.3 品質管理 ↔ F07 レビュー基準 R1-R7 | 観点・対象フェーズの整合 |
 | X10 | F01 CLAUDE.md Agent Teams ↔ F04 §1 エージェント一覧 | エージェント数、名前、役割の一致 |
 | X11 | F10 移植ガイド モデルマッピング ↔ F04 §1 model 列 | モデル割当の一致 |
 | X16 | F02 付録A シーケンス図 ↔ F04 §3 データフロー図 | 参加者・メッセージの整合 |

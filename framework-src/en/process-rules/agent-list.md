@@ -16,17 +16,19 @@
 | 4 | security-reviewer | Threat modeling, security design, vulnerability scanning | opus | design, implementation |
 | 5 | implementer | Source code implementation, unit test creation | opus | implementation |
 | 6 | test-engineer | Test planning / execution, coverage measurement, performance testing | sonnet | testing |
-| 7 | review-agent | Quality review from R1-R6 perspectives, quality gate judgment | opus | All phases (at gates) |
+| 7 | review-agent | Quality review from R1-R7 perspectives, raising findings with severity | opus | All phases (at gates) |
 | 8 | progress-monitor | WBS management, progress tracking, quality metrics monitoring, anomaly detection | sonnet | design onward |
 | 9 | change-manager | Acceptance, impact analysis, and recording of user-initiated change requests | sonnet | planning onward (after spec approval) |
 | 10 | risk-manager | Risk identification, assessment, monitoring, and risk register management | sonnet | planning onward |
 | 11 | license-checker | OSS license compatibility verification, attribution management | haiku | implementation, delivery |
-| 12 | kotodama-kun | Terminology and naming consistency check (framework glossary + project glossary) | haiku | All phases (at Out generation) |
+| 12 | kotodama-kun | Terminology and naming consistency check (framework glossary + project glossary) | sonnet | All phases (at Out generation) |
 | 13 | framework-translation-verifier | Verify translation consistency across multilingual framework documents | sonnet | delivery (pre-release) |
 | 14 | user-manual-writer | User manual creation | sonnet | delivery |
 | 15 | runbook-writer | Operations runbook creation | sonnet | delivery |
 | 16 | incident-reporter | Incident report creation | sonnet | operation |
 | 17 | process-improver | Retrospective, root cause analysis, and process improvement proposal | sonnet | All phases (at phase completion) |
+
+> **Rationale for the model assignment:** kotodama-kun judges wasei-eigo and detects synonyms across documents. Both require understanding meaning, and it is the most frequently called agent, invoked whenever any agent produces an Out. Both false positives and misses propagate across the whole framework, so sonnet is assigned.
 | 18 | decree-writer | Safe application of approved improvements to governance files | sonnet | All phases (at phase completion) |
 | 19 | field-test-engineer | User field testing, feedback recording, post-fix verification | sonnet | testing (conditional: field testing enabled) |
 | 20 | feedback-classifier | Classify feedback against spec as defect / CR / question, create tickets | sonnet | testing (conditional: field testing enabled) |
@@ -109,6 +111,8 @@ Derived from Document Management Rules §11. **Each file_type has a single owner
 |-----------|-----------|:---:|--------------|
 | review | project-records/reviews/ | M | All phases (at gates) |
 
+> review carries the findings only. The gate verdict and the send-back target are recorded by technical-authority in tech-decision.
+
 ### progress-monitor
 
 | file_type | Directory | S/M | Primary Phase |
@@ -137,7 +141,7 @@ Derived from Document Management Rules §11. **Each file_type has a single owner
 
 ### kotodama-kun
 
-> kotodama-kun does not own any file_type. Check reports are communicated verbally to orchestrator for minor issues, or recorded as a review in project-records/reviews/ for significant issues (borrowing review-agent's file_type).
+> kotodama-kun owns no file_type and writes no file. Check reports are returned to the caller as structured text, and the caller decides whether and where to record them. Another agent's file_type is never borrowed.
 
 | Input | Provider | Purpose |
 |-------|----------|---------|
@@ -421,12 +425,24 @@ Which agents are activated in which phases.
 | design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5 PASS |
 | implementation | orchestrator, implementer, test-engineer (unit), security-reviewer (SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5 PASS, SCA clear |
 | testing | orchestrator, test-engineer, kotodama-kun, review-agent, technical-authority, progress-monitor, process-improver, decree-writer, field-test-engineer (conditional), feedback-classifier (conditional), field-issue-analyst (conditional) | R6 PASS, all tests PASS |
-| delivery | orchestrator, kotodama-kun, review-agent, technical-authority, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R6 all PASS, translation consistency verification PASS, user acceptance |
+| delivery | orchestrator, kotodama-kun, review-agent, technical-authority, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R7 all PASS, translation consistency verification PASS, user acceptance |
 | operation | orchestrator, security-reviewer (patching), progress-monitor, incident-reporter, process-improver, decree-writer | SLA achieved |
 
 ---
 
-## 5. Procedure for Adding New Agents
+## 5. Total file_type Count
+
+| Category | Count |
+|---|---:|
+| file_types under Common Block management (Document Rules §7) | 37 |
+| Of which conditional (only when the corresponding process is enabled) | field-issue, hw-requirement-spec, ai-requirement-spec, framework-requirement-spec |
+| Generated artifacts that are not file_types | openapi.yaml, src/, tests/, infra/, cost-log.json, test-progress.json, defect-curve.json |
+
+The authoritative count is the table in Document Rules §7; this section summarizes it. On any discrepancy, §7 wins.
+
+---
+
+## 6. Procedure for Adding New Agents
 
 1. Add the agent to §1 of this list
 2. Add the assigned file_types to §2 (confirm no overlap with existing agents)

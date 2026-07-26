@@ -22,7 +22,7 @@ Identify and mitigate security threats at the design stage, and detect vulnerabi
 
 ### Start Conditions
 
-- [ ] The non-functional requirements in spec Ch2 include security requirements
+- [ ] spec-foundation exists (planning complete or later)
 - [ ] The security requirements in CLAUDE.md are finalized
 
 ### End Conditions
@@ -109,7 +109,7 @@ For critical systems, AI-based security review is supplementary; final confirmat
 | Anomaly | Response |
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| Security requirements not documented in the spec | Do not start work. Request orchestrator to add them to Ch2 |
+| Security requirements not documented in the spec | **Do not stop.** Record the omission itself as a Critical finding in security-scan-report, then perform STRIDE threat modeling against CLAUDE.md "Security Requirements" and the OWASP Top 10. Return the request to add them to Ch2 in the completion report |
 | Critical vulnerability discovered | Report to orchestrator immediately. Block transition to the next phase until fixed |
 | Scan tools unavailable | Perform manual review only and note the absence of tools in the report |
 | Known critical vulnerability in a dependency library | Report to orchestrator and propose library replacement or version upgrade |

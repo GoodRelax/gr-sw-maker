@@ -22,7 +22,7 @@ The following are AI-platform-independent. Use them as-is:
 | `project-records/` | Reviews, decisions, and risk records |
 | `process-rules/glossary-en.md` | Glossary |
 | `process-rules/defect-taxonomy-en.md` | Defect taxonomy |
-| `process-rules/review-standards-en.md` | Review standards (R1-R6) |
+| `process-rules/review-standards-en.md` | Review standards (R1-R7) |
 | `process-rules/spec-template-*.md` | Specification templates |
 | `process-rules/prompt-structure-en.md` | Prompt structure conventions (S0-S6) |
 | `user-order.md` | User requirements (3-question format) |

@@ -624,3 +624,73 @@ feedback-classifier に「`cr` と分類したら change-request の起票要請
 | 新 file_type の出現数 | ja/en とも deployment-design 9・risk-register 11 で一致 |
 | 参照の実在 | 187 件すべて解決 |
 | デプロイ | 22 体 |
+
+---
+
+## Step 5c — 検査主体の配線と台帳の更新
+
+| # | 内容 |
+|:-:|---|
+| 5-3 | kotodama-kun の Out を呼び出し元への構造化テキスト返却に再定義、model を haiku → sonnet、`Bash` 付与 |
+| 5-7 | security-reviewer の Start Condition を緩和、Exception を安全側に反転 |
+| 5-8 | review-agent を R1-R7 に配線、`@purity` grep 検査を Procedure に追加、`security-scan-report` を In から除外 |
+| 5-18 | agent-list の更新（model 割当・オーナーシップ・file_type 総数） |
+| 6-39 | 全 `R1-R6` / `R1〜R6` を `R1-R7` に置換（**18 ファイル・58 箇所**） |
+| 6-33 | `review` file_type に `gate` / `purity_tag_coverage_pct` を追加、`dimensions` の値域を R1-R7 + T1-T9 に拡張 |
+
+### 5-7 の設計 — Exception の安全側への反転
+
+B6 は「セキュリティ NFR が仕様書にないと脅威モデリングが恒久スキップされる」。従来の Exception は「作業を開始しない。orchestrator に Ch2 への追記を要請」だった。
+
+これは**無言の失敗経路**を作る。NFR が漏れる → security-reviewer が起動しない → 脅威モデルなしで design ゲートを通過する。しかも「要求どおり停止した」ため、どこにも記録が残らない。
+
+反転後は「**作業を止めない。** 未記載であること自体を Critical 指摘として security-scan-report に記録した上で、CLAUDE.md「セキュリティ要求」と OWASP Top 10 を基準に STRIDE を実施する」。停止ではなく記録に変えたことで、漏れが可視化される。
+
+Start Condition も「Ch2 にセキュリティ要求が含まれている」から「spec-foundation が存在する」に緩めた。上流の欠落を起動条件にすると、欠落が検出されずに黙って飛ばされる。
+
+### 5-3 の設計 — 借用の廃止
+
+kotodama-kun は `Write` を持たないのに Out がファイル出力を要求していた（B1）。かつ出力先が `project-records/reviews/`、すなわち review-agent の所有ディレクトリだった。
+
+**Out を「呼び出し元への構造化テキスト返却」に変更した。** ファイルを出さないので `Write` は不要になり、他エージェントの file_type を借用する必要もなくなる。記録の要否と記録先は呼び出し元が判断する。
+
+model は haiku → sonnet（B13）。和製英語の判定と文書横断の同義語検出は意味理解を要し、かつ全エージェントの Out 生成時に呼ばれるため呼出頻度が最も高い。判断根拠を agent-list §1 に注記として残した。
+
+### 5-8 の設計
+
+| 変更 | 内容 |
+|---|---|
+| 適用観点表 | 設計レベル・実装レベルの両方に R7 を追加 |
+| FAIL ルーティング表 | R7 を追加。あわせて「本表は**推奨**戻り先であり、確定は technical-authority が tech-decision に記録する」と明記 |
+| 実行タイミング表 | design 後・実装後の観点に R7 を追加 |
+| Procedure 4a/4b | `grep -rn '@purity' src/` を実行し、除外対象を除く付与率を算出。100% でなければ R7.6 違反として起票 |
+| Out | 消費者に technical-authority を追加。実装コードのレビュー時は `purity_tag_coverage_pct` を必須に |
+| In | `security-scan-report` を除外（B5） |
+
+**B5 の解消方法:** review-agent は R1-R7 のいずれにもセキュリティ観点を持たないまま `security-scan-report` のレビューを命じられていた。「レビューせよ、ただし基準は存在しない」という反証不能な指示である。観点を追加するのではなく、**In から外した。** スキャン結果の判定は technical-authority の管轄（In に `security-scan-report` を持つ）であり、そこに一本化される。
+
+### 9-8（マージゲートの検知点）が通った
+
+Step 0 の時点で「R7 が定義されるだけで配線されない」ことを懸念し、04-work-plan §13.1 に 9-8 を追加した。5c 完了時点で条件をすべて満たしている。
+
+| 9-8 の条件 | 結果 |
+|---|---|
+| `review-agent` の適用観点表・実行タイミング表に R7 が存在 | ja/en とも R7 の出現 11 箇所 |
+| `purity_tag_coverage_pct` が review の Out に出力される | 6 ファイルに存在（agents 2 + document-rules 2 + review-standards 2） |
+| `grep -rn 'R1-R6' framework-src/` が 0 件 | **0 件** |
+
+Step 0 の報告で挙げた「定義されているが誰も実行しない MUST」は解消された。
+
+### 検証証跡
+
+| 検査 | 結果 |
+|---|---|
+| ja/en 構造パリティ（エージェント） | 22 体すべて一致 |
+| ja/en 構造パリティ（規則・コマンド） | agent-list 29/160/8・document-rules 175/704/36・process-rules 197/256/116・council-review 30/54/4 で一致 |
+| file_type 総数 | §7 マスターテーブル 37 行 == §9.N 定義セクション 37 個（ja/en とも） |
+| 参照の実在 | 189 件すべて解決 |
+| デプロイ | 22 体 |
+
+### Step 5 完了時点の状態
+
+18 項目すべて適用済み。前倒しで実施した Step 6 項目: 6-29（tech-decision）, 6-30（deployment-design）, 6-31（risk-register）, 6-32（governance-change-log）, 6-33（review フィールド）, 6-39（R1-R7 置換）。

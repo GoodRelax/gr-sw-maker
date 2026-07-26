@@ -13,7 +13,7 @@ If discrepancies are detected, halt the review and ask the user for a decision.
 | Category | Glob Pattern | Expected Pairs |
 |----------|--------------|:--------------:|
 | Process rules | `framework-src/ja/process-rules/*.md` ↔ `framework-src/en/process-rules/*.md` | 11 |
-| Agent definitions | `framework-src/ja/agents/*.md` ↔ `framework-src/en/agents/*.md` | 21 |
+| Agent definitions | `framework-src/ja/agents/*.md` ↔ `framework-src/en/agents/*.md` | 22 |
 | Project instruction template | `framework-src/ja/CLAUDE.md` ↔ `framework-src/en/CLAUDE.md` | 1 |
 | Custom commands | `framework-src/ja/commands/*.md` ↔ `framework-src/en/commands/*.md` | 5 |
 | User requirement template | `framework-src/ja/user-order.md` ↔ `framework-src/en/user-order.md` | 1 |
@@ -69,7 +69,7 @@ If Phase 0 passes, JA and EN content is confirmed consistent. From this point, *
 | F04 | `framework-src/en/process-rules/agent-list.md` | Agent list (Single Source of Truth) |
 | F05 | `framework-src/en/process-rules/glossary.md` | Glossary |
 | F06 | `framework-src/en/process-rules/defect-taxonomy.md` | Defect taxonomy |
-| F07 | `framework-src/en/process-rules/review-standards.md` | Review standards (R1-R6) |
+| F07 | `framework-src/en/process-rules/review-standards.md` | Review standards (R1-R7) |
 | F08 | `framework-src/en/process-rules/prompt-structure.md` | Prompt structure conventions (S0-S6) |
 | F09 | `framework-src/en/process-rules/spec-template.md` | Specification template |
 | F10 | `framework-src/en/process-rules/porting-guide.md` | Porting guide |
@@ -198,7 +198,7 @@ The following 4 experts conduct a review from a bird's-eye perspective.
 
 **Verification items:**
 - [ ] Are the transition conditions for the 8 phases (setup→operation) free of contradictions within F02?
-- [ ] Do the quality gate (R1-R6) application phases match between F02 and F07?
+- [ ] Do the quality gate (R1-R7) application phases match between F02 and F07?
 - [ ] Do the escalation criteria (risk≧6, cost 80%, impact_level=high) match between F02 and F01?
 - [ ] Is the change management flow (F02 §3.2) description consistent?
 - [ ] Is the defect state transition (F02 stateDiagram) defined?
@@ -247,7 +247,7 @@ The following 4 experts conduct a review from a bird's-eye perspective.
 | X05 | F04 §4 Activation map ↔ F02 §2 Phase definitions | Phase names, launched agents consistency |
 | X06 | F04 §3 Data flow diagram ↔ F11 Each agent's In/Out | file_type flow consistency (read only necessary agent definitions) |
 | X08 | F05 Glossary ↔ F06 Defect taxonomy | No contradictions in term definitions |
-| X09 | F02 §3.3 Quality management ↔ F07 Review standards R1-R6 | Perspective and target phase consistency |
+| X09 | F02 §3.3 Quality management ↔ F07 Review standards R1-R7 | Perspective and target phase consistency |
 | X10 | F01 CLAUDE.md Agent Teams ↔ F04 §1 Agent list | Agent count, names, roles match |
 | X11 | F10 Porting guide model mapping ↔ F04 §1 model column | Model assignment match |
 | X16 | F02 Appendix A Sequence diagram ↔ F04 §3 Data flow diagram | Participant and message consistency |

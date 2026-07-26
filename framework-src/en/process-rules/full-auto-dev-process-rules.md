@@ -59,7 +59,7 @@
 
 - [Chapter 9: Quality Management Framework](#chapter-9-quality-management-framework)
   - 9.1 Staged Review Gates
-  - 9.2 Review Perspectives (R1-R6)
+  - 9.2 Review Perspectives (R1-R7)
   - 9.3 Quality Criteria Table
 - [Chapter 10: Headless Mode and CI/CD Integration](#chapter-10-headless-mode-and-cicd-integration)
   - 10.1 Headless Mode Basics
@@ -304,7 +304,7 @@ flowchart TD
     end
 
     subgraph Phase6["Phase 6: Delivery"]
-        P6A["AI: Final Review (R1-R6)"]
+        P6A["AI: Final Review (R1-R7)"]
         P6B["AI: Deploy and Smoke Test"]
         P6C["AI: Final Report"]
         P6D["User: Acceptance Testing"]
@@ -377,7 +377,7 @@ When the project scale is small, certain Mandatory and Recommended processes may
 | R6 Test review (separate report) | Merged into final review | Required | Required |
 
 **Rules:**
-- Quality gates (R1, R2/R4/R5, final R1-R6) are NEVER exempt regardless of scale. Reviews may be merged (e.g., Micro: single final review covering R1-R6) but never skipped
+- Quality gates (R1, R2/R4/R5, final R1-R7) are NEVER exempt regardless of scale. Reviews may be merged (e.g., Micro: single final review covering R1-R7) but never skipped
 - defect/CR recording, risk management, traceability, and change management remain Mandatory at all scales — but the recording format may be simplified for Micro tier (inline in session-transcript with a summary table)
 - Exemptions MUST be recorded in CLAUDE.md during setup. Unrecorded exemptions are violations
 
@@ -955,7 +955,7 @@ gantt
     Test Review (R6)                   : p5c, after p5g, 1d
 
     section Phase6_Delivery
-    Final Review (R1-R6)               : p6a, after p5c, 1d
+    Final Review (R1-R7)               : p6a, after p5c, 1d
     Container Build and Deploy         : p6b, after p6a, 1d
     Final Report Creation              : p6c, after p6b, 1d
     Acceptance Testing                 : milestone, p6d, after p6c, 0d
@@ -1186,7 +1186,7 @@ When the PM Agent detects anomalies, the lead agent automatically takes the foll
 #### 4.7.1 Final Review and FAIL Routing
 
 ```bash
-claude "Testing is complete. Conduct a final review of all deliverables with review-agent (all R1-R6 perspectives).
+claude "Testing is complete. Conduct a final review of all deliverables with review-agent (all R1-R7 perspectives).
 If FAILED, return to the corresponding phase based on the finding's perspective and make corrections:
 - R1 findings -> Specification Ch1-2 corrections (equivalent to planning phase)
 - R2/R4/R5 design findings -> Specification Ch3-4 corrections (equivalent to design phase)
@@ -1231,7 +1231,7 @@ claude "Execute the following final steps:
    - Test results summary (coverage, pass rate)
    - Performance test results (NFR achievement status)
    - Final state of test progress curve and defect curve
-   - Review results summary (R1-R6)
+   - Review results summary (R1-R7)
    - Security evaluation results (including SAST/SCA)
    - Final version confirmation of API documentation (openapi.yaml)
    - Observability configuration verification results
@@ -1590,7 +1590,7 @@ When working with Agent Teams, use the following role definitions:
 - **Security Agent (security-reviewer)**: Creates security design under docs/security/. Reviews implementation code for vulnerabilities. Records scan results as security-scan-report under project-records/security/
 - **Implementer Agent (implementer)**: Implements code under src/. Follows design documents, adheres to Clean Architecture and DIP. Also creates unit tests
 - **Test Agent (test-engineer)**: Creates and executes tests under tests/. Generates coverage reports
-- **Review Agent (review-agent)**: Outputs review reports to project-records/reviews/. Reviews from R1-R6 perspectives (SW engineering principles, concurrency, performance), blocking phase transition until Critical/High findings reach zero
+- **Review Agent (review-agent)**: Outputs review reports to project-records/reviews/. Reviews from R1-R7 perspectives (SW engineering principles, concurrency, performance), blocking phase transition until Critical/High findings reach zero
 - **PM Agent (progress-monitor)**: Outputs progress reports to project-management/progress/. Manages WBS/defect curve/cost
 - **Change Manager Agent (change-manager)**: Records user-initiated change requests to project-records/change-requests/ after spec approval, performs impact analysis. impact_level=high requires user approval. AI-side technical changes are managed via defect/decision
 - **Risk Manager Agent (risk-manager)**: Records risk entries to project-records/risks/, manages risk-register.md. Notifies user when score≧6
@@ -1770,7 +1770,7 @@ Execute the following phases sequentially:
 32a. [If field testing is enabled] Conduct user-attended field testing. Feedback management follows field-issue-handling-rules.md
 
 ## Phase 6: Delivery
-33. Conduct final review of all deliverables (all R1-R6 perspectives) with review-agent
+33. Conduct final review of all deliverables (all R1-R7 perspectives) with review-agent
     -> If FAILED: Return to the corresponding phase based on the finding's perspective and make corrections
 34. Build container image and verify IaC configuration in infra/
 35. Execute deployment and verify basic operation with smoke tests
@@ -1905,7 +1905,7 @@ flowchart TD
     Perf_Gate{"NFR Numerical Targets<br/>Achieved?"}
     ST["System Testing Complete"]
     TR["R6 Test Review<br/>PASS?"]
-    Final["Final R1-R6 Review"]
+    Final["Final R1-R7 Review"]
     R1Fail["Specification Ch1-2 Correction<br/>Phase 1 Equivalent"]
     R2Fail["Specification Ch3-4 Correction<br/>Phase 3 Equivalent"]
     R3Fail["Code Correction<br/>Phase 4 Equivalent"]
@@ -1955,7 +1955,7 @@ Each review gate is automatically executed by review-agent. Phase transitions ar
 
 If any condition is not met, the orchestrator MUST NOT proceed to the next phase. Missing reviews must be executed; missing dispositions must be recorded. There are no exceptions to this rule.
 
-### 9.2 Review Perspectives (R1-R6)
+### 9.2 Review Perspectives (R1-R7)
 
 Six perspectives applied by review-agent. **For detailed checklists, refer to `process-rules/review-standards.md` (Review Standards Specification).** The following is a summary of each perspective.
 
@@ -2009,7 +2009,7 @@ Define KPIs to track for each phase. progress-monitor reflects these KPIs in the
 | testing | Performance test NFR achievement rate | Per CLAUDE.md Quality Targets | performance-report |
 | testing | defect open count (Critical/High) | Per CLAUDE.md Quality Targets | defect aggregation |
 | testing | defect curve convergence | New discovery trending downward | defect-curve.json |
-| delivery | Final review PASS | R1-R6 all PASS per CLAUDE.md Quality Targets | review-agent report |
+| delivery | Final review PASS | R1-R7 all PASS per CLAUDE.md Quality Targets | review-agent report |
 | delivery | Acceptance test pass | User-approved | final-report |
 | delivery | Deployment complete | Smoke test passed | Deploy logs |
 | operation | SLA achievement rate | Per CLAUDE.md Quality Targets | Monitoring metrics |
@@ -2386,7 +2386,7 @@ Verify all items below before deployment in the delivery phase.
 
 ## Quality Gates
 
-- [ ] Final review (R1-R6): Critical/High zero findings
+- [ ] Final review (R1-R7): Critical/High zero findings
 - [ ] All quality metrics meet CLAUDE.md Quality Targets thresholds
 
 ## Security
@@ -2633,7 +2633,7 @@ sequenceDiagram
     Orch->>Review: Request R6 Review of performance-report
     Review->>Orch: Report R6 Review Results
     PM->>Orch: Submit progress Report
-    Orch->>Review: Request Final R1-R6 Review
+    Orch->>Review: Request Final R1-R7 Review
     Review->>Orch: Report Final Review (PASS)
     Orch->>PI: Request testing Phase Retrospective
     PI->>Orch: Submit retrospective-report
@@ -2767,7 +2767,7 @@ The PM Agent updates `project-management/progress/progress-report.json` accordin
 | `security-reviewer` | Security design, vulnerability review, SCA | opus | Core |
 | `implementer` | Source code implementation, unit test creation | opus | Core |
 | `test-engineer` | Test creation and execution, performance testing, coverage measurement | sonnet | Core |
-| `review-agent` | Review from SW engineering principles, concurrency, performance perspectives (R1-R6) | opus | Core |
+| `review-agent` | Review from SW engineering principles, concurrency, performance perspectives (R1-R7) | opus | Core |
 | `progress-monitor` | Progress management, WBS, quality metrics, cost tracking, agent monitoring | sonnet | Core |
 | `change-manager` | Change request receipt, impact analysis, recording | sonnet | Process Management |
 | `risk-manager` | Risk identification, evaluation, mitigation management | sonnet | Process Management |
