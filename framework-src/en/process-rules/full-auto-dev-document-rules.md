@@ -140,7 +140,7 @@ Revision rules applicable to all files under process-rules/ (including this docu
 
 | Directory | Stored Content | Primary Users |
 |-------------|----------|-----------|
-| `project-management/` | Orchestration state, handoffs, progress, WBS, cost | Lead agent, PM agent |
+| `project-management/` | Orchestration state, handoffs, progress, WBS, cost | orchestrator, progress-monitor |
 | `docs/` | Specifications, API documents, security design — "what was built" | All agents, users, downstream consumers |
 | `project-records/` | Reviews, decisions, risks, defects, CRs — "how it was built" | Auditors, reviewers, process-oriented stakeholders |
 
@@ -368,7 +368,7 @@ security-reviewer creates a threat model. Other agents reference it for implemen
 | File purpose | Common? Form? | **Common** (`doc:purpose`) | Field shared across all file types |
 | Adopted threat analysis methodology (STRIDE, DREAD, etc.) | Form? Detail? | **Form Block** (`threat-model:methodology`) | Agent parses to determine methodology. Can also be displayed on dashboard |
 | Total number of identified threats | Form? Detail? | **Form Block** (`threat-model:threat_count`) | Numeric metric. Aggregated by progress-monitor |
-| Number of unmitigated high-risk threats | Form? Detail? | **Form Block** (`threat-model:unmitigated_high_count`) | Used by technical-authority for the gate decision (-> §9.4.1 GATE-DESIGN) |
+| Number of unmitigated Critical threats | Form? Detail? | **Form Block** (`threat-model:unmitigated_critical_count`) | Used by technical-authority for the gate decision (-> §9.4.1 GATE-DESIGN) |
 | Per-threat details (attack vectors, impact, mitigations) | Form? Detail? | **Detail Block** | Detailed analysis content. Not parsed for decisions |
 
 **Decision point:** The "total number of threats" could be counted from Detail Block tables, but having a normalized value in Form Block ensures reliable machine readability.
@@ -381,10 +381,10 @@ progress-monitor manages the WBS. orchestrator references it for phase progressi
 |------|------|------|------|
 | Total task count | Form? Detail? | **Form Block** (`wbs:task_total`) | Input for completion rate calculation |
 | Completed task count | Form? Detail? | **Form Block** (`wbs:task_completed`) | Displayed on dashboard |
-| Current critical path | Form? Detail? | **Form Block** (`wbs:critical_path`) | Used by lead for bottleneck decisions |
+| WBS completion rate | Form? Detail? | **Form Block** (`wbs:completion_pct`) | Derivable from the two rows above, but orchestrator uses it immediately for progression decisions |
 | Details of each task (assignee, duration, dependencies) | Form? Detail? | **Detail Block** | Task details are domain knowledge |
 
-**Decision point:** The critical path can be derived from the task table in Detail Block, but even derived values belong in Form Block if agents use them immediately for decisions.
+**Decision point:** The completion rate can be derived from the task table in Detail Block, but even derived values belong in Form Block if agents use them immediately for decisions.
 
 ### Example 3: executive-dashboard.md (Executive Dashboard)
 
@@ -394,22 +394,22 @@ progress-monitor updates the project-wide summary. Users grasp the situation at 
 |------|------|------|------|
 | Current phase | Form? Detail? | **Form Block** (`executive-dashboard:phase`) | Synced with pipeline-state |
 | Overall project completion rate | Form? Detail? | **Form Block** (`executive-dashboard:completion_pct`) | Numeric metric |
-| Overall health status (green/yellow/red) | Form? Detail? | **Form Block** (`executive-dashboard:health`) | Lead determines whether to escalate |
-| Number of open blockers | Form? Detail? | **Form Block** (`executive-dashboard:blocker_count`) | Escalation if not 0 |
+| Overall health status (green/yellow/red) | Form? Detail? | **Form Block** (`executive-dashboard:health`) | orchestrator determines whether to escalate |
+| Current blocker (empty if none) | Form? Detail? | **Form Block** (`executive-dashboard:blocker`) | Escalation if not empty. It holds a summary rather than a count because pipeline-state:blocked already carries the machine-readable blocking state |
 | Detailed summary per phase | Form? Detail? | **Detail Block** | Summary text for humans to read |
 
 **Decision point:** The dashboard has a large Form Block, but that is correct. The raison d'etre of this file is "aggregation of structured status."
 
 ### Example 4: final-report.md (Final Report)
 
-Lead creates in delivery phase. Material for users to decide on project closure.
+orchestrator creates it in the delivery phase. Material for users to decide on project closure.
 
 | Information | Candidates | Decision | Rationale |
 |------|------|------|------|
-| Final test pass rate | Form? Detail? | **Form Block** (`final-report:test_pass_rate`) | Input for acceptance decision |
-| Coverage achievement rate | Form? Detail? | **Form Block** (`final-report:coverage_pct`) | Same as above |
-| Number of unresolved Critical/High defects | Form? Detail? | **Form Block** (`final-report:open_critical`, `final-report:open_high`) | Release not allowed if not 0 |
-| Goal achievement assessment | Form? Detail? | **Separate**: enum (`final-report:goal_achievement`: achieved/partial/not-achieved) -> **Form Block**, details -> **Detail Block** | Appears qualitative but can be classified by enum |
+| Final test pass rate and coverage | Form? Detail? | **Neither** (refer to `progress:test_pass_rate` / `progress:coverage_pct`) | Do not copy a measurement another file_type already owns. The same value in two places with different owners always drifts |
+| Unresolved defect count | Form? Detail? | **Form Block** (`final-report:open_defect_count`) | Input for the project closure decision (-> §9.4.1 GATE-DELIVERY) |
+| Total API cost | Form? Detail? | **Form Block** (`final-report:total_cost_usd`) | Input for the acceptance decision and the next estimate |
+| Goal achievement assessment | Form? Detail? | **Separate**: enum (`final-report:goal_achievement`: achieved/partially-achieved/not-achieved) -> **Form Block**, details -> **Detail Block** | Appears qualitative but can be classified by enum |
 | Remaining issues / technical debt list | Form? Detail? | **Detail Block** | Detailed list |
 | Lessons Learned | Form? Detail? | **Detail Block** | Entirely free-form |
 
@@ -435,10 +435,10 @@ test-engineer creates after k6 execution. Comparison results against NFR targets
 
 | Information | Candidates | Decision | Rationale |
 |------|------|------|------|
-| Number of tested endpoints | Form? Detail? | **Form Block** (`performance-report:endpoint_count`) | Aggregated on dashboard |
+| Number of test scenarios | Form? Detail? | **Form Block** (`performance-report:scenario_count`) | Aggregated on dashboard |
 | NFR achievement rate (pass/total) | Form? Detail? | **Form Block** (`performance-report:nfr_pass_rate`) | testing phase fails if not 100% |
-| Maximum P99 latency | Form? Detail? | **Form Block** (`performance-report:p99_max_ms`) | SLA exceedance alert decision |
-| Detailed results per endpoint | Form? Detail? | **Detail Block** | Table of latency, throughput, error rate |
+| P99 latency | Form? Detail? | **Form Block** (`performance-report:p99_latency_ms`) | SLA exceedance alert decision |
+| Detailed results per scenario | Form? Detail? | **Detail Block** | Table of latency, throughput, error rate |
 | k6 script configuration parameters | Form? Detail? | **Detail Block** | Test condition records (for reproducibility) |
 
 ---
@@ -778,7 +778,7 @@ Standard values for `commissioned_by` (creation trigger) and `consumed_by` (next
 | Value | Meaning |
 |---|------|
 | `user` | Directly created by the user |
-| `orchestrator` | Created by lead as part of their responsibilities |
+| `orchestrator` | Created by orchestrator as part of its own responsibilities |
 | `phase-{name}` | Triggered by phase transition per process rules |
 | `{agent-name}` | Triggered by an event from a specific agent |
 
@@ -1020,7 +1020,7 @@ Dispositions: **fixed** = corrected and verified, **deferred** = acknowledged bu
 | decision:id | string | Yes | DEC-NNN | — |
 | decision:category | enum | Yes | Decision category | architecture / security / technology / process / requirement |
 | decision:decision_status | enum | Yes | Decision status | proposed / approved / rejected / superseded |
-| decision:approved_by | string | No | Approver (user or lead). Empty when unapproved | — |
+| decision:approved_by | string | No | Approver (user or orchestrator). Empty when unapproved | — |
 
 ### Detail Block Guidance
 
@@ -1152,7 +1152,7 @@ Describe the traceability matrix in the Detail Block. Column definitions for the
 |-----------|------|------|------|-----------|
 | interview-record:interview_status | enum | Yes | Interview status | not-started / in-progress / completed |
 | interview-record:session_count | int | Yes | Number of completed sessions | — |
-| interview-record:open_question_count | int | Yes | Number of unresolved questions | = 0 required for planning -> design transition |
+| interview-record:open_question_count | int | Yes | Number of unresolved questions | -> Process Rules §9.4.1 GATE-INTERVIEW |
 
 ### Detail Block Guidance
 
@@ -1274,8 +1274,8 @@ Describe authentication/authorization design, encryption policy, input validatio
 |-----------|------|------|------|-----------|
 | security-scan-report:scan_type | enum | Yes | Scan type | sast / sca / dast / secret-scan / manual |
 | security-scan-report:tool_name | string | Yes | Tool name used | — |
-| security-scan-report:finding_critical | int | Yes | Critical finding count | = 0 required for delivery transition |
-| security-scan-report:finding_high | int | Yes | High finding count | = 0 required for delivery transition |
+| security-scan-report:finding_critical | int | Yes | Critical finding count | -> Process Rules §9.4.1 GATE-IMPL |
+| security-scan-report:finding_high | int | Yes | High finding count | -> Process Rules §9.4.1 GATE-IMPL |
 | security-scan-report:finding_medium | int | Yes | Medium finding count | — |
 | security-scan-report:finding_low | int | Yes | Low finding count | — |
 
@@ -1386,7 +1386,7 @@ Describe a concise user-facing summary (recent progress, next milestone, key ris
 | final-report:goal_achievement | enum | Yes | Project goal achievement level | achieved / partially-achieved / not-achieved |
 | final-report:total_cost_usd | number | Yes | Total API cost | — |
 | final-report:total_defect_count | int | Yes | Cumulative defect count | — |
-| final-report:open_defect_count | int | Yes | Unresolved defect count | = 0 required for project close |
+| final-report:open_defect_count | int | Yes | Unresolved defect count | -> Process Rules §9.4.1 GATE-DELIVERY |
 | final-report:lesson_count | int | Yes | Number of lessons | — |
 
 ### Detail Block Guidance
@@ -1418,8 +1418,8 @@ Describe the answers to the 3 questions the user answers (1. What do you want to
 |-----------|------|------|------|-----------|
 | license-report:total_dependency_count | int | Yes | Total number of dependencies | — |
 | license-report:compatible_count | int | Yes | License-compatible count | — |
-| license-report:incompatible_count | int | Yes | License-incompatible count | = 0 required for delivery transition |
-| license-report:unknown_count | int | Yes | License-unknown count | = 0 required for delivery transition |
+| license-report:incompatible_count | int | Yes | License-incompatible count | -> Process Rules §9.4.1 GATE-IMPL |
+| license-report:unknown_count | int | Yes | License-unknown count | -> Process Rules §9.4.1 GATE-IMPL |
 
 ### Detail Block Guidance
 
@@ -1435,7 +1435,7 @@ Describe dependency list table (library name, version, license, compatibility as
 |-----------|------|------|------|-----------|
 | performance-report:test_tool | string | Yes | Performance testing tool name | — |
 | performance-report:scenario_count | int | Yes | Number of test scenarios | — |
-| performance-report:nfr_pass_rate | string | Yes | NFR pass rate | "N/M" format. = M/M required for delivery transition |
+| performance-report:nfr_pass_rate | string | Yes | NFR pass rate | "N/M" format. -> Process Rules §9.4.1 GATE-TEST |
 | performance-report:p99_latency_ms | int | No | P99 latency (milliseconds) | — |
 | performance-report:throughput_rps | number | No | Throughput (requests/second) | — |
 
@@ -1691,7 +1691,7 @@ Each file has exactly one `owner` agent. Only the owner can modify Common Block 
 
 | Owner | File (file_type) | Write Scope |
 |---------|---------|-----------|
-| orchestrator | pipeline-state | Full control. Only lead writes this file |
+| orchestrator | pipeline-state | Full control. Only orchestrator writes this file |
 | orchestrator | executive-dashboard | Full control of project-wide dashboard |
 | orchestrator | final-report | Full control of project final report |
 | orchestrator | decision | Full control of decision records |

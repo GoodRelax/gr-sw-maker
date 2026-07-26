@@ -140,7 +140,7 @@ process-rules/ 配下の全ファイル（本文書を含む）に適用する�
 
 | ディレクトリ | 格納内容 | 主な利用者 |
 |-------------|----------|-----------|
-| `project-management/` | オーケストレーション状態、引継ぎ、進捗、WBS、コスト | leadエージェント、PMエージェント |
+| `project-management/` | オーケストレーション状態、引継ぎ、進捗、WBS、コスト | orchestrator, progress-monitor |
 | `docs/` | 仕様書、API文書、セキュリティ設計 — 「何を作ったか」 | 全エージェント、ユーザー、下流の利用者 |
 | `project-records/` | レビュー、意思決定、リスク、defect、CR — 「どう作ったか」 | 監査者、レビュアー、プロセス重視のステークホルダー |
 
@@ -368,7 +368,7 @@ security-reviewer が脅威モデルを作成。他のエージェントはこ�
 | ファイルの目的 | Common? Form? | **Common** (`doc:purpose`) | 全ファイルタイプ共通フィールド |
 | 採用した脅威分析手法（STRIDE, DREAD等） | Form? Detail? | **Form Block** (`threat-model:methodology`) | エージェントがパースして手法を判断。dashboardにも表示可能 |
 | 特定された脅威の総数 | Form? Detail? | **Form Block** (`threat-model:threat_count`) | 数値メトリクス。progress-monitorが集計 |
-| 未軽減の高リスク脅威数 | Form? Detail? | **Form Block** (`threat-model:unmitigated_high_count`) | technical-authority がゲート判断に使う（→ §9.4.1 GATE-DESIGN） |
+| 未軽減のCritical脅威数 | Form? Detail? | **Form Block** (`threat-model:unmitigated_critical_count`) | technical-authority がゲート判断に使う（→ §9.4.1 GATE-DESIGN） |
 | 脅威ごとの詳細（攻撃ベクター、影響、軽減策） | Form? Detail? | **Detail Block** | 詳細な分析内容。パースして判断はしない |
 
 **判断ポイント:** 「脅威の総数」はDetail Blockの表を数えればわかるが、Form Blockに正規化した数値を持つことで確実に機械読取可能になる。
@@ -381,10 +381,10 @@ progress-monitor がWBSを管理。orchestrator がフェーズ進行判断に�
 |------|------|------|------|
 | 総タスク数 | Form? Detail? | **Form Block** (`wbs:task_total`) | 完了率算出の入力 |
 | 完了タスク数 | Form? Detail? | **Form Block** (`wbs:task_completed`) | dashboardに表示 |
-| 現在のクリティカルパス | Form? Detail? | **Form Block** (`wbs:critical_path`) | leadがボトルネック判断に使う |
+| WBS完了率 | Form? Detail? | **Form Block** (`wbs:completion_pct`) | 上2行から導出できるが、orchestrator が進行判断に即座に使う |
 | 各タスクの詳細（担当、期間、依存関係） | Form? Detail? | **Detail Block** | タスク詳細はドメイン知識 |
 
-**判断ポイント:** クリティカルパスはDetail Block内のタスク表から導出できるが、導出値であってもエージェントが即座に判断に使うならForm Block。
+**判断ポイント:** 完了率はDetail Block内のタスク表から導出できるが、導出値であってもエージェントが即座に判断に使うならForm Block。
 
 ### 実例3: executive-dashboard.md（エグゼクティブダッシュボード）
 
@@ -394,22 +394,22 @@ progress-monitor が更新するプロジェクト全体の要約。ユーザー
 |------|------|------|------|
 | 現在のフェーズ | Form? Detail? | **Form Block** (`executive-dashboard:phase`) | pipeline-stateと同期 |
 | プロジェクト全体の完了率 | Form? Detail? | **Form Block** (`executive-dashboard:completion_pct`) | 数値メトリクス |
-| 全体のヘルスステータス（green/yellow/red） | Form? Detail? | **Form Block** (`executive-dashboard:health`) | leadが報告要否を判断 |
-| オープン中のブロッカー数 | Form? Detail? | **Form Block** (`executive-dashboard:blocker_count`) | 0でなければエスカレーション |
+| 全体のヘルスステータス（green/yellow/red） | Form? Detail? | **Form Block** (`executive-dashboard:health`) | orchestrator が報告要否を判断 |
+| 現在のブロッカー（なければ空） | Form? Detail? | **Form Block** (`executive-dashboard:blocker`) | 空でなければエスカレーション。件数ではなく要約を持つのは、機械可読なブロック状態を pipeline-state:blocked が既に持つため |
 | 各フェーズの詳細サマリー | Form? Detail? | **Detail Block** | 人間が読むための要約文 |
 
 **判断ポイント:** dashboardはForm Blockが大きくなるが、それは正しい。このファイルの存在意義が「構造化されたステータスの集約」だから。
 
 ### 実例4: final-report.md（総括レポート）
 
-delivery フェーズでleadが作成。ユーザーがプロジェクト終了を判断するための材料。
+delivery フェーズで orchestrator が作成。ユーザーがプロジェクト終了を判断するための材料。
 
 | 情報 | 候補 | 判断 | 理由 |
 |------|------|------|------|
-| 最終テスト合格率 | Form? Detail? | **Form Block** (`final-report:test_pass_rate`) | 受入判断の入力 |
-| カバレッジ達成率 | Form? Detail? | **Form Block** (`final-report:coverage_pct`) | 同上 |
-| 未解決のCritical/High defect 数 | Form? Detail? | **Form Block** (`final-report:open_critical`, `final-report:open_high`) | 0でなければリリース不可 |
-| 目標達成の評価 | Form? Detail? | **分離**: enum (`final-report:goal_achievement`: achieved/partial/not-achieved) → **Form Block**、詳細 → **Detail Block** | 定性的だがenumで分類可能 |
+| 最終テスト合格率・カバレッジ | Form? Detail? | **どちらでもない**（`progress:test_pass_rate` / `progress:coverage_pct` を参照） | 他の file_type が既に持つ測定値は転記しない。owner の違う2箇所に同じ値を置くと必ず乖離する |
+| 未解決 defect 数 | Form? Detail? | **Form Block** (`final-report:open_defect_count`) | プロジェクト終了判断の入力（→ §9.4.1 GATE-DELIVERY） |
+| 総APIコスト | Form? Detail? | **Form Block** (`final-report:total_cost_usd`) | 受入判断と次期見積りの入力 |
+| 目標達成の評価 | Form? Detail? | **分離**: enum (`final-report:goal_achievement`: achieved/partially-achieved/not-achieved) → **Form Block**、詳細 → **Detail Block** | 定性的だがenumで分類可能 |
 | 残課題・技術的負債のリスト | Form? Detail? | **Detail Block** | 詳細なリスト |
 | 学んだ教訓（Lessons Learned） | Form? Detail? | **Detail Block** | 完全に自由記述 |
 
@@ -435,10 +435,10 @@ test-engineerがk6実行後に作成。NFR目標との比較結果。
 
 | 情報 | 候補 | 判断 | 理由 |
 |------|------|------|------|
-| テスト対象エンドポイント数 | Form? Detail? | **Form Block** (`performance-report:endpoint_count`) | dashboardに集計 |
+| テストシナリオ数 | Form? Detail? | **Form Block** (`performance-report:scenario_count`) | dashboardに集計 |
 | NFR達成率（pass/total） | Form? Detail? | **Form Block** (`performance-report:nfr_pass_rate`) | 100%でないとtesting フェーズ不合格 |
-| P99レイテンシの最大値 | Form? Detail? | **Form Block** (`performance-report:p99_max_ms`) | SLA超過のアラート判断 |
-| 各エンドポイントの詳細結果 | Form? Detail? | **Detail Block** | レイテンシ・スループット・エラー率の表 |
+| P99レイテンシ | Form? Detail? | **Form Block** (`performance-report:p99_latency_ms`) | SLA超過のアラート判断 |
+| シナリオ別の詳細結果 | Form? Detail? | **Detail Block** | レイテンシ・スループット・エラー率の表 |
 | k6スクリプトの設定パラメータ | Form? Detail? | **Detail Block** | テスト条件の記録（再現性のため） |
 
 ---
@@ -778,7 +778,7 @@ external-dependency-spec（抽象テンプレート）
 | 値 | 意味 |
 |---|------|
 | `user` | ユーザーが直接作成 |
-| `orchestrator` | leadが自身の責務として作成 |
+| `orchestrator` | orchestrator が自身の責務として作成 |
 | `phase-{name}` | プロセス規則のフェーズ遷移がトリガー |
 | `{agent-name}` | 特定エージェントのイベントがトリガー |
 
@@ -1020,7 +1020,7 @@ external-dependency-spec（抽象テンプレート）
 | decision:id | string | Yes | DEC-NNN | — |
 | decision:category | enum | Yes | 意思決定カテゴリ | architecture / security / technology / process / requirement |
 | decision:decision_status | enum | Yes | 意思決定ステータス | proposed / approved / rejected / superseded |
-| decision:approved_by | string | No | 承認者（ユーザーまたはlead）。未承認時は空 | — |
+| decision:approved_by | string | No | 承認者（ユーザーまたは orchestrator）。未承認時は空 | — |
 
 ### Detail Block Guidance
 
@@ -1152,7 +1152,7 @@ Detail Blockにトレーサビリティマトリクスを記載する。マト�
 |-----------|------|------|------|-----------|
 | interview-record:interview_status | enum | Yes | インタビューステータス | not-started / in-progress / completed |
 | interview-record:session_count | int | Yes | 実施済みセッション数 | — |
-| interview-record:open_question_count | int | Yes | 未解決の質問数 | = 0 required for planning → design transition |
+| interview-record:open_question_count | int | Yes | 未解決の質問数 | → プロセス規則 §9.4.1 GATE-INTERVIEW |
 
 ### Detail Block Guidance
 
@@ -1274,8 +1274,8 @@ WBSテーブル（タスクID、タスク名、担当エージェント、依存
 |-----------|------|------|------|-----------|
 | security-scan-report:scan_type | enum | Yes | スキャン種別 | sast / sca / dast / secret-scan / manual |
 | security-scan-report:tool_name | string | Yes | 使用ツール名 | — |
-| security-scan-report:finding_critical | int | Yes | Critical検出数 | = 0 required for delivery transition |
-| security-scan-report:finding_high | int | Yes | High検出数 | = 0 required for delivery transition |
+| security-scan-report:finding_critical | int | Yes | Critical検出数 | → プロセス規則 §9.4.1 GATE-IMPL |
+| security-scan-report:finding_high | int | Yes | High検出数 | → プロセス規則 §9.4.1 GATE-IMPL |
 | security-scan-report:finding_medium | int | Yes | Medium検出数 | — |
 | security-scan-report:finding_low | int | Yes | Low検出数 | — |
 
@@ -1386,7 +1386,7 @@ external-dependency-spec 共通章構成に従う。非標準I/Fの詳細仕様�
 | final-report:goal_achievement | enum | Yes | プロジェクト目標達成度 | achieved / partially-achieved / not-achieved |
 | final-report:total_cost_usd | number | Yes | 総APIコスト | — |
 | final-report:total_defect_count | int | Yes | 累計 defect 数 | — |
-| final-report:open_defect_count | int | Yes | 未解決 defect 数 | = 0 required for project close |
+| final-report:open_defect_count | int | Yes | 未解決 defect 数 | → プロセス規則 §9.4.1 GATE-DELIVERY |
 | final-report:lesson_count | int | Yes | 教訓の件数 | — |
 
 ### Detail Block Guidance
@@ -1418,8 +1418,8 @@ external-dependency-spec 共通章構成に従う。非標準I/Fの詳細仕様�
 |-----------|------|------|------|-----------|
 | license-report:total_dependency_count | int | Yes | 依存ライブラリ総数 | — |
 | license-report:compatible_count | int | Yes | ライセンス互換数 | — |
-| license-report:incompatible_count | int | Yes | ライセンス非互換数 | = 0 required for delivery transition |
-| license-report:unknown_count | int | Yes | ライセンス不明数 | = 0 required for delivery transition |
+| license-report:incompatible_count | int | Yes | ライセンス非互換数 | → プロセス規則 §9.4.1 GATE-IMPL |
+| license-report:unknown_count | int | Yes | ライセンス不明数 | → プロセス規則 §9.4.1 GATE-IMPL |
 
 ### Detail Block Guidance
 
@@ -1435,7 +1435,7 @@ external-dependency-spec 共通章構成に従う。非標準I/Fの詳細仕様�
 |-----------|------|------|------|-----------|
 | performance-report:test_tool | string | Yes | 性能テストツール名 | — |
 | performance-report:scenario_count | int | Yes | テストシナリオ数 | — |
-| performance-report:nfr_pass_rate | string | Yes | NFR合格率 | "N/M" 形式。= M/M required for delivery transition |
+| performance-report:nfr_pass_rate | string | Yes | NFR合格率 | "N/M" 形式。→ プロセス規則 §9.4.1 GATE-TEST |
 | performance-report:p99_latency_ms | int | No | P99レイテンシ（ミリ秒） | — |
 | performance-report:throughput_rps | number | No | スループット（リクエスト/秒） | — |
 
@@ -1542,6 +1542,8 @@ external-dependency-spec 共通章構成に従う。非標準I/Fの詳細仕様�
 ### Detail Block Guidance
 
 ふりかえり分析の本体を記載する。defect パターンの根本原因分析（fault origin 別の集計）、KPT（Keep/Problem/Try）形式の分析結果、具体的な改善策（対象ファイル・変更内容・期待効果）を含む。承認後は decree-writer が適用し、before/after diff を project-records/improvement/ に記録する。
+
+---
 
 ## 9.33 field-issue（名前空間: field-issue:）（条件付き: 実機テスト有効時）
 
@@ -1689,7 +1691,7 @@ archived   → 変更しない（参照専用）
 
 | オーナー | ファイル（file_type） | 書込み範囲 |
 |---------|---------|-----------|
-| orchestrator | pipeline-state | 完全制御。leadのみがこのファイルを書く |
+| orchestrator | pipeline-state | 完全制御。orchestrator のみがこのファイルを書く |
 | orchestrator | executive-dashboard | プロジェクト全体ダッシュボードの完全制御 |
 | orchestrator | final-report | プロジェクト総括レポートの完全制御 |
 | orchestrator | decision | 意思決定記録の完全制御 |
