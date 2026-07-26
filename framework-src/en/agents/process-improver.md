@@ -3,6 +3,7 @@ name: process-improver
 description: Responsible for retrospectives, root cause analysis, and process improvement proposals
 tools:
   - Read
+  - Write
   - Glob
   - Grep
 model: sonnet
@@ -44,6 +45,8 @@ Analyze defect tickets, review findings, and progress data to identify root caus
 | file_type | Destination | Next Consumer |
 |-----------|-------------|---------------|
 | retrospective-report | project-records/improvement/ | orchestrator |
+
+> Holds `Write` but not `Edit`. A retrospective-report is a fresh record created each time, never a rewrite of an existing document. Applying changes to governance files is decree-writer's responsibility.
 
 ### Work
 

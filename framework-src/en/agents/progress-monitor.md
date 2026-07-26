@@ -23,7 +23,6 @@ Visualize project progress and quality with numerical data, detect anomalies ear
 ### Start Conditions
 
 - [ ] Specification chapters Ch3-6 are complete and the project has entered the design phase or later
-- [ ] The cost budget is configured in CLAUDE.md
 
 ### End Conditions
 
@@ -53,6 +52,9 @@ Visualize project progress and quality with numerical data, detect anomalies ear
 |-----------|-------------|---------------|
 | progress | project-management/progress/ | orchestrator, user |
 | wbs | project-management/progress/wbs.md | orchestrator |
+| (cost-log.json) | project-management/progress/cost-log.json | orchestrator |
+
+> cost-log.json is JSON time-series data, not a file_type (not Common Block managed). At each phase boundary, read `session-state.json` and append that phase's token consumption and cost.
 
 ### Work
 
@@ -90,22 +92,25 @@ Read only the sections above, not the full rule document.
 
 ### Anomaly Detection Thresholds
 
-| Condition | Report To |
-|-----------|-----------|
-| Test execution rate is below 70% of the plan | orchestrator |
-| Defect discovery rate surges (over 200% day-over-day) | orchestrator |
-| Defect fix rate falls below the discovery rate and the gap widens | orchestrator |
-| Coverage is more than 10% below the target | orchestrator |
-| Cost budget reaches 80% | orchestrator -> user |
-| No response from an agent for over 30 minutes | orchestrator |
-| Suspected mutual wait between the same agents | orchestrator |
+Detection applies to **state observable at the moment this agent is launched**. Elapsed time cannot be measured by the agent itself, so it MUST NOT be used as a condition.
 
-### Circular Wait Detection
+| Condition | How it is observed | Report To |
+|-----------|--------------------|-----------|
+| Test execution rate is below 70% of the plan | Compare test-progress.json against the planned values in wbs | orchestrator |
+| Defect fix rate falls below the discovery rate and the gap widens | Compare cumulative discovered and cumulative fixed in defect-curve.json | orchestrator |
+| Coverage is more than 10% below the target | Compare the coverage report against CLAUDE.md "Quality Targets" | orchestrator |
+| Cost budget reaches the alert threshold | Compare the cost-log.json total against the threshold in CLAUDE.md "Quality Targets" | orchestrator -> user |
+| pipeline-state for the phase is unchanged since the previous launch | Compare the phase and update history in pipeline-state | orchestrator |
 
-If the following conditions overlap, immediately report to the orchestrator and force-restart the agents:
-- Multiple agents are simultaneously in a "waiting for another agent to complete" state
-- No progress data has been updated for over 30 minutes
-- Reports to the orchestrator have ceased
+### Stall Detection
+
+**Judge by change of state, not by elapsed time.** Report a stall to the orchestrator when all of the following hold compared with the previous launch:
+
+- The `phase` in pipeline-state has not changed
+- The number of completed tasks in wbs has not increased
+- No new deliverable has appeared in the directory for that phase
+
+Report only the facts (what has not changed). Do not infer a cause and do not instruct a restart: deciding the recovery procedure is the orchestrator's jurisdiction.
 
 ## Exception
 

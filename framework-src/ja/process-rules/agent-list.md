@@ -10,7 +10,7 @@
 
 | # | name | 役割 | model | 主要フェーズ |
 |:-:|------|------|:-----:|------------|
-| 1 | orchestrator | プロジェクト全体のオーケストレーション、フェーズ遷移制御、意思決定記録 | opus | 全フェーズ |
+| 1 | orchestrator | 進行状態の記録、PM 情報（進捗・コスト・リスク・変更要求）の統合、ユーザーへの報告 | opus | 全フェーズ |
 | 2 | srs-writer | ユーザーコンセプトの構造化、インタビュー、仕様書 Ch1-2 作成 | opus | planning |
 | 3 | architect | 仕様書 Ch3-6 詳細化、OpenAPI・可観測性・外部依存要求の設計 | opus | design |
 | 4 | security-reviewer | 脅威モデリング、セキュリティ設計、脆弱性スキャン | opus | design, implementation |
@@ -178,7 +178,11 @@
 
 ### decree-writer
 
-> decree-writer は file_type を所有しない。適用結果の before/after diff は project-records/improvement/ に記録する（retrospective-report の補足として）。
+| file_type | ディレクトリ | 単/連 | 主要フェーズ |
+|-----------|------------|:-----:|------------|
+| governance-change-log | project-records/governance/ | 連 | 全フェーズ（フェーズ完了時） |
+
+> 適用結果の before/after diff は governance-change-log に記録する。project-records/improvement/ は process-improver の所有であり、そこへは書き込まない。
 
 | 入力 | 提供元 | 用途 |
 |------|--------|------|

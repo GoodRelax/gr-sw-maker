@@ -3,6 +3,7 @@ name: process-improver
 description: ふりかえり・根本原因分析・プロセス改善策の提案を担当する
 tools:
   - Read
+  - Write
   - Glob
   - Grep
 model: sonnet
@@ -44,6 +45,8 @@ defect 票・レビュー指摘・進捗データを分析し、繰り返し発�
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
 | retrospective-report | project-records/improvement/ | orchestrator |
+
+> `Write` のみを持ち `Edit` は持たない。retrospective-report は毎回新規に作成する記録であり、既存文書の書き換えは行わない。ガバナンスファイルへの適用は decree-writer の責務である。
 
 ### Work
 

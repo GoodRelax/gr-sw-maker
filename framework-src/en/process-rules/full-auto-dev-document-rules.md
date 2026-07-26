@@ -713,6 +713,7 @@ The Footer is shared across all file types. Agents MUST append a new `<entry>` t
 | review | `review:` | Code/design review results | `project-records/reviews/` | No |
 | decision | `decision:` | Architecture decision record | `project-records/decisions/` | No |
 | tech-decision | `tech-decision:` | Technical ruling and quality gate decision record | `project-records/tech-decisions/` | No |
+| governance-change-log | `governance-change-log:` | Record of changes applied to governance files | `project-records/governance/` | No |
 | risk | `risk:` | Risk entry and register | `project-records/risks/` | No |
 | defect | `defect:` | defect tracking | `project-records/defects/` | No |
 | change-request | `change-request:` | Change request management | `project-records/change-requests/` | No |
@@ -806,6 +807,7 @@ Standard values for `commissioned_by` (creation trigger) and `consumed_by` (next
 | review | Phase gate (e.g., `phase-planning`) | orchestrator, target agent | review-agent |
 | decision | Agent that needed the decision | All agents | orchestrator |
 | tech-decision | When a gate decision or technical ruling is requested | Main session, orchestrator, all implementation agents | technical-authority |
+| governance-change-log | When an improvement is applied | orchestrator, user, process-improver | decree-writer |
 | risk | `phase-planning` | risk-manager, orchestrator | risk-manager |
 | defect | `test-engineer` | Agent assigned to fix | test-engineer |
 | change-request | `user` (user-initiated change requests only) | change-manager, orchestrator | change-manager |
@@ -1585,6 +1587,28 @@ Judgments made on grounds of cost, schedule or risk are recorded in decision (ow
 
 ---
 
+## 9.35 governance-change-log (Namespace: governance-change-log:)
+
+### Fields
+
+| Field | Type | Required | Description | Range/Constraint |
+|-------|------|----------|-------------|------------------|
+| governance-change-log:id | string | Yes | Unique identifier | GCL-NNN |
+| governance-change-log:source_report | string | Yes | The retrospective-report the change came from | File name |
+| governance-change-log:target_file | string | Yes | The governance file that was changed | Path |
+| governance-change-log:apply_status | enum | Yes | Result of application | applied / partially-applied / rejected |
+| governance-change-log:approved_by | enum | Yes | Who approved it | user / orchestrator |
+| governance-change-log:safety_check_result | enum | Yes | Result of the safety check | pass / fail |
+| governance-change-log:rejected_reason | text | No | Why it was not applied (required for rejected / partially-applied) | — |
+
+### Detail Block Guidance
+
+Record the before/after diff of the applied change. Include each safety-check item and its verdict (self-modification prohibited, quality gate definitions protected, thresholds never relaxed). When `apply_status` is anything other than `applied`, `rejected_reason` MUST be filled in.
+
+The owner is decree-writer. It is kept in a separate directory from retrospective-report (owner: process-improver), which is where the improvement was proposed. If the agent that proposes and the agent that applies wrote to the same directory, it would no longer be possible to tell which record is whose.
+
+---
+
 # 10. Versioning Rules
 
 Versioning is determined by the document **status** at the time of change.
@@ -1615,6 +1639,7 @@ Each file has exactly one `owner` agent. Only the owner can modify Common Block 
 | orchestrator | final-report | Full control of project final report |
 | orchestrator | decision | Full control of decision records |
 | technical-authority | tech-decision | Full control of technical ruling and gate decision records |
+| decree-writer | governance-change-log | Full control of governance application records |
 | srs-writer | user-order | Validation and completion. User provides initial input |
 | srs-writer | interview-record | Full control of interview records |
 | srs-writer | spec-foundation | Common + Form + Detail of specification Ch1-2 |

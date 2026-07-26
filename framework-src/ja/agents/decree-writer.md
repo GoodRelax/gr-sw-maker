@@ -42,7 +42,11 @@ orchestrator から受け取った承認済み改善策を、安全チェック�
 
 ### Out
 
-> decree-writer は file_type を所有しない。適用結果の before/after diff は project-records/improvement/ に記録する（retrospective-report の補足として）。
+| file_type | 出力先 | 次の消費者 |
+|-----------|--------|-----------|
+| governance-change-log | project-records/governance/ | orchestrator, ユーザー, process-improver |
+
+> 適用結果の before/after diff は governance-change-log に記録する。`project-records/improvement/` は process-improver の所有であり、そこへは書き込まない。
 
 ### Work
 

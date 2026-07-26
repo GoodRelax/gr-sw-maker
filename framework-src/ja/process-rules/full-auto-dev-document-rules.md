@@ -713,6 +713,7 @@ Footerは全ファイルタイプ共通。エージェントは書込みのた�
 | review | `review:` | コード/設計レビュー結果 | `project-records/reviews/` | No |
 | decision | `decision:` | アーキテクチャ意思決定記録 | `project-records/decisions/` | No |
 | tech-decision | `tech-decision:` | 技術裁定・品質ゲート判定の記録 | `project-records/tech-decisions/` | No |
+| governance-change-log | `governance-change-log:` | ガバナンスファイルへの適用記録 | `project-records/governance/` | No |
 | risk | `risk:` | リスクエントリおよび台帳 | `project-records/risks/` | No |
 | defect | `defect:` | defect tracking | `project-records/defects/` | No |
 | change-request | `change-request:` | 変更要求管理 | `project-records/change-requests/` | No |
@@ -806,6 +807,7 @@ external-dependency-spec（抽象テンプレート）
 | review | フェーズゲート（例: `phase-planning`） | orchestrator, 対象エージェント | review-agent |
 | decision | 判断を要したエージェント | 全エージェント | orchestrator |
 | tech-decision | ゲート判定・技術裁定の要求時 | メインセッション, orchestrator, 全実装系エージェント | technical-authority |
+| governance-change-log | 改善策の適用時 | orchestrator, ユーザー, process-improver | decree-writer |
 | risk | `phase-planning` | risk-manager, orchestrator | risk-manager |
 | defect | `test-engineer` | 修正担当エージェント | test-engineer |
 | change-request | `user`（ユーザー起点の変更要求のみ） | change-manager, orchestrator | change-manager |
@@ -1583,6 +1585,28 @@ field-issue の詳細を記載する。field-test-engineer がフィードバッ
 
 ---
 
+## 9.35 governance-change-log（名前空間: governance-change-log:）
+
+### Fields
+
+| フィールド | 型 | 必須 | 説明 | 値域・制約 |
+|-----------|------|------|------|-----------|
+| governance-change-log:id | string | Yes | 一意の識別子 | GCL-NNN |
+| governance-change-log:source_report | string | Yes | 適用元の retrospective-report | ファイル名 |
+| governance-change-log:target_file | string | Yes | 変更したガバナンスファイル | パス |
+| governance-change-log:apply_status | enum | Yes | 適用結果 | applied / partially-applied / rejected |
+| governance-change-log:approved_by | enum | Yes | 承認主体 | user / orchestrator |
+| governance-change-log:safety_check_result | enum | Yes | 安全チェックの結果 | pass / fail |
+| governance-change-log:rejected_reason | text | No | 適用しなかった理由（rejected / partially-applied の場合は必須） | — |
+
+### Detail Block Guidance
+
+適用した変更の before/after diff を記載する。安全チェック（自己変更の禁止、品質ゲート定義の保護、閾値の緩和禁止）の各項目と判定を含める。`apply_status` が `applied` 以外の場合は `rejected_reason` を必ず記入する。
+
+owner は decree-writer である。改善策の提案元である retrospective-report（owner: process-improver）とはディレクトリを分ける。提案した主体と適用した主体が同じディレクトリに書くと、どちらの記録か追えなくなるためである。
+
+---
+
 # 10. バージョニングルール
 
 バージョニングは変更時点の文書**ステータス**によって決定される。
@@ -1613,6 +1637,7 @@ released  → 現ファイルを old/ へ移動 → 新ファイルを作成
 | orchestrator | final-report | プロジェクト総括レポートの完全制御 |
 | orchestrator | decision | 意思決定記録の完全制御 |
 | technical-authority | tech-decision | 技術裁定・ゲート判定記録の完全制御 |
+| decree-writer | governance-change-log | ガバナンス適用記録の完全制御 |
 | srs-writer | user-order | バリデーションと補完。ユーザーが初期記入 |
 | srs-writer | interview-record | インタビュー記録の完全制御 |
 | srs-writer | spec-foundation | 仕様書 Ch1-2 の Common + Form + Detail |

@@ -42,7 +42,11 @@ Apply approved improvements received from the orchestrator to governance files (
 
 ### Out
 
-> decree-writer does not own any file_type. Before/after diffs of application results are recorded in project-records/improvement/ (as supplements to the retrospective-report).
+| file_type | Destination | Next Consumer |
+|-----------|-------------|---------------|
+| governance-change-log | project-records/governance/ | orchestrator, user, process-improver |
+
+> Before/after diffs of applied changes are recorded in governance-change-log. `project-records/improvement/` is owned by process-improver and is never written to from here.
 
 ### Work
 

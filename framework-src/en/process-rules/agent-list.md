@@ -10,7 +10,7 @@
 
 | # | name | Role | model | Primary Phase |
 |:-:|------|------|:-----:|--------------|
-| 1 | orchestrator | Overall project orchestration, phase transition control, decision recording | opus | All phases |
+| 1 | orchestrator | Records progress state, consolidates PM information (progress, cost, risk, change requests), reports to the user | opus | All phases |
 | 2 | srs-writer | User concept structuring, interviews, spec Ch1-2 creation | opus | planning |
 | 3 | architect | Spec Ch3-6 elaboration, OpenAPI / observability / external dependency requirement design | opus | design |
 | 4 | security-reviewer | Threat modeling, security design, vulnerability scanning | opus | design, implementation |
@@ -178,7 +178,11 @@ Derived from Document Management Rules §11. **Each file_type has a single owner
 
 ### decree-writer
 
-> decree-writer does not own any file_type. The before/after diff of application results is recorded in project-records/improvement/ (as a supplement to retrospective-report).
+| file_type | Directory | S/M | Primary Phase |
+|-----------|-----------|:---:|--------------|
+| governance-change-log | project-records/governance/ | M | All phases (at phase completion) |
+
+> Before/after diffs of applied changes are recorded in governance-change-log. project-records/improvement/ is owned by process-improver and is never written to from here.
 
 | Input | Provider | Purpose |
 |-------|----------|---------|

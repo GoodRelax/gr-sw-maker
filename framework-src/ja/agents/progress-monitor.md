@@ -23,7 +23,6 @@ model: sonnet
 ### Start Conditions
 
 - [ ] 仕様書 Ch3-6 が完成し、design フェーズ以降に入っている
-- [ ] CLAUDE.md のコスト予算が設定されている
 
 ### End Conditions
 
@@ -53,6 +52,9 @@ model: sonnet
 |-----------|--------|-----------|
 | progress | project-management/progress/ | orchestrator, ユーザー |
 | wbs | project-management/progress/wbs.md | orchestrator |
+| （cost-log.json） | project-management/progress/cost-log.json | orchestrator |
+
+> cost-log.json は JSON 時系列データであり file_type（Common Block 管理対象）ではない。フェーズ境界で `session-state.json` を読み、当該フェーズのトークン消費とコストを追記する。
 
 ### Work
 
@@ -90,22 +92,25 @@ model: sonnet
 
 ### 異常検知閾値
 
-| 条件 | 報告先 |
-|------|--------|
-| テスト消化率が計画比70%未満 | orchestrator |
-| defect 発見率が急増（前日比200%超） | orchestrator |
-| defect 修正率が発見率を下回り乖離が拡大 | orchestrator |
-| カバレッジが目標値を10%以上下回る | orchestrator |
-| コスト予算の80%到達 | orchestrator → user |
-| エージェントから30分以上応答がない | orchestrator |
-| 同一エージェント間で相互待機の疑い | orchestrator |
+検知は**自身が起動された時点で観測できる状態**に対して行う。時間の経過を自ら計測することはできないため、経過時間を条件にしない（MUST NOT）。
 
-### 循環待機の検知
+| 条件 | 観測方法 | 報告先 |
+|------|---------|--------|
+| テスト消化率が計画比70%未満 | test-progress.json と wbs の計画値を比較 | orchestrator |
+| defect 修正率が発見率を下回り乖離が拡大 | defect-curve.json の累積発見数と累積修正数を比較 | orchestrator |
+| カバレッジが目標値を10%以上下回る | カバレッジレポートと CLAUDE.md「品質目標」を比較 | orchestrator |
+| コスト予算がアラート閾値に到達 | cost-log.json の累計と CLAUDE.md「品質目標」の閾値を比較 | orchestrator → user |
+| 同一フェーズの pipeline-state が前回起動時から変化していない | pipeline-state の phase と更新履歴を比較 | orchestrator |
 
-以下の条件が重なる場合、orchestrator に即時報告してエージェントを強制再起動する:
-- 複数エージェントが同時に「他エージェントの完了待ち」状態にある
-- 30分以上進捗データが更新されていない
-- orchestrator への報告が途絶えている
+### 停滞の検知
+
+**経過時間ではなく状態の変化で判定する。** 前回の起動時点と比べて以下がすべて成立する場合、停滞として orchestrator に報告する:
+
+- pipeline-state の `phase` が変化していない
+- wbs の完了タスク数が増えていない
+- 新たな成果物が該当フェーズのディレクトリに出力されていない
+
+報告するのは事実（何が変化していないか）のみとし、原因の推定や再起動の指示は行わない。復旧手順の判断は orchestrator の管轄である。
 
 ## Exception
 

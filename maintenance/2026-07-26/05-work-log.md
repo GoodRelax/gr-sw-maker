@@ -479,3 +479,68 @@ review-agent の End Conditions では R の範囲（R1-R6 か R1-R7 か）を�
 | 4-4 読むべき規則の節 | 完了（22/22） |
 | 4-5 フェーズ別 End Conditions | 完了（5/5） |
 | 4-6 出力例 | 完了（6/6） |
+
+---
+
+## Step 5a — 実行モデルの確定
+
+Step 5 は 18 項目あるため、主題ごとに 3 段階に分けた。5a は議題 2b（技術統括の新設）の帰結を実装する段階。
+
+| # | 内容 |
+|:-:|---|
+| 5-1 | orchestrator を PM 専任に再定義 |
+| 5-2 | process-improver に `Write` を付与（`Edit` は付与しない） |
+| 5-13 | progress-monitor: Start Condition からコスト予算を削除、`cost-log.json` を Out に追加、監視トリガーをイベントベースへ、強制再起動条項を削除 |
+| 5-14 | decree-writer に `governance-change-log` を所有させる |
+
+### 4a で作り込んだ番号不整合を修正した
+
+orchestrator の Procedure で、**手順 7 のサブ項目が `6a/6b/6c`、手順 8 が `7a/7b/7c` のまま残っていた。** 4a の番号振り直しが親番号だけを +1 し、サブラベルを追随させなかったことによる。
+
+4a のサブステップ検査は `^ *[0-9]+[a-z]\. ` を見ていたが、実際の記法は `   - 6a. ...` とダッシュが挟まっており、正規表現に掛からず素通りしていた。影響は orchestrator のみ（technical-authority の `3a-3d` は 4a の対象外だったため正しい）。5-1 で Procedure を書き直した際に解消した。
+
+**教訓:** 「検査したから安全」ではなく、検査パターンが実際の記法を覆っているかを確認する必要がある。
+
+### 5-1 の設計
+
+議題 2b の責務境界（`orchestrator` = 回す人、`technical-authority` = 決める人）を定義に落とした。
+
+| 箇所 | 変更 |
+|---|---|
+| frontmatter / Identity / Purpose | 「プロジェクトオーケストレーター」→「プロジェクトマネージャー」。技術ゲートを自ら判断してはならない（MUST NOT）を明記 |
+| In | `tech-decision` を追加。`review` の用途を「品質ゲート判定」→「ユーザー報告用の品質状況の把握」に変更 |
+| Procedure 5-7 | 起動指示を要請返却に変更。ゲート判定を「tech-decision の `verdict` を確認する」に置換。サブ番号を親に一致させた |
+| Rules フェーズ遷移条件 | **PM 条件と技術条件を列で分離。** 技術条件の出所を tech-decision と明示 |
+| Rules エスカレーション基準 | コスト閾値を CLAUDE.md 参照に変更。「同一ゲート 3 回目の FAIL」を追加 |
+| Exception 3 行 | 30 分無応答 → 状態ベースの検知に置換。FAIL 時の戻し先判断を technical-authority に委譲。技術判断を求められた場合の管轄外応答を追加 |
+
+### 5-13 の設計
+
+A3 の「実装不能な監視トリガー」を、**エージェントが自分の起動時点で観測できる状態**に置き換えた。
+
+| 削除した条件 | 理由 | 置換 |
+|---|---|---|
+| エージェントから 30 分以上応答がない | エージェントは時間の経過を自ら計測できない | pipeline-state の `phase` が前回起動時から変化していない |
+| defect 発見率が前日比 200% 超 | 「前日」を知るには時系列の自己記憶が要る | 累積発見数と累積修正数の比較（単一時点で観測可能） |
+| 30 分以上進捗データが更新されていない | 同上 | wbs の完了タスク数が増えていない |
+| 強制再起動する | エージェントに他エージェントを再起動する手段がない | 事実のみ報告する。復旧手順の判断は orchestrator の管轄 |
+
+「経過時間を条件にしない（MUST NOT）」を明文化した。実装不能な条件を書けば、LLM は黙って飛ばす。
+
+### 5-2 / 5-14 の設計
+
+- **process-improver に `Write` のみ付与し `Edit` は付与しない。** retrospective-report は毎回新規作成する記録であり、既存文書の書き換えは decree-writer の責務。`Edit` を持たせると B12-c（他エージェント所有ディレクトリへの書き込み）を招く
+- **decree-writer に `governance-change-log`（`project-records/governance/`）を新設して所有させた。** 従来は「file_type を所有しない。diff は `project-records/improvement/` に記録」だったが、そこは process-improver の所有ディレクトリである。提案した主体と適用した主体が同じディレクトリに書くと、どちらの記録か追えなくなる
+
+`governance-change-log` の登録（文書管理規則 §7 / §7.1 / §9.35 / §11）は **6-32 の前倒し**。tech-decision と同じく、所有する file_type が未登録では出力契約が成立しないため分離できない。
+
+### 検証証跡
+
+| 検査 | 結果 |
+|---|---|
+| 4 体の ja/en 構造パリティ | orchestrator 145/15/46・process-improver 145/17/36・progress-monitor 122/15/37・decree-writer 118/15/33 ですべて一致 |
+| 規則文書の ja/en パリティ | agent-list 28/152/8・document-rules 169/683/36 で一致 |
+| `governance-change-log` の出現数 | ja/en とも doc-rules 11・agent-list 2・decree-writer 2 で一致 |
+| orchestrator の起動指示 | 残存 0（4-1 で送りにした 4 箇所を解消） |
+| 参照の実在 | 187 件すべて解決 |
+| デプロイ | 22 体 |
