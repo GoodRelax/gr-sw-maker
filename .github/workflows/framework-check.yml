@@ -1,0 +1,49 @@
+name: framework-check
+
+# These checks guard the framework repository, not a project built with it.
+# create.js removes .github/ from a generated project for that reason.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Nothing else runs if a script cannot be parsed, and a broken setup.js
+      # would make every check below fail for the wrong reason.
+      - name: syntax
+        run: |
+          for file in $(git ls-files '*.js' '*.mjs'); do
+            node --check "$file"
+          done
+
+      # Language tree parity and structural parity: same files, same shape.
+      - name: parity
+        run: node tools/check-parity.mjs
+
+      # Agent roster, and the review perspective wiring that a grep for the old
+      # R1-R6 range cannot see.
+      - name: roster
+        run: node tools/check-roster.mjs
+
+      # Dead links, and section citations that point at nothing.
+      - name: links
+        run: node tools/check-links.mjs
+
+      # Form Block tag names that no Fields table defines.
+      - name: tagnames
+        run: node tools/check-tagnames.mjs
+
+      # Deploy fidelity, idempotency, language switching, and the .bak that
+      # protects an edited user-order.md.
+      - name: setup
+        run: node tools/check-setup.mjs

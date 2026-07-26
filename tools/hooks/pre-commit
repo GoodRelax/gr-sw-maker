@@ -1,0 +1,47 @@
+#!/bin/sh
+# Reject a commit that changes one language tree without the other.
+#
+# Install with:   git config core.hooksPath tools/hooks
+#
+# check-parity reads the working tree, so it cannot see that a commit is
+# one-sided when the change preserves structure -- a reworded sentence in ja
+# alone passes every count. The staged-pair test below is what actually closes
+# that gap; check-parity then catches structural damage in what is staged.
+
+set -e
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+missing=""
+
+for path in $staged; do
+  case "$path" in
+    framework-src/*/*)
+      lang=$(printf '%s' "$path" | cut -d/ -f2)
+      rest=$(printf '%s' "$path" | cut -d/ -f3-)
+      for other in $(ls framework-src); do
+        [ "$other" = "$lang" ] && continue
+        counterpart="framework-src/$other/$rest"
+        [ -e "$counterpart" ] || continue
+        printf '%s\n' "$staged" | grep -qxF "$counterpart" || missing="$missing  $counterpart\n"
+      done
+      ;;
+  esac
+done
+
+if [ -n "$missing" ]; then
+  printf 'pre-commit: this commit changes one language tree without the other.\n'
+  printf 'Not staged:\n'
+  printf "$missing"
+  printf '\nja and en go in the same commit (framework-development.md 5.1).\n'
+  printf 'Override with --no-verify only when the counterpart genuinely needs no change.\n'
+  exit 1
+fi
+
+# The pair test above is pure shell and always runs. check-parity needs node,
+# and a hook that blocks every commit when node is off PATH would be worse than
+# the drift it prevents, so its absence is reported rather than fatal.
+if command -v node >/dev/null 2>&1; then
+  node tools/check-parity.mjs
+else
+  printf 'pre-commit: node not found, skipping check-parity.\n'
+fi

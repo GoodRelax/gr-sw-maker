@@ -128,6 +128,13 @@ diff <(cd framework-src/ja && find . -type f | sort) \
 **片方の言語だけを変更したコミットを作ってはならない。** 分けると、次に触る人がどちらが正でどちらが未反映かを判断できなくなり、ドリフトが恒久化する。
 
 `tools/check-parity.mjs` が構造の一致を検査し、pre-commit hook が片側だけのコミットを拒否する。
+フックは clone ごとに 1 度だけ有効化する。
+
+```bash
+git config core.hooksPath tools/hooks
+```
+
+フックは片方の言語だけを stage したコミットを拒否し、続けて `check-parity` を実行する。**構造を変えない書き換え（言い回しの修正など）はパリティ検査では検出できない**ため、stage 済みファイルの対応検査のほうが本体である。
 
 ### 5.2 Form Block のタグ名を突き合わせる
 
@@ -138,6 +145,8 @@ diff <(cd framework-src/ja && find . -type f | sort) \
 ### 5.3 参照先の節が実在することを確認する
 
 エージェント定義の「読むべき規則の節」に節番号を書いた場合、その節が実在することを確認する。存在しない節を指すと、エージェントは代わりに規則全文を読む。
+
+`tools/check-links.mjs` が、Markdown リンクと節番号参照の双方の実在を検査する。**節番号は実在するが題名が違う**場合は検出できない。これは目視で確認する。
 
 ### 5.4 改定の反映範囲
 
@@ -151,7 +160,27 @@ diff <(cd framework-src/ja && find . -type f | sort) \
 
 ---
 
-## 6. npm publish 手順
+
+---
+
+## 6. 検査を手元で走らせる
+
+以下はすべて依存ライブラリなしで動く。CI（`.github/workflows/framework-check.yml`）が同じ 6 つを実行するため、**手元で通れば CI も通る。**
+
+| コマンド | 検査内容 |
+|---|---|
+| `node --check <file>` | 全 `*.js` / `*.mjs` の構文 |
+| `node tools/check-parity.mjs` | 言語ツリーの一致、行数・見出し・表行・コードフェンス・リンク先の一致 |
+| `node tools/check-roster.mjs` | エージェント名簿と実体の一致、frontmatter の `name` / `model`、レビュー観点の配線 |
+| `node tools/check-links.mjs` | デッドリンク、節番号参照の実在 |
+| `node tools/check-tagnames.mjs` | Form Block のタグ名が §9 の Fields 表に実在すること |
+| `node tools/check-setup.mjs` | `setup.js` の展開内容・冪等性・言語切替・`.bak` 退避 |
+
+`check-setup.mjs` は一時ディレクトリに `setup.js` と `framework-src/` を複製してから実行するため、**作業中の `CLAUDE.md` や `user-order.md` を壊さない。**
+
+`tools/gate-guard.mjs` と `tools/session-meter.mjs` は検査ではなく実行時の機構であり、ここには含まない（移植ガイド「Claude Code 固有の機構」を参照）。
+
+## 7. npm publish 手順
 
 1. フレームワークの変更をすべてコミット・プッシュする
 2. `create-gr-sw-maker/` 配下で `npm publish` を実行する
