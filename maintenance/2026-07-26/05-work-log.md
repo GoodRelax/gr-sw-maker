@@ -544,3 +544,83 @@ A3 の「実装不能な監視トリガー」を、**エージェントが自分
 | orchestrator の起動指示 | 残存 0（4-1 で送りにした 4 箇所を解消） |
 | 参照の実在 | 187 件すべて解決 |
 | デプロイ | 22 体 |
+
+---
+
+## Step 5b — 無主責務の解消と新設 file_type
+
+| # | 内容 |
+|:-:|---|
+| 5-4 | architect の Out に `deployment-design` を追加 |
+| 5-5 | implementer の Out に `infra/` を追加、単体テスト合格率の扱いを変更 |
+| 5-6 | runbook-writer の Start Condition を `deployment-design` 基準に、IaC 不在時の Exception を緩和 |
+| 5-9 | feedback-classifier に change-request 起票要請を追加、change-manager の In に `field-issue（type=cr）` |
+| 5-10 | user-manual-writer のスクリーンショットをプレースホルダ方式に |
+| 5-11 | incident-reporter に `Bash` 付与、In にログ/メトリクス源、Exception を 2 → 4 行 |
+| 5-12 | srs-writer の PoC を Work 表に明記 |
+| 5-15 | risk-manager の Out に `risk-register` を分離 |
+| 5-16 | implementer の並列実装にマージ責任を明記 |
+| 5-17 | framework-translation-verifier の In を `framework-src/{ja,en}/**` に修正、役割を意味検証に純化 |
+
+### B2（infra/ が無主）の解消
+
+議題 2b の割り当て（architect が `deployment-design`、implementer が `infra/`）を定義に落とした。**設計と実装の主体を分離している。**
+
+| エージェント | 役割 |
+|---|---|
+| architect | `deployment-design` を作る（環境定義・デプロイ手順・ロールバック・シークレット管理） |
+| implementer | それを根拠に `infra/` の IaC コードを実装する |
+| runbook-writer | それを根拠に運用手順を書く |
+| technical-authority | `infra/` が `deployment-design` に適合しているかを判定する |
+
+`deployment-design` の登録（文書管理規則 §7 / §7.1 / §9.36 / §11）は **6-30 の前倒し**。
+
+### 計画との差分 — 5-5 の合格率
+
+計画は「単体テスト合格率を 95% → 100% に修正」だが、**調査の結果、単体テストに 100% を要求している箇所は存在しなかった。**
+
+実際の問題は、CLAUDE.md が閾値の Single Source of Truth として `[例: 95%]` とプレースホルダで書いているのに、implementer が 95% を直書きしている点である。数値を 100% に変えるだけでは、CLAUDE.md 側の値と矛盾する二重管理が残る（むしろ現状より悪化する）。
+
+**4-5 で test-engineer に施したのと同じく、CLAUDE.md「品質目標」への参照に変更した。** End Conditions と Exception の 2 箇所。
+
+### 5-6 の設計 — 止めない Exception
+
+従来は「IaC コードが未完了なら作業を開始しない」だった。しかし IaC は implementer が implementation フェーズで作るもので、delivery フェーズの runbook-writer がそれを待つと、**手順書がないまま納品されるか、無期限に待つかの二択**になる。
+
+Start Condition を `deployment-design` の存在に変更し、Exception を「**作業を止めない。** deployment-design を根拠に手順を書き、各コマンドに導出元を併記する。IaC 完成後の検証要請を返す」に緩和した。導出元の併記により、未検証のコマンドがそれと分かる形で残る。
+
+### 5-9 の設計 — 経路によって基準を変えない
+
+B4 は「実機テストの CR が change-manager をバイパスする」。承認基準と記録形式が 2 系統並存し、**終盤フェーズという最も危険な時点でガードの弱い方を通る**。
+
+feedback-classifier に「`cr` と分類したら change-request の起票要請を返す」を課し、change-manager 側には「実機テスト由来の `cr` もユーザー起点の変更として扱う。**経路によって基準を変えない**」を明記した。
+
+### 5-10 / 5-11 / 5-12 — 能力のない指示の是正（B9）
+
+| エージェント | 実行不能だった指示 | 是正 |
+|---|---|---|
+| user-manual-writer | スクリーンショットを示す（取得手段なし） | プレースホルダ `![（画面名）](images/...)` を置き、必要な画面一覧を完了報告で返す。**存在しない画像パスを書いてはならない（MUST NOT）** |
+| incident-reporter | Bash なしでログからタイムライン構築 | `Bash` を付与。加えて「ログにアクセスできない」「再現条件が特定できない」の 2 行を Exception に追加し、**タイムラインを創作しない**ことを明示 |
+| srs-writer | Bash なしで PoC 作成 | Work 表に明記し、Out 確定後に削除する旨を追加。**作成手段を持たない場合は作らず、文章と図で確認する** |
+
+いずれも「能力がないのに指示がある」状態を放置すると、LLM は**創作で埋める**。禁止を明示する方が、指示を消すより安全である。
+
+### 5-15 — singleton 判定の矛盾（C10-b）
+
+`risk` に個別エントリと集約台帳が同居し、singleton かどうかが定まらなかった。`risk`（連番）と `risk-register`（単一）に分離した。登録は **6-31 の前倒し**。
+
+### 5-17 — 検証スコープの是正（F5）
+
+検証対象が `.claude/agents/*.md` 等の**生成物**を指していた。これらは `.gitignore` 対象で、setup.js が `framework-src/` から作るコピーである。**生成物を検証しても原本の不一致は検出できない。** In を `framework-src/{ja,en}/**` に修正した。
+
+あわせて役割を純化した。見出し数・表行数といった機械的に数えられる差異は CI の `check-parity.mjs`（7-3）が担当し、本エージェントは**機械が数えられないもの**——訳語の一貫性、原文にない主張の混入、原文にある条件の欠落——に集中する。同じ検査を二重に持たない。
+
+### 検証証跡
+
+| 検査 | 結果 |
+|---|---|
+| ja/en 構造パリティ | 22 体すべて一致（不一致 0） |
+| 規則文書パリティ | agent-list 28/155/8・document-rules 175/702/36 で一致 |
+| 新 file_type の出現数 | ja/en とも deployment-design 9・risk-register 11 で一致 |
+| 参照の実在 | 187 件すべて解決 |
+| デプロイ | 22 体 |

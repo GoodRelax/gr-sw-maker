@@ -80,7 +80,8 @@ Read only the sections above, not the full rule document.
 ### Writing Guidelines
 
 - Write from the end user's perspective (avoid developer-oriented terminology)
-- Provide specific screenshots and step-by-step operation procedures
+- Provide specific step-by-step operation procedures
+- **Screenshots cannot be captured by this agent, so insert a placeholder.** Use the form `![(screen name)](images/{screen-name}.png)` and return the list of screens needed in the completion report. An image path that does not exist MUST NOT be written into the text
 - Include FAQ and troubleshooting sections
 - Terminology must conform to the project glossary (spec-foundation Ch1.8)
 

@@ -18,6 +18,8 @@ You ensure that the English and Japanese versions of framework documents are str
 
 If inconsistencies between multilingual versions are discovered after release, users receive different information depending on the language, undermining trust. This agent detects and reports such issues before release.
 
+**This agent verifies agreement of meaning.** Differences that can be counted mechanically - heading counts, table row counts, fence counts - are the job of the CI structural parity check (`tools/check-parity.mjs`). Do not duplicate that check; concentrate on what a machine cannot count: consistency of translated terminology, claims present in one version but not the other, and conditions dropped from the original.
+
 ### Start Conditions
 
 - [ ] Multilingual files exist in the project folder (`-en.md` / `-ja.md` pairs, or language-specific variants)
@@ -33,17 +35,17 @@ If inconsistencies between multilingual versions are discovered after release, u
 
 | file_type | Provider | Usage | Required elements |
 |-----------|--------|------|---------|
-| entire project folder | framework | target for multilingual file verification | Both language trees under framework-src/{ja,en}/ |
+| framework-src/{ja,en}/** | framework | Verify the original language trees against each other | Both language trees exist and their file sets match |
+| essays/*-{ja,en}.md | framework | Verify the essay pairs | The pairs are complete |
+| README.md / README-ja.md | framework | Verify the public documents | Both exist |
 
 Scope of verification target search:
 
-- `process-rules/*-en.md` / `*-ja.md` pairs
-- `README.md` / `README-ja.md`
-- `.claude/agents/*.md` (agent definitions)
-- `.claude/commands/*.md` (command definitions)
-- `CLAUDE.md`
-- Multilingual files under `essays/`
-- All other files with language suffixes
+- `framework-src/ja/**` <-> `framework-src/en/**` (process-rules, agents, commands, CLAUDE.md, user-order.md)
+- `essays/*-ja.md` <-> `essays/*-en.md`
+- `README-ja.md` <-> `README.md`
+
+**`.claude/` and the top-level `process-rules/` are NOT verified.** Those are deploy output generated from `framework-src/` by setup.js and are covered by `.gitignore`. Verifying generated files cannot detect a mismatch between the originals.
 
 ### Out
 

@@ -70,6 +70,7 @@
 | ai-requirement-spec | docs/ai/ | 単 | design（条件付き） |
 | framework-requirement-spec | docs/framework/ | 単 | design（条件付き） |
 | disaster-recovery-plan | docs/operations/ | 単 | design |
+| deployment-design | docs/operations/ | 単 | design |
 
 > architect は上記 file_type に加え、openapi.yaml（docs/api/）を生成・管理する。openapi.yaml は外部ツール規定形式（文書管理規則 §13）であり file_type ではないが、implementer と test-engineer が消費する。
 
@@ -87,6 +88,7 @@
 |-----------|------------|:-----:|------------|
 | （ソースコード） | src/ | — | implementation |
 | （単体テスト） | tests/ | — | implementation |
+| （IaC コード） | infra/ | — | implementation |
 
 > implementer はコード（src/, tests/）を生成するが、これらは Common Block 管理対象外。トレーサビリティは traceability-matrix で管理する。
 
@@ -125,6 +127,7 @@
 | file_type | ディレクトリ | 単/連 | 主要フェーズ |
 |-----------|------------|:-----:|------------|
 | risk | project-records/risks/ | 連 | planning 以降 |
+| risk-register | project-records/risks/ | 単 | planning 以降 |
 
 ### license-checker
 

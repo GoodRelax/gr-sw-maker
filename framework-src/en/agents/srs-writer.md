@@ -53,7 +53,11 @@ Elevate ambiguous user desires into unambiguous, verifiable requirement specific
 
 ### Work
 
-None
+| File | Purpose |
+|------|---------|
+| (mock / sample / PoC) | A prototype for confirming the concept with the user. Created only at the corresponding Procedure step |
+
+> Delete the prototype once spec-foundation is finalized. spec-foundation is the authoritative specification; leaving the prototype in place would create a second one. If the means to build it are unavailable, do not build it - say so and confirm with the user using text and diagrams instead.
 
 ## Procedure
 

@@ -29,7 +29,7 @@ Transform design documents into working code. Adhere to Clean Architecture and D
 ### End Conditions
 
 - [ ] Source code is implemented under src/
-- [ ] Unit tests are created under tests/ with a pass rate of 95% or higher
+- [ ] Unit tests are created under tests/ and the pass rate meets the threshold in CLAUDE.md "Quality Targets"
 - [ ] Implementation column in project-records/traceability/ is updated
 - [ ] Passed review-agent R2/R3/R4/R5 review
 - [ ] Zero Critical/High findings in SCA/SAST scans
@@ -41,6 +41,7 @@ Transform design documents into working code. Adhere to Clean Architecture and D
 | file_type | Provider | Usage | Required elements |
 |-----------|--------|------|---------|
 | spec-architecture | architect | Implement according to Ch3-4 design | Ch3.2/3.3/3.4; traces on every Gherkin in Ch4 |
+| deployment-design | architect | Implement the IaC code under infra/ | Environment definitions, deployment procedure |
 | openapi.yaml | architect | Implement API endpoints | paths and schemas for every endpoint |
 | threat-model | security-reviewer | Implement security countermeasures | A mitigation for every STRIDE threat |
 | security-architecture | security-reviewer | Follow security design | The authentication and authorization scheme |
@@ -54,6 +55,7 @@ Transform design documents into working code. Adhere to Clean Architecture and D
 |-----------|-------------|---------------|
 | (source code) | src/ | test-engineer, review-agent |
 | (unit tests) | tests/ | test-engineer |
+| (IaC code) | infra/ | runbook-writer, technical-authority |
 
 > Source code and test code are not managed under Common Block. Traceability is managed via the traceability-matrix.
 
@@ -96,6 +98,8 @@ Read only the sections above, not the full rule document.
 
 ### Parallel Implementation (Agent Teams)
 
+**Division of merge responsibility:** deciding **how** a conflict is resolved is ruled on by technical-authority; **carrying out** the resolution is implementer's work. After integration, return the request for an R2 (design principles) and R3 (coding quality) re-review in the completion report. Integration can break a design that held on each branch individually, so the re-review MUST NOT be skipped.
+
 Use Git worktree to implement each feature on a dedicated branch in parallel:
 - Branch name: feature/{issue-number}-{description}
 - On implementation completion, return the review request in the completion report
@@ -108,4 +112,4 @@ Use Git worktree to implement each feature on a dedicated branch in parallel:
 | Design document descriptions are ambiguous and cannot be translated into implementation | Do not implement based on assumptions. Request the orchestrator to ask the architect for design refinement |
 | Implementation as designed is impossible due to tech stack constraints | Propose alternatives and request a decision from the orchestrator |
 | External dependency (library/API) is unavailable | Stop work and report to the orchestrator. If using mocks/stubs as a temporary measure, record it explicitly |
-| Unit test pass rate falls below 95% | Analyze the cause of test failures and fix them. If the cause is rooted in the design, report to the orchestrator |
+| Unit test pass rate falls below the threshold in CLAUDE.md "Quality Targets" | Analyze the cause of the test failures and fix them. If the cause is rooted in the design, state that in the completion report |

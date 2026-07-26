@@ -113,6 +113,7 @@ field-issue:
 - When in doubt, classify as `defect` (err on the side of caution)
 - When the specification is ambiguous and determination is impossible, record the ambiguity itself in the Detail Block and classify as `defect`
 - When a single feedback contains both defect and cr aspects, split into separate tickets
+- **When classified as `cr`, return the request to raise a change-request in the completion report.** Do not let the field-issue ticket stand alone. change-manager holds the single source of truth for scope-change approval criteria and record format, and originating from field testing MUST NOT be a reason to bypass it
 
 ### Constraints
 

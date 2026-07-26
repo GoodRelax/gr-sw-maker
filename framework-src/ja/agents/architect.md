@@ -57,6 +57,7 @@ docs/spec/ の仕様書 Ch3-6 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 | ai-requirement-spec | docs/ai/ | implementer（条件付き） |
 | framework-requirement-spec | docs/framework/ | implementer（条件付き） |
 | disaster-recovery-plan | docs/operations/ | runbook-writer, 運用チーム |
+| deployment-design | docs/operations/ | implementer, runbook-writer, technical-authority |
 | openapi.yaml | docs/api/ | implementer, test-engineer |
 
 > openapi.yaml は外部ツール規定形式（文書管理規則 §13）であり file_type ではない。Common Block 管理対象外だが、architect が生成・管理する。

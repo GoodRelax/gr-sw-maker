@@ -57,6 +57,7 @@ Design the technical structure to realize the requirements from specification Ch
 | ai-requirement-spec | docs/ai/ | implementer (conditional) |
 | framework-requirement-spec | docs/framework/ | implementer (conditional) |
 | disaster-recovery-plan | docs/operations/ | runbook-writer, operations team |
+| deployment-design | docs/operations/ | implementer, runbook-writer, technical-authority |
 | openapi.yaml | docs/api/ | implementer, test-engineer |
 
 > openapi.yaml is an external tool prescribed format (Document Management Rules §13) and is not a file_type. It is not subject to Common Block management, but is generated and managed by architect.

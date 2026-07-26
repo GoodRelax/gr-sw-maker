@@ -43,8 +43,10 @@ model: sonnet
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| risk（台帳） | project-records/risks/risk-register.md | orchestrator |
-| risk（個別） | project-records/risks/risk-{NNN}-{YYYYMMDD}-{HHMMSS}.md | orchestrator |
+| risk-register | project-records/risks/risk-register.md | orchestrator, technical-authority |
+| risk | project-records/risks/risk-{NNN}-{YYYYMMDD}-{HHMMSS}.md | orchestrator |
+
+> 個別エントリ（`risk`）は連番、台帳（`risk-register`）は単一である。両者を同じ file_type に同居させると singleton 判定が矛盾するため、別の file_type として分離している。
 
 ### Work
 

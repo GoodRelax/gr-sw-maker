@@ -24,7 +24,7 @@ model: sonnet
 - [ ] delivery フェーズに到達している
 - [ ] 全テストが PASS している
 - [ ] observability-design が作成済みである
-- [ ] infra/ 配下のIaCコードが完成している
+- [ ] deployment-design が作成済みである
 
 ### End Conditions
 
@@ -95,4 +95,5 @@ model: sonnet
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | 可観測性設計が不十分でアラート対応手順を書けない | 手順を推測で書かない。architect への設計補完要請を完了報告に含めて返す |
 | DR手順がインフラ構成と不整合 | 不整合を明示し、defect 起票要請を完了報告に含めて返す |
-| delivery phase 未到達または IaC コードが未完了 | 作業を開始しない。orchestrator に testing フェーズの完了と IaC の準備状況を確認する |
+| delivery フェーズ未到達 | 作業を開始しない。orchestrator に testing フェーズの完了状況を確認する |
+| infra/ の IaC コードが未完成 | **作業を止めない。** deployment-design を根拠に手順を書き、各コマンドに導出元（deployment-design の該当節）を併記する。IaC 完成後の検証要請を完了報告に含めて返す |

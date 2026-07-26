@@ -40,6 +40,7 @@ model: sonnet
 | spec-architecture | architect | 変更影響の分析対象 | Ch3-4, Ch4 の全 Gherkin に traces |
 | （src/, tests/） | implementer, test-engineer | 変更影響の分析対象 | 変更対象を特定できるディレクトリ構成 |
 | CLAUDE.md | orchestrator (setup) | プロジェクト設定の確認 | 品質目標・重要判断の基準の各節 |
+| field-issue（type=cr） | feedback-classifier | 実機テスト由来のスコープ変更の受付 | issue_id, type = cr, 変更内容 |
 
 ### Out
 
@@ -98,6 +99,7 @@ model: sonnet
 ### Constraints
 
 - ユーザー起点の変更のみを扱う。AI側の技術的変更は defect または decision で管理する
+- **実機テスト由来の `cr` もユーザー起点の変更として扱う。** 起票経路が field-issue であっても、影響分析・承認基準・記録形式は通常の change-request と同一とする。経路によって基準を変えない
 
 ## Exception
 

@@ -18,6 +18,8 @@ model: sonnet
 
 多言語版の不整合がリリース後に発覚すると、ユーザーが言語によって異なる情報を受け取り信頼を損なう。リリース前にこれを検出・報告する。
 
+**本エージェントは意味の一致を検証する。** 見出し数・表行数・フェンス数といった機械的に数えられる差異は CI の構造パリティ検査（`tools/check-parity.mjs`）が担当する。同じ検査を二重に持たず、機械が数えられないもの——訳語の一貫性、原文にない主張の混入、原文にある条件の欠落——に集中する。
+
 ### Start Conditions
 
 - [ ] プロジェクトフォルダ内に多言語ファイル（`-en.md` / `-ja.md` ペア、または言語別バリアント）が存在する
@@ -33,17 +35,17 @@ model: sonnet
 
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
-| プロジェクトフォルダ全体 | framework | 多言語ファイルの検証対象 | framework-src/{ja,en}/ の両言語ツリー |
+| framework-src/{ja,en}/** | framework | 原本の言語ツリー同士の検証 | 両言語ツリーが存在し、ファイル集合が一致すること |
+| essays/*-{ja,en}.md | framework | 読み物の対応検証 | ペアが揃っていること |
+| README.md / README-ja.md | framework | 公開文書の対応検証 | 両方が存在すること |
 
 検証対象の探索範囲:
 
-- `process-rules/*-en.md` / `*-ja.md` ペア
-- `README.md` / `README-ja.md`
-- `.claude/agents/*.md`（エージェント定義）
-- `.claude/commands/*.md`（コマンド定義）
-- `CLAUDE.md`
-- `essays/` 配下の多言語ファイル
-- その他、言語サフィックス付きファイル全て
+- `framework-src/ja/**` ↔ `framework-src/en/**`（process-rules, agents, commands, CLAUDE.md, user-order.md）
+- `essays/*-ja.md` ↔ `essays/*-en.md`
+- `README-ja.md` ↔ `README.md`
+
+**`.claude/` 配下と `process-rules/` 直下は検証しない。** これらは setup.js が `framework-src/` から生成した配布物であり、`.gitignore` の対象である。生成物を検証しても、原本の不一致は検出できない。
 
 ### Out
 

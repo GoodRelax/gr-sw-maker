@@ -714,6 +714,8 @@ The Footer is shared across all file types. Agents MUST append a new `<entry>` t
 | decision | `decision:` | Architecture decision record | `project-records/decisions/` | No |
 | tech-decision | `tech-decision:` | Technical ruling and quality gate decision record | `project-records/tech-decisions/` | No |
 | governance-change-log | `governance-change-log:` | Record of changes applied to governance files | `project-records/governance/` | No |
+| deployment-design | `deployment-design:` | Deployment design (environments, procedure, rollback) | `docs/operations/` | Yes |
+| risk-register | `risk-register:` | Risk register (aggregate of individual risks) | `project-records/risks/` | Yes |
 | risk | `risk:` | Risk entry and register | `project-records/risks/` | No |
 | defect | `defect:` | defect tracking | `project-records/defects/` | No |
 | change-request | `change-request:` | Change request management | `project-records/change-requests/` | No |
@@ -808,6 +810,8 @@ Standard values for `commissioned_by` (creation trigger) and `consumed_by` (next
 | decision | Agent that needed the decision | All agents | orchestrator |
 | tech-decision | When a gate decision or technical ruling is requested | Main session, orchestrator, all implementation agents | technical-authority |
 | governance-change-log | When an improvement is applied | orchestrator, user, process-improver | decree-writer |
+| deployment-design | `phase-design` | implementer, runbook-writer, technical-authority | architect |
+| risk-register | `phase-planning` (updated thereafter) | orchestrator, technical-authority | risk-manager |
 | risk | `phase-planning` | risk-manager, orchestrator | risk-manager |
 | defect | `test-engineer` | Agent assigned to fix | test-engineer |
 | change-request | `user` (user-initiated change requests only) | change-manager, orchestrator | change-manager |
@@ -1609,6 +1613,45 @@ The owner is decree-writer. It is kept in a separate directory from retrospectiv
 
 ---
 
+## 9.36 deployment-design (Namespace: deployment-design:)
+
+### Fields
+
+| Field | Type | Required | Description | Range/Constraint |
+|-------|------|----------|-------------|------------------|
+| deployment-design:environments | list | Yes | The environments defined | e.g. dev / staging / production |
+| deployment-design:iac_tool | string | Yes | The IaC tool | Matches the IaC entry in CLAUDE.md "Technology Stack" |
+| deployment-design:deploy_strategy | enum | Yes | Deployment strategy | rolling / blue-green / canary / recreate |
+| deployment-design:rollback_procedure | text | Yes | Rollback procedure | — |
+| deployment-design:secret_management | string | Yes | How secrets are managed | — |
+
+### Detail Block Guidance
+
+Record the composition of each environment (network, compute, data stores), the deployment procedure, the rollback procedure, and how secrets are managed. implementer writes the IaC code under `infra/` from this document, and runbook-writer writes the operational procedures from it. technical-authority rules on whether `infra/` conforms to this design.
+
+The owner is architect. The `infra/` implementation is done by implementer, keeping the designer and the implementer separate.
+
+---
+
+## 9.37 risk-register (Namespace: risk-register:)
+
+### Fields
+
+| Field | Type | Required | Description | Range/Constraint |
+|-------|------|----------|-------------|------------------|
+| risk-register:total_count | int | Yes | Total risks registered | 0 or greater |
+| risk-register:open_count | int | Yes | Risks not yet closed | 0 or greater |
+| risk-register:max_score | int | Yes | Highest score among open risks | 1-9 |
+| risk-register:escalated_count | int | Yes | Count already escalated to the user at score 6 or above | 0 or greater |
+
+### Detail Block Guidance
+
+Record the register listing the individual `risk` entries. Each row carries risk_id, summary, score, state, and who owns the mitigation.
+
+**Difference from `risk`:** `risk` is an individual risk entry, created as numbered files. `risk-register` is the single file that aggregates them. Keeping both under one file_type made the singleton determination contradictory, so they are separated. Both are owned by risk-manager.
+
+---
+
 # 10. Versioning Rules
 
 Versioning is determined by the document **status** at the time of change.
@@ -1640,6 +1683,8 @@ Each file has exactly one `owner` agent. Only the owner can modify Common Block 
 | orchestrator | decision | Full control of decision records |
 | technical-authority | tech-decision | Full control of technical ruling and gate decision records |
 | decree-writer | governance-change-log | Full control of governance application records |
+| architect | deployment-design | Full control of the deployment design; the infra/ implementation belongs to implementer |
+| risk-manager | risk-register | Full control of the risk register |
 | srs-writer | user-order | Validation and completion. User provides initial input |
 | srs-writer | interview-record | Full control of interview records |
 | srs-writer | spec-foundation | Common + Form + Detail of specification Ch1-2 |

@@ -714,6 +714,8 @@ Footerは全ファイルタイプ共通。エージェントは書込みのた�
 | decision | `decision:` | アーキテクチャ意思決定記録 | `project-records/decisions/` | No |
 | tech-decision | `tech-decision:` | 技術裁定・品質ゲート判定の記録 | `project-records/tech-decisions/` | No |
 | governance-change-log | `governance-change-log:` | ガバナンスファイルへの適用記録 | `project-records/governance/` | No |
+| deployment-design | `deployment-design:` | デプロイ設計（環境・手順・ロールバック） | `docs/operations/` | Yes |
+| risk-register | `risk-register:` | リスク台帳（個別 risk の集約） | `project-records/risks/` | Yes |
 | risk | `risk:` | リスクエントリおよび台帳 | `project-records/risks/` | No |
 | defect | `defect:` | defect tracking | `project-records/defects/` | No |
 | change-request | `change-request:` | 変更要求管理 | `project-records/change-requests/` | No |
@@ -808,6 +810,8 @@ external-dependency-spec（抽象テンプレート）
 | decision | 判断を要したエージェント | 全エージェント | orchestrator |
 | tech-decision | ゲート判定・技術裁定の要求時 | メインセッション, orchestrator, 全実装系エージェント | technical-authority |
 | governance-change-log | 改善策の適用時 | orchestrator, ユーザー, process-improver | decree-writer |
+| deployment-design | `phase-design` | implementer, runbook-writer, technical-authority | architect |
+| risk-register | `phase-planning`（以降更新） | orchestrator, technical-authority | risk-manager |
 | risk | `phase-planning` | risk-manager, orchestrator | risk-manager |
 | defect | `test-engineer` | 修正担当エージェント | test-engineer |
 | change-request | `user`（ユーザー起点の変更要求のみ） | change-manager, orchestrator | change-manager |
@@ -1607,6 +1611,45 @@ owner は decree-writer である。改善策の提案元である retrospective
 
 ---
 
+## 9.36 deployment-design（名前空間: deployment-design:）
+
+### Fields
+
+| フィールド | 型 | 必須 | 説明 | 値域・制約 |
+|-----------|------|------|------|-----------|
+| deployment-design:environments | list | Yes | 定義した環境の一覧 | 例: dev / staging / production |
+| deployment-design:iac_tool | string | Yes | IaC ツール | CLAUDE.md「技術スタック」の IaC と一致 |
+| deployment-design:deploy_strategy | enum | Yes | デプロイ方式 | rolling / blue-green / canary / recreate |
+| deployment-design:rollback_procedure | text | Yes | ロールバック手順 | — |
+| deployment-design:secret_management | string | Yes | シークレットの管理方式 | — |
+
+### Detail Block Guidance
+
+環境ごとの構成（ネットワーク・計算資源・データストア）、デプロイ手順、ロールバック手順、シークレット管理方式を記載する。implementer はこれを根拠に `infra/` の IaC コードを実装し、runbook-writer はこれを根拠に運用手順を書く。technical-authority は `infra/` が本設計に適合しているかを判定する。
+
+owner は architect である。`infra/` の実装は implementer が行い、設計と実装の主体を分離する。
+
+---
+
+## 9.37 risk-register（名前空間: risk-register:）
+
+### Fields
+
+| フィールド | 型 | 必須 | 説明 | 値域・制約 |
+|-----------|------|------|------|-----------|
+| risk-register:total_count | int | Yes | 登録されているリスクの総数 | 0以上 |
+| risk-register:open_count | int | Yes | 未クローズのリスク数 | 0以上 |
+| risk-register:max_score | int | Yes | 未クローズのうち最大のスコア | 1-9 |
+| risk-register:escalated_count | int | Yes | スコア 6 以上でユーザーに通知済みの件数 | 0以上 |
+
+### Detail Block Guidance
+
+個別の `risk` エントリを一覧化した台帳を記載する。各行は risk_id・概要・スコア・状態・軽減策の担当を持つ。
+
+**`risk` との違い:** `risk` は個別のリスクエントリで連番のファイルとして作成される。`risk-register` はそれらを集約した単一ファイルである。両者を同じ file_type に同居させると singleton 判定が矛盾するため分離している。owner はいずれも risk-manager である。
+
+---
+
 # 10. バージョニングルール
 
 バージョニングは変更時点の文書**ステータス**によって決定される。
@@ -1638,6 +1681,8 @@ released  → 現ファイルを old/ へ移動 → 新ファイルを作成
 | orchestrator | decision | 意思決定記録の完全制御 |
 | technical-authority | tech-decision | 技術裁定・ゲート判定記録の完全制御 |
 | decree-writer | governance-change-log | ガバナンス適用記録の完全制御 |
+| architect | deployment-design | デプロイ設計の完全制御。infra/ の実装は implementer |
+| risk-manager | risk-register | リスク台帳の完全制御 |
 | srs-writer | user-order | バリデーションと補完。ユーザーが初期記入 |
 | srs-writer | interview-record | インタビュー記録の完全制御 |
 | srs-writer | spec-foundation | 仕様書 Ch1-2 の Common + Form + Detail |

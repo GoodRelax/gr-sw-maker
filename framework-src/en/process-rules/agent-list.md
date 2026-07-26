@@ -70,6 +70,7 @@ Derived from Document Management Rules §11. **Each file_type has a single owner
 | ai-requirement-spec | docs/ai/ | S | design (conditional) |
 | framework-requirement-spec | docs/framework/ | S | design (conditional) |
 | disaster-recovery-plan | docs/operations/ | S | design |
+| deployment-design | docs/operations/ | S | design |
 
 > In addition to the above file_types, architect generates and manages openapi.yaml (docs/api/). openapi.yaml is an external tool prescribed format (Document Management Rules §13) and is not a file_type, but is consumed by implementer and test-engineer.
 
@@ -87,6 +88,7 @@ Derived from Document Management Rules §11. **Each file_type has a single owner
 |-----------|-----------|:---:|--------------|
 | (source code) | src/ | — | implementation |
 | (unit tests) | tests/ | — | implementation |
+| (IaC code) | infra/ | — | implementation |
 
 > implementer generates code (src/, tests/), but these are not subject to Common Block management. Traceability is managed via traceability-matrix.
 
@@ -125,6 +127,7 @@ Derived from Document Management Rules §11. **Each file_type has a single owner
 | file_type | Directory | S/M | Primary Phase |
 |-----------|-----------|:---:|--------------|
 | risk | project-records/risks/ | M | planning onward |
+| risk-register | project-records/risks/ | S | planning onward |
 
 ### license-checker
 

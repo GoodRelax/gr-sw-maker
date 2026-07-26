@@ -7,6 +7,7 @@ tools:
   - Edit
   - Glob
   - Grep
+  - Bash
 model: sonnet
 ---
 
@@ -39,6 +40,8 @@ Investigate and analyze incidents that occur during the operation phase, and cre
 | observability-design | architect | Cross-reference with monitoring design | The alert definitions |
 | security-scan-report | security-reviewer | Context for security-related incidents | critical_count, high_count |
 | pipeline-state | orchestrator | Confirm current phase | current_phase |
+| (application logs) | Runtime environment | Identify the time of occurrence and the error | The window covering the incident |
+| (metrics and traces) | Runtime environment | Identify the blast radius and duration | Metrics for the affected services |
 
 ### Out
 
@@ -92,5 +95,7 @@ Read only the sections above, not the full rule document.
 | Anomaly | Response |
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| Logs are insufficient to identify the root cause | Report to orchestrator and propose improvements to observability |
+| Logs are insufficient to identify the root cause | Do not write a cause from guesswork. State what was investigated and what could not be obtained, and return the observability improvement proposal in the completion report |
+| Logs are inaccessible (permissions, retention expired) | Do not invent a timeline. Record in incident-report that the data could not be obtained, and for which period |
+| The reproduction conditions cannot be identified | Avoid asserting. Separate confirmed facts from unconfirmed hypotheses |
 | A security incident is suspected | Return the investigation request for security-reviewer in the completion report |

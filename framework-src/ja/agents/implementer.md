@@ -29,7 +29,7 @@ model: opus
 ### End Conditions
 
 - [ ] src/ にソースコードが実装されている
-- [ ] tests/ に単体テストが作成され、合格率95%以上
+- [ ] tests/ に単体テストが作成され、合格率が CLAUDE.md「品質目標」の閾値を満たしている
 - [ ] project-records/traceability/ の実装カラムが更新されている
 - [ ] review-agent の R2/R3/R4/R5 レビューに PASS している
 - [ ] SCA/SAST スキャンで Critical/High ゼロ
@@ -40,7 +40,8 @@ model: opus
 
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
-| spec-architecture | architect | Ch3-4 の設計に従って実装する | Ch3.2/3.3/3.4, Ch4 の全 Gherkin に traces |
+| spec-architecture | architect | Ch3-4 の設計に従って実装する |
+| deployment-design | architect | infra/ の IaC コードを実装する | Ch3.2/3.3/3.4, Ch4 の全 Gherkin に traces |
 | openapi.yaml | architect | API エンドポイントの実装 | 全エンドポイントの paths と schemas |
 | threat-model | security-reviewer | セキュリティ対策の実装 | STRIDE の全脅威に対策 |
 | security-architecture | security-reviewer | セキュリティ設計に従う | 認証・認可方式 |
@@ -54,6 +55,7 @@ model: opus
 |-----------|--------|-----------|
 | （ソースコード） | src/ | test-engineer, review-agent |
 | （単体テスト） | tests/ | test-engineer |
+| （IaC コード） | infra/ | runbook-writer, technical-authority |
 
 > ソースコード・テストコードは Common Block 管理対象外。トレーサビリティは traceability-matrix で管理する。
 
@@ -96,6 +98,8 @@ model: opus
 
 ### 並列実装（Agent Teams）
 
+**マージの責任分担:** コンフリクトを**どう解決するか**の判断は technical-authority が裁定する。**解決の実行**は implementer が行う。統合後は R2（設計原則）と R3（コーディング品質）の再レビュー要請を完了報告に含めて返す。統合によって個々のブランチでは成立していた設計が壊れうるため、再レビューを省略してはならない（MUST NOT）。
+
 Git worktree を使用し、各機能を専用ブランチで並列実装する:
 - ブランチ名: feature/{issue番号}-{説明}
 - 実装完了後、レビュー要請を完了報告に含めて返す
@@ -108,4 +112,4 @@ Git worktree を使用し、各機能を専用ブランチで並列実装する:
 | 設計文書の記述が曖昧で実装に落とせない | 推測で実装しない。orchestrator に architect への設計精緻化を要請 |
 | 技術スタックの制約で設計通りの実装が不可能 | 代替案を提示して orchestrator に判断を求める |
 | 外部依存（ライブラリ・API）が利用不可 | 作業を停止し、orchestrator に報告。モック/スタブで暫定対応する場合は明示的に記録 |
-| 単体テスト合格率が95%を下回る | テスト失敗の原因を分析し、修正する。原因が設計に起因する場合は orchestrator に報告 |
+| 単体テスト合格率が CLAUDE.md「品質目標」の閾値を下回る | テスト失敗の原因を分析し、修正する。原因が設計に起因する場合はその旨を完了報告に明記する |

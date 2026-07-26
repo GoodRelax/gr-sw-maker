@@ -40,6 +40,7 @@ Control scope changes after specification approval to prevent uncontrolled chang
 | spec-architecture | architect | Subject of change impact analysis | Ch3-4; traces on every Gherkin in Ch4 |
 | (src/, tests/) | implementer, test-engineer | Subject of change impact analysis | A directory layout that identifies the change target |
 | CLAUDE.md | orchestrator (setup) | Reference for project settings | The quality target and critical-decision-criteria sections |
+| field-issue (type=cr) | feedback-classifier | Accept a scope change originating from field testing | issue_id; type = cr; the requested change |
 
 ### Out
 
@@ -98,6 +99,7 @@ Read only the sections above, not the full rule document.
 ### Constraints
 
 - Only handles user-initiated changes. Technical changes on the AI side are managed via defect or decision
+- **A `cr` originating from field testing is also a user-initiated change.** Even when it arrives via a field-issue, the impact analysis, approval criteria and record format are identical to any other change-request. The criteria never vary by the route the request took
 
 ## Exception
 

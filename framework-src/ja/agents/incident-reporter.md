@@ -7,6 +7,7 @@ tools:
   - Edit
   - Glob
   - Grep
+  - Bash
 model: sonnet
 ---
 
@@ -38,7 +39,9 @@ model: sonnet
 | runbook | runbook-writer | 運用手順との乖離確認 | 該当事象の対応手順 |
 | observability-design | architect | 監視設計との照合 | アラート定義 |
 | security-scan-report | security-reviewer | セキュリティ関連インシデントの文脈 | critical_count, high_count |
-| pipeline-state | orchestrator | 現在のフェーズ確認 | current_phase |
+| pipeline-state | orchestrator | 現在のフェーズ確認 |
+| （アプリケーションログ） | 実行環境 | 事象発生時刻とエラーの特定 |
+| （メトリクス・トレース） | 実行環境 | 影響範囲と継続時間の特定 | current_phase |
 
 ### Out
 
@@ -92,5 +95,7 @@ model: sonnet
 | 異常 | 対応 |
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
-| ログが不十分で根本原因を特定できない | orchestrator に報告し、可観測性の改善を提案する |
+| ログが不十分で根本原因を特定できない | 原因を推測で書かない。調査した範囲と得られなかった情報を明記し、可観測性の改善提案を完了報告に含めて返す |
+| ログにアクセスできない（権限・保持期間切れ） | タイムラインを創作しない。取得できなかった旨と対象期間を incident-report に記録する |
+| 事象の再現条件が特定できない | 断定を避け、確認できた事実と未確認の仮説を区別して記載する |
 | セキュリティインシデントの疑いがある | security-reviewer への調査要請を完了報告に含めて返す |

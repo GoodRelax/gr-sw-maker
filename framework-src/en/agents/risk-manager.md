@@ -43,8 +43,10 @@ Detect risks early to prevent critical issues from arising in later stages of th
 
 | file_type | Output location | Next consumer |
 |-----------|-----------------|---------------|
-| risk (register) | project-records/risks/risk-register.md | orchestrator |
-| risk (individual) | project-records/risks/risk-{NNN}-{YYYYMMDD}-{HHMMSS}.md | orchestrator |
+| risk-register | project-records/risks/risk-register.md | orchestrator, technical-authority |
+| risk | project-records/risks/risk-{NNN}-{YYYYMMDD}-{HHMMSS}.md | orchestrator |
+
+> Individual entries (`risk`) are multi-instance; the register (`risk-register`) is single. Keeping both under one file_type made the singleton determination contradictory, so they are separated into distinct file_types.
 
 ### Work
 
