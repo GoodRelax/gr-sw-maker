@@ -59,7 +59,14 @@ const outputPath =
   join(dirname(inputPath), basename(inputPath, ".jsonl") + ".md");
 
 /* -- Read JSONL ---------------------------------------------------------- */
-const raw = readFileSync(resolve(inputPath), "utf8");
+let raw;
+try {
+  raw = readFileSync(resolve(inputPath), "utf8");
+} catch (err) {
+  console.error(`Cannot read ${resolve(inputPath)}: ${err.message}`);
+  process.exit(1);
+}
+
 const entries = raw
   .trim()
   .split("\n")
@@ -79,10 +86,20 @@ const startTimestamp = firstUserEntry?.timestamp;
 
 /* -- Helpers -------------------------------------------------------------- */
 
-/** Format epoch ms as local datetime string. */
-function formatTimestamp(ms) {
-  if (!ms) return "";
-  return new Date(ms).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
+/**
+ * Format an entry timestamp for display.
+ *
+ * Claude Code writes `timestamp` as an ISO 8601 string, not epoch milliseconds.
+ * The zone is the host's: hardcoding one would relabel every transcript with a
+ * time the reader did not experience.
+ *
+ * @param {string | undefined} timestamp ISO 8601 timestamp from a JSONL entry.
+ * @returns {string} Localized datetime, or "" when the entry carries no timestamp.
+ */
+function formatTimestamp(timestamp) {
+  if (!timestamp) return "";
+  const at = new Date(timestamp);
+  return Number.isNaN(at.getTime()) ? "" : at.toLocaleString();
 }
 
 /** Strip <system-reminder> tags from text. */
@@ -214,7 +231,12 @@ for (const entry of entries) {
 }
 
 /* -- Write output -------------------------------------------------------- */
-writeFileSync(resolve(outputPath), md.join("\n"), "utf8");
+try {
+  writeFileSync(resolve(outputPath), md.join("\n"), "utf8");
+} catch (err) {
+  console.error(`Cannot write ${resolve(outputPath)}: ${err.message}`);
+  process.exit(1);
+}
 
 const userCount = entries.filter((e) => e.type === "user").length;
 const assistantCount = entries.filter((e) => e.type === "assistant").length;

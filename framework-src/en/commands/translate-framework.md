@@ -41,7 +41,7 @@ The following are language-independent machine-parseable identifiers and must no
 | Phase names | `setup`, `planning`, `design` | Enum values |
 | S0-S6 section headings | `## Activation`, `## Ownership`, `## Procedure`, `## Rules`, `## Exception` | Defined by prompt structure conventions |
 | Subsection headings | `### Purpose`, `### Start Conditions`, `### End Conditions`, `### In`, `### Out`, `### Work` | Same as above |
-| Field names / namespace prefixes | `doc:type`, `impact_level` | Machine parsing |
+| Field names / namespace prefixes | `doc:file_type`, `impact_level` | Machine parsing |
 | HTML comments (FIELD annotations) | `<!-- FIELD: ... -->` | Machine parsing |
 | Source code identifiers | Variable names, function names | International convention |
 

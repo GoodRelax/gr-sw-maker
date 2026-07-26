@@ -34,7 +34,7 @@ node setup.js
 
 ### 3. AIプラットフォームを選ぶ（Claude Code ならスキップ）
 
-Claude Code 以外の AI を使う場合、[移植ガイド](process-rules/porting-guide-ja.md)を AI に読ませて自動変換を指示してください。
+Claude Code 以外の AI を使う場合、[移植ガイド](framework-src/ja/process-rules/porting-guide.md)を AI に読ませて自動変換を指示してください。
 
 > 詳細は[AIプラットフォームの切り替え](#aiプラットフォームの切り替え)を参照。
 
@@ -95,7 +95,7 @@ AI がプロジェクト構成（`CLAUDE.md`）を自動生成し、あなたに
 
 ### AIプラットフォームの切り替え
 
-対象 AI で [`process-rules/porting-guide-ja.md`](process-rules/porting-guide-ja.md) を読み込み、自動変換を指示してください。
+対象 AI で [`framework-src/ja/process-rules/porting-guide.md`](framework-src/ja/process-rules/porting-guide.md) を読み込み、自動変換を指示してください。
 
 - ファイルの約70%はポータブル — 変更不要
 - 約15%は一括置換（ベンダー名・モデル名・パス）
@@ -146,7 +146,7 @@ gr-sw-maker フレームワーク自体のメンテナンスを行う場合、�
 - **`CLAUDE.md`** は Claude Code の実行時に必須だが、git では追跡しない。clone 後に `node setup.js ja`（または `en`）を実行して生成する。
 - **`README.md`** は唯一の例外 — GitHub の表示に必要なため直接 tracked しており、`setup.js` では生成しない。
 - **`essays/research/*.md`** は単一言語の調査レポート — `setup.js` の生成物ではなく、通常通り tracked。
-- 詳細な規約は[フレームワーク開発ガイド](process-rules/framework-development-ja.md)を参照。
+- 詳細な規約は[フレームワーク開発ガイド](framework-src/ja/process-rules/framework-development.md)を参照。
 
 ---
 
@@ -154,16 +154,16 @@ gr-sw-maker フレームワーク自体のメンテナンスを行う場合、�
 
 | 文書 | 内容 |
 |------|------|
-| [プロセス規則](process-rules/full-auto-dev-process-rules-ja.md) | フェーズ定義、品質ゲート、条件付きプロセス |
-| [文書管理規則](process-rules/full-auto-dev-document-rules-ja.md) | 命名、ブロック構造、バージョニング |
-| [エージェント一覧](process-rules/agent-list-ja.md) | 全エージェントの名簿、オーナーシップ、データフロー |
-| [レビュー基準](process-rules/review-standards-ja.md) | R1-R6 レビュー観点とチェックリスト |
-| [プロンプト構造規約](process-rules/prompt-structure-ja.md) | S0-S6 エージェント定義規約 |
-| [仕様テンプレート](process-rules/spec-template-ja.md) | ANMS 仕様テンプレート（STFB 構造） |
-| [用語集](process-rules/glossary-ja.md) | フレームワーク用語の定義と選定理由 |
-| [不具合分類](process-rules/defect-taxonomy-ja.md) | error / fault / failure / defect / incident 因果連鎖 |
-| [フィールドテスト管理規則](process-rules/field-issue-handling-rules-ja.md) | フィールドテスト・フィードバック管理（条件付き） |
-| [移植ガイド](process-rules/porting-guide-ja.md) | 他 AI プラットフォームへの変換仕様 |
+| [プロセス規則](framework-src/ja/process-rules/full-auto-dev-process-rules.md) | フェーズ定義、品質ゲート、条件付きプロセス |
+| [文書管理規則](framework-src/ja/process-rules/full-auto-dev-document-rules.md) | 命名、ブロック構造、バージョニング |
+| [エージェント一覧](framework-src/ja/process-rules/agent-list.md) | 全エージェントの名簿、オーナーシップ、データフロー |
+| [レビュー基準](framework-src/ja/process-rules/review-standards.md) | R1-R7 レビュー観点とチェックリスト |
+| [プロンプト構造規約](framework-src/ja/process-rules/prompt-structure.md) | S0-S6 エージェント定義規約 |
+| [仕様テンプレート](framework-src/ja/process-rules/spec-template.md) | ANMS 仕様テンプレート（STFB 構造） |
+| [用語集](framework-src/ja/process-rules/glossary.md) | フレームワーク用語の定義と選定理由 |
+| [不具合分類](framework-src/ja/process-rules/defect-taxonomy.md) | error / fault / failure / defect / incident 因果連鎖 |
+| [実機テスト フィードバック管理規則](framework-src/ja/process-rules/field-issue-handling-rules.md) | 実機テストのフィードバック管理（条件付き） |
+| [移植ガイド](framework-src/ja/process-rules/porting-guide.md) | 他 AI プラットフォームへの変換仕様 |
 | [論文](essays/) | ANMS / ANPS / ANGS 三段階仕様体系の設計根拠 |
 
 ---
