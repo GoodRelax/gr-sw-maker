@@ -14,11 +14,9 @@ The following are AI-platform-independent. Use them as-is:
 
 | Path | Content |
 |---|---|
-| `framework-src/{lang}/process-rules/glossary.md` | Glossary |
 | `framework-src/{lang}/process-rules/defect-taxonomy.md` | Defect taxonomy |
-| `framework-src/{lang}/process-rules/review-standards.md` | Review standards (R1-R7) |
+| `framework-src/{lang}/process-rules/field-issue-handling-rules.md` | Field issue handling rules |
 | `framework-src/{lang}/process-rules/spec-template.md` | Specification template |
-| `framework-src/{lang}/process-rules/prompt-structure.md` | Prompt structure conventions (S0-S6) |
 | `framework-src/{lang}/user-order.md` | User requirements (3-question format) |
 
 > **Directories of generated output (`docs/`, `src/`, `tests/`, `infra/`, `project-management/`, `project-records/`) are not listed here.** They are not what gets ported; they are where the ported process writes. What porting asks is whether the rules and prompts carry over, not whether the output directories are compatible.
@@ -30,6 +28,9 @@ The following are AI-platform-independent. Use them as-is:
 | `framework-src/{lang}/process-rules/full-auto-dev-process-rules.md` | "Claude Code", "Agent Teams", model names |
 | `framework-src/{lang}/process-rules/full-auto-dev-document-rules.md` | Paths `.claude/agents/`, `.claude/commands/` |
 | `framework-src/{lang}/process-rules/agent-list.md` | Model names in the model assignment table |
+| `framework-src/{lang}/process-rules/prompt-structure.md` | "Claude Code", `.claude/` paths, model names |
+| `framework-src/{lang}/process-rules/glossary.md` | "Claude Code" |
+| `framework-src/{lang}/process-rules/review-standards.md` | `.claude/` paths |
 
 > **The model assignments are as of 2026-03.** Models are superseded over time; when porting, substitute the latest equivalent available on the target platform.
 

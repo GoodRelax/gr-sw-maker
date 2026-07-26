@@ -14,11 +14,9 @@
 
 | パス | 内容 |
 |---|---|
-| `framework-src/{lang}/process-rules/glossary.md` | 用語集 |
 | `framework-src/{lang}/process-rules/defect-taxonomy.md` | 不具合分類 |
-| `framework-src/{lang}/process-rules/review-standards.md` | レビュー観点規約（R1-R7） |
+| `framework-src/{lang}/process-rules/field-issue-handling-rules.md` | 実機テスト フィードバック管理規則 |
 | `framework-src/{lang}/process-rules/spec-template.md` | 仕様テンプレート |
-| `framework-src/{lang}/process-rules/prompt-structure.md` | プロンプト構造規約（S0-S6） |
 | `framework-src/{lang}/user-order.md` | ユーザー要求（3問形式） |
 
 > **生成物のディレクトリ（`docs/`, `src/`, `tests/`, `infra/`, `project-management/`, `project-records/`）は本表に含めない。** これらは移植の対象ではなく、移植後のプロセスが出力する先である。移植で問われるのは「規則とプロンプトがそのまま使えるか」であって、出力先ディレクトリの互換性ではない。
@@ -30,6 +28,9 @@
 | `framework-src/{lang}/process-rules/full-auto-dev-process-rules.md` | "Claude Code"、"Agent Teams"、モデル名 |
 | `framework-src/{lang}/process-rules/full-auto-dev-document-rules.md` | `.claude/agents/`、`.claude/commands/` のパス |
 | `framework-src/{lang}/process-rules/agent-list.md` | モデル割当表のモデル名 |
+| `framework-src/{lang}/process-rules/prompt-structure.md` | "Claude Code"、`.claude/` パス、モデル名 |
+| `framework-src/{lang}/process-rules/glossary.md` | "Claude Code" |
+| `framework-src/{lang}/process-rules/review-standards.md` | `.claude/` パス |
 
 > **モデル名は 2026-03 時点の割当である。** モデルは更新されるため、移植時は対象プラットフォームで利用可能な最新の対応モデルに読み替えること。
 
