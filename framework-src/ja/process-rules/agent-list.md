@@ -31,6 +31,7 @@
 | 19 | field-test-engineer | ユーザーとの実機テスト、フィードバック記録、修正後の実機検証 | sonnet | testing（条件付き: 実機テスト有効時） |
 | 20 | feedback-classifier | フィードバックを仕様書と照合し defect / CR / 質問に分類、チケット起票 | sonnet | testing（条件付き: 実機テスト有効時） |
 | 21 | field-issue-analyst | 原因分析（defect）、対策立案（defect / CR）、影響範囲・副作用・代替案比較 | opus | testing（条件付き: 実機テスト有効時） |
+| 22 | technical-authority | 技術判断の裁定、仕様・設計・実装・テストの整合保証、品質ゲート判定 | opus | planning 以降（ゲート時） |
 
 ---
 
@@ -212,6 +213,14 @@
 | src/ | implementer | 原因分析対象のソースコード |
 | spec-foundation, spec-architecture | srs-writer, architect | 影響分析・仕様書更新要否の判定 |
 
+### technical-authority
+
+| file_type | ディレクトリ | 単/連 | 主要フェーズ |
+|-----------|------------|:-----:|------------|
+| tech-decision | project-records/tech-decisions/ | 連 | planning 以降 |
+
+> technical-authority は成果物を作成せず、裁定と記録のみを行う。decision（orchestrator 所有）とは管轄が異なる。技術的整合とゲート可否は tech-decision、コスト・スケジュール・リスクを理由とする判断は decision に記録する。
+
 ---
 
 ## 3. エージェント間データフロー
@@ -237,6 +246,7 @@ flowchart TD
     FTV["framework-translation-verifier"]
     PI["process-improver"]
     DW["decree-writer"]
+    TA["technical-authority"]
 
     User -->|"user-order"| SRS
     SRS -->|"spec-foundation<br/>interview-record"| Arch
@@ -251,6 +261,11 @@ flowchart TD
     Test -->|"defect"| Impl
     Test -->|"test-plan<br/>performance-report<br/>traceability"| Rev
     Rev -->|"review"| Orch
+    Rev -->|"review"| TA
+    Sec -->|"threat-model<br/>security-scan-report"| TA
+    Test -->|"traceability"| TA
+    TA -->|"tech-decision"| Orch
+    TA -->|"tech-decision"| Impl
     PM -->|"progress<br/>wbs"| Orch
     RM -->|"risk"| Orch
     CM -->|"change-request"| Orch
@@ -281,6 +296,7 @@ flowchart TD
     style Lic fill:#d5dbdb,stroke:#333,color:#000
     style FTV fill:#af7ac5,stroke:#333,color:#fff
     style PI fill:#F0E68C,stroke:#333,color:#000
+    style TA fill:#e59866,stroke:#333,color:#000
     style DW fill:#F0E68C,stroke:#333,color:#000
 ```
 
@@ -393,12 +409,12 @@ kotodama-kun を**使用しない**エージェント:
 | フェーズ | 起動されるエージェント | 品質ゲート |
 |---------|---------------------|-----------|
 | setup | orchestrator | CLAUDE.md 承認 |
-| planning | orchestrator, srs-writer, kotodama-kun, review-agent, process-improver, decree-writer | R1 PASS → 仕様書承認 |
-| dependency-selection | orchestrator, architect, kotodama-kun, license-checker | ユーザー選定承認 |
-| design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, process-improver, decree-writer | R2/R4/R5 PASS |
-| implementation | orchestrator, implementer, test-engineer(単体), security-reviewer(SCA), kotodama-kun, license-checker, review-agent, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5 PASS, SCA クリア |
-| testing | orchestrator, test-engineer, kotodama-kun, review-agent, progress-monitor, process-improver, decree-writer, field-test-engineer(条件付き), feedback-classifier(条件付き), field-issue-analyst(条件付き) | R6 PASS, 全テスト PASS |
-| delivery | orchestrator, kotodama-kun, review-agent, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R6 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
+| planning | orchestrator, srs-writer, kotodama-kun, review-agent, technical-authority, process-improver, decree-writer | R1 PASS → 仕様書承認 |
+| dependency-selection | orchestrator, architect, kotodama-kun, license-checker, technical-authority | ユーザー選定承認 |
+| design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5 PASS |
+| implementation | orchestrator, implementer, test-engineer(単体), security-reviewer(SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5 PASS, SCA クリア |
+| testing | orchestrator, test-engineer, kotodama-kun, review-agent, technical-authority, progress-monitor, process-improver, decree-writer, field-test-engineer(条件付き), feedback-classifier(条件付き), field-issue-analyst(条件付き) | R6 PASS, 全テスト PASS |
+| delivery | orchestrator, kotodama-kun, review-agent, technical-authority, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R6 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
 | operation | orchestrator, security-reviewer(パッチ), progress-monitor, incident-reporter, process-improver, decree-writer | SLA 達成 |
 
 ---

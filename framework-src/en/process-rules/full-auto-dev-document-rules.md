@@ -712,6 +712,7 @@ The Footer is shared across all file types. Agents MUST append a new `<entry>` t
 | test-plan | `test-plan:` | Test plan | `project-management/` | Yes |
 | review | `review:` | Code/design review results | `project-records/reviews/` | No |
 | decision | `decision:` | Architecture decision record | `project-records/decisions/` | No |
+| tech-decision | `tech-decision:` | Technical ruling and quality gate decision record | `project-records/tech-decisions/` | No |
 | risk | `risk:` | Risk entry and register | `project-records/risks/` | No |
 | defect | `defect:` | defect tracking | `project-records/defects/` | No |
 | change-request | `change-request:` | Change request management | `project-records/change-requests/` | No |
@@ -804,6 +805,7 @@ Standard values for `commissioned_by` (creation trigger) and `consumed_by` (next
 | test-plan | `phase-design` | test-engineer, review-agent | test-engineer |
 | review | Phase gate (e.g., `phase-planning`) | orchestrator, target agent | review-agent |
 | decision | Agent that needed the decision | All agents | orchestrator |
+| tech-decision | When a gate decision or technical ruling is requested | Main session, orchestrator, all implementation agents | technical-authority |
 | risk | `phase-planning` | risk-manager, orchestrator | risk-manager |
 | defect | `test-engineer` | Agent assigned to fix | test-engineer |
 | change-request | `user` (user-initiated change requests only) | change-manager, orchestrator | change-manager |
@@ -1557,6 +1559,32 @@ Describe the details of the field-issue. field-test-engineer records feedback (s
 
 ---
 
+## 9.34 tech-decision (Namespace: tech-decision:)
+
+### Fields
+
+| Field | Type | Required | Description | Range/Constraint |
+|-------|------|----------|-------------|------------------|
+| tech-decision:id | string | Yes | Unique identifier | TD-NNN |
+| tech-decision:title | string | Yes | Title of the decision | — |
+| tech-decision:decision_status | enum | Yes | State of the decision | proposed / decided / superseded |
+| tech-decision:phase | enum | Yes | Target phase | setup / planning / dependency-selection / design / implementation / testing / delivery / operation |
+| tech-decision:gate | string | No | Target gate (for a gate decision) | GATE-XXX |
+| tech-decision:verdict | enum | No | Gate verdict (for a gate decision) | PASS / FAIL |
+| tech-decision:fail_count | integer | No | Consecutive FAIL count on the same gate | 0 or greater |
+| tech-decision:send_back_to | enum | No | Where to send back (on FAIL) | design / implementation |
+| tech-decision:rationale | text | Yes | Rationale for the decision | — |
+| tech-decision:waiver | string | No | Presence of and reference to a waiver | none / reference to the waiver record |
+| tech-decision:reevaluate_at | string | No | Re-evaluation timing (required when a waiver is granted) | — |
+
+### Detail Block Guidance
+
+Record the point at issue, the options compared, and the options not adopted with the reason. For a gate decision, include a table mapping the findings of the referenced review to their disposition. When a waiver is granted, always record the user approval, the scope of impact, and the re-evaluation timing (Process Rules §9.1).
+
+Judgments made on grounds of cost, schedule or risk are recorded in decision (owner: orchestrator), not in this file_type.
+
+---
+
 # 10. Versioning Rules
 
 Versioning is determined by the document **status** at the time of change.
@@ -1586,6 +1614,7 @@ Each file has exactly one `owner` agent. Only the owner can modify Common Block 
 | orchestrator | executive-dashboard | Full control of project-wide dashboard |
 | orchestrator | final-report | Full control of project final report |
 | orchestrator | decision | Full control of decision records |
+| technical-authority | tech-decision | Full control of technical ruling and gate decision records |
 | srs-writer | user-order | Validation and completion. User provides initial input |
 | srs-writer | interview-record | Full control of interview records |
 | srs-writer | spec-foundation | Common + Form + Detail of specification Ch1-2 |

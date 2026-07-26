@@ -31,6 +31,7 @@
 | 19 | field-test-engineer | User field testing, feedback recording, post-fix verification | sonnet | testing (conditional: field testing enabled) |
 | 20 | feedback-classifier | Classify feedback against spec as defect / CR / question, create tickets | sonnet | testing (conditional: field testing enabled) |
 | 21 | field-issue-analyst | Root cause analysis (defect), solution planning (defect / CR), impact/side-effect/alternative analysis | opus | testing (conditional: field testing enabled) |
+| 22 | technical-authority | Arbitrates technical decisions, guarantees consistency across spec/design/implementation/test, rules on quality gates | opus | planning onward (at gates) |
 
 ---
 
@@ -212,6 +213,14 @@ Derived from Document Management Rules §11. **Each file_type has a single owner
 | src/ | implementer | Source code for root cause analysis |
 | spec-foundation, spec-architecture | srs-writer, architect | Impact analysis and spec update necessity assessment |
 
+### technical-authority
+
+| file_type | Directory | Single/Multi | Main phases |
+|-----------|------------|:-----:|------------|
+| tech-decision | project-records/tech-decisions/ | Multi | planning onward |
+
+> technical-authority produces no deliverables; it only rules and records. Its jurisdiction differs from decision (owned by orchestrator): technical consistency and gate verdicts go in tech-decision, while judgments made on grounds of cost, schedule or risk go in decision.
+
 ---
 
 ## 3. Inter-Agent Data Flow
@@ -237,6 +246,7 @@ flowchart TD
     FTV["framework-translation-verifier"]
     PI["process-improver"]
     DW["decree-writer"]
+    TA["technical-authority"]
 
     User -->|"user-order"| SRS
     SRS -->|"spec-foundation<br/>interview-record"| Arch
@@ -251,6 +261,11 @@ flowchart TD
     Test -->|"defect"| Impl
     Test -->|"test-plan<br/>performance-report<br/>traceability"| Rev
     Rev -->|"review"| Orch
+    Rev -->|"review"| TA
+    Sec -->|"threat-model<br/>security-scan-report"| TA
+    Test -->|"traceability"| TA
+    TA -->|"tech-decision"| Orch
+    TA -->|"tech-decision"| Impl
     PM -->|"progress<br/>wbs"| Orch
     RM -->|"risk"| Orch
     CM -->|"change-request"| Orch
@@ -281,6 +296,7 @@ flowchart TD
     style Lic fill:#d5dbdb,stroke:#333,color:#000
     style FTV fill:#af7ac5,stroke:#333,color:#fff
     style PI fill:#F0E68C,stroke:#333,color:#000
+    style TA fill:#e59866,stroke:#333,color:#000
     style DW fill:#F0E68C,stroke:#333,color:#000
 ```
 
@@ -393,12 +409,12 @@ Which agents are activated in which phases.
 | Phase | Activated Agents | Quality Gate |
 |-------|-----------------|-------------|
 | setup | orchestrator | CLAUDE.md approval |
-| planning | orchestrator, srs-writer, kotodama-kun, review-agent, process-improver, decree-writer | R1 PASS -> spec approval |
-| dependency-selection | orchestrator, architect, kotodama-kun, license-checker | User selection approval |
-| design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, process-improver, decree-writer | R2/R4/R5 PASS |
-| implementation | orchestrator, implementer, test-engineer (unit), security-reviewer (SCA), kotodama-kun, license-checker, review-agent, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5 PASS, SCA clear |
-| testing | orchestrator, test-engineer, kotodama-kun, review-agent, progress-monitor, process-improver, decree-writer, field-test-engineer (conditional), feedback-classifier (conditional), field-issue-analyst (conditional) | R6 PASS, all tests PASS |
-| delivery | orchestrator, kotodama-kun, review-agent, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R6 all PASS, translation consistency verification PASS, user acceptance |
+| planning | orchestrator, srs-writer, kotodama-kun, review-agent, technical-authority, process-improver, decree-writer | R1 PASS -> spec approval |
+| dependency-selection | orchestrator, architect, kotodama-kun, license-checker, technical-authority | User selection approval |
+| design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5 PASS |
+| implementation | orchestrator, implementer, test-engineer (unit), security-reviewer (SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5 PASS, SCA clear |
+| testing | orchestrator, test-engineer, kotodama-kun, review-agent, technical-authority, progress-monitor, process-improver, decree-writer, field-test-engineer (conditional), feedback-classifier (conditional), field-issue-analyst (conditional) | R6 PASS, all tests PASS |
+| delivery | orchestrator, kotodama-kun, review-agent, technical-authority, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R6 all PASS, translation consistency verification PASS, user acceptance |
 | operation | orchestrator, security-reviewer (patching), progress-monitor, incident-reporter, process-improver, decree-writer | SLA achieved |
 
 ---

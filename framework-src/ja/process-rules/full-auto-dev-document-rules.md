@@ -712,6 +712,7 @@ Footerは全ファイルタイプ共通。エージェントは書込みのた�
 | test-plan | `test-plan:` | テスト計画 | `project-management/` | Yes |
 | review | `review:` | コード/設計レビュー結果 | `project-records/reviews/` | No |
 | decision | `decision:` | アーキテクチャ意思決定記録 | `project-records/decisions/` | No |
+| tech-decision | `tech-decision:` | 技術裁定・品質ゲート判定の記録 | `project-records/tech-decisions/` | No |
 | risk | `risk:` | リスクエントリおよび台帳 | `project-records/risks/` | No |
 | defect | `defect:` | defect tracking | `project-records/defects/` | No |
 | change-request | `change-request:` | 変更要求管理 | `project-records/change-requests/` | No |
@@ -804,6 +805,7 @@ external-dependency-spec（抽象テンプレート）
 | test-plan | `phase-design` | test-engineer, review-agent | test-engineer |
 | review | フェーズゲート（例: `phase-planning`） | orchestrator, 対象エージェント | review-agent |
 | decision | 判断を要したエージェント | 全エージェント | orchestrator |
+| tech-decision | ゲート判定・技術裁定の要求時 | メインセッション, orchestrator, 全実装系エージェント | technical-authority |
 | risk | `phase-planning` | risk-manager, orchestrator | risk-manager |
 | defect | `test-engineer` | 修正担当エージェント | test-engineer |
 | change-request | `user`（ユーザー起点の変更要求のみ） | change-manager, orchestrator | change-manager |
@@ -1555,6 +1557,32 @@ field-issue の詳細を記載する。field-test-engineer がフィードバッ
 
 ---
 
+## 9.34 tech-decision（名前空間: tech-decision:）
+
+### Fields
+
+| フィールド | 型 | 必須 | 説明 | 値域・制約 |
+|-----------|------|------|------|-----------|
+| tech-decision:id | string | Yes | 一意の識別子 | TD-NNN |
+| tech-decision:title | string | Yes | 判断の表題 | — |
+| tech-decision:decision_status | enum | Yes | 判断の状態 | proposed / decided / superseded |
+| tech-decision:phase | enum | Yes | 対象フェーズ | setup / planning / dependency-selection / design / implementation / testing / delivery / operation |
+| tech-decision:gate | string | No | 対象ゲート（ゲート判定の場合） | GATE-XXX |
+| tech-decision:verdict | enum | No | ゲート判定結果（ゲート判定の場合） | PASS / FAIL |
+| tech-decision:fail_count | integer | No | 同一ゲートの連続 FAIL 回数 | 0 以上 |
+| tech-decision:send_back_to | enum | No | 戻し先（FAIL の場合） | design / implementation |
+| tech-decision:rationale | text | Yes | 判断根拠 | — |
+| tech-decision:waiver | string | No | waiver の有無と参照 | none / waiver 記録への参照 |
+| tech-decision:reevaluate_at | string | No | 再評価の時期（waiver 時は必須） | — |
+
+### Detail Block Guidance
+
+裁定の争点、比較した選択肢、採用しなかった案とその理由を記載する。ゲート判定の場合は、参照した review の指摘と対応状況の対応表を含める。waiver を認めた場合は、ユーザー承認の記録・影響範囲・再評価時期を必ず記載する（プロセス規則 §9.1）。
+
+コスト・スケジュール・リスクを理由とする判断は本 file_type ではなく decision（owner: orchestrator）に記録する。
+
+---
+
 # 10. バージョニングルール
 
 バージョニングは変更時点の文書**ステータス**によって決定される。
@@ -1584,6 +1612,7 @@ released  → 現ファイルを old/ へ移動 → 新ファイルを作成
 | orchestrator | executive-dashboard | プロジェクト全体ダッシュボードの完全制御 |
 | orchestrator | final-report | プロジェクト総括レポートの完全制御 |
 | orchestrator | decision | 意思決定記録の完全制御 |
+| technical-authority | tech-decision | 技術裁定・ゲート判定記録の完全制御 |
 | srs-writer | user-order | バリデーションと補完。ユーザーが初期記入 |
 | srs-writer | interview-record | インタビュー記録の完全制御 |
 | srs-writer | spec-foundation | 仕様書 Ch1-2 の Common + Form + Detail |
