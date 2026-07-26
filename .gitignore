@@ -20,6 +20,7 @@ coverage/
 
 # Framework development private files (not distributed)
 prompt/
+maintenance/temporary/
 CLAUDE.md
 
 # setup.js deploy outputs (suffix-less copies of -ja/-en originals)
