@@ -73,11 +73,26 @@
 
 | 機構 | 用途 | 省略時の代替 |
 |---|---|---|
-| `tools/gate-guard.mjs`（`PreToolUse` フック） | ゲート未通過での `src/` 書込みを機械的に拒否する | 人間またはエージェントによる手動確認 |
+| `tools/gate-guard.mjs`（`PreToolUse` フック） | ゲート未通過での `src/` `tests/` `infra/` 等への書込みを機械的に拒否する | 人間またはエージェントによる手動確認 |
 | `tools/session-meter.mjs`（`statusLine`） | コンテキスト使用率とコストを `session-state.json` に記録する | コスト追跡を手動記録に切り替える |
 | `.claude/settings.json` | 上記 2 つの登録先 | 不要 |
 
 **省略した場合、コスト予算アラートとゲート強制は働かない。** その旨をプロジェクトの CLAUDE.md 相当ファイルに明記し、代替手段を決めること。
+
+### gate-guard が守る対象
+
+| 書込み先 | 通過が必要なゲート |
+|---|---|
+| `docs/api/` `docs/observability/` `docs/security/` | GATE-PLANNING |
+| `src/` `tests/` `infra/` | GATE-DESIGN |
+| `project-records/performance/` | GATE-IMPL |
+| `final-report.md` | GATE-TEST |
+
+`project-management/` と `project-records/reviews/` は常に許可する。**ゲートを通すための記録自体を止めると進行不能になる**ためである。
+
+判定は「該当ゲートの合格レビューが `project-records/reviews/` に実在するか」のみを見る。レビューの内容が妥当かどうかは technical-authority の裁定であり、機械は判断しない。
+
+**誤検知で作業が止まった場合は `GR_SW_MAKER_SKIP_GATE_GUARD=1` を設定する。** フックが不在・入力が壊れている・対象外のパスといった想定外の状況では、すべて書込みを許可する側に倒れる。検証器のバグで全作業が止まる事態を避けるためである。
 
 ---
 

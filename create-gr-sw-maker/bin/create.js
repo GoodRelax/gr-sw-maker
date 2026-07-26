@@ -20,12 +20,19 @@ const FRAMEWORK_ONLY = [
   "README-ja.md",
   "create-gr-sw-maker",
   "essays",
-  "tools",
   "maintenance",
-  // Framework CI (added in the tooling step): it checks framework-src parity and
-  // the agent roster, neither of which a user project is responsible for.
+  // Framework CI: it checks framework-src parity and the agent roster, neither
+  // of which a user project is responsible for.
   ".github",
 ];
+
+// tools/ cannot be removed wholesale: gate-guard and session-meter are
+// registered in .claude/settings.json and run inside a user project, while the
+// rest exist only to check this repository. An allowlist means a framework tool
+// added later stays behind by default, which is the safe direction: a check
+// script leaking into a user project is harmless noise, but a missing runtime
+// script leaves settings.json pointing at a file that does not exist.
+const USER_TOOLS = new Set(["gate-guard.mjs", "session-meter.mjs"]);
 
 function usage() {
   console.error("Usage: npm init gr-sw-maker <project-name> [-- --ref <branch|tag|commit>]");
@@ -128,6 +135,15 @@ function removePath(targetDir, relative) {
   }
 }
 
+function pruneTools(targetDir) {
+  const dir = path.join(targetDir, "tools");
+  if (!fs.existsSync(dir)) return;
+  for (const entry of fs.readdirSync(dir)) {
+    if (USER_TOOLS.has(entry)) continue;
+    fs.rmSync(path.join(dir, entry), { recursive: true, force: true });
+  }
+}
+
 // Empty the tree but keep its shape: .gitkeep files mark the directories the
 // framework writes into, and removing them would delete the directories too.
 function cleanDir(dir) {
@@ -183,6 +199,7 @@ async function main() {
     for (const relative of FRAMEWORK_ONLY) {
       removePath(targetDir, relative);
     }
+    pruneTools(targetDir);
 
     const recordsDir = path.join(targetDir, "project-records");
     if (fs.existsSync(recordsDir)) {

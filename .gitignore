@@ -16,6 +16,11 @@ coverage/
 # Claude Code local settings
 .claude/settings.local.json
 
+# Rewritten by tools/session-meter.mjs after every response. progress-monitor
+# distills it into cost-log.json, which is the record worth keeping; this file
+# is the live reading.
+project-management/progress/session-state.json
+
 # Framework development private files (not distributed)
 prompt/
 maintenance/temporary/

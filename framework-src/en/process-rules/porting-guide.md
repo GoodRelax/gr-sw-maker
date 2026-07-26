@@ -73,11 +73,26 @@ The following depend on Claude Code features. **They may be omitted when porting
 
 | Mechanism | Purpose | Substitute when omitted |
 |---|---|---|
-| `tools/gate-guard.mjs` (`PreToolUse` hook) | Mechanically refuses writes to `src/` before a gate has passed | Manual confirmation by a human or an agent |
+| `tools/gate-guard.mjs` (`PreToolUse` hook) | Mechanically refuses writes to `src/`, `tests/`, `infra/` and others before the gate has passed | Manual confirmation by a human or an agent |
 | `tools/session-meter.mjs` (`statusLine`) | Records context usage and cost into `session-state.json` | Switch cost tracking to manual recording |
 | `.claude/settings.json` | Where the two above are registered | Not needed |
 
 **When omitted, the cost budget alert and gate enforcement do not operate.** State that in the project's CLAUDE.md equivalent and decide on a substitute.
+
+### What gate-guard protects
+
+| Write destination | Gate that must have passed |
+|---|---|
+| `docs/api/` `docs/observability/` `docs/security/` | GATE-PLANNING |
+| `src/` `tests/` `infra/` | GATE-DESIGN |
+| `project-records/performance/` | GATE-IMPL |
+| `final-report.md` | GATE-TEST |
+
+`project-management/` and `project-records/reviews/` are always allowed: **blocking the records that open a gate would deadlock the pipeline.**
+
+The only question it answers is whether a passing review for that gate exists in `project-records/reviews/`. Whether the review was sound is technical-authority's ruling, not a machine's.
+
+**Set `GR_SW_MAKER_SKIP_GATE_GUARD=1` if a false positive blocks work.** Every unexpected condition -- hook absent, payload malformed, path unrecognised -- allows the write, so that a bug in the guard cannot stop all work.
 
 ---
 

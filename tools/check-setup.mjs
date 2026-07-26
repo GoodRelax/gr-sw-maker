@@ -129,4 +129,31 @@ try {
   rmSync(sandbox, { recursive: true, force: true });
 }
 
+/* -- What a generated project ends up with -------------------------------- */
+// .claude/settings.json is shipped, and it names the scripts Claude Code runs
+// inside a user project. create.js keeps only an allowlist of tools/, so a hook
+// pointing at a framework-only script would leave every generated project with
+// a hook whose target does not exist. Nothing at runtime would say so.
+const settingsPath = join(ROOT, ".claude", "settings.json");
+const createPath = join(ROOT, "create-gr-sw-maker", "bin", "create.js");
+if (existsSync(settingsPath) && existsSync(createPath)) {
+  const allowlist = /const USER_TOOLS = new Set\(\[([^\]]*)\]\)/.exec(readFileSync(createPath, "utf8"));
+  if (!allowlist) {
+    problems.push("create.js no longer declares USER_TOOLS; the tools allowlist cannot be checked");
+  } else {
+    const shipped = new Set([...allowlist[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]));
+    const settings = readFileSync(settingsPath, "utf8");
+    for (const [, name] of settings.matchAll(/tools\/([A-Za-z0-9._-]+)/g)) {
+      if (!shipped.has(name)) {
+        problems.push(`.claude/settings.json runs tools/${name}, which create.js does not ship`);
+      }
+      if (!existsSync(join(ROOT, "tools", name))) {
+        problems.push(`.claude/settings.json runs tools/${name}, which does not exist`);
+      }
+    }
+  }
+} else if (!existsSync(settingsPath)) {
+  problems.push(".claude/settings.json is missing; the hook and statusLine are not registered");
+}
+
 finish("check-setup", problems, `${langs.length} language(s): ${langs.join(", ")}`);
