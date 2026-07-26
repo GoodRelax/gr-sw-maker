@@ -39,72 +39,83 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
 0n2. 実機テストの要否を評価する（HW連携が有効かつユーザー立会での実機動作確認が必要）
     → 該当する場合: testing フェーズで field-test-engineer / feedback-classifier / field-issue-analyst をアクティベートする
 0o. 評価結果をユーザーに報告し、条件付きプロセスの追加について確認を求める
+0p. orchestrator を起動し、project-management/pipeline-state.md を初期化する
 
 ## Phase 1: 企画（インタビュー＆仕様）
 1a. user-order.md を解析する
-1b. user-order.md を基にユーザーへ構造化インタビューを実施する
+1b. srs-writer を起動し、user-order.md を基にユーザーへ構造化インタビューを実施する
     - ドメイン深堀、スコープ境界、エッジケース、優先度、制約、既知の妥協、非機能要求
     - **ドメイン境界識別**: 「このプロジェクト固有のコアロジックは何か？」「この理論/アルゴリズムはドメインか、既存ライブラリとして使うだけか？」を明確化する
     - 1回の質問は3〜5個まで。回答を要約して確認しながら進める
     - ユーザーが「もう十分」と判断したら終了する
-1c. インタビュー結果を project-management/interview-record.md に記録し、ユーザーに確認を求める
-1d. モック/サンプル/PoCを作成し、ユーザーにフィードバックを求める（UI系: ワイヤーフレーム/HTMLモック、API系: OpenAPIスニペット、データ系: ER図/サンプルJSON）。フィードバックを反映し、ユーザーが「イメージ通り」と判断するまでイテレーションする
-1e. process-rules/spec-template.md を参照し、インタビュー結果 + user-order.md を入力に仕様書を docs/spec/[project-name]-spec.md に作成する（Ch1-2: Foundation・Requirements、形式はsetupフェーズで選定）
-1f. Ch3-6 のスケルトン（見出しのみ）を同一ファイルに配置する
+1c. srs-writer がインタビュー結果を project-management/interview-record.md に記録し、ユーザーに確認を求める
+1d. srs-writer がモック/サンプル/PoCを作成し、ユーザーにフィードバックを求める（UI系: ワイヤーフレーム/HTMLモック、API系: OpenAPIスニペット、データ系: ER図/サンプルJSON）。フィードバックを反映し、ユーザーが「イメージ通り」と判断するまでイテレーションする
+1e. srs-writer が process-rules/spec-template.md を参照し、インタビュー結果 + user-order.md を入力に仕様書を docs/spec/[project-name]-spec.md に作成する（Ch1-2: Foundation・Requirements、形式はsetupフェーズで選定）
+1f. srs-writer が Ch3-6 のスケルトン（見出しのみ）を同一ファイルに配置する
 1g. 仕様書の概要をユーザーに報告し承認を求める
-1h. review-agentで仕様書 Ch1-2 の品質レビュー（R1観点: R1a構造品質 + R1b表現品質）を実施し、PASS後に次へ進む
+1h. review-agentで仕様書 Ch1-2 の品質レビュー（R1観点: R1a構造品質 + R1b表現品質）を実施する
+1i. technical-authority を起動し GATE-PLANNING を判定する（プロセス規則 §9.4.1）。PASS後に次へ進む
 
 ## Phase 2: 外部依存選定（条件付き — HW/AI/Framework連携がある場合のみ）
 2a. Phase 0 の条件付きプロセス評価結果を確認する
     → HW連携・AI/LLM連携・フレームワーク要求定義のいずれも該当しない場合: Phase 3 へスキップ
-2b. 外部依存（HW/AI/フレームワーク）の評価・選定を行う
-2c. 各外部依存の requirement-spec を docs/ 配下に作成する（hw-requirement-spec, ai-requirement-spec, framework-requirement-spec）
-2d. Adapter層のI/F設計（DIPに基づく抽象化）を行う
-2e. 選定結果を project-records/decisions/ に記録する
+2b. architect を起動し、外部依存（HW/AI/フレームワーク）の評価・選定を行う
+2c. architect が各外部依存の requirement-spec を docs/ 配下に作成する（hw-requirement-spec, ai-requirement-spec, framework-requirement-spec）
+2d. architect が Adapter層のI/F設計（DIPに基づく抽象化）を行う
+2e. orchestrator を起動し、選定結果を project-records/decisions/ に記録する
 2f. ユーザーに選定結果を報告し承認を求める
+2g. technical-authority を起動し GATE-DEPENDENCY を判定する（プロセス規則 §9.4.1）
 
 ## Phase 3: 設計（仕様書 Ch1-2 承認後）
-3a. docs/spec/ の仕様書 Ch3 (Architecture) を詳細化する（レイヤー仕訳を先行実施: 全コンポーネントをEntity/UseCase/Adapter/Frameworkに分類し、Ch3冒頭に明記）
-3b. docs/spec/ の仕様書 Ch4 (Specification) を Gherkin で詳細化する
-3c. docs/spec/ の仕様書 Ch5 (Test Strategy) を定義する
-3d. docs/spec/ の仕様書 Ch6 (Design Principles Compliance) を設定する
-3e. docs/api/openapi.yaml にOpenAPI 3.0仕様を生成する
-3f. docs/security/ にセキュリティ設計を作成する
-3g. docs/observability/observability-design.md に可観測性設計（ログ・メトリクス・トレーシング・アラート）を作成する
-3h. project-management/progress/wbs.md にWBSとガントチャートを作成する
+3a. architect を起動し、docs/spec/ の仕様書 Ch3 (Architecture) を詳細化する（レイヤー仕訳を先行実施: 全コンポーネントをEntity/UseCase/Adapter/Frameworkに分類し、Ch3冒頭に明記）
+3b. architect が docs/spec/ の仕様書 Ch4 (Specification) を Gherkin で詳細化する
+3c. architect が docs/spec/ の仕様書 Ch5 (Test Strategy) を定義する
+3d. architect が docs/spec/ の仕様書 Ch6 (Design Principles Compliance) を設定する
+3e. architect が docs/api/openapi.yaml にOpenAPI 3.0仕様を生成する
+3f. security-reviewer を起動し、docs/security/ に threat-model（STRIDE）と security-architecture を作成する
+3g. architect が docs/observability/observability-design.md に可観測性設計（ログ・メトリクス・トレーシング・アラート）を作成する
+3g2. architect が docs/operations/deployment-design.md にデプロイ設計（環境定義・デプロイ手順・ロールバック・シークレット管理）を作成する
+3h. progress-monitor を起動し、project-management/progress/wbs.md にWBSとガントチャートを作成する
 3i. risk-managerでリスク台帳を project-records/risks/ に作成する
 3j. [機能安全が有効な場合] 安全分析を実施する（詳細は defect-taxonomy.md §7 参照）:
     - HARA: Ch3 詳細化の前に hazard 一覧・safety goal・ASIL/SIL 割当を実施 → project-records/safety/hara-*.md
     - safety requirement を spec-foundation Ch2 NFR に追加
     - FMEA: Ch3 確定後にコンポーネント別 failure mode 分析を実施 → project-records/safety/fmea-*.md
     - FTA: ASIL C 以上の hazard がある場合、原因の論理構造を分析 → project-records/safety/fta-*.md
-3k. review-agentで仕様書 Ch3-4・設計の品質レビュー（R2/R4/R5観点）を実施し、PASS後に次へ進む
+3k. review-agentで仕様書 Ch3-4・設計の品質レビュー（R2/R4/R5観点）を実施する
+3l. technical-authority を起動し GATE-DESIGN を判定する（プロセス規則 §9.4.1）。PASS後に次へ進む
 
 ## Phase 4: 実装
-4a. 仕様書に基づきsrc/にコードを実装する（Git worktreeで並列実装）
-4b. 可観測性設計に基づき構造化ログ・メトリクス計装・トレーシングをコードに組み込む
-4c. tests/に単体テストを作成・実行する
+4a. implementer を起動し、仕様書に基づきsrc/にコードを実装する（Git worktreeで並列実装）
+4b. implementer が可観測性設計に基づき構造化ログ・メトリクス計装・トレーシングをコードに組み込む
+4c. implementer が tests/に単体テストを作成・実行する
+4c2. implementer が deployment-design に基づき infra/ の IaC コードを実装する
 4d. review-agentで実装コードのレビュー（R2/R3/R4/R5観点）を実施し、PASS後に次へ進む
 4e. security-reviewerでSCAスキャン（npm audit等）を実行し、Critical/High脆弱性がゼロか確認する
 4f. license-checkerでライセンス確認を実施する
+4g. technical-authority を起動し GATE-IMPL を判定する（プロセス規則 §9.4.1）
 
 ## Phase 5: テスト
-5a. 結合テストを作成・実行する
-5b. システムテストを可能な範囲で作成・実行する
-5c. 性能テストを仕様書 Ch2 のNFR数値目標に基づき実行し、結果をproject-records/performance/に記録する
-5d. テスト消化曲線とdefect curveを更新する
+5a. test-engineer を起動し、結合テストを作成・実行する
+5b. test-engineer がシステムテストを可能な範囲で作成・実行する
+5c. test-engineer が性能テストを仕様書 Ch2 のNFR数値目標に基づき実行し、結果をproject-records/performance/に記録する
+5c2. [実機テストが有効な場合] field-test-engineer を起動して実機テストを実施し、feedback-classifier で分類、field-issue-analyst で原因分析と対策立案を行う（実機テスト フィードバック管理規則に従う）
+5d. progress-monitor を起動し、テスト消化曲線とdefect curveを更新する
 5e. review-agentでテストコードのレビュー（R6観点）を実施する
-5f. 品質基準を評価する
+5f. technical-authority を起動し GATE-TEST を判定する（プロセス規則 §9.4.1）
 
 ## Phase 6: 納品
 6a. review-agentで全成果物の最終レビュー（R1〜R7全観点）を実施する
     → FAILした場合: 指摘の観点に応じた該当フェーズへ戻り修正する
-6b. コンテナイメージをビルドし、infra/のIaC構成を確認する
+6b. implementer がコンテナイメージをビルドし、infra/のIaC構成を確認する
 6c. デプロイメントを実行し、スモークテストで基本動作を確認する
 6d. 監視・アラート設定が可観測性設計と一致しているか確認する
 6e. ロールバック手順を確認・文書化する
-6f. final-report.md に最終レポートを作成する
-6g. 受入テスト手順書を作成する
+6f. orchestrator を起動し、final-report.md に最終レポートを作成する
+6f2. user-manual-writer を起動し、docs/ にユーザーマニュアルを作成する
+6f3. runbook-writer を起動し、docs/operations/ に運用手順書を作成する
+6g. test-engineer が受入テスト手順書を作成する
+6g2. technical-authority を起動し GATE-DELIVERY を判定する（プロセス規則 §9.4.1）
 6h. ユーザーに完了報告する
 
 ## Phase 7: 運用・保守（条件付き — 運用・保守が有効な場合のみ）
@@ -112,7 +123,18 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
 7b. パッチ適用・セキュリティスキャンの定期実行を設定する
 7c. SLA 監視（可観測性設計に基づくアラート・ダッシュボード）を確認する
 7d. disaster-recovery-plan に基づく復旧手順の訓練を計画する
-7e. 本番 incident 発生時は incident-report を作成し、根本原因分析を実施する
+7e. 本番 incident 発生時は incident-reporter を起動し、incident-report の作成と根本原因分析を実施する
+
+## 各フェーズ完了時の共通手順（全フェーズに適用）
+Fa. kotodama-kun を起動し、当該フェーズの全 Out の用語・命名を一括チェックする
+Fb. progress-monitor を起動し、project-management/progress/session-state.json を読んで当該フェーズのトークン消費とコストを cost-log.json に追記する
+Fc. session-state.json の context_used_pct が CLAUDE.md「品質目標」のコンテキスト使用率の引継ぎ閾値に達していたら、handoff を作成してからセッションを中断する
+Fd. orchestrator を起動し、pipeline-state.md と executive-dashboard.md を更新してユーザーに報告する
+Fe. process-improver を起動し、ふりかえりと defect パターンの根本原因分析を実施する
+Ff. Fe の改善策がユーザーに承認された場合のみ、decree-writer を起動してガバナンスファイルに適用する
+Fg. 仕様書承認後にユーザーから変更要求が出た場合は、change-manager を起動して影響分析と記録を行う
+
+> framework-translation-verifier はフレームワーク文書そのものの保守用であり、本パイプラインでは起動しない。
 
 各フェーズ完了時に進捗を報告してください。
 重要な判断が必要な場合はユーザーに確認を求めてください。
