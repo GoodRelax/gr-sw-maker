@@ -67,6 +67,10 @@ IEC 61508 broadly classifies faults into deterministic and probabilistic types.
 | **Systematic Fault** | IEC 61508 | A deterministic fault caused by human error. Includes all of requirements / design / implementation. Always reproducible under the same conditions | Yes |
 | **Random Hardware Fault** | IEC 61508 | A probabilistic fault caused by physical degradation of HW (aging, radiation, etc.). Manifests only probabilistically | No (not a SW-specific concept) |
 
+> **Scope of this section:** every fault in software is systematic. That it always reproduces under the same conditions is precisely why **an event that fails to reproduce must not be closed as `cannot-reproduce` on that basis alone**. Failure to reproduce means the conditions have not been identified, not that no fault exists. Closing as `cannot-reproduce` requires the six-item reproduction-attempt report (Process Rules §9.1.4).
+>
+> Random Hardware Fault is relevant only to hardware-side events in HW-integration projects. It is not used in software defect analysis.
+
 **All SW faults are systematic faults.** Since SW does not physically degrade, random hardware faults do not exist. This means all SW faults originate from human error and are always reproducible given the same input and state. This implies that a "non-reproducible SW failure" simply means the conditions have not been sufficiently identified.
 
 ### 3.4 Terms for Recording and Management (Process Concepts)

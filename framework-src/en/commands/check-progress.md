@@ -1,5 +1,6 @@
 Check the current development progress and report the following:
 
+0. **Confirm the data exists.** If `project-management/progress/` is absent or empty, report "No progress data has been generated yet (progress-monitor creates it from the design phase onward)" and stop. Never report on data that does not exist by inferring it (MUST NOT)
 1. Load the latest data under project-management/progress/
 2. Calculate the WBS progress rate
 3. Report the current test burn-down curve values

@@ -67,6 +67,10 @@ IEC 61508 では fault を決定論的なものと確率論的なものに大別
 | **Systematic Fault** | IEC 61508 | 人間の error に起因する決定論的 fault。requirements / design / implementation の全てを含む。同じ条件で必ず再現する | Yes |
 | **Random Hardware Fault** | IEC 61508 | HW の物理的劣化（経年、放射線等）に起因する確率論的 fault。確率的にしか発現しない | No（SW 固有の概念ではない） |
 
+> **本節の適用範囲:** SW の fault はすべて Systematic である。同じ条件で必ず再現するという性質は、**再現しない事象を安易に `cannot-reproduce` として閉じてはならない**根拠になる。再現しないのは fault がないからではなく、条件を特定できていないからである。`cannot-reproduce` にするには再現試行レポート 6 項目が必須である（プロセス規則 §9.1.4）。
+>
+> Random Hardware Fault は HW 連携プロジェクトで実機側の事象を扱う場合にのみ関係する。SW の defect 分析には用いない。
+
 **SW のすべての fault は systematic fault である。** SW は物理的に劣化しないため、random hardware fault は存在しない。つまり SW の fault は必ず人間の error に起因し、同じ入力と状態で必ず再現する。これは「再現できない SW の failure は、条件の特定が不十分なだけ」ということを意味する。
 
 ### 3.4 記録・管理上の用語（プロセス概念）

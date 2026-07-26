@@ -6,15 +6,19 @@ Argument format: `{source language} {target language}` (e.g., `ja fr`, `en fr`, 
 
 ## 1. Collecting Files for Translation
 
-Collect translation targets using the following glob patterns (`{src}` = source language suffix):
+Collect translation targets from the source language tree (`{src}` = source language code):
 
-| Category | Glob Pattern |
-|----------|--------------|
-| Process rules | `process-rules/*-{src}.md` |
-| Agent definitions | `.claude/agents/*-{src}.md` |
-| Custom commands | `.claude/commands/*-{src}.md` |
-| Project instruction template | `CLAUDE.md` |
-| User order template | `user-order.md` |
+| Category | Path |
+|----------|------|
+| Process rules | `framework-src/{src}/process-rules/*.md` |
+| Agent definitions | `framework-src/{src}/agents/*.md` |
+| Custom commands | `framework-src/{src}/commands/*.md` |
+| Project instruction template | `framework-src/{src}/CLAUDE.md` |
+| User order template | `framework-src/{src}/user-order.md` |
+
+**The destination is `framework-src/{target}/`, reproducing the same directory structure.** File names do not change (no suffix is added).
+
+> `.claude/` and the top-level `process-rules/` are output of `setup.js` and are not translation targets. Translating generated files only gets them overwritten on the next `setup.js` run.
 
 ### Optional (Essays)
 

@@ -7,73 +7,72 @@
 
 ## 1. フレームワーク開発とアプリ開発の区別
 
-gr-sw-maker には 2 つの利用形態がある:
+gr-sw-maker には 2 つの利用形態がある。
 
 | | フレームワーク開発 | アプリ開発 |
 |---|---|---|
 | **目的** | フレームワーク自体のルール・エージェント定義を改定する | gr-sw-maker を使ってアプリケーションを開発する |
 | **リポジトリ** | `gr-sw-maker`（GitHub 上の原本） | `npm init gr-sw-maker` で作成したプロジェクト |
 | **作業者** | フレームワーク開発者 | アプリ開発者 |
-| **使うツール** | `create.js` / `setup.js` は使わない | `create.js`（初回）+ `setup.js`（言語選択） |
+| **編集する対象** | `framework-src/{lang}/` 配下の原本 | `setup.js` が展開した作業ファイル |
 
 ---
 
-## 2. ファイル・フォルダの位置づけ
+## 2. ディレクトリ構成
 
-各ファイル・フォルダがフレームワーク開発とアプリ開発でどう使われるかを定義する。
+**原本はすべて `framework-src/{lang}/` に置き、言語サフィックスを付けない。**
 
-### 2.1 プロジェクト指示ファイル
+```text
+framework-src/
+  ja/
+    CLAUDE.md               ... アプリ開発用テンプレート原本
+    user-order.md           ... ユーザー要求テンプレート原本
+    agents/                 ... エージェント定義原本（22）
+    commands/               ... コマンド定義原本（5）
+    process-rules/          ... プロセス規則原本（11）
+  en/                       ... 同一構成
+```
 
-| ファイル | フレームワーク開発 | アプリ開発 |
-|---|---|---|
-| `CLAUDE.md` | 直接編集。フレームワーク開発用の指示。`.gitignore`（非公開） | `setup.js` が `CLAUDE-ja/en.md` から生成。full-auto-dev 用の指示。git tracked |
-| `CLAUDE-ja.md` | 直接編集。アプリ開発用テンプレート原本（日本語） | `setup.js` で `CLAUDE.md` にコピーされる。コピー後も参考として残る |
-| `CLAUDE-en.md` | 直接編集。アプリ開発用テンプレート原本（英語） | 同上 |
+`setup.js` が選択された言語を作業位置へ展開する。
 
-**重要:** フレームワーク開発の `CLAUDE.md` と `CLAUDE-ja/en.md` は**内容が異なる**別のファイルである。`CLAUDE.md` はフレームワーク開発の作業指示、`CLAUDE-ja/en.md` はアプリ開発者に配布するテンプレート原本。
+| 原本 | 展開先 |
+|---|---|
+| `framework-src/{lang}/agents/` | `.claude/agents/` |
+| `framework-src/{lang}/commands/` | `.claude/commands/` |
+| `framework-src/{lang}/process-rules/` | `process-rules/` |
+| `framework-src/{lang}/CLAUDE.md` | `CLAUDE.md` |
+| `framework-src/{lang}/user-order.md` | `user-order.md` |
 
-### 2.2 エージェント定義・コマンド定義
+### 2.1 この構成を採る理由
 
-| ファイル | フレームワーク開発 | アプリ開発 |
-|---|---|---|
-| `.claude/agents/*-ja.md` / `*-en.md` | 直接編集。エージェント定義原本 | `setup.js` でサフィックスなしにコピーされる |
-| `.claude/agents/*.md`（サフィックスなし） | 使わない。`.gitignore` | `setup.js` が生成。git tracked |
-| `.claude/commands/*-ja.md` / `*-en.md` | 直接使用（council-review 等） | `setup.js` でサフィックスなしにコピーされる |
-| `.claude/commands/*.md`（サフィックスなし） | 使わない。`.gitignore` | `setup.js` が生成。git tracked |
+**リンクが原本ツリーと展開後ツリーの両方で解決する。** `framework-src/ja/process-rules/glossary.md` 内の `[不具合分類](defect-taxonomy.md)` は、原本ツリーでも展開後の `process-rules/` でも同じ文字列のまま正しく解決する。サフィックス方式では後者でしか解決しなかった。
 
-### 2.3 プロセス規則
+**エージェント名の衝突が構造的に起きない。** Claude Code が走査するのは `.claude/agents/` である。`framework-src/ja/agents/` はパスに `.claude/` を含まないため走査対象外となり、同名エージェントが複数登録されることがない。
 
-| ファイル | フレームワーク開発 | アプリ開発 |
-|---|---|---|
-| `process-rules/*-ja.md` / `*-en.md` | 直接編集。プロセス規則原本 | `setup.js` でサフィックスなしにコピーされる |
-| `process-rules/*.md`（サフィックスなし） | 使わない。`.gitignore` | `setup.js` が生成。git tracked |
+**パリティ検査が単純になる。**
 
-### 2.4 ユーザー要求
+```bash
+diff <(cd framework-src/ja && find . -type f | sort) \
+     <(cd framework-src/en && find . -type f | sort)
+```
 
-| ファイル | フレームワーク開発 | アプリ開発 |
-|---|---|---|
-| `user-order-ja.md` / `*-en.md` | 直接編集。テンプレート原本 | `setup.js` でサフィックスなしにコピーされる |
-| `user-order.md`（サフィックスなし） | 使わない。`.gitignore` | `setup.js` が生成。要求記入用。git tracked |
+**言語追加時に `.gitignore` を触らなくてよい。** `framework-src/fr/` を足すだけで済む。
 
-### 2.5 配布・パッケージング
-
-| ファイル | フレームワーク開発 | アプリ開発 |
-|---|---|---|
-| `create-gr-sw-maker/` | npm パッケージ本体（`package.json` + `bin/create.js`）を管理 | `npm init gr-sw-maker` で実行後、自己削除 |
-| `setup.js` | 使わない。配布物として管理 | `node setup.js <lang>` で `-ja/en.md` → `.md` を生成 |
-
-### 2.6 その他
+### 2.2 原本以外のファイル
 
 | ファイル | フレームワーク開発 | アプリ開発 |
 |---|---|---|
-| `.gitignore` | デプロイ出力 + `CLAUDE.md` + `prompt/` を除外 | `create.js` がデプロイ出力除外行を削除した版 |
-| `README.md` | 直接編集。フレームワークの説明 | `create.js` がテンプレートを生成。アプリ開発者が書き換える |
-| `README-ja.md` | 直接編集。フレームワークの説明（日本語） | なし（必要ならユーザーが作成） |
-| `project-records/` | フレームワークのレビュー記録等 | `create.js` が中身を削除。アプリの記録を蓄積 |
-| `essays/` | 直接編集。論文・調査レポート | そのまま残る（参考資料） |
-| `docs/` | 使わない | アプリ開発の補足資料置き場 |
-| `prompt/` | 作業メモ等。`.gitignore`（非公開） | 存在しない |
-| `settings.local.json` | 使用。`.gitignore` | 使用。`.gitignore` |
+| `CLAUDE.md`（ルート） | フレームワーク開発用の作業指示。`.gitignore`（非公開） | `setup.js` が展開。full-auto-dev 用の指示。git tracked |
+| `.claude/agents/*.md` 等 | `setup.js` の出力。`.gitignore` | 作業ファイル。git tracked |
+| `create-gr-sw-maker/` | npm パッケージ本体を管理 | `create.js` が削除 |
+| `setup.js` | 配布物として管理。フレームワーク側でも動作確認に使う | `node setup.js <lang>` で言語を切り替える |
+| `tools/` | 検査スクリプト群 | `create.js` が削除 |
+| `essays/` | 論文・調査レポート | `create.js` が削除 |
+| `maintenance/` | レビューと修正計画の記録 | `create.js` が削除 |
+| `README.md` / `README-ja.md` | フレームワークの説明 | `create.js` が README を生成し直す |
+| `prompt/` | 作業メモ。`.gitignore`（非公開） | 存在しない |
+
+**ルートの `CLAUDE.md` と `framework-src/{lang}/CLAUDE.md` は別のファイルである。** 前者はフレームワーク開発の作業指示、後者はアプリ開発者に配布するテンプレート原本。内容は一致しない。
 
 ---
 
@@ -85,63 +84,80 @@ gr-sw-maker には 2 つの利用形態がある:
 |---|---|
 | **実行契機** | `npm init gr-sw-maker <project-name>` |
 | **使用場面** | アプリ開発のみ |
-| **処理内容** | 1. GitHub から gr-sw-maker の tarball をダウンロード<br/>2. 指定ディレクトリに展開<br/>3. 不要ファイルを削除（`create-gr-sw-maker/`、`project-records/` の中身）<br/>4. `.gitignore` からデプロイ出力除外行を削除<br/>5. `README.md` をテンプレートで生成 |
+| **処理内容** | 1. GitHub から tarball をダウンロード（`--ref` で任意のブランチ・タグ・コミットを指定可）<br/>2. 指定ディレクトリに展開<br/>3. フレームワーク開発専用のファイルを削除（`LICENSE`, `README-ja.md`, `essays/`, `tools/`, `maintenance/`, `create-gr-sw-maker/`, `.github/`）<br/>4. `project-records/` の中身を空にする（`.gitkeep` は残す）<br/>5. `gitignore-user.template` を `.gitignore` として設置し、テンプレートを削除<br/>6. `README.md` をプロジェクト名で生成 |
+
+**`framework-src/` は削除しない。** `setup.js` の入力であり、これがないと言語切替ができなくなる。
 
 ### 3.2 setup.js
 
 | 項目 | 内容 |
 |---|---|
-| **実行契機** | `node setup.js <lang>`（`ja` または `en`） |
-| **使用場面** | アプリ開発のみ |
-| **処理内容** | 選択した言語の `-ja.md` / `-en.md` をサフィックスなしの `.md` にコピー |
-| **対象ファイル** | `CLAUDE-*.md`、`.claude/agents/*-*.md`、`.claude/commands/*-*.md`、`user-order-*.md` |
+| **実行契機** | `node setup.js [lang] [--force]` |
+| **使用場面** | アプリ開発、およびフレームワーク開発での動作確認 |
+| **処理内容** | `framework-src/{lang}/` の内容を作業位置へ展開する |
+| **上書き保護** | `CLAUDE.md` と `user-order.md` は内容が異なる場合 `*.bak` へ退避してから上書きする。`--force` で退避を省略できる |
+| **残骸の除去** | 選択言語が提供しないフレームワーク所有ファイル、および旧サフィックス方式の残骸を削除する。ユーザーが独自に追加したファイルは削除しない |
 
 ---
 
-## 4. .gitignore の二面性
+## 4. .gitignore を 2 ファイルに分ける理由
 
-`.gitignore` はフレームワークリポとアプリプロジェクトで異なる内容になる。
+`.gitignore` はフレームワークリポジトリとアプリプロジェクトで**正反対の意味**を持つ。
 
-### 4.1 フレームワークリポ版（原本）
+| パス | フレームワークリポジトリ | アプリプロジェクト |
+|---|---|---|
+| `.claude/agents/foo.md` | `setup.js` の出力。コミットしてはいけない | 作業ファイル。コミットする |
 
-```
-# === Framework repo only (create.js removes everything below this line) ===
+同じパスが逆であるため、1 つの `.gitignore` では両立できない。**2 ファイルに分けて解決する。**
 
-# Framework development private files (not distributed)
-prompt/
-CLAUDE.md
+| ファイル | 役割 |
+|---|---|
+| `.gitignore` | フレームワークリポジトリ専用。展開出力を除外する |
+| `gitignore-user.template` | アプリプロジェクト用。`create.js` が `.gitignore` として設置し、テンプレート本体を削除する |
 
-# setup.js deploy outputs
-.claude/agents/*.md
-!.claude/agents/*-ja.md
-!.claude/agents/*-en.md
-.claude/commands/*.md
-!.claude/commands/*-ja.md
-!.claude/commands/*-en.md
-process-rules/*.md
-!process-rules/*-ja.md
-!process-rules/*-en.md
-user-order.md
-```
+**従来はマーカー行と正規表現で 1 ファイルを切り分けていたが廃止した。** マーカー行の文言が `.gitignore` と `create.js` にまたがる暗黙の API になっており、文言を直すと切り落としが**エラーを出さずに**止まるためである。現在はテンプレートが欠けていれば `create.js` がその場で例外を投げる。
 
-- マーカー行（`# === Framework repo only ...`）以降が `create.js` により一括削除される
-- `CLAUDE.md`（フレームワーク開発用指示）と `prompt/` は非公開
-- デプロイ出力（サフィックスなし `.md`）を除外
-- `!*-*.md` で `-ja.md` / `-en.md` 原本は追跡対象に戻す
-
-### 4.2 アプリプロジェクト版
-
-`create.js` が `# setup.js deploy outputs` 以降の行を削除するため、サフィックスなしの `.md` が git tracked になる。
+**アンカーに注意する。** `CLAUDE.md` のように先頭スラッシュのないパターンは全階層にマッチし、`framework-src/{lang}/CLAUDE.md` まで巻き込む。ルート限定の除外は `/CLAUDE.md` と書く。
 
 ---
 
-## 5. npm publish 手順
+## 5. 改定時の手順
 
-フレームワークの新バージョンを npm に公開する手順:
+### 5.1 ja/en は同一コミットに含める（MUST）
 
-1. フレームワークの変更を全てコミット・プッシュ
-2. `create-gr-sw-maker/` 配下で `npm publish` を実行
-3. `npm init gr-sw-maker <test-project>` で E2E テストを実施
-4. `node setup.js ja` および `node setup.js en` の動作を確認
+**片方の言語だけを変更したコミットを作ってはならない。** 分けると、次に触る人がどちらが正でどちらが未反映かを判断できなくなり、ドリフトが恒久化する。
 
-**注意:** npm に publish されるのは `create-gr-sw-maker/` パッケージのみ。gr-sw-maker 本体は npm に登録しない（GitHub からの tarball ダウンロードで配布）。
+`tools/check-parity.mjs` が構造の一致を検査し、pre-commit hook が片側だけのコミットを拒否する。
+
+### 5.2 Form Block のタグ名を突き合わせる
+
+文書管理規則を改定した場合、**§4.2 の実例に現れるタグ名が §9 の Fields 表に実在することを確認する。** 実例だけに存在するタグ名は、エージェントがそれを正として出力し、誰も読めない出力を生む。
+
+`tools/check-tagnames.mjs` がこの突合を行う。
+
+### 5.3 参照先の節が実在することを確認する
+
+エージェント定義の「読むべき規則の節」に節番号を書いた場合、その節が実在することを確認する。存在しない節を指すと、エージェントは代わりに規則全文を読む。
+
+### 5.4 改定の反映範囲
+
+| 改定した文書 | 併せて確認する対象 |
+|---|---|
+| `agent-list.md` | 全エージェント定義の frontmatter、`full-auto-dev-document-rules.md` §7 / §11 |
+| `full-auto-dev-document-rules.md` §7 | `agent-list.md` §2 のオーナーシップ、各エージェントの Out |
+| `review-standards.md` | `review-agent` の適用観点表、`full-auto-dev-process-rules.md` §9.2 |
+| `prompt-structure.md` | 全 22 体のエージェント定義 |
+| エージェントの新設・削除 | `agent-list.md` §5 の「新規エージェント追加手順」に従い 6 手順すべてを実施する |
+
+---
+
+## 6. npm publish 手順
+
+1. フレームワークの変更をすべてコミット・プッシュする
+2. `create-gr-sw-maker/` 配下で `npm publish` を実行する
+3. `npm init gr-sw-maker <test-project>` で E2E テストを実施する
+4. 生成されたプロジェクトで `node setup.js ja` および `node setup.js en` の動作を確認する
+
+**注意:** npm に publish されるのは `create-gr-sw-maker` パッケージのみ。gr-sw-maker 本体は npm に登録せず、GitHub からの tarball ダウンロードで配布する。
+
+`create.js` の修正はパッケージの中身そのものであるため、**再 publish しなければユーザーに届かない。**

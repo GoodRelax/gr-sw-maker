@@ -8,13 +8,17 @@ gr-sw-maker フレームワーク文書を $ARGUMENTS に翻訳してくださ�
 
 以下の glob パターンで翻訳対象を収集する（`{src}` = ソース言語サフィックス）:
 
-| 種別 | glob パターン |
-|------|--------------|
-| プロセス規則 | `process-rules/*-{src}.md` |
-| エージェント定義 | `.claude/agents/*-{src}.md` |
-| カスタムコマンド | `.claude/commands/*-{src}.md` |
-| プロジェクト指示テンプレート | `CLAUDE.md` |
-| ユーザー要求テンプレート | `user-order.md` |
+| 種別 | パス |
+|------|------|
+| プロセス規則 | `framework-src/{src}/process-rules/*.md` |
+| エージェント定義 | `framework-src/{src}/agents/*.md` |
+| カスタムコマンド | `framework-src/{src}/commands/*.md` |
+| プロジェクト指示テンプレート | `framework-src/{src}/CLAUDE.md` |
+| ユーザー要求テンプレート | `framework-src/{src}/user-order.md` |
+
+**出力先は `framework-src/{target}/` であり、同一のディレクトリ構成をそのまま作る。** ファイル名は変えない（サフィックスを付けない）。
+
+> `.claude/` 配下と `process-rules/` 直下は `setup.js` の出力であり翻訳対象ではない。生成物を翻訳しても、次回の `setup.js` 実行で上書きされる。
 
 ### 任意（論文）
 

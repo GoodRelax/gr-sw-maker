@@ -85,7 +85,7 @@
 ## セキュリティ要求
 
 - OWASP Top 10 への対策を必須とする
-- 認証にはJWTを使用する
+- 認証方式: [例: JWT / セッション Cookie / OAuth 2.0 + OIDC]。**setup フェーズで選定し、決定を記録する。** 方式によって脅威モデルが変わるため、既定値を無条件に採らない
 - 入力値は必ずバリデーションする
 - SQLインジェクション対策としてパラメタライズドクエリを使用する
 - SAST: CodeQL（GitHub Actions で自動実行）
@@ -107,7 +107,7 @@ setup フェーズでユーザーと合意する。全エージェントおよ�
 | セキュリティ脆弱性 | Critical: 0, High: 0 | SAST/SCA スキャン結果 |
 | レビュー指摘 | Critical: 0, High: 0 | review-agent の出力 |
 | コーディング規約準拠 | 違反 0 件 | Linter 実行結果 |
-| コスト予算アラート閾値 | 予算の [例: 80%] | ユーザー通知をトリガー |
+| コスト予算アラート閾値 | 予算の [記入必須: 例 80%] | ユーザー通知をトリガー。**プレースホルダのままにしてはならない（MUST NOT）。** 未記入だと progress-monitor が比較対象を持たず、アラートが恒久的に発火しない |
 | パッチ対応時間 | Critical: [例: 48h], High: [例: 1週間] | operation フェーズのみ |
 
 ## APIドキュメント
@@ -198,13 +198,15 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 - 運用・保守: [有効/無効] - 理由: [記載]
 - 実機テスト: [有効/無効] - 理由: [記載]
 
-## ドキュメントの基本形式 (MCBSMD)
+## ドキュメントの記法規約（常時適用）
 
-- Output the entire content **as a single Markdown code block** so it can be copied in one go.
-- **Enclose the entire Markdown with six backticks ` `````` ` at the beginning and end.** Specify its language as markdown.
-- **Use these six backticks only once as the outermost enclosure.**
-- **Never output speculation or fabrications.** If something is unclear or requires investigation, explicitly state so.
-- This method is called **MCBSMD** (Multiple Code Blocks in a Single Markdown)
+**すべての生成文書に適用する。** 以下は文書の中身の書き方であり、外側の囲みとは独立している。
+
+- **推測や創作を出力してはならない（MUST NOT）。** 不明な点や調査が必要な点は、その旨を明記する
+- 図は原則 Mermaid を用いる。Mermaid で表現できない場合のみ PlantUML を用いる
+- コードと図はそれぞれ三重バッククォートのコードブロックに入れ、言語またはファイル種別を指定する
+- 各コードブロック・図の直前に `**タイトル:**` 形式の見出しを置く
+- 説明はコードブロックの外に、ブロック直後の空行を挟んで書く
 
 ### Code and Diagram Block Rules
 
@@ -247,3 +249,13 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
      > $$
      > E = mc^2
      > $$
+
+## ドキュメントの外殻規約（要求時のみ適用）
+
+**ユーザーが「1 回でコピーできる形」を明示的に要求した場合にのみ適用する。**
+
+- 文書全体を六重バッククォート ` `````` ` で囲み、言語を markdown と指定する
+- 六重バッククォートは最外殻に 1 回だけ使う
+- この形式を **MCBSMD**（Multiple Code Blocks in a Single Markdown）と呼ぶ
+
+> **リポジトリにコミットする文書には外殻を付けない（MUST NOT）。** 六重バッククォートで囲んだまま `.md` として保存すると、GitHub では全文が 1 つのコードブロックとして表示され、見出しも表もリンクも機能しなくなる。外殻はチャット上で受け渡すときの梱包であって、文書の一部ではない。

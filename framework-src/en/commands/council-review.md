@@ -299,6 +299,6 @@ Output structure:
 1. Phase 0 results (translation consistency check summary)
 2. Sub-agent results summary (A/B results)
 3. Main council review results (Expert 1-4 results)
-4. Cross-check results (X01-X18 each PASS/FAIL)
+4. Cross-check results (**for each pair defined in the Expert 4 cross-check table**, PASS/FAIL)
 5. Consolidated findings list
 6. Overall judgment

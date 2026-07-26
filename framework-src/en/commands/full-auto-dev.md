@@ -36,6 +36,8 @@ Execute the following phases sequentially:
     → If applicable: Add certification acquisition tasks to the WBS and plan submission document creation
 0n. Evaluate necessity of operation & maintenance (production environment operation, SLA guarantees, post-release maintenance)
     → If applicable: Enable the operation phase and include RPO/RTO and monitoring architecture in the design phase
+0n2. Evaluate whether field testing is required (HW integration enabled and device operation must be confirmed with the user present)
+    -> If applicable: activate field-test-engineer / feedback-classifier / field-issue-analyst in the testing phase
 0o. Report evaluation results to the user and request confirmation on adding conditional processes
 
 ## Phase 1: Planning (Interview & Specification)

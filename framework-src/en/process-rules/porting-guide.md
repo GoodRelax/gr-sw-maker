@@ -14,71 +14,70 @@ The following are AI-platform-independent. Use them as-is:
 
 | Path | Content |
 |---|---|
-| `docs/` | Specifications and design documents (generated artifacts) |
-| `src/` | Source code |
-| `tests/` | Test code |
-| `infra/` | IaC code |
-| `project-management/` | Progress and WBS |
-| `project-records/` | Reviews, decisions, and risk records |
-| `process-rules/glossary-en.md` | Glossary |
-| `process-rules/defect-taxonomy-en.md` | Defect taxonomy |
-| `process-rules/review-standards-en.md` | Review standards (R1-R7) |
-| `process-rules/spec-template-*.md` | Specification templates |
-| `process-rules/prompt-structure-en.md` | Prompt structure conventions (S0-S6) |
-| `user-order.md` | User requirements (3-question format) |
-| `.mcp.json` | MCP configuration (open standard) |
+| `framework-src/{lang}/process-rules/glossary.md` | Glossary |
+| `framework-src/{lang}/process-rules/defect-taxonomy.md` | Defect taxonomy |
+| `framework-src/{lang}/process-rules/review-standards.md` | Review standards (R1-R7) |
+| `framework-src/{lang}/process-rules/spec-template.md` | Specification template |
+| `framework-src/{lang}/process-rules/prompt-structure.md` | Prompt structure conventions (S0-S6) |
+| `framework-src/{lang}/user-order.md` | User requirements (3-question format) |
+
+> **Directories of generated output (`docs/`, `src/`, `tests/`, `infra/`, `project-management/`, `project-records/`) are not listed here.** They are not what gets ported; they are where the ported process writes. What porting asks is whether the rules and prompts carry over, not whether the output directories are compatible.
 
 ### Bulk Replacement (Vendor Names, Model Names, Paths)
 
 | File | Replacement Target |
 |---|---|
-| `process-rules/full-auto-dev-process-rules-en.md` | "Claude Code", "Agent Teams", model names (Opus/Sonnet/Haiku) |
-| `process-rules/full-auto-dev-document-rules-en.md` | Paths `.claude/agents/`, `.claude/commands/` |
-| `process-rules/agent-list-en.md` | Model names in the model assignment table |
+| `framework-src/{lang}/process-rules/full-auto-dev-process-rules.md` | "Claude Code", "Agent Teams", model names |
+| `framework-src/{lang}/process-rules/full-auto-dev-document-rules.md` | Paths `.claude/agents/`, `.claude/commands/` |
+| `framework-src/{lang}/process-rules/agent-list.md` | Model names in the model assignment table |
+
+> **The model assignments are as of 2026-03.** Models are superseded over time; when porting, substitute the latest equivalent available on the target platform.
 
 ### Format Conversion Required
 
 | Type | Current Path | Conversion Details |
 |---|---|---|
-| Project instruction file | `CLAUDE.md` | Rename and move to the target platform's instruction file |
-| Agent definitions (see agent-list §1 for count, x 2 languages) | `.claude/agents/*-ja.md`, `*-en.md` | Select language -> Rename -> Convert frontmatter (YAML) to target format. Body text (S0-S6) can be reused as-is |
-| Custom commands (see `.claude/commands/` for count, x 2 languages) | `.claude/commands/*-ja.md`, `*-en.md` | Select language -> Rename -> Convert to target platform's execution method |
+| Project instruction file | `framework-src/{lang}/CLAUDE.md` | Rename and move to the target platform's instruction file |
+| Agent definitions (see agent-list §1 for count) | `framework-src/{lang}/agents/*.md` | Convert the frontmatter (YAML) to the target format. Body text (S0-S6) is reused as-is |
+| Custom commands | `framework-src/{lang}/commands/*.md` | Convert to the target platform's execution method |
 | Configuration file | `.claude/settings*.json` | Create new file in the target platform's configuration format |
 
-## Agent and Command Language Selection
+## Language Selection for Agents and Commands
 
-The framework provides agent definitions (`.claude/agents/`) and custom commands (`.claude/commands/`) as Japanese-English pairs. When deploying to a project, choose from the following 4 options and rename to `.md` without a suffix. Options 3 and 4 (translation) can be executed with the `/translate-framework` command (`.claude/commands/translate-framework-ja.md`).
+The framework ships its originals as two trees, `framework-src/ja/` and `framework-src/en/`. `setup.js` deploys the selected language to the working locations.
 
-**Claude Code derives the agent name from the file name** (`orchestrator-ja.md` -> agent name `orchestrator-ja`). For correct operation in a project, `orchestrator.md` without a suffix is required.
+**Claude Code takes the agent name from the `name:` field in the frontmatter.** It is not derived from the file name. The originals therefore carry no suffix to begin with, and no rename is needed at deploy time.
 
-### Options
+### Choosing a Language
 
-| # | Operation | Use Case | Procedure |
-|:-:|------|------------|------|
-| 1 | Rename `-ja.md` | Japanese project | `orchestrator-ja.md` -> `orchestrator.md` |
-| 2 | Rename `-en.md` | English project | `orchestrator-en.md` -> `orchestrator.md` |
-| 3 | Translate `-ja.md` | Other-language project based on Japanese | `orchestrator-ja.md` -> Translate -> `orchestrator.md` |
-| 4 | Translate `-en.md` | Other-language project based on English | `orchestrator-en.md` -> Translate -> `orchestrator.md` |
+| # | Operation | Use case |
+|:-:|-----------|----------|
+| 1 | `node setup.js ja` | Japanese project |
+| 2 | `node setup.js en` | English project |
+| 3 | `/translate-framework ja {lang}` followed by `node setup.js {lang}` | Another language, based on Japanese |
+| 4 | `/translate-framework en {lang}` followed by `node setup.js {lang}` | Another language, based on English |
 
-### Deployment Procedure
+`/translate-framework` reads `framework-src/{src}/` and creates a new `framework-src/{target}/`.
 
-```bash
-# Example: For a Japanese project (Option 1)
-cd .claude/agents/
-for f in *-ja.md; do cp "$f" "${f%-ja.md}.md"; done
+### On the Target Platform
 
-cd ../commands/
-for f in *-ja.md; do cp "$f" "${f%-ja.md}.md"; done
-```
+Even when the target platform has no `.claude/agents/`, **the structure of the original tree `framework-src/{lang}/` carries over unchanged.** Only the deployment target has to follow the conventions of the platform.
 
-> **Note:** After renaming, you may either keep or delete the `-ja.md` / `-en.md` files as templates. If keeping them, add them to `.gitignore` to avoid confusion.
+> **Note:** `.claude/` and the top-level `process-rules/` are output of `setup.js`, not originals. What to edit when porting is the `framework-src/{lang}/` side.
 
-### Design Rationale
+---
 
-- During framework distribution, both languages have explicit suffixes (`-ja.md` / `-en.md`)
-- During project execution, the suffix-free (`.md`) file is the sole active entity
-- This allows the project to maintain document management rule section 12: "primary language = no suffix"
-- The framework does not force a decision on whether English or Japanese is the default
+## Mechanisms Specific to Claude Code
+
+The following depend on Claude Code features. **They may be omitted when porting to another platform.** The process still holds without them; what is lost is the automated checking.
+
+| Mechanism | Purpose | Substitute when omitted |
+|---|---|---|
+| `tools/gate-guard.mjs` (`PreToolUse` hook) | Mechanically refuses writes to `src/` before a gate has passed | Manual confirmation by a human or an agent |
+| `tools/session-meter.mjs` (`statusLine`) | Records context usage and cost into `session-state.json` | Switch cost tracking to manual recording |
+| `.claude/settings.json` | Where the two above are registered | Not needed |
+
+**When omitted, the cost budget alert and gate enforcement do not operate.** State that in the project's CLAUDE.md equivalent and decide on a substitute.
 
 ---
 
@@ -176,7 +175,7 @@ Instruct the target AI as follows:
 
 ```
 This repository is a full-auto-dev framework for Claude Code.
-Follow the conversion specifications in process-rules/porting-guide-en.md
+Follow the conversion specifications in framework-src/{lang}/process-rules/porting-guide.md
 and convert for [target platform name].
 
 1. Select the language for agents and commands (project primary language: [ja/en/other])

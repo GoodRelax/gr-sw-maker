@@ -14,71 +14,70 @@
 
 | パス | 内容 |
 |---|---|
-| `docs/` | 仕様書・設計書（生成済み成果物） |
-| `src/` | ソースコード |
-| `tests/` | テストコード |
-| `infra/` | IaCコード |
-| `project-management/` | 進捗・WBS |
-| `project-records/` | レビュー・意思決定・リスク記録 |
-| `process-rules/glossary-ja.md` | 用語集 |
-| `process-rules/defect-taxonomy-ja.md` | 不具合分類 |
-| `process-rules/review-standards-ja.md` | レビュー基準（R1-R7） |
-| `process-rules/spec-template-*.md` | 仕様テンプレート |
-| `process-rules/prompt-structure-ja.md` | プロンプト構造規約（S0-S6） |
-| `user-order.md` | ユーザー要求（3問形式） |
-| `.mcp.json` | MCP設定（オープン標準） |
+| `framework-src/{lang}/process-rules/glossary.md` | 用語集 |
+| `framework-src/{lang}/process-rules/defect-taxonomy.md` | 不具合分類 |
+| `framework-src/{lang}/process-rules/review-standards.md` | レビュー観点規約（R1-R7） |
+| `framework-src/{lang}/process-rules/spec-template.md` | 仕様テンプレート |
+| `framework-src/{lang}/process-rules/prompt-structure.md` | プロンプト構造規約（S0-S6） |
+| `framework-src/{lang}/user-order.md` | ユーザー要求（3問形式） |
+
+> **生成物のディレクトリ（`docs/`, `src/`, `tests/`, `infra/`, `project-management/`, `project-records/`）は本表に含めない。** これらは移植の対象ではなく、移植後のプロセスが出力する先である。移植で問われるのは「規則とプロンプトがそのまま使えるか」であって、出力先ディレクトリの互換性ではない。
 
 ### 一括置換で対応（ベンダー名・モデル名・パス）
 
 | ファイル | 置換対象 |
 |---|---|
-| `process-rules/full-auto-dev-process-rules-ja.md` | "Claude Code"、"Agent Teams"、モデル名（Opus/Sonnet/Haiku） |
-| `process-rules/full-auto-dev-document-rules-ja.md` | `.claude/agents/`、`.claude/commands/` のパス |
-| `process-rules/agent-list-ja.md` | モデル割当表のモデル名 |
+| `framework-src/{lang}/process-rules/full-auto-dev-process-rules.md` | "Claude Code"、"Agent Teams"、モデル名 |
+| `framework-src/{lang}/process-rules/full-auto-dev-document-rules.md` | `.claude/agents/`、`.claude/commands/` のパス |
+| `framework-src/{lang}/process-rules/agent-list.md` | モデル割当表のモデル名 |
+
+> **モデル名は 2026-03 時点の割当である。** モデルは更新されるため、移植時は対象プラットフォームで利用可能な最新の対応モデルに読み替えること。
 
 ### フォーマット変換が必要
 
 | 種別 | 現在のパス | 変換内容 |
 |---|---|---|
-| プロジェクト指示ファイル | `CLAUDE.md` | 対象プラットフォームの指示ファイルにリネーム・移動 |
-| エージェント定義（本数は agent-list §1 参照 × 2言語） | `.claude/agents/*-ja.md`, `*-en.md` | 言語選択 → リネーム → フロントマター（YAML）を対象形式に変換。本文（S0-S6）は流用 |
-| カスタムコマンド（本数は `.claude/commands/` 参照 × 2言語） | `.claude/commands/*-ja.md`, `*-en.md` | 言語選択 → リネーム → 対象プラットフォームの実行方式に変換 |
+| プロジェクト指示ファイル | `framework-src/{lang}/CLAUDE.md` | 対象プラットフォームの指示ファイルにリネーム・移動 |
+| エージェント定義（本数は agent-list §1 参照） | `framework-src/{lang}/agents/*.md` | frontmatter（YAML）を対象形式に変換。本文（S0-S6）は流用 |
+| カスタムコマンド | `framework-src/{lang}/commands/*.md` | 対象プラットフォームの実行方式に変換 |
 | 設定ファイル | `.claude/settings*.json` | 対象プラットフォームの設定形式で新規作成 |
 
 ## エージェント・コマンドの言語選択
 
-フレームワークはエージェント定義（`.claude/agents/`）とカスタムコマンド（`.claude/commands/`）を日英ペアで提供する。プロジェクトにデプロイする際、以下の4択から選択してサフィックスなしの `.md` にリネームする。選択肢3・4（翻訳）は `/translate-framework` コマンド（`.claude/commands/translate-framework-ja.md`）で実行できる。
+フレームワークは原本を `framework-src/ja/` と `framework-src/en/` の 2 ツリーで提供する。`setup.js` が選択した言語を作業位置へ展開する。
 
-**Claude Code はファイル名からエージェント名を導出する**（`orchestrator-ja.md` → エージェント名 `orchestrator-ja`）。プロジェクトで正しく動作させるには、サフィックスなしの `orchestrator.md` が必要。
+**Claude Code はエージェント名を frontmatter の `name:` フィールドから取得する。** ファイル名からは導出しない。したがって原本のファイル名は最初からサフィックスなしでよく、展開時のリネームは不要である。
 
-### 選択肢
+### 言語の選び方
 
-| # | 操作 | ユースケース | 手順 |
-|:-:|------|------------|------|
-| 1 | `-ja.md` をリネーム | 日本語プロジェクト | `orchestrator-ja.md` → `orchestrator.md` |
-| 2 | `-en.md` をリネーム | 英語プロジェクト | `orchestrator-en.md` → `orchestrator.md` |
-| 3 | `-ja.md` を翻訳 | 日本語ベースで他言語プロジェクト | `orchestrator-ja.md` → 翻訳 → `orchestrator.md` |
-| 4 | `-en.md` を翻訳 | 英語ベースで他言語プロジェクト | `orchestrator-en.md` → 翻訳 → `orchestrator.md` |
+| # | 操作 | ユースケース |
+|:-:|------|------------|
+| 1 | `node setup.js ja` | 日本語プロジェクト |
+| 2 | `node setup.js en` | 英語プロジェクト |
+| 3 | `/translate-framework ja {lang}` の後に `node setup.js {lang}` | 日本語ベースで他言語プロジェクト |
+| 4 | `/translate-framework en {lang}` の後に `node setup.js {lang}` | 英語ベースで他言語プロジェクト |
 
-### デプロイ手順
+`/translate-framework` は `framework-src/{src}/` を読み、`framework-src/{target}/` を新たに作る。
 
-```bash
-# 例: 日本語プロジェクトの場合（選択肢1）
-cd .claude/agents/
-for f in *-ja.md; do cp "$f" "${f%-ja.md}.md"; done
+### 移植先での扱い
 
-cd ../commands/
-for f in *-ja.md; do cp "$f" "${f%-ja.md}.md"; done
-```
+移植先プラットフォームが `.claude/agents/` を持たない場合でも、**原本ツリー `framework-src/{lang}/` の構造はそのまま使える。** 展開先だけを対象プラットフォームの規約に合わせればよい。
 
-> **注意:** リネーム後、`-ja.md` / `-en.md` はテンプレートとして残しても、削除してもよい。残す場合は `.gitignore` に追加して混乱を防ぐこと。
+> **注意:** `.claude/` 配下と `process-rules/` 直下は `setup.js` の出力であり、原本ではない。移植時に編集すべきは `framework-src/{lang}/` 側である。
 
-### 設計根拠
+---
 
-- フレームワーク配布時は両言語に明示サフィックスを付与する（`-ja.md` / `-en.md`）
-- プロジェクト実行時はサフィックスなし（`.md`）が唯一の実体となる
-- これにより文書管理規則 §12「主言語=サフィックスなし」をプロジェクト側で維持できる
-- 英語 vs 日本語のどちらがデフォルトかという判断をフレームワーク側で強制しない
+## Claude Code 固有の機構
+
+以下は Claude Code の機能に依存する。**他プラットフォームへ移植する際は省略してよい。** 省略してもプロセスは成立し、失われるのは自動検査だけである。
+
+| 機構 | 用途 | 省略時の代替 |
+|---|---|---|
+| `tools/gate-guard.mjs`（`PreToolUse` フック） | ゲート未通過での `src/` 書込みを機械的に拒否する | 人間またはエージェントによる手動確認 |
+| `tools/session-meter.mjs`（`statusLine`） | コンテキスト使用率とコストを `session-state.json` に記録する | コスト追跡を手動記録に切り替える |
+| `.claude/settings.json` | 上記 2 つの登録先 | 不要 |
+
+**省略した場合、コスト予算アラートとゲート強制は働かない。** その旨をプロジェクトの CLAUDE.md 相当ファイルに明記し、代替手段を決めること。
 
 ---
 
@@ -176,7 +175,7 @@ for f in *-ja.md; do cp "$f" "${f%-ja.md}.md"; done
 
 ```
 このリポジトリは Claude Code 用の全自動開発フレームワークである。
-process-rules/porting-guide-ja.md の変換仕様に従い、
+framework-src/{lang}/process-rules/porting-guide.md の変換仕様に従い、
 [対象プラットフォーム名] 用に変換せよ。
 
 1. エージェント・コマンドの言語を選択する（本プロジェクトの主言語: [ja/en/他]）

@@ -133,6 +133,33 @@ flowchart TD
 
 ## 6. Gate Conditions
 
+### 6.0 The Three Terminals and Where a Failed Gate Sends It Back
+
+A field-issue does not only end at `verified`. **There are three terminals.**
+
+| Terminal | Condition | Metric aggregation |
+|----------|-----------|--------------------|
+| `verified` | Fixed, and confirmed by the user on the device | Included |
+| `rejected` | Judged to be behavior as specified, not a defect | Excluded |
+| `cannot-reproduce` | Reproduction was attempted exhaustively and did not occur | Excluded |
+
+**Closing as `cannot-reproduce` requires the six-item reproduction-attempt report (MUST):** attempt count, environment, input conditions, difference from the original report, how non-reproduction was confirmed, and the reopen condition. If even one is missing, the ticket cannot terminate and stays at `reported`.
+
+**Reopening is possible from all three terminals.** A design in which a closed judgment cannot be overturned makes a wrong judgment permanent.
+
+**Where a failed gate sends the ticket back:**
+
+| Gate not satisfied | Sent back to | Why |
+|--------------------|--------------|-----|
+| §6.1 classification cannot be settled | `reported` (field-test-engineer) | Not enough information. Collect more logs and reproduction steps |
+| §6.3 root cause cannot be identified | Stays at `in-analysis` | Never advance to `cause-identified` on a guess |
+| §6.5 solutions cannot be narrowed to one | Stays at `in-planning` | Enumerate every alternative and ask the user for direction |
+| §6.8 spec review FAILs | `spec-updated` (srs-writer / architect) | The specification correction is insufficient |
+| §6.10 code review FAILs | `fixed` (implementer) | The implementation fix is insufficient |
+| §6.12 field verification is rejected | Raise a new ticket at `reported` | Close the original and track the new behavior separately |
+
+**Never advance without deciding where it goes back (MUST NOT).** When the destination cannot be determined, report to orchestrator and ask.
+
 Each status transition MUST satisfy the following gate conditions.
 
 ### 6.1 reported → classified

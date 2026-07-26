@@ -85,7 +85,7 @@ Select specification format based on project scale:
 ## Security Requirements
 
 - Countermeasures against OWASP Top 10 are mandatory
-- Use JWT for authentication
+- Authentication method: [e.g., JWT / session cookie / OAuth 2.0 + OIDC]. **Select it during the setup phase and record the decision.** The threat model changes with the method, so never adopt a default unconditionally
 - Always validate input values
 - Use parameterized queries as SQL injection countermeasure
 - SAST: CodeQL (auto-executed in GitHub Actions)
@@ -107,7 +107,7 @@ Agreed with the user during setup. All agents and quality gates reference this s
 | Security vulnerabilities | Critical: 0, High: 0 | SAST/SCA scan results |
 | Review findings | Critical: 0, High: 0 | review-agent output |
 | Coding convention compliance | 0 violations | Linter execution results |
-| Cost budget alert threshold | [e.g., 80%] of budget | Triggers user notification |
+| Cost budget alert threshold | [REQUIRED: e.g. 80%] of budget | Triggers user notification. **MUST NOT be left as a placeholder.** Unfilled, progress-monitor has nothing to compare against and the alert never fires |
 | Patch response time | Critical: [e.g., 48h], High: [e.g., 1 week] | operation phase only |
 
 ## API Documentation
@@ -198,13 +198,15 @@ Enable only when applicable conditions exist:
 - Operations and maintenance: [enabled/disabled] - Reason: [describe]
 - Field testing: [enabled/disabled] - Reason: [describe]
 
-## Document Base Format (MCBSMD)
+## Document Notation Rules (always in effect)
 
-- Output the entire content **as a single Markdown code block** so it can be copied in one go.
-- **Enclose the entire Markdown with six backticks ` `````` ` at the beginning and end.** Specify its language as markdown.
-- **Use these six backticks only once as the outermost enclosure.**
-- **Never output speculation or fabrications.** If something is unclear or requires investigation, explicitly state so.
-- This method is called **MCBSMD** (Multiple Code Blocks in a Single Markdown)
+**These apply to every generated document.** They govern the content of a document and are independent of any outer wrapper.
+
+- **Never output speculation or fabrication (MUST NOT).** Where something is unclear or needs investigation, say so explicitly
+- Use Mermaid for diagrams as a rule. Use PlantUML only when the diagram cannot be expressed in Mermaid
+- Put code and diagrams each in their own triple-backtick block and specify a language or file type
+- Place a `**title:**` heading immediately before each code or diagram block
+- Write the explanation outside the block, after a blank line following it
 
 ### Code and Diagram Block Rules
 
@@ -247,3 +249,13 @@ Enable only when applicable conditions exist:
      > $$
      > E = mc^2
      > $$
+
+## Document Wrapper Rule (applies only on request)
+
+**Applies only when the user explicitly asks for a form that can be copied in one go.**
+
+- Wrap the whole document in six backticks ` `````` ` and specify the language as markdown
+- Use the six backticks exactly once, as the outermost enclosure
+- This form is called **MCBSMD** (Multiple Code Blocks in a Single Markdown)
+
+> **Never apply the wrapper to a document committed to the repository (MUST NOT).** Saved as `.md` while still wrapped in six backticks, GitHub renders the entire file as one code block and headings, tables and links all stop working. The wrapper is packaging for handing the text over in chat, not part of the document.
