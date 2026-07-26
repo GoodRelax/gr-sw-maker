@@ -75,19 +75,19 @@ Select specification format based on project scale:
 ## Coding Standards
 
 - [Project-specific rules]
-- Follow ESLint configuration
+- Linter: [e.g. ESLint (JS/TS) / Ruff (Python) / clippy (Rust)]. **Select it during the setup phase according to the language and record the decision**
 - Add JSDoc comments to all public functions
 - Handle errors explicitly
-- Use structured logging (JSON format) (console.log is prohibited)
+- Log output: [e.g. structured logging (JSON), `console.log` prohibited (long-running service) / not applicable, stdout is the deliverable (CLI)]. Same as above
 - **Naming is sacred:** Generic meaningless words such as `type`, `data`, `info`, `value` are prohibited. Names must convey "what it is" at a glance. Qualify the type with a domain prefix (e.g., `status` → `decision_status`)
 - **AI/LLM Prompt Placement Principle:** Product prompts go under `src/` (equivalent to code). Project-driving prompts go under `.claude/` (meta layer). Do not mix them
 
 ## Security Requirements
 
-- Countermeasures against OWASP Top 10 are mandatory
+- Threat classification to apply: [e.g. OWASP Top 10 (web) / input validation and path traversal (CLI, library)]. **Select it during the setup phase and record the decision.** Do not apply web-derived items mechanically to a project with no such attack surface
 - Authentication method: [e.g., JWT / session cookie / OAuth 2.0 + OIDC]. **Select it during the setup phase and record the decision.** The threat model changes with the method, so never adopt a default unconditionally
 - Always validate input values
-- Use parameterized queries as SQL injection countermeasure
+- SQL injection: use parameterized queries where a persistent store is involved. **Where none is, record the decision that it does not apply**
 - SAST: CodeQL (auto-executed in GitHub Actions)
 - SCA: npm audit / Snyk (must run when adding dependencies)
 - Secret scanning: git-secrets or truffleHog (pre-commit hook)
@@ -107,18 +107,20 @@ Agreed with the user during setup. All agents and quality gates reference this s
 | Security vulnerabilities | Critical: 0, High: 0 | SAST/SCA scan results |
 | Review findings | Critical: 0, High: 0 | review-agent output |
 | Coding convention compliance | 0 violations | Linter execution results |
+| Cost budget | [REQUIRED: e.g. 50 USD] | The denominator of the alert threshold. Copy it into `budget_usd` in cost-log.json. **Left empty, the relative threshold below has nothing to compare against** |
 | Cost budget alert threshold | [REQUIRED: e.g. 80%] of budget | Triggers user notification. **MUST NOT be left as a placeholder.** Unfilled, progress-monitor has nothing to compare against and the alert never fires |
 | Context handoff threshold | [REQUIRED: e.g. 80%] | On reaching it, create a handoff and interrupt the session. Compared against `context_used_pct` in session-state.json |
 | Patch response time | Critical: [e.g., 48h], High: [e.g., 1 week] | operation phase only |
 
 ## API Documentation
 
-- Output in OpenAPI 3.0 format under docs/api/
+- API specification: [e.g. OpenAPI 3.0 under docs/api/ (when an HTTP API exists) / not applicable (CLI, library, batch)]. **Decide during the setup phase and record the decision**
 - architect agent generates simultaneously with spec Ch3 elaboration
 - After implementation, test-engineer verifies consistency with endpoints
 
 ## Observability Requirements
 
+- Scope of observability: [e.g. long-running service (everything below) / local execution (stdout, stderr and exit codes only)]. **Select it during the setup phase and record the decision**
 - Logging: structured JSON format, 4 levels: DEBUG/INFO/WARN/ERROR
 - Metrics: instrument RED (Rate/Error/Duration) metrics on all APIs
 - Tracing: request tracing with OpenTelemetry
