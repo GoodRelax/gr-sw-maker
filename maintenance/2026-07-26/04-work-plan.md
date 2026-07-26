@@ -242,7 +242,7 @@ node setup.js ja          # 言語切替で残骸が残らないこと
 | 7-1 | `tools/gate-guard.mjs` | 品質ゲートの機械検証（`PreToolUse`） | 約 150 行 |
 | 7-2 | `tools/session-meter.mjs` | statusLine。context / cost を `session-state.json` に永続化 | 約 40 行 |
 | 7-3 | `tools/check-parity.mjs` | ja/en ペアの構造一致検査 | 約 80 行 |
-| 7-4 | `tools/check-roster.mjs` | エージェント台帳の整合 | 約 50 行 |
+| 7-4 | `tools/check-roster.mjs` | エージェント台帳の整合。あわせて `review-standards` の R ID 集合と `review-agent` の観点表を突合する | 約 70 行 |
 | 7-5 | `tools/check-links.mjs` | デッドリンク走査 | 約 60 行 |
 | 7-6 | `tools/check-tagnames.mjs` | §4.2 の実例タグ名と §9 Fields 表の突合 | 約 50 行 |
 | 7-7 | `.claude/settings.json` | `PreToolUse` フック + `statusLine` の登録（**現在存在しない。新規作成**） | 約 15 行 |
@@ -259,6 +259,7 @@ node setup.js ja          # 言語切替で残骸が残らないこと
 | structural parity | 見出し数・表行数・**コードフェンス数**・行数・リンク集合・数値トークンの一致（差 0） |
 | agent roster | `.claude/agents` の数 == agent-list §1 の行数、YAML `name` == ファイル名 |
 | form block tag names | §4.2 の実例タグ名が §9 に実在すること |
+| review perspective wiring | `review-standards` の `R7.x` 全 ID が `review-agent` の観点表に出現すること |
 | setup smoke | デプロイ数・冪等性 |
 | dead link | サフィックスなし参照の allowlist 付き走査 |
 
@@ -479,6 +480,7 @@ waiver を認める場合は以下をすべて満たすこと（MUST）:
 | 9-5 | `session-state.json` が生成され、context / cost が記録されること |
 | 9-6 | GitHub 上で `framework-src/{ja,en}/` 配下の相互リンクが解決すること |
 | 9-7 | `essays/angs-essay-en.md` が正しくレンダリングされること |
+| 9-8 | **R7 の配線が完了していること。** `review-agent` の適用観点表・実行タイミング表に R7 が存在し、`purity_tag_coverage_pct` が `review` の Out に出力される。かつ `grep -rn 'R1-R6' process-rules/ framework-src/` が 0 件であること |
 
 ### 13.2 ユーザー側の作業（リポジトリ修正では完結しない）
 

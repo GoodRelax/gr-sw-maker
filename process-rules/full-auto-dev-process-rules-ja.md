@@ -1360,26 +1360,28 @@ export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 
 ### 5.4 MCP サーバーの設定
 
-プロジェクトルートに `.mcp.json` を作成し、外部ツール連携を定義する。
+**本フレームワークは `.mcp.json` を同梱しない。** MCP 連携が必要なプロジェクトのみ、各自でプロジェクトルートに作成する。同梱すると、実際には使わない外部接続の承認を初回起動時に全ユーザーへ求めることになるためである。
 
-**MCP設定ファイル (.mcp.json):**
+**MCP設定ファイル (.mcp.json) の形式:**
 
 ```json
 {
   "mcpServers": {
-    "github": {
-      "type": "url",
-      "url": "https://mcp.github.com/sse"
+    "<server-name>": {
+      "command": "npx",
+      "args": ["-y", "@scope/server-package"]
     },
-    "slack": {
-      "type": "url",
-      "url": "https://mcp.slack.com/sse"
+    "<remote-server-name>": {
+      "type": "http",
+      "url": "https://example.com/mcp"
     }
   }
 }
 ```
 
-利用するMCPサーバーはプロジェクトの技術スタックに応じて選定する。MCPエコシステムには1,000以上のコミュニティサーバーが存在し、Jira、Google Drive、Sentry、Puppeteer（ビジュアルテスト）等との連携が可能である。設定可能なサーバーの一覧は https://github.com/modelcontextprotocol/servers を参照のこと。
+`type` を省略した場合は stdio（`command` / `args` でローカル起動）となる。リモートサーバーを使う場合は `type` に `http` または `sse` を指定する。**`"type": "url"` は存在しない値であり、指定してはならない。**
+
+利用するMCPサーバーはプロジェクトの技術スタックに応じて選定する。MCPエコシステムには1,000以上のコミュニティサーバーが存在し、Jira、Google Drive、Sentry、Puppeteer（ビジュアルテスト）等との連携が可能である。**サーバー名・起動コマンド・エンドポイントは公式の一覧で実在を確認してから記載すること。** 設定可能なサーバーの一覧は https://github.com/modelcontextprotocol/servers を参照のこと。
 
 ### 5.5 推奨プロジェクト構造（完全版）
 
@@ -1388,7 +1390,7 @@ export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ```text
 project_root/
   CLAUDE.md                       ... プロジェクト設定（最重要）
-  .mcp.json                       ... MCP サーバー設定
+  .mcp.json                       ... MCP サーバー設定（必要な場合のみ各自作成）
   user-order.md                    ... 作りたいもの（ユーザーが3問に回答）
   process-rules/
     spec-template-ja.md           ... 仕様書テンプレート（JA）

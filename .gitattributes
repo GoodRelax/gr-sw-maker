@@ -1,2 +1,9 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Force LF in the working tree for everything we distribute, so that
+# setup.js / create.js output is byte-identical on every platform.
+*.md   text eol=lf
+*.js   text eol=lf
+*.mjs  text eol=lf
+*.json text eol=lf

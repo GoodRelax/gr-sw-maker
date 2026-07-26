@@ -1,4 +1,3 @@
-````markdown
 ## Draft (alpha version, work in progress)
 
 # ANGS (AI-Native Graph Spec) — Specification Management and Agent Coordination via Graph Structure
@@ -612,4 +611,3 @@ This paper presented ANGS (AI-Native Graph Spec) as a method for applying ANMS t
 3. Young, G. "CQRS Documents" — Command Query Responsibility Segregation
 4. Mavin, A., et al. "EARS: Easy Approach to Requirements Syntax" — IEEE, 2009
 5. Cucumber. "Gherkin Reference"
-````

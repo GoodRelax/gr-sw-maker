@@ -230,8 +230,8 @@ Add or remove principles based on the project's nature.
 | Readability       | POLA                 | Principle of Least Astonishment       | Does the code behave as the reader expects?                                 |
 | Readability       | PIE                  | Program Intently and Expressively     | Does the code clearly convey its intent?                                    |
 | Testability       | Testability          | —                                     | Is unit testing easy? Can mocks/stubs be injected readily?                  |
-| Purity            | Pure / Semi-pure / Non-pure | —                              | Is each function classifiable as pure / semi-pure / non-pure? Are side effects and external reads pushed outward (functional core / imperative shell)? |
-| Structure         | Collect-Process Separation | Gather-then-Process             | Within a function/class, is input collection (all reads) completed before processing (transformation), so results do not depend on timing? |
+| Purity            | Pure / Semi-pure-a / Semi-pure-b / Non-pure | —              | Is each function classifiable as pure / semi-pure-a / semi-pure-b / non-pure? Are side effects and external reads pushed outside the computation logic (functional core / imperative shell)? |
+| Structure         | Collect-Process Separation | Gather-then-Process             | Is no new external read performed partway through processing? Where collecting everything is impossible, is the unit of consistency (chunk / snapshot / transaction) stated, so results do not depend on timing? |
 | State Transitions | State Transition     | —                                     | Are transition condition retrieval and transition execution separated?       |
 | Concurrency       | Concurrency Safety   | —                                     | Are deadlocks, race conditions, and glitches prevented?                     |
 | Error Handling    | Error Propagation    | —                                     | Are errors propagated and handled properly, not silently swallowed?          |

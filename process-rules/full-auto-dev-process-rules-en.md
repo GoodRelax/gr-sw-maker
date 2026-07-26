@@ -1360,26 +1360,28 @@ To persist, add to your shell configuration file (`.bashrc`, `.zshrc`, etc.).
 
 ### 5.4 MCP Server Configuration
 
-Create `.mcp.json` at the project root to define external tool integrations.
+**This framework ships no `.mcp.json`.** Only projects that actually need MCP integration create one at their own project root. Shipping one would ask every user to approve an external connection they do not use, on first launch.
 
-**MCP Configuration File (.mcp.json):**
+**Format of the MCP configuration file (.mcp.json):**
 
 ```json
 {
   "mcpServers": {
-    "github": {
-      "type": "url",
-      "url": "https://mcp.github.com/sse"
+    "<server-name>": {
+      "command": "npx",
+      "args": ["-y", "@scope/server-package"]
     },
-    "slack": {
-      "type": "url",
-      "url": "https://mcp.slack.com/sse"
+    "<remote-server-name>": {
+      "type": "http",
+      "url": "https://example.com/mcp"
     }
   }
 }
 ```
 
-Select MCP servers to use based on the project's technology stack. The MCP ecosystem includes over 1,000 community servers, enabling integration with Jira, Google Drive, Sentry, Puppeteer (visual testing), etc. For a list of available servers, see https://github.com/modelcontextprotocol/servers.
+Omitting `type` means stdio (launched locally via `command` / `args`). For a remote server, set `type` to `http` or `sse`. **`"type": "url"` is not a valid value and MUST NOT be used.**
+
+Select MCP servers to use based on the project's technology stack. The MCP ecosystem includes over 1,000 community servers, enabling integration with Jira, Google Drive, Sentry, Puppeteer (visual testing), etc. **Verify that every server name, launch command, and endpoint actually exists against the official list before writing it down.** For a list of available servers, see https://github.com/modelcontextprotocol/servers.
 
 ### 5.5 Recommended Project Structure (Complete Version)
 
@@ -1388,7 +1390,7 @@ Select MCP servers to use based on the project's technology stack. The MCP ecosy
 ```text
 project_root/
   CLAUDE.md                       ... Project configuration (most important)
-  .mcp.json                       ... MCP server configuration
+  .mcp.json                       ... MCP server configuration (create only if needed)
   user-order.md                    ... What to build (user answers 3 questions)
   process-rules/
     spec-template-ja.md           ... Specification template (JA)
