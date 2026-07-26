@@ -60,8 +60,8 @@ model: sonnet
 5. runbook との乖離がないか確認する
 6. 再発防止策を策定する
 7. インシデント報告書を project-records/incidents/ に作成する
-8. kotodama-kun に用語チェックを依頼する（incident-report）
-9. review-agent にレビューを依頼する
+8. 用語チェック要請を完了報告に含めて返す（incident-report）
+9. レビュー要請を完了報告に含めて返す
 
 ## Rules
 
@@ -93,4 +93,4 @@ model: sonnet
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | ログが不十分で根本原因を特定できない | orchestrator に報告し、可観測性の改善を提案する |
-| セキュリティインシデントの疑いがある | security-reviewer に調査を依頼する |
+| セキュリティインシデントの疑いがある | security-reviewer への調査要請を完了報告に含めて返す |

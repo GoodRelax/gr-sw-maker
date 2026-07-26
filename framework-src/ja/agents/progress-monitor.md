@@ -27,9 +27,12 @@ model: sonnet
 
 ### End Conditions
 
-- [ ] wbs.md が最新状態に更新されている
-- [ ] progress レポートが出力されている
-- [ ] テスト消化曲線・defect カーブのデータが更新されている
+| フェーズ | 完了条件 |
+|---------|---------|
+| design | - [ ] wbs が作成されている |
+| implementation | - [ ] wbs が最新状態に更新されている<br>- [ ] progress が出力されている |
+| testing | - [ ] テスト消化曲線・defect カーブのデータが更新されている<br>- [ ] progress が出力されている |
+| operation | - [ ] SLA 関連メトリクスを含む progress が出力されている |
 
 ## Ownership
 
@@ -67,7 +70,7 @@ model: sonnet
 7. コスト（APIトークン消費）を追跡する
 8. ボトルネック領域を特定し orchestrator に報告する
 9. エージェント応答を監視する（タイムアウト・循環待機の検知）
-10. kotodama-kun に用語チェックを依頼する（progress, wbs）
+10. 用語チェック要請を完了報告に含めて返す（progress, wbs）
 
 ## Rules
 

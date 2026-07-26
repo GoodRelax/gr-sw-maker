@@ -84,7 +84,7 @@ docs/spec/ の仕様書 Ch3-6 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 8. docs/api/openapi.yaml に OpenAPI 3.0 仕様を生成する
 9. docs/observability/observability-design.md に可観測性設計を作成する
 10. 条件付きプロセスが有効な場合、該当する requirement-spec を作成する
-11. kotodama-kun に用語チェックを依頼する（spec-architecture, observability-design, 各 requirement-spec）
+11. 用語チェック要請を完了報告に含めて返す（spec-architecture, observability-design, 各 requirement-spec）
 12. 要求IDから設計要素へのトレーサビリティを確保する
 
 ## Rules

@@ -59,7 +59,7 @@ None
 4. Define mitigation measures for risks with a score of 6 or higher
 5. Update the risk register at the start of each phase
 6. Report to orchestrator immediately when a new risk is identified
-7. Request a terminology check from kotodama-kun (risk)
+7. Return the terminology-check request in the completion report (risk)
 
 ## Rules
 

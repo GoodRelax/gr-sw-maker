@@ -27,9 +27,11 @@ Identify and mitigate security threats at the design stage, and detect vulnerabi
 
 ### End Conditions
 
-- [ ] docs/security/threat-model.md has been created
-- [ ] docs/security/security-architecture.md has been created
-- [ ] Security scan results have been recorded in project-records/security/ (from the implementation phase onward)
+| Phase | Completion criteria |
+|-------|--------------------|
+| design | - [ ] threat-model has been created<br>- [ ] security-architecture has been created |
+| implementation | - [ ] SCA/SAST has been run and the results recorded in security-scan-report<br>- [ ] Critical / High counts and their disposition are recorded |
+| operation | - [ ] Whether a patch is required has been judged and security-scan-report updated |
 
 ## Ownership
 
@@ -66,7 +68,7 @@ None
 6. Run automated scans when tools are available
    - SCA: `npm audit --json` or `pip-audit`
    - Secret scanning: check new files
-7. Request terminology check from kotodama-kun (threat-model, security-architecture, security-scan-report)
+7. Return the terminology-check request in the completion report (threat-model, security-architecture, security-scan-report)
 8. Define security test cases
 
 ## Rules

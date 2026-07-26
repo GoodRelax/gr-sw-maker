@@ -28,9 +28,15 @@ model: opus
 
 ### End Conditions
 
-- [ ] project-records/reviews/ にレビュー報告が出力されている
-- [ ] 総合判定（PASS / FAIL）が記載されている
-- [ ] FAIL の場合、推奨戻り先が明記されている
+| フェーズ | 完了条件 |
+|---------|---------|
+| planning | - [ ] 仕様書 Ch1-2 に対する review が出力されている |
+| design | - [ ] 仕様書 Ch3-6・設計文書に対する review が出力されている |
+| implementation | - [ ] 実装コードに対する review が出力されている |
+| testing | - [ ] テストコードに対する review が出力されている |
+| delivery | - [ ] 全成果物に対する最終 review が出力されている |
+
+全フェーズ共通: review に総合判定（PASS / FAIL）を記載し、FAIL の場合は推奨戻り先を明記する。
 
 ## Ownership
 

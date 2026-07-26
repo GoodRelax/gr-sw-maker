@@ -398,3 +398,84 @@ Step 2 の規約が「参照先が実在することを確認する。存在し�
 ### 手戻り
 
 4b の最初の適用スクリプトはシェルのヒアドキュメントで壊れ、**ファイル書き込みに到達せず終了していた**。適用済みと誤認しかけたが、`読むべき規則の節` の保有数が 1/22（technical-authority のみ）であることを確認して発覚した。以降、この規模のスクリプトはファイルに書いてから実行している。
+
+---
+
+### 4c の実施内容
+
+| 項目 | 対象 | 内容 |
+|---|---:|---|
+| 4-1 起動の書き換え | 31 箇所 × 2 言語 | 「他エージェントに依頼／引き渡す／委任する」を「要請を完了報告に含めて返す」へ |
+| 4-5 フェーズ別 End Conditions | 4 体 × 2 言語 | test-engineer / security-reviewer / progress-monitor / review-agent |
+
+`technical-authority` は Step 3 で両方とも適用済み。
+
+### 4-1 の内訳（計画は 21 箇所、実測 31 箇所）
+
+計画の「kotodama-kun へ 11、review-agent へ 3、その他 7」は実在を確認できた。それに加えて **Exception 表の中に同型の記述が 10 箇所**あった。
+
+| 区分 | 件数 | 例 |
+|---|---:|---|
+| Procedure 内の kotodama-kun 依頼 | 11 | 「kotodama-kun に用語チェックを依頼する」 |
+| Procedure 内の review-agent 依頼 | 3 | 「review-agent にレビューを依頼する」 |
+| Procedure 内のその他の引き渡し | 3 | srs-writer → architect、feedback-classifier → field-issue-analyst、field-test-engineer → feedback-classifier |
+| Rules / Constraints / End Conditions | 4 | implementer「review-agent へ引き継ぐ」、kotodama-kun「対象エージェントに修正を依頼している」ほか |
+| **Exception 表**（計画外） | **10** | 「security-reviewer に調査を依頼する」「architect に設計の補完を依頼する」ほか |
+| 合計 | 31 | — |
+
+**Exception 表を含めた理由:** 設計原則 6 は正常系・異常系を区別していない。むしろ Exception は「自分では処理できないので他へ渡す」場面そのもので、**引き継ぎが最も必要な経路**である。ここを旧記述のまま残すと、正常系だけ直った半端な状態になる。
+
+書き換えでは、単に「要請を返す」に置換するのではなく、**安全側の動作を先に置いた**。例:
+
+> 変更前: 可観測性設計が不十分でアラート対応手順を書けない → architect に設計の補完を依頼する
+> 変更後: 可観測性設計が不十分でアラート対応手順を書けない → **手順を推測で書かない。** architect への設計補完要請を完了報告に含めて返す
+
+「依頼する」だけでは、依頼が実行されなかったときに何をするかが未定義で、推測で書き進む余地が残る。
+
+### 対象外とした 2 箇所
+
+| 箇所 | 判断 |
+|---|---|
+| `orchestrator` の 4 箇所（Procedure `:74` `:75` `:81`、Exception `:131`） | 計画どおり 5-1（PM 専任への再定義）で扱う。実測が計画の「4 箇所」と一致した |
+| `progress-monitor` の「orchestrator に即時報告。復旧手順の判断を委ねる」 | 報告と判断の委譲であって起動指示ではない。EN 側の "Delegate" は同義の訳語 |
+
+### 4-5 のフェーズ別化
+
+単一チェックリストに複数フェーズの条件が混在していたものを分割した。
+
+| エージェント | 分割前の問題 | 分割後 |
+|---|---|---|
+| test-engineer | design で作る `test-plan` と testing でしか達成できない「合格率 100%」が同居 | design / implementation / testing の 3 フェーズ |
+| security-reviewer | design 成果物と implementation のスキャンが同居 | design / implementation / operation の 3 フェーズ |
+| progress-monitor | wbs 作成と testing のカーブ更新が同居 | design / implementation / testing / operation の 4 フェーズ |
+| review-agent | 全フェーズ共通の 3 条件のみでフェーズ差が表現できていない | planning / design / implementation / testing / delivery の 5 フェーズ + 共通条件 |
+
+**あわせて直した 2 点:**
+
+1. test-engineer の「review-agent の R6 レビューに PASS している」を **「R6 レビュー要請を完了報告に含めて返した」** に変更した。他エージェントの実行結果を自分の完了条件にすると、自力では絶対に満たせない条件になる（B3 の「厳格に実装するほど進行不能」そのもの）。ゲートの合否は technical-authority の管轄であり、test-engineer の完了条件ではない。
+2. 合格率の数値を直書きせず **CLAUDE.md「品質目標」への参照**に変更した。CLAUDE.md が閾値の Single Source of Truth であり、直書きは二重管理になる。
+
+review-agent の End Conditions では R の範囲（R1-R6 か R1-R7 か）を書かず、レビュー**対象**で表現した。R の範囲は Rules の適用観点表が持ち、5-8 がそこを一括で更新する。同じ情報を 2 箇所に置かない。
+
+### 検証証跡
+
+| 検査 | 結果 |
+|---|---|
+| 4-1 適用 | ja 31/31・en 31/31（取りこぼし 0） |
+| 4-5 適用 | 8/8（4 体 × 2 言語） |
+| 残存する起動指示 | orchestrator の 4 箇所のみ（5-1 送り） |
+| フェーズ別 End Conditions | ja 5・en 5（4 体 + technical-authority） |
+| ja/en 構造パリティ | 22 体すべて一致（不一致 0） |
+| 参照の実在 | 185 件すべて解決（4b から変化なし） |
+| デプロイ | 22 体 |
+
+### Step 4 完了時点の状態
+
+| 項目 | 適用状況 |
+|---|---|
+| 4-1 起動の書き換え | 完了（orchestrator を除く） |
+| 4-2 In 必須要素列 + Procedure step 1 | 完了（22/22） |
+| 4-3 共通 Exception 行 | 完了（22/22） |
+| 4-4 読むべき規則の節 | 完了（22/22） |
+| 4-5 フェーズ別 End Conditions | 完了（5/5） |
+| 4-6 出力例 | 完了（6/6） |

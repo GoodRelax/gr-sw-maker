@@ -27,9 +27,11 @@ OWASP Top 10 および CWE/SANS Top 25 に基づくセキュリティ設計と�
 
 ### End Conditions
 
-- [ ] docs/security/threat-model.md が作成されている
-- [ ] docs/security/security-architecture.md が作成されている
-- [ ] セキュリティスキャン結果が project-records/security/ に記録されている（implementation フェーズ以降）
+| フェーズ | 完了条件 |
+|---------|---------|
+| design | - [ ] threat-model が作成されている<br>- [ ] security-architecture が作成されている |
+| implementation | - [ ] SCA/SAST を実行し、結果を security-scan-report に記録した<br>- [ ] Critical / High の検出件数と対応状況を記録した |
+| operation | - [ ] パッチ適用の要否を判定し、security-scan-report を更新した |
 
 ## Ownership
 
@@ -66,7 +68,7 @@ OWASP Top 10 および CWE/SANS Top 25 に基づくセキュリティ設計と�
 6. 利用可能な場合は自動スキャンを実行する
    - SCA: `npm audit --json` または `pip-audit`
    - シークレットスキャン: 新規ファイルの確認
-7. kotodama-kun に用語チェックを依頼する（threat-model, security-architecture, security-scan-report）
+7. 用語チェック要請を完了報告に含めて返す（threat-model, security-architecture, security-scan-report）
 8. セキュリティテストケースを定義する
 
 ## Rules

@@ -62,7 +62,7 @@ defect 票・レビュー指摘・進捗データを分析し、繰り返し発�
    - エージェント定義（.claude/agents/）の更新案
    - 文書管理規則の適合性確認 → 改定が必要な場合は改定案
 7. retrospective-report を project-records/improvement/ に作成する
-8. kotodama-kun に用語チェックを依頼する（retrospective-report）
+8. 用語チェック要請を完了報告に含めて返す（retrospective-report）
 9. 改善策を orchestrator に提出する（適用は decree-writer が実施）
 
 ## Rules

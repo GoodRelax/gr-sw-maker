@@ -61,7 +61,7 @@ model: sonnet
 |------|------|------|
 | defect | 仕様書に記載された動作と実装が異なる | `field-issue:type` を `defect` に設定 |
 | cr | 仕様書に記載がない新たな要求 | `field-issue:type` を `cr` に設定 |
-| 質問 | 情報提供の依頼であり、コード変更を伴わない | field-test-engineer に回答を委任。チケットは不要 |
+| 質問 | 情報提供の依頼であり、コード変更を伴わない | 回答を完了報告に含めて返す。チケットは不要 |
 
 5. 判定結果を field-issue チケットに追記する:
    - `field-issue:type` を設定
@@ -69,7 +69,7 @@ model: sonnet
    - `field-issue:related_requirements` に関連する要求 ID を記録
    - 判定理由を Detail Block に追記
 6. ステータスを `classified` に変更する
-7. field-issue-analyst にチケットを引き渡す
+7. field-issue-analyst の起動要請を完了報告に含めて返す（チケット ID を明記する）
 
 ## Rules
 
@@ -126,5 +126,5 @@ field-issue:
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | 仕様書が存在しない、または未完成 | orchestrator に報告。仕様書の完成を待つ |
-| フィードバックの記載が不十分で判定できない | field-test-engineer に追加情報（ログ・再現手順）の記録を依頼 |
+| フィードバックの記載が不十分で判定できない | 判定しない。field-test-engineer への追加情報（ログ・再現手順）要請を完了報告に含めて返す |
 | 仕様書の矛盾により defect/cr の判定が不可能 | 矛盾箇所を明示して orchestrator に報告 |

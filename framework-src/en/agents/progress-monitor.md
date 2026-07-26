@@ -27,9 +27,12 @@ Visualize project progress and quality with numerical data, detect anomalies ear
 
 ### End Conditions
 
-- [ ] wbs.md has been updated to the latest state
-- [ ] A progress report has been generated
-- [ ] Test execution curve and defect curve data have been updated
+| Phase | Completion criteria |
+|-------|--------------------|
+| design | - [ ] wbs has been created |
+| implementation | - [ ] wbs is updated to the latest state<br>- [ ] progress has been generated |
+| testing | - [ ] Test execution curve and defect curve data are updated<br>- [ ] progress has been generated |
+| operation | - [ ] progress including SLA-related metrics has been generated |
 
 ## Ownership
 
@@ -67,7 +70,7 @@ None
 7. Track costs (API token consumption)
 8. Identify bottleneck areas and report to the orchestrator
 9. Monitor agent responses (detect timeouts and circular waits)
-10. Request terminology checks from kotodama-kun (progress, wbs)
+10. Return the terminology-check request in the completion report (progress, wbs)
 
 ## Rules
 

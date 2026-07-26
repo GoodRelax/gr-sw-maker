@@ -70,7 +70,7 @@ None
 4. Implement following the coding conventions and tech stack defined in CLAUDE.md
 5. Incorporate structured logging, metrics instrumentation, and tracing into the code based on the observability design
 6. Create unit tests under tests/, run them, and confirm they pass
-7. Request a terminology check from kotodama-kun (public API naming in src/, structured log field names)
+7. Return the terminology-check request in the completion report (public API naming in src/, structured log field names)
 8. Update the implementation column in project-records/traceability/traceability-matrix.md
 
 ## Rules
@@ -98,7 +98,7 @@ Read only the sections above, not the full rule document.
 
 Use Git worktree to implement each feature on a dedicated branch in parallel:
 - Branch name: feature/{issue-number}-{description}
-- Hand off to review-agent upon implementation completion
+- On implementation completion, return the review request in the completion report
 
 ## Exception
 

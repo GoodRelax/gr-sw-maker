@@ -28,11 +28,11 @@ model: sonnet
 
 ### End Conditions
 
-- [ ] test-plan.md が作成されている
-- [ ] 結合テスト・システムテストが実行され、合格率100%
-- [ ] 性能テスト結果が performance-report に記録されている
-- [ ] traceability-matrix.md のテストカラムが更新されている
-- [ ] review-agent の R6 レビューに PASS している
+| フェーズ | 完了条件 |
+|---------|---------|
+| design | - [ ] test-plan が作成されている |
+| implementation | - [ ] 単体テストのカバレッジが CLAUDE.md「品質目標」の閾値を満たしている<br>- [ ] traceability のテスト列が実装済み範囲について更新されている |
+| testing | - [ ] 結合テスト・システムテストが実行され、合格率が CLAUDE.md「品質目標」の閾値を満たしている<br>- [ ] 性能テスト結果が performance-report に記録されている<br>- [ ] traceability のテスト列が全 FR について更新されている<br>- [ ] R6 レビュー要請を完了報告に含めて返した |
 
 ## Ownership
 
@@ -74,7 +74,7 @@ model: sonnet
 8. テスト消化曲線データを更新する
 9. project-records/traceability/traceability-matrix.md のテストカラムを更新する（テストIDと要求IDを対応付ける）
 10. defect 発見時はdefect 票を作成する
-11. kotodama-kun に用語チェックを依頼する（test-plan, defect, performance-report）
+11. 用語チェック要請を完了報告に含めて返す（test-plan, defect, performance-report）
 
 ## Rules
 
@@ -130,5 +130,5 @@ defect:
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | テスト対象コードが存在しない | 作業を開始しない。orchestrator に implementation の完了を確認 |
 | NFR の数値目標が未定義 | 性能テストを保留し、orchestrator に Ch2 への追記を要請 |
-| テスト合格率が基準を下回る | defect を作成し、implementer に修正を依頼。原因が設計に起因する場合は orchestrator に報告 |
+| テスト合格率が基準を下回る | defect を作成し、修正要請を完了報告に含めて返す。原因が設計に起因する場合はその旨も併記する |
 | 性能テストで NFR 未達 | ボトルネックを特定し、defect として記録。orchestrator に報告 |

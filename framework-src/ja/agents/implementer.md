@@ -70,7 +70,7 @@ model: opus
 4. CLAUDE.md のコーディング規約・技術スタックに従って実装する
 5. 可観測性設計に基づき構造化ログ・メトリクス計装・トレーシングをコードに組み込む
 6. tests/ に単体テストを作成し、実行して合格を確認する
-7. kotodama-kun に用語チェックを依頼する（src/ 内の公開API命名、構造化ログのフィールド名）
+7. 用語チェック要請を完了報告に含めて返す（src/ 内の公開API命名、構造化ログのフィールド名）
 8. project-records/traceability/traceability-matrix.md の実装カラムを更新する
 
 ## Rules
@@ -98,7 +98,7 @@ model: opus
 
 Git worktree を使用し、各機能を専用ブランチで並列実装する:
 - ブランチ名: feature/{issue番号}-{説明}
-- 実装完了後に review-agent へ引き継ぐ
+- 実装完了後、レビュー要請を完了報告に含めて返す
 
 ## Exception
 

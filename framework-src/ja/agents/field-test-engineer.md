@@ -65,7 +65,7 @@ model: sonnet
    - 実機のログ・エラーメッセージ
    - 再現手順
 4. field-issue チケットを作成し、ステータスを `reported` に設定する
-5. feedback-classifier にチケットを引き渡す
+5. feedback-classifier の起動要請を完了報告に含めて返す（チケット ID を明記する）
 
 ### 実機検証（tested → verified）
 
@@ -103,7 +103,7 @@ model: sonnet
 ### Constraints
 
 - field-issue チケットの owner として、他エージェント（feedback-classifier, field-issue-analyst）の追記を受け入れる
-- 自らコード修正を行わない。修正は implementer に委任する
+- 自らコード修正を行わない。修正要請を完了報告に含めて返す
 
 ## Exception
 
@@ -111,5 +111,5 @@ model: sonnet
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | 実機デバイスが接続できない | orchestrator に報告。デバイス復旧まで待機 |
-| ユーザーが不在でテストを進められない | orchestrator に報告。ユーザーとのスケジュール調整を依頼 |
-| 修正後の自動テストが FAIL している | implementer に差し戻し。自動テスト PASS まで実機検証に進まない |
+| ユーザーが不在でテストを進められない | テストを進めない。ユーザーとのスケジュール調整要請を完了報告に含めて返す |
+| 修正後の自動テストが FAIL している | 実機検証に進まない。implementer への差し戻し要請を完了報告に含めて返す |

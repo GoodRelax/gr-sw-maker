@@ -65,7 +65,7 @@ None
    - Device logs and error messages
    - Reproduction steps
 4. Create a field-issue ticket and set status to `reported`
-5. Hand off the ticket to feedback-classifier
+5. Return the request to launch feedback-classifier in the completion report (state the ticket ID)
 
 ### Field Verification (tested → verified)
 
@@ -103,7 +103,7 @@ Follow the Field Issue Handling Rules (`process-rules/field-issue-handling-rules
 ### Constraints
 
 - As field-issue ticket owner, accept additions from other agents (feedback-classifier, field-issue-analyst)
-- Do not modify code directly. Delegate fixes to implementer
+- Do not modify code directly. Return the fix request in the completion report
 
 ## Exception
 
@@ -111,5 +111,5 @@ Follow the Field Issue Handling Rules (`process-rules/field-issue-handling-rules
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Physical device cannot be connected | Report to orchestrator. Wait until device is restored |
-| User is unavailable and testing cannot proceed | Report to orchestrator. Request schedule coordination with user |
-| Automated tests FAIL after fix | Return to implementer. Do not proceed to field verification until automated tests PASS |
+| User is unavailable and testing cannot proceed | Do not proceed with testing. Return the request to coordinate a schedule with the user in the completion report |
+| Automated tests FAIL after fix | Do not proceed to field verification. Return the send-back request for implementer in the completion report |

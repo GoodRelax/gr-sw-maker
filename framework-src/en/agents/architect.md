@@ -84,7 +84,7 @@ None
 8. Generate OpenAPI 3.0 specification in docs/api/openapi.yaml
 9. Create observability design in docs/observability/observability-design.md
 10. If conditional processes are enabled, create the corresponding requirement-spec
-11. Request terminology check from kotodama-kun (spec-architecture, observability-design, each requirement-spec)
+11. Return the terminology-check request in the completion report (spec-architecture, observability-design, each requirement-spec)
 12. Ensure traceability from requirement IDs to design elements
 
 ## Rules

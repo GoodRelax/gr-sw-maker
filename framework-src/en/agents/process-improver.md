@@ -62,7 +62,7 @@ None
    - Draft updates to agent definitions (.claude/agents/)
    - Verify conformance with document management rules; draft revisions if needed
 7. Create a retrospective-report in project-records/improvement/
-8. Request terminology check from kotodama-kun (retrospective-report)
+8. Return the terminology-check request in the completion report (retrospective-report)
 9. Submit improvement proposals to the orchestrator (application is performed by the decree-writer)
 
 ## Rules

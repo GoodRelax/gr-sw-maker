@@ -28,9 +28,15 @@ Objectively evaluate artifact quality, ensure zero Critical/High findings, and a
 
 ### End Conditions
 
-- [ ] A review report has been output to project-records/reviews/
-- [ ] An overall verdict (PASS / FAIL) is stated
-- [ ] If FAIL, the recommended return destination is specified
+| Phase | Completion criteria |
+|-------|--------------------|
+| planning | - [ ] A review of spec Ch1-2 has been output |
+| design | - [ ] A review of spec Ch3-6 and the design documents has been output |
+| implementation | - [ ] A review of the implementation code has been output |
+| testing | - [ ] A review of the test code has been output |
+| delivery | - [ ] A final review of all deliverables has been output |
+
+Common to every phase: the review states an overall verdict (PASS / FAIL) and, on FAIL, names the recommended send-back target.
 
 ## Ownership
 

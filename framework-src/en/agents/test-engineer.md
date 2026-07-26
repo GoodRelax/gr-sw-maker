@@ -28,11 +28,11 @@ Verify that the requirements in the specification are correctly implemented in c
 
 ### End Conditions
 
-- [ ] test-plan.md has been created
-- [ ] Integration tests and system tests have been executed with a 100% pass rate
-- [ ] Performance test results have been recorded in the performance-report
-- [ ] The test column in traceability-matrix.md has been updated
-- [ ] Passed the review-agent R6 review
+| Phase | Completion criteria |
+|-------|--------------------|
+| design | - [ ] test-plan has been created |
+| implementation | - [ ] Unit test coverage meets the threshold in CLAUDE.md "Quality Targets"<br>- [ ] The test column of traceability is updated for the implemented scope |
+| testing | - [ ] Integration and system tests have run and the pass rate meets the threshold in CLAUDE.md "Quality Targets"<br>- [ ] Performance test results are recorded in performance-report<br>- [ ] The test column of traceability is updated for every FR<br>- [ ] The R6 review request has been returned in the completion report |
 
 ## Ownership
 
@@ -74,7 +74,7 @@ None
 8. Update the test consumption curve data
 9. Update the test column in project-records/traceability/traceability-matrix.md (map test IDs to requirement IDs)
 10. Create a defect ticket when a defect is found
-11. Request a terminology check from kotodama-kun (test-plan, defect, performance-report)
+11. Return the terminology-check request in the completion report (test-plan, defect, performance-report)
 
 ## Rules
 
@@ -130,5 +130,5 @@ defect:
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Code under test does not exist | Do not start work. Confirm with the orchestrator that implementation is complete |
 | NFR numerical targets are undefined | Suspend performance testing and request the orchestrator to add them to Ch2 |
-| Test pass rate falls below the threshold | Create a defect and request the implementer to fix it. If the cause is design-related, report to the orchestrator |
+| Test pass rate falls below the threshold | Create a defect and return the fix request in the completion report. If the cause is design-related, state that as well |
 | NFR not met in performance testing | Identify the bottleneck and record it as a defect. Report to the orchestrator |

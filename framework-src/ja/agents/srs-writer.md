@@ -72,8 +72,8 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
    - 機能要求を EARS 構文で記述する（6パターン）
    - 非機能要求を EARS 構文 + 数式で記述する
    - すべての要求に ID（FR-xxx, NFR-xxx）を付与する
-8. kotodama-kun に用語チェックを依頼する（spec-foundation, interview-record）
-9. Ch3-6 のスケルトン（見出しのみ）を配置し、architect に引き継ぐ
+8. 用語チェック要請を完了報告に含めて返す（spec-foundation, interview-record）
+9. Ch3-6 のスケルトン（見出しのみ）を配置し、architect の起動要請を完了報告に含めて返す
 
 ## Rules
 

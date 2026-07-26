@@ -62,8 +62,8 @@ model: sonnet
 4. disaster-recovery-plan から DR 手順を抽出する
 5. infra/ 配下のIaCコードからインフラ操作手順を導出する
 6. 運用手順書を docs/operations/runbook.md に作成する
-7. kotodama-kun に用語チェックを依頼する
-8. review-agent にレビューを依頼する
+7. 用語チェック要請を完了報告に含めて返す
+8. レビュー要請を完了報告に含めて返す
 
 ## Rules
 
@@ -93,6 +93,6 @@ model: sonnet
 | 異常 | 対応 |
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
-| 可観測性設計が不十分でアラート対応手順を書けない | architect に設計の補完を依頼する |
-| DR手順がインフラ構成と不整合 | orchestrator に報告し、defect として記録を依頼する |
+| 可観測性設計が不十分でアラート対応手順を書けない | 手順を推測で書かない。architect への設計補完要請を完了報告に含めて返す |
+| DR手順がインフラ構成と不整合 | 不整合を明示し、defect 起票要請を完了報告に含めて返す |
 | delivery phase 未到達または IaC コードが未完了 | 作業を開始しない。orchestrator に testing フェーズの完了と IaC の準備状況を確認する |

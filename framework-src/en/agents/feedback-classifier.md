@@ -61,7 +61,7 @@ None
 |---------------|-----------|--------|
 | defect | Implementation differs from behavior described in spec | Set `field-issue:type` to `defect` |
 | cr | New requirement not described in spec | Set `field-issue:type` to `cr` |
-| question | Information request that does not require code changes | Delegate response to field-test-engineer. No ticket needed |
+| question | Information request that does not require code changes | Return the answer in the completion report. No ticket needed |
 
 5. Append the determination result to the field-issue ticket:
    - Set `field-issue:type`
@@ -69,7 +69,7 @@ None
    - Record related requirement IDs in `field-issue:related_requirements`
    - Append determination rationale to Detail Block
 6. Change status to `classified`
-7. Hand off the ticket to field-issue-analyst
+7. Return the request to launch field-issue-analyst in the completion report (state the ticket ID)
 
 ## Rules
 
@@ -126,5 +126,5 @@ field-issue:
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Specification does not exist or is incomplete | Report to orchestrator. Wait for specification completion |
-| Feedback description is insufficient for determination | Request field-test-engineer to record additional information (logs, reproduction steps) |
+| Feedback description is insufficient for determination | Do not classify. Return the request for field-test-engineer to record additional information (logs, reproduction steps) in the completion report |
 | Spec contradictions make defect/cr determination impossible | Explicitly identify contradictions and report to orchestrator |

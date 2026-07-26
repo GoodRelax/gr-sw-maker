@@ -60,8 +60,8 @@ None
 5. Check for deviations from the runbook
 6. Formulate recurrence prevention measures
 7. Create the incident report in project-records/incidents/
-8. Request terminology check from kotodama-kun (incident-report)
-9. Request review from review-agent
+8. Return the terminology-check request in the completion report (incident-report)
+9. Return the review request in the completion report
 
 ## Rules
 
@@ -93,4 +93,4 @@ Read only the sections above, not the full rule document.
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Logs are insufficient to identify the root cause | Report to orchestrator and propose improvements to observability |
-| A security incident is suspected | Request investigation from security-reviewer |
+| A security incident is suspected | Return the investigation request for security-reviewer in the completion report |

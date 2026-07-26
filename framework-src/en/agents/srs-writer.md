@@ -72,8 +72,8 @@ None
    - Describe functional requirements using EARS syntax (6 patterns)
    - Describe non-functional requirements using EARS syntax + mathematical formulas
    - Assign IDs (FR-xxx, NFR-xxx) to all requirements
-8. Request terminology check from kotodama-kun (spec-foundation, interview-record)
-9. Place skeletons (headings only) for Ch3-6 and hand off to architect
+8. Return the terminology-check request in the completion report (spec-foundation, interview-record)
+9. Place skeletons (headings only) for Ch3-6 and return the request to launch architect in the completion report
 
 ## Rules
 

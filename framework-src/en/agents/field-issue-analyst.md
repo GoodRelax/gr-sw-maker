@@ -160,4 +160,4 @@ Follow the Field Issue Handling Rules (`process-rules/field-issue-handling-rules
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Cannot identify root cause | Record investigation scope and hypotheses, request orchestrator to decide on additional investigation |
 | Impact scope is too broad to narrow down solutions | Enumerate all alternatives and request orchestrator to consult with user on direction |
-| Determined that defect/cr classification is incorrect | Request feedback-classifier to reclassify. Do not change type directly |
+| Determined that defect/cr classification is incorrect | Do not change type directly. Return the reclassification request for feedback-classifier in the completion report |

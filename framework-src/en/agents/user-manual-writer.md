@@ -58,8 +58,8 @@ None
 3. Understand the system configuration and operation flows from spec-architecture
 4. Refer to the implementation code (src/) to verify the actual screens and API behavior
 5. Create the user manual at docs/user-manual.md
-6. Request a terminology check from kotodama-kun
-7. Request a review from review-agent
+6. Return the terminology-check request in the completion report
+7. Return the review request in the completion report
 
 ## Rules
 
@@ -89,6 +89,6 @@ Read only the sections above, not the full rule document.
 | Anomaly | Response |
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| Discovered a discrepancy between the specification and the implementation | Report to the orchestrator and request that it be recorded as a defect |
-| Operation procedures for non-functional requirements are unclear | Request confirmation from the architect |
+| Discovered a discrepancy between the specification and the implementation | State the discrepancy and return the defect-filing request in the completion report |
+| Operation procedures for non-functional requirements are unclear | Do not write from guesswork. Return the confirmation request for architect in the completion report |
 | Delivery phase not reached or tests have not PASSED | Do not start work. Confirm with orchestrator that the testing phase is complete |

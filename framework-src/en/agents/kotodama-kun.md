@@ -26,7 +26,7 @@ Detect naming inconsistencies before they propagate across the entire project, a
 ### End Conditions
 
 - [ ] A check report has been output (either "no issues" or a list of findings)
-- [ ] If there are findings, a correction request has been sent to the responsible agent
+- [ ] If there are findings, the responsible agent and the correction are stated in the completion report
 
 ## Ownership
 

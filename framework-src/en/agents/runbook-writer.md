@@ -62,8 +62,8 @@ None
 4. Extract DR procedures from disaster-recovery-plan
 5. Derive infrastructure operation procedures from the IaC code under infra/
 6. Create the operational runbook at docs/operations/runbook.md
-7. Request terminology check from kotodama-kun
-8. Request review from review-agent
+7. Return the terminology-check request in the completion report
+8. Return the review request in the completion report
 
 ## Rules
 
@@ -93,6 +93,6 @@ Read only the sections above, not the full rule document.
 | Anomaly | Response |
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| Observability design is insufficient and alert response procedures cannot be written | Request design supplementation from architect |
-| DR procedures are inconsistent with infrastructure configuration | Report to orchestrator and request recording as a defect |
+| Observability design is insufficient and alert response procedures cannot be written | Do not write procedures from guesswork. Return the design-supplementation request for architect in the completion report |
+| DR procedures are inconsistent with infrastructure configuration | State the inconsistency and return the defect-filing request in the completion report |
 | Delivery phase not reached or IaC code is incomplete | Do not start work. Confirm with orchestrator that the testing phase is complete and IaC is ready |
