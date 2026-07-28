@@ -40,6 +40,8 @@
 
 全フェーズで「コスト記録: 計測不能（`session-state.json` 不在）」が発生し、RISK-005 が score 6 に上昇した。**Step 7 の `session-meter.mjs` / `.claude/settings.json` が入る前のフレームワークで走った可能性が高い。** 次回走行時に世代を確認すること。
 
+> **追記（2026-07-29）:** 世代を確認した結果、**上記の推定は誤りであった。** トライアル環境には `tools/session-meter.mjs` / `tools/gate-guard.mjs` / `.claude/settings.json`（statusLine 登録済み）がいずれも存在し、それでも `session-state.json` が生成されていない。世代の問題ではなく、導入済みの計測機構が動いていない。FF-06 として `02-naming-and-actor-model-backlog.md` §2 N-1 に記録した。
+
 ---
 
 ## 3. session-handoff スキル（設計検討済み・未確定）
