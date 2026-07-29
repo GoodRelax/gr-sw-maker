@@ -95,7 +95,7 @@ Software structure and design decisions. Defines the technical structure to real
 | 3.5     | Behavior             | Process flows and interactions. Sequence diagrams, activity diagrams   |
 | 3.6     | Decisions            | ADR (Architecture Decision Records). Rationale, alternatives, decision-maker. Michael Nygard's ADR format (Status / Context / Decision / Consequences) is recommended |
 
-Component and class diagrams MUST be color-coded by architecture layer. The default uses Clean Architecture's 4 layers (see legend below). If adopting a different architecture, define a custom legend in Section 3.1.
+Component and class diagrams MUST be color-coded by architecture layer. **What the coding must convey is the dependency direction, not the number of layers.** The default uses Clean Architecture's 4 layers (see legend below). If the layer count is not four, or if adopting a different architecture, define a custom legend in Section 3.1.
 
 **Default Legend: Clean Architecture Layers (shared by component and class diagrams):**
 

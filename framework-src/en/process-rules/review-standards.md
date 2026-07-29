@@ -135,7 +135,7 @@ Names are the primary interface of software. A name reveals its essence; code sh
 - Does the dependency direction point toward the domain layer (inward) (only outside-to-inside dependencies allowed)?
 - Are domain entities not contaminated by framework or DB details (annotations, etc.)?
 - Is the structure such that changes in the infrastructure layer (DB, external API) do not propagate to business logic?
-- **Correctness of layer classification**: Is the Entity/UseCase/Adapter/Framework classification appropriate? Are concepts that belong to the domain misclassified in the Framework layer? Conversely, are things that could remain in Framework unnecessarily elevated to Entity? Judge based on "is this essential to the project's purpose, or merely a means?"
+- **Correctness of layer classification**: Is the layer classification appropriate? Are concepts that belong at the centre misclassified toward the outside? Conversely, are things that could remain outside unnecessarily elevated to the centre? Judge based on "is this essential to the project's purpose, or merely a means?" **The number of layers is not itself a finding.** A design that the default four layers (Entity/UseCase/Adapter/Framework) cannot express is appropriate where Ch3.1 defines its layers and dependency direction
 - **Appropriateness of the Adapter layer**: Is the Adapter layer so thin that external dependencies leak into the domain? Is it so thick that business logic has crept into the Adapter layer?
 
 **Prompt Engineering (when AI/LLM integration is enabled)**
@@ -416,7 +416,7 @@ A single standalone check sheet aggregating all review perspectives (R1–R7). K
 | R2.13 | Design | SHOULD | CQS: a method either changes state or returns a value, not both | — | — |
 | R2.14 | Design | MUST | POLA: behavior matches the name; no hidden side effects; no double-negative booleans | — | — |
 | R2.15 | Design | MUST | PIE: names and comments express "why", not just "what"; name intermediate results | — | — |
-| R2.16 | Design | MUST | CA: dependency points inward to the domain; domain not contaminated by framework/DB; Entity/UseCase/Adapter/Framework classification and Adapter thickness correct | — | — |
+| R2.16 | Design | MUST | CA: dependency is one-way and points toward the least-changing centre; the centre is not contaminated by framework/DB; layer classification and the thickness of the outermost seam layer are correct. **The number of layers is not prescribed** (default is the four layers Entity/UseCase/Adapter/Framework; a different layering is compliant where Ch3.1 defines it) | — | — |
 | R2.17 | Design (AI/LLM) | SHOULD | Prompt engineering: prompts under `src/` with explicit I/O schemas, no ambiguous instructions, prompt tests, versioning policy, hallucination countermeasures | — | — |
 | R3.1 | Coding | MUST | Every external I/O (network/DB/file) has error handling; errors are not silently swallowed (no empty catch) | — | — |
 | R3.2 | Coding | MUST | Error messages carry debug context internally; no internal details (stack traces, DB errors) leaked to users | — | — |

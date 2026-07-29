@@ -977,7 +977,7 @@ Once specification Ch1-2 is approved, automatically start the design phase.
 
 **Key Sub-phase: Layer Classification (Prerequisite for Ch3 Creation)**
 
-Before elaborating Ch3 Architecture, use the planning phase interview results (particularly "Domain Boundary Identification") as input to explicitly classify all project components into Clean Architecture's four layers (Entity / Use Case / Adapter / Framework). This classification result becomes the foundation for the component diagram and dependency diagram in Ch3.
+Before elaborating Ch3 Architecture, use the planning phase interview results (particularly "Domain Boundary Identification") as input to explicitly classify all project components into layers. **This work has two requirements, and the number of layers is neither of them.** (1) The dependency direction is one-way. (2) What it points toward is whatever is unique to the project and least likely to change (the centre). **The number of layers is a design decision; four is the default vocabulary, not a requirement.** Use the four layers below (Entity / Use Case / Adapter / Framework) as the default, and where they cannot express the design, state the adopted layers and their dependency direction in Ch3.1. This classification result becomes the foundation for the component diagram and dependency diagram in Ch3.
 
 Classification criteria:
 - **Entity (Domain)**: Core logic and business rules unique to this project. Does not depend on externals
