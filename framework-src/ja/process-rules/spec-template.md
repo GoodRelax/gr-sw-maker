@@ -93,7 +93,7 @@ SWの構造と設計判断。Chapter 2 の要求を実現するための技術�
 | 3.3     | File Structure       | ファイル構成         | ディレクトリ構成。コンポーネントとフォルダの対応                         |
 | 3.4     | Domain Model         | ドメインモデル       | 構造・関係・状態の定義。クラス図（3.1の凡例で色分け）、ER図、状態遷移図 |
 | 3.5     | Behavior             | 振る舞い             | 処理フロー・相互作用。シーケンス図、アクティビティ図                     |
-| 3.6     | Decisions            | 設計判断             | ADR（Architecture Decision Records）。判断理由・代替案・決定者。記録形式は Michael Nygard の ADR フォーマット（Status / Context / Decision / Consequences）を推奨 |
+| 3.6     | Decisions            | 設計判断             | ADR（Architecture Decision Records）。判断理由・代替案・決定者。記録形式は Michael Nygard の ADR フォーマット（Status / Context / Decision / Consequences）を推奨。**ADR-000「最小構成との比較」を必ず含める**（要求を満たす最小の構成、採用案が増やした要素、各々を増やした理由。R2.18） |
 
 コンポーネント図・クラス図にはアーキテクチャレイヤーに基づく色分けを必須とする。**色分けが表すべきものは依存の向きであり、層の数ではない。** デフォルトはClean Architectureの4層（下記凡例）を使用する。層の数が4でない場合、および他のアーキテクチャを採用する場合は、そのアーキテクチャに応じた凡例を3.1に定義すること。
 
@@ -217,6 +217,7 @@ Scenario: SC-002 [シナリオ名] (traces: FR-xxx)
 | 依存関係 | SDP                  | Stable Dependencies Principle         | 依存先が自分より安定（変更頻度が低い）モジュールか                         |
 | 簡潔性   | KISS                 | Keep It Simple, Stupid                | 動作する最も単純な解決を選んでいるか                                       |
 | 簡潔性   | YAGNI                | You Aren't Gonna Need It             | 今必要でない機能を作っていないか。オーバーエンジニアリングしていないか     |
+| 簡潔性   | Minimal Comparison   | —                                     | Ch3.6 の ADR-000 で最小構成と比較し、増分の理由を示しているか（R2.18）     |
 | 簡潔性   | DRY                  | Don't Repeat Yourself                 | コード・ロジック・定義に重複がないか                                       |
 | 責務分離 | SoC                  | Separation of Concerns                | 関心ごとが適切に分離されているか                                           |
 | 責務分離 | SRP                  | Single Responsibility Principle       | 各クラス・モジュールが単一の責務を持つか                                   |

@@ -93,7 +93,7 @@ Software structure and design decisions. Defines the technical structure to real
 | 3.3     | File Structure       | Directory structure. Mapping between components and folders            |
 | 3.4     | Domain Model         | Definition of structure, relationships, and state. Class diagram (color-coded per 3.1 legend), ER diagram, state transition diagram |
 | 3.5     | Behavior             | Process flows and interactions. Sequence diagrams, activity diagrams   |
-| 3.6     | Decisions            | ADR (Architecture Decision Records). Rationale, alternatives, decision-maker. Michael Nygard's ADR format (Status / Context / Decision / Consequences) is recommended |
+| 3.6     | Decisions            | ADR (Architecture Decision Records). Rationale, alternatives, decision-maker. Michael Nygard's ADR format (Status / Context / Decision / Consequences) is recommended. **ADR-000 "Comparison against the minimal configuration" MUST be included** (the smallest configuration that satisfies the requirements, what the adopted design adds, and why each addition is necessary. R2.18) |
 
 Component and class diagrams MUST be color-coded by architecture layer. **What the coding must convey is the dependency direction, not the number of layers.** The default uses Clean Architecture's 4 layers (see legend below). If the layer count is not four, or if adopting a different architecture, define a custom legend in Section 3.1.
 
@@ -217,6 +217,7 @@ Add or remove principles based on the project's nature.
 | Dependencies      | SDP                  | Stable Dependencies Principle         | Does the dependency target a module that is more stable (lower change frequency) than itself? |
 | Simplicity        | KISS                 | Keep It Simple, Stupid                | Is the simplest working solution chosen?                                    |
 | Simplicity        | YAGNI                | You Aren't Gonna Need It             | Are unnecessary features being built? Is there over-engineering?            |
+| Simplicity        | Minimal Comparison   | —                                     | Does ADR-000 in Ch3.6 compare against the minimal configuration and justify each addition (R2.18)? |
 | Simplicity        | DRY                  | Don't Repeat Yourself                 | Is there duplication in code, logic, or definitions?                        |
 | Separation        | SoC                  | Separation of Concerns                | Are concerns properly separated?                                            |
 | Separation        | SRP                  | Single Responsibility Principle       | Does each class/module have a single responsibility?                        |

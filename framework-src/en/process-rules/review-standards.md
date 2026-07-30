@@ -104,6 +104,12 @@ Names are the primary interface of software. A name reveals its essence; code sh
 - Is there excessive generalization or abstraction (e.g., an abstract class with only one concrete case at present)?
 - Are there unused parameters, flags, or configuration values?
 
+**Comparison against the minimum (Occam's razor)**
+- Does Ch3.6 contain ADR-000 "Comparison against the minimal configuration"? (**If it is absent this item is violated. The quality of its content is not at issue here**)
+- Is the minimal configuration written as one that *satisfies the requirements* (a proposal that drops requirements is not a minimal configuration)?
+- Are the elements the adopted design adds to the minimum enumerated, each with a reason for adding it?
+- Do the reasons go beyond "because a convention required it" (**state which convention served which requirement**)?
+
 **SoC (Separation of Concerns)**
 - Are UI logic and business logic mixed together?
 - Is data access logic leaking into the business logic layer?
@@ -418,6 +424,7 @@ A single standalone check sheet aggregating all review perspectives (R1–R7). K
 | R2.15 | Design | MUST | PIE: names and comments express "why", not just "what"; name intermediate results | — | — |
 | R2.16 | Design | MUST | CA: dependency is one-way and points toward the least-changing centre; the centre is not contaminated by framework/DB; layer classification and the thickness of the outermost seam layer are correct. **The number of layers is not prescribed** (default is the four layers Entity/UseCase/Adapter/Framework; a different layering is compliant where Ch3.1 defines it) | — | — |
 | R2.17 | Design (AI/LLM) | SHOULD | Prompt engineering: prompts under `src/` with explicit I/O schemas, no ambiguous instructions, prompt tests, versioning policy, hallucination countermeasures | — | — |
+| R2.18 | Design | MUST | Comparison against the minimum: Ch3.6 contains ADR-000 "Comparison against the minimal configuration", stating the smallest configuration that satisfies the requirements, what the adopted design adds to it, and why each addition is necessary | — | — |
 | R3.1 | Coding | MUST | Every external I/O (network/DB/file) has error handling; errors are not silently swallowed (no empty catch) | — | — |
 | R3.2 | Coding | MUST | Error messages carry debug context internally; no internal details (stack traces, DB errors) leaked to users | — | — |
 | R3.3 | Coding | MUST | All external input validated; Null/Undefined/empty handled; no unsafe type assertions | — | — |

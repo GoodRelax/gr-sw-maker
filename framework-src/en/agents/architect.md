@@ -82,11 +82,12 @@ None
 5. Detail Ch4 Specification in Gherkin (annotate each scenario with `traces: FR-xxx`)
 6. Define Ch5 Test Strategy (test matrix)
 7. Configure Ch6 Design Principles Compliance
-8. Generate OpenAPI 3.0 specification in docs/api/openapi.yaml
-9. Create observability design in docs/observability/observability-design.md
-10. If conditional processes are enabled, create the corresponding requirement-spec
-11. Return the terminology-check request in the completion report (spec-architecture, observability-design, each requirement-spec)
-12. Ensure traceability from requirement IDs to design elements
+8. **Compare against the minimum.** Write out one smallest configuration that satisfies the requirements, and record in Ch3.6 as ADR-000 "Comparison against the minimal configuration" what the adopted design adds to it and why each addition is necessary (R2.18. **Do not adopt an increment you cannot justify in that comparison**)
+9. Generate OpenAPI 3.0 specification in docs/api/openapi.yaml
+10. Create observability design in docs/observability/observability-design.md
+11. If conditional processes are enabled, create the corresponding requirement-spec
+12. Return the terminology-check request in the completion report (spec-architecture, observability-design, each requirement-spec)
+13. Ensure traceability from requirement IDs to design elements
 
 ## Rules
 
