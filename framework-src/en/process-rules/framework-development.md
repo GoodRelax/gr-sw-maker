@@ -158,6 +158,39 @@ When writing a section number into an agent's "rule sections to read", confirm t
 | `prompt-structure.md` | All 22 agent definitions |
 | Adding or removing an agent | Perform all six steps of "Procedure for Adding New Agents" in `agent-list.md` §5 |
 
+### 5.5 A Proposal That Adds Must Carry the Smallest Alternative (MUST)
+
+A proposal that **adds** a rule, a field, a check or an agent MUST state three things alongside it.
+
+| # | What to state |
+|:-:|---|
+| 1 | **What happens if it is not added.** Give a count where the event was observed |
+| 2 | **The smaller alternative** (the minimal configuration) |
+| 3 | **Why the minimal configuration was not taken** |
+
+**Why:** R2.18 makes a product design compare itself against the smallest configuration that satisfies the requirements, but **the framework itself was exempt.** The rules it ships come to 11,264 lines in ja alone, and nothing has ever asked whether they could be fewer. **A proposal to add a rule is expected to carry a justification; no evidence has ever been asked for that not adding it was considered.** A structure where only the adding force operates is what the trial identified as the root cause of over-design, and the framework is an instance of it.
+
+**The limit:** what this guarantees is that a comparison was recorded, not that its conclusion was right. **That is the same deliberate acceptance R2.18 makes.**
+
+### 5.6 Defaults and MUSTs Carry Their Reason (MUST, scope-limited)
+
+**The scope is defaults and MUSTs only.** Writing a reason into every clause would add volume, inviting from the rules' own side the growth 5.5 exists to resist.
+
+| Target | What to state |
+|---|---|
+| **A default** | Why that is the default, and **where to record a departure from it** |
+| **A MUST** | What breaks when it is not obeyed |
+
+**Why:** in the trial, the server/web assumptions baked into the CLAUDE.md template collided with a CLI in **six places**, each needing a decision to reinterpret it. **Had "why this is the default" been written down, "this does not apply to a CLI" would have been immediate.** The reader is an LLM, and where only the default is written, the default is what gets followed.
+
+**Comparison against the minimal configuration (5.5 applied to itself):**
+
+| # | Content |
+|:-:|---|
+| 1 | **Without it:** reinterpreting defaults recurs. The trial's count is six places |
+| 2 | **Minimal configuration:** write the reason on defaults only, leaving MUSTs out of scope |
+| 3 | **Why not taken:** what needed reinterpreting in the trial were defaults, but **what got argued over were MUSTs.** Leaving them out means re-litigating why each obligation exists every time |
+
 ---
 
 
