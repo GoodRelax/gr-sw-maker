@@ -238,6 +238,8 @@ Temporary files used only during work. Document only when they exist.
 
 An agent never launches another agent. Launching is the sole prerogative of the main agent.
 
+**Two-way exchange with the user -- asking, obtaining approval, receiving a judgement -- is equally the sole prerogative of `main-agent`.** A subagent's output is visible to the user, so **a one-way report works**, but **no reply can come back.** An instruction that says "confirm with the user" or "obtain the user's approval" fails exactly as a launch instruction does: **silently, without an error.** Where confirmation is needed, **return the request in the completion report for `main-agent` to act on.**
+
 | Never write | Write instead |
 |---|---|
 | "Launch kotodama-kun to check terminology" | "Return the terminology-check request in the completion report" |

@@ -37,6 +37,8 @@
 | ANMS | AI-Native Minimal Spec。単一 Markdown ファイルの仕様書形式。1コンテキストウィンドウに収まる規模向け |
 | ANPS | AI-Native Plural Spec。複数 Markdown ファイル + Common Block の仕様書形式。中規模向け |
 | ANGS | AI-Native Graph Spec。GraphDB + Git の仕様書形式。大規模向け。MD はビュー |
+| main-agent | ユーザーと双方向にやりとりし、サブエージェントを起動する唯一の主体。Claude Code のメインの会話そのものであり、**定義ファイルを持たないため名簿（agent-list §1）に載らない**。会話履歴を保持する |
+| project-manager | 進行状態の記録と PM 情報の統合・報告を担うサブエージェント。**ユーザーとは直接やりとりしない**（旧名 `orchestrator`。世の中の orchestrator がユーザー入口を兼ねるため退役させた） |
 | Common Block | 全 file_type 共通のメタデータ。ファイルの身元証明（識別・状態・ワークフロー・コンテキスト・出自）。**YAML frontmatter のトップレベルに置く** |
 | Form Block | file_type 固有の構造化フィールド。エージェントがパースして判断・アクションに使う。**frontmatter 内で名前空間キーの配下にネストし、1 ファイルに 1 つ** |
 | Detail Block | 詳細説明ゾーン。ドメイン知識の本体。人間とエージェントが理解のために読む。**frontmatter の外、本文の markdown** |

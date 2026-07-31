@@ -1,16 +1,33 @@
 # Agent List
 
-> **Document purpose:** Single Source of Truth for all agents registered in the full-auto-dev framework. Update this document when adding, modifying, or removing agents.
+> **Document purpose:** Single Source of Truth for all **subagents** registered in the full-auto-dev framework. Update this document when adding, modifying, or removing subagents.
+> **`main-agent` is not in this list**, because it has no definition file (see section 0).
 > **Derived from:** [Process Rules](full-auto-dev-process-rules.md) §2-4, §7, §9 / [Document Management Rules](full-auto-dev-document-rules.md) §7, §7.1, §11
 > **Related documents:** [Prompt Structure Convention](prompt-structure.md), each agent prompt (`.claude/agents/*.md`)
 
 ---
 
-## 1. Agent List
+## 0. The Three Governing Actors
+
+**Governance is split three ways, not one.** Who talks to the user is readable only here.
+
+| Actor | Responsibility | Interaction with the user | Definition file |
+|---|---|---|---|
+| **`main-agent`** | Progress lead. Launches subagents | **Two-way.** Questions, approvals and judgements arrive only here | **None** (it is the main Claude Code conversation itself) |
+| **`technical-authority`** | Technical rulings and quality-gate decisions | None (via `main-agent`) | `agents/technical-authority.md` |
+| **`project-manager`** | Records progress state, consolidates and reports PM information | **One-way reporting only** | `agents/project-manager.md` |
+
+**A subagent cannot hold a two-way exchange with the user.** Its output is visible, so a one-way report works, but **it can receive neither an answer nor an approval.** Only `main-agent` can.
+
+**Why the split:** in the usual multi-agent frameworks -- LangGraph's supervisor, CrewAI's hierarchical manager -- the coordinating role doubles as the user's entry point. Here it does not, **because it cannot**: a subagent cannot carry a conversation. That a name summons the opposite expectation is part of why `orchestrator` was retired.
+
+---
+
+## 1. Subagent List
 
 | # | name | Role | model | Primary Phase |
 |:-:|------|------|:-----:|--------------|
-| 1 | project-manager | Records progress state, consolidates PM information (progress, cost, risk, change requests), reports to the user | opus | All phases |
+| 1 | project-manager | Records progress state, consolidates PM information (progress, cost, risk, change requests), **reports via `main-agent`** | opus | All phases |
 | 2 | srs-writer | User concept structuring, interviews, spec Ch1-2 creation | opus | planning |
 | 3 | architect | Spec Ch3-6 elaboration, OpenAPI / observability / external dependency requirement design | opus | design |
 | 4 | security-reviewer | Threat modeling, security design, vulnerability scanning | opus | design, implementation |

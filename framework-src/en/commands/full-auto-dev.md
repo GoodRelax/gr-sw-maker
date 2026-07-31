@@ -130,7 +130,7 @@ Execute the following phases sequentially:
 Fa. Launch kotodama-kun and check terminology and naming across all Outs of that phase in one pass
 Fb. Launch progress-monitor to read project-management/progress/session-state.json and append that phase's token consumption and cost to cost-log.json
     -> If session-state.json is absent or sink_heartbeat_at is stale: the measurement path has stopped. Record in cost-log.json that measurement was unavailable and report it to the user. **Never write an estimated consumption (MUST NOT)**
-Fc. If compaction_count in session-state.json has risen above the previous phase, a compaction has happened. Create a handoff so there is a resumption point
+Fc. If compaction_count in session-state.json has risen above the previous phase, a compaction has happened. Create a **session-handoff** so there is a resumption point (`/session-handoff`; a different file_type from the inter-agent handoff)
     -> Context usage cannot be observed. Never decide to interrupt from an estimated usage figure (MUST NOT); whether to interrupt is the user's call
 Fd. Launch project-manager to update pipeline-state.md and executive-dashboard.md and report to the user
 Fe. Launch process-improver to run the retrospective and root cause analysis of defect patterns

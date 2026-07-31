@@ -37,6 +37,8 @@ Concepts defined by this framework that are not found in dictionaries.
 | ANMS | AI-Native Minimal Spec. A specification format in a single Markdown file. For projects that fit within one context window |
 | ANPS | AI-Native Plural Spec. A specification format using multiple Markdown files + Common Block. For medium-scale projects |
 | ANGS | AI-Native Graph Spec. A specification format using GraphDB + Git. For large-scale projects. MD serves as views |
+| main-agent | The only actor that exchanges with the user in both directions and launches subagents. It is the main Claude Code conversation itself and **carries no definition file, so it is absent from the roster (agent-list section 1)**. It holds the conversation history |
+| project-manager | The subagent that records progress state and consolidates and reports PM information. **It never exchanges with the user directly** (formerly `orchestrator`, retired because an orchestrator elsewhere doubles as the user's entry point) |
 | Common Block | Metadata common to all file_type. Identity proof of the file (identification, state, workflow, context, provenance). **Sits at the top level of the YAML frontmatter** |
 | Form Block | Structured fields specific to each file_type. Parsed by agents for decisions and actions. **Nested under a namespace key in the frontmatter, one per file** |
 | Detail Block | The detailed description zone. The body of domain knowledge. Read by both humans and agents for understanding. **Outside the frontmatter, in the markdown body** |

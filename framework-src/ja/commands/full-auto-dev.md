@@ -130,7 +130,7 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
 Fa. kotodama-kun を起動し、当該フェーズの全 Out の用語・命名を一括チェックする
 Fb. progress-monitor を起動し、project-management/progress/session-state.json を読んで当該フェーズのトークン消費とコストを cost-log.json に追記する
     → session-state.json が無い、または sink_heartbeat_at が古い場合: 計測経路が停止している。計測不能である旨を cost-log.json に記録し、ユーザーに報告する。**消費量を推測で書いてはならない（MUST NOT）**
-Fc. session-state.json の compaction_count が前フェーズより増えていたら文脈の圧縮が起きている。handoff を作成して再開点を残す
+Fc. session-state.json の compaction_count が前フェーズより増えていたら文脈の圧縮が起きている。**session-handoff** を作成して再開点を残す（`/session-handoff`。エージェント間の handoff とは別の file_type）
     → コンテキスト使用率は観測できない。使用率の推定値で中断を判断してはならない（MUST NOT）。中断の要否はユーザーが判断する
 Fd. project-manager を起動し、pipeline-state.md と executive-dashboard.md を更新してユーザーに報告する
 Fe. process-improver を起動し、ふりかえりと defect パターンの根本原因分析を実施する
