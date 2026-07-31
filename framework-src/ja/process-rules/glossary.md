@@ -37,9 +37,11 @@
 | ANMS | AI-Native Minimal Spec。単一 Markdown ファイルの仕様書形式。1コンテキストウィンドウに収まる規模向け |
 | ANPS | AI-Native Plural Spec。複数 Markdown ファイル + Common Block の仕様書形式。中規模向け |
 | ANGS | AI-Native Graph Spec。GraphDB + Git の仕様書形式。大規模向け。MD はビュー |
-| Common Block | 全 file_type 共通のメタデータブロック。ファイルの身元証明（識別・状態・ワークフロー・コンテキスト・出自） |
-| Form Block | file_type 固有の構造化フィールドブロック。エージェントがパースして判断・アクションに使う |
-| Detail Block | 詳細説明ゾーン。ドメイン知識の本体。人間とエージェントが理解のために読む |
+| Common Block | 全 file_type 共通のメタデータ。ファイルの身元証明（識別・状態・ワークフロー・コンテキスト・出自）。**YAML frontmatter のトップレベルに置く** |
+| Form Block | file_type 固有の構造化フィールド。エージェントがパースして判断・アクションに使う。**frontmatter 内で名前空間キーの配下にネストし、1 ファイルに 1 つ** |
+| Detail Block | 詳細説明ゾーン。ドメイン知識の本体。人間とエージェントが理解のために読む。**frontmatter の外、本文の markdown** |
+| OKF | Open Knowledge Format。知識文書の容器形式の標準。本フレームワークは v0.2 に従い、`type` / `description` / `generated` / `sources` を用いる |
+| actor | 主体の表記規約。`{agent-name}` / `human:{id}` / `process:{id}` の 3 形式。**人間の承認と機械の生成を機械的に区別するために設けた** |
 | Footer | 更新履歴ブロック。append-only。監査用 |
 | In | エージェントの入力。仕事開始時に存在するファイル。イミュータブル（読むだけ） |
 | Out | エージェントの出力。仕事終了時の最終成果物。End Conditions に対応。次のエージェントの In になる |

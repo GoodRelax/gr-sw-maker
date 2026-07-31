@@ -89,10 +89,56 @@ function readStdin() {
   }
 }
 
-/** A tag value as written by the Form Block spec: <ns:field>value</ns:field>. */
-function tagValue(text, tag) {
-  const match = new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`).exec(text);
-  return match ? match[1].trim() : null;
+/**
+ * The Form Block of a managed file, taken from its YAML frontmatter.
+ *
+ * This is not a YAML parser. It returns the indented lines under one top-level
+ * key, which is all this guard needs and is what keeps it dependency-free.
+ * Anything it cannot read is treated as absent, and an absent review reads as a
+ * gate that has not passed -- the direction the rules already take.
+ */
+function formBlock(text, namespace) {
+  const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text);
+  if (!frontmatter) return null;
+
+  const lines = frontmatter[1].split(/\r?\n/);
+  const start = lines.findIndex((line) => line.trimEnd() === `${namespace}:`);
+  if (start === -1) return null;
+
+  const body = [];
+  for (const line of lines.slice(start + 1)) {
+    // An unindented, non-empty line is the next top-level key.
+    if (line.trim() !== "" && !/^\s/.test(line)) break;
+    body.push(line);
+  }
+  return body.join("\n");
+}
+
+/** A scalar field inside a Form Block. */
+function fieldValue(block, name) {
+  if (!block) return null;
+  const match = new RegExp(`^\\s+${name}:\\s*(.*)$`, "m").exec(block);
+  if (!match) return null;
+  return match[1].trim().replace(/^["']|["']$/g, "") || null;
+}
+
+/**
+ * A field plus any lines nested under it, so a value written either as a flow
+ * list or as a block list comes back as one string to search.
+ */
+function fieldRegion(block, name) {
+  if (!block) return null;
+  const start = new RegExp(`^(\\s+)${name}:(.*)$`, "m").exec(block);
+  if (!start) return null;
+
+  const indent = start[1].length;
+  const parts = [start[2]];
+  for (const line of block.slice(start.index + start[0].length).split(/\r?\n/)) {
+    if (line.trim() === "") continue;
+    if (line.match(/^\s*/)[0].length <= indent) break;
+    parts.push(line);
+  }
+  return parts.join("\n");
 }
 
 /** Is there a passing review on record for this gate? */
@@ -108,9 +154,10 @@ function gatePassed(projectDir, gate) {
     } catch {
       continue;
     }
-    if (tagValue(text, "review:result") !== "pass") continue;
+    const block = formBlock(text, "review");
+    if (fieldValue(block, "result") !== "pass") continue;
 
-    const named = tagValue(text, "review:gate");
+    const named = fieldValue(block, "gate");
     if (named) {
       if (named === gate) return true;
       continue;
@@ -118,7 +165,7 @@ function gatePassed(projectDir, gate) {
     // review:gate is optional in the Form Block spec, so fall back to the
     // perspectives the review applied. A review covering every perspective the
     // gate requires is the same evidence under a different field.
-    const dimensions = tagValue(text, "review:dimensions");
+    const dimensions = fieldRegion(block, "dimensions");
     if (!dimensions) continue;
     const applied = new Set(dimensions.match(/R\d+/g) ?? []);
     if (GATE_PERSPECTIVES[gate].every((id) => applied.has(id))) return true;

@@ -1,6 +1,6 @@
-# full-auto-dev 文書管理規則 v0.0.0
+# full-auto-dev 文書管理規則 v0.1.0
 
-## Version 0.0.0 | Date: 2026-03-15
+## Version 0.1.0 | Date: 2026-08-01
 
 > **ステータス:** Pre-release（PoC前）。PoC完了後に v1.0.0 へ昇格する。
 
@@ -26,13 +26,13 @@
 | **MINOR** | Form Block の変更・追加 | 該当タイプのファイルのみ | 該当タイプのみ要確認 |
 | **PATCH** | Detail Block Guidance / 文言修正 | 影響なし | そのまま使える |
 
-管理対象ファイルの `doc:schema_version` は本文書の **MAJOR.MINOR** を記録する（PATCHは省略）。
+管理対象ファイルの `schema_version` は本文書の **MAJOR.MINOR** を記録する（PATCHは省略）。
 
 **リリースステータス:**
 
 | バージョン | 条件 | 意味 |
 |-----------|------|------|
-| 0.x.x | PoC前 | 設計段階。Common Block含め自由に変更可能 |
+| 0.x.x | PoC前 | 設計段階。Common Block含め自由に変更可能。**この間、容器の変更は MINOR で表す**（MAJOR は 1.0.0 への昇格に予約されているため） |
 | 1.0.0 | PoC完了・検証済み | 正式版。MAJOR変更にはマイグレーションガイドが必要 |
 
 ## 1.2 フレームワーク規約の改訂ルール
@@ -303,23 +303,23 @@ API定義、セキュリティ設計など、仕様書以外の設計成果物�
 
 # 4. ブロック構造
 
-管理対象の `.md` ファイルはすべて以下の4部構成に従う。
+管理対象の `.md` ファイルはすべて以下の4部構成に従う。**Common Block と Form Block は 1 つの YAML frontmatter に同居し、Detail Block と Footer は本文にある。**
 
 **ブロック図:**
 
 ```mermaid
 graph TD
-    A["Common Block<br/>全file_type共通<br/>doc: 名前空間"]
-    B["Form Block<br/>file_type固有<br/>専用名前空間"]
-    C["Detail Block<br/>詳細説明ゾーン<br/>名前空間不要"]
-    D["Footer<br/>更新履歴<br/>doc: 名前空間"]
+    A["Common Block<br/>全file_type共通<br/>frontmatter のトップレベル"]
+    B["Form Block<br/>file_type固有<br/>frontmatter の名前空間キー配下"]
+    C["Detail Block<br/>詳細説明ゾーン<br/>本文の markdown"]
+    D["Footer<br/>変更履歴<br/>本文末尾の表"]
 
-    A -->|"次"| B
-    B -->|"次"| C
+    A -->|"同じ frontmatter"| B
+    B -->|"frontmatter を閉じる"| C
     C -->|"次"| D
 ```
 
-各ブロックの役割は明確である。Common Blockはファイルを識別し、Form Blockはファイルタイプ固有の定型フォーマット（AIが従うべき構造）を定義し、Detail Blockは詳細な説明・根拠・証拠を記述し、Footerは変更履歴を追跡する。
+各ブロックの役割は明確である。Common Blockはファイルを識別し、Form Blockはファイルタイプ固有の定型フォーマット（AIが従うべき構造）を定義し、Detail Blockは詳細な説明・根拠・証拠を記述し、Footerは変更履歴を追跡する。**構造化された値は frontmatter に、散文は本文にある** — 機械が読む部分と人が読む部分が、解析なしで分かれている。
 
 **Form Block は 1 ファイルに 1 つである（MUST）。複数のエントリは Detail Block の表が担う。** §9 の 37 の file_type はすべてこの形をとっており、Form Block が持つのは件数・状態・ID といった**文書レベルの属性**である。例えば `test-plan` の Form Block は `test_case_count`（総数）を持ち、テストケースの一覧は Detail Block の表にある。`wbs`・`traceability`・`risk-register`・`threat-model`・`license-report` も同型である。**この規約により、Form Block を繰り返し検出するパーサは不要になる。**
 
@@ -367,7 +367,7 @@ security-reviewer が脅威モデルを作成。他のエージェントはこ�
 
 | 情報 | 候補 | 判断 | 理由 |
 |------|------|------|------|
-| ファイルの目的 | Common? Form? | **Common** (`doc:purpose`) | 全ファイルタイプ共通フィールド |
+| ファイルの目的 | Common? Form? | **Common** (`purpose`) | 全ファイルタイプ共通フィールド |
 | 採用した脅威分析手法（STRIDE, DREAD等） | Form? Detail? | **Form Block** (`threat-model:methodology`) | エージェントがパースして手法を判断。dashboardにも表示可能 |
 | 特定された脅威の総数 | Form? Detail? | **Form Block** (`threat-model:threat_count`) | 数値メトリクス。progress-monitorが集計 |
 | 未軽減のCritical脅威数 | Form? Detail? | **Form Block** (`threat-model:unmitigated_critical_count`) | technical-authority がゲート判断に使う（→ §9.4.1 GATE-DESIGN） |
@@ -424,7 +424,7 @@ srs-writerがCh1-2を作成、architectがCh3-6を詳細化。
 | 情報 | 候補 | 判断 | 理由 |
 |------|------|------|------|
 | 仕様形式（ANMS/ANPS） | Form? Detail? | **Form Block** (`spec-foundation:spec_format`) | エージェントが読取方法を判断 |
-| 完成済みチャプター（Ch1-2内） | Form? Detail? | **Form Block** (`spec-foundation:completed_chapters`) | architectが引継ぎ可能か判断。doc:document_statusとは別概念（文書全体 vs チャプター単位） |
+| 完成済みチャプター（Ch1-2内） | Form? Detail? | **Form Block** (`spec-foundation:completed_chapters`) | architectが引継ぎ可能か判断。document_status とは別概念（文書全体 vs チャプター単位） |
 | 完成済みチャプター | Form? Detail? | **Form Block** (`spec-architecture:completed_chapters`) | architectが作業開始位置を判断 |
 | 機能要求数 / 非機能要求数 | Form? Detail? | **Form Block** (`spec-foundation:fr_count`, `spec-foundation:nfr_count`) | traceabilityカバレッジ算出の母数 |
 | Ch1-6の本文全体 | Form? Detail? | **Detail Block** | ANMS/ANPSフォーマットに従う仕様本体 |
@@ -517,181 +517,173 @@ stateDiagram-v2
 
 # 5. Common Block 仕様
 
-フィールド順序は固定。エージェントはフィールドの順序変更や必須フィールドの省略をしてはならない（MUST NOT）。
+Common Block は **YAML frontmatter** として記述する。ファイル先頭に `---` で囲んで置かなければならない（MUST）。独自のタグ形式を用いてはならない（MUST NOT）。
 
-**フィールド順序（AIの読取フローに最適化）:**
+**容器形式は Open Knowledge Format (OKF) v0.2 に従う。** 従来の `<doc:field>` 形式は専用パーサを要したが、YAML frontmatter は `yq`・Python・JS・GitHub の表示・各種エディタがそのまま読む。**標準があるものを自前で作らない。**
+
+**キー順序（AIの読取フローに最適化）:**
 
 ```
-── 識別（何をどう読むか）──
-schema_version → file_type → language
+── OKF コア（何であるか）──
+okf_version → type → description
+── 識別（どう読むか）──
+→ schema_version → language
 ── 状態（触っていいか）──
 → document_status → document_version
 ── ワークフロー（自分の仕事か）──
 → owner → commissioned_by → consumed_by
 ── コンテキスト（何の話か）──
-→ project → purpose → summary
+→ project → purpose
 ── 参照（関連は何か）──
-→ related_docs
-── 出自（いつ誰が）──
-→ created_by → created_at
+→ related_docs → sources
+── 出自と更新（いつ誰が）──
+→ generated → updated
+── file_type 固有 ──
+→ {namespace}
 ```
 
-**フィールド定義:**
+**キー定義:**
 
-| フィールド | 型 | 必須 | グループ | 説明 |
-|-----------|------|------|---------|------|
-| schema_version | string | Yes | 識別 | スキーマバージョン（現在 "0.0"） |
-| file_type | enum | Yes | 識別 | 登録済みファイルタイプの1つ（第7章参照） |
-| language | string (ISO 639-1) | Yes | 識別 | このファイルの記述言語（例: `ja`, `en`, `fr`） |
-| document_status | enum: draft / in-review / approved / archived | Yes | 状態 | 文書のライフサイクルステータス |
-| document_version | string | Yes | 状態 | `{メジャー}.{マイナー}` 形式の版番号（例: `1.2`）。**ファイル名は不変とし、版はこのフィールドで管理する** |
-| owner | string | Yes | ワークフロー | 書込み権限を持つエージェント |
-| commissioned_by | string | Yes | ワークフロー | この文書の作成トリガー（値: `user`, `orchestrator`, `phase-{name}`, または `{agent-name}`） |
-| consumed_by | list | Yes | ワークフロー | この文書を次に利用するエージェント。**消費者が複数の場合はタグを繰り返す**（`<doc:consumed_by>a</doc:consumed_by><doc:consumed_by>b</doc:consumed_by>`）。カンマ区切りの単一文字列にしない |
-| project | string | Yes | コンテキスト | プロジェクト名 |
-| purpose | string | Yes | コンテキスト | このファイルが存在する理由と期待されるアクション |
-| summary | string | Yes | コンテキスト | ファイル内容の簡潔な説明 |
-| related_docs | list | No | 参照 | 入力/出力/次のファイルへの参照 |
-| created_by | string | Yes | 出自 | ファイルを作成したエージェント |
-| created_at | datetime | Yes | 出自 | ISO 8601 作成タイムスタンプ（UTC） |
+| キー | 型 | 必須 | 区分 | 説明 |
+|-----|------|------|------|------|
+| okf_version | string | Yes | OKF | 準拠する OKF の版。現在 `"0.2"` |
+| type | string | Yes | OKF | 登録済みファイルタイプの1つ（第7章参照）。**OKF が必須とする唯一のキー** |
+| description | string | Yes | OKF | ファイル内容の簡潔な説明 |
+| schema_version | string | Yes | 拡張 | 本フレームワークのスキーマ版（現在 `"0.1"`） |
+| language | string (ISO 639-1) | Yes | 拡張 | このファイルの記述言語（例: `ja`, `en`, `fr`） |
+| document_status | enum: draft / in-review / approved / archived | Yes | 拡張 | 文書のライフサイクルステータス。**OKF の `status` は用いない**（値域が異なるため） |
+| document_version | string | Yes | 拡張 | `{メジャー}.{マイナー}` 形式の版番号（例: `1.2`）。**ファイル名は不変とし、版はこのキーで管理する** |
+| owner | actor | Yes | 拡張 | 書込み権限を持つ主体。§5.1 の表記に従う |
+| commissioned_by | string | Yes | 拡張 | この文書の作成トリガー（値: `user`, `orchestrator`, `phase-{name}`, または `{agent-name}`） |
+| consumed_by | list | Yes | 拡張 | この文書を次に利用するエージェント。**YAML のリストで書く**（タグの繰り返しは不要になった） |
+| project | string | Yes | 拡張 | プロジェクト名 |
+| purpose | string | Yes | 拡張 | このファイルが存在する理由と期待されるアクション |
+| related_docs | list | No | 拡張 | 入力/出力/次のファイルへの参照。各要素のキーは `ref` / `input` / `output` / `next` |
+| sources | list | No | OKF | 引用した数値・他者の判断の出所。§5.2 |
+| generated | map | Yes | OKF | `by`（作成した主体）と `at`（ISO 8601・UTC） |
+| updated | map | Yes | 拡張 | `by` と `at`。書込みのたびに更新する（第6章） |
+| {namespace} | map | file_type による | 拡張 | file_type 固有の Form Block（第9章）。名前空間名をキーとしてネストする |
 
 **Common Block テンプレート:**
 
-```markdown
-<!-- ============================================================
-     COMMON BLOCK | DO NOT MODIFY STRUCTURE OR FIELD NAMES
-     ============================================================ -->
+```yaml
+---
+okf_version: "0.2"
+type: {file_type}
+description: {summary}
 
-## Identification
+schema_version: "0.1"
+language: {language_code}
 
-<!-- FIELD: schema_version | type: string | required: true -->
+document_status: draft
+document_version: "0.1"
 
-<doc:schema_version>0.0</doc:schema_version>
+owner: {actor}
+commissioned_by: {trigger}
+consumed_by:
+  - {agent-name}
 
-<!-- FIELD: file_type | type: enum | required: true -->
+project: {project-name}
+purpose: {purpose}
 
-<doc:file_type>{file_type}</doc:file_type>
+related_docs:
+  - ref: {path-to-related-file}
 
-<!-- FIELD: language | type: string (ISO 639-1) | required: true -->
+sources:
+  - id: {citation-id}
+    resource: {path-or-url}
+    author: {actor}
+    last_modified: {YYYY-MM-DD}
 
-<doc:language>{language_code}</doc:language>
+generated:
+  by: {actor}
+  at: {ISO-8601-timestamp}
+updated:
+  by: {actor}
+  at: {ISO-8601-timestamp}
 
-## Document State
-
-<!-- FIELD: document_status | type: enum | values: draft,in-review,approved,archived | required: true -->
-
-<doc:document_status>draft</doc:document_status>
-
-<!-- FIELD: document_version | type: string | required: true -->
-
-<doc:document_version>0.1</doc:document_version>
-
-## Workflow
-
-<!-- FIELD: owner | type: string | required: true -->
-
-<doc:owner>{agent-name}</doc:owner>
-
-<!-- FIELD: commissioned_by | type: string | required: true -->
-<!-- Trigger for this document's creation: user, orchestrator, phase-{name}, or {agent-name} -->
-
-<doc:commissioned_by>{trigger}</doc:commissioned_by>
-
-<!-- FIELD: consumed_by | type: string | required: true -->
-<!-- Which agent will use this document next -->
-
-<doc:consumed_by>{agent-name}</doc:consumed_by>
-
-## Context
-
-<!-- FIELD: project | type: string | required: true -->
-
-<doc:project>{project-name}</doc:project>
-
-<!-- FIELD: purpose | type: string | required: true -->
-<!-- Tell the agent WHY this file exists and what action is expected -->
-
-<doc:purpose>
-{purpose}
-</doc:purpose>
-
-<!-- FIELD: summary | type: string | required: true -->
-
-<doc:summary>
-{summary}
-</doc:summary>
-
-## References
-
-<!-- FIELD: related_docs | type: list | required: false -->
-
-<doc:related_docs>
-<doc:ref>{path-to-related-file}</doc:ref>
-</doc:related_docs>
-
-## Provenance
-
-<!-- FIELD: created_by | type: string | required: true -->
-
-<doc:created_by>{agent-name}</doc:created_by>
-
-<!-- FIELD: created_at | type: datetime | required: true -->
-
-<doc:created_at>{ISO-8601-timestamp}</doc:created_at>
+{namespace}:
+  {field_name}: {value}
+---
 ```
 
-**related_docs サブタグ:**
+**related_docs のキー:**
 
-| サブタグ | 意味 |
+| キー | 意味 |
 |---------|------|
-| `<doc:ref>` | 一般参照（デフォルト） |
-| `<doc:input>` | この文書が消費するファイル |
-| `<doc:output>` | この文書が生成するファイル |
-| `<doc:next>` | シーケンス上の次のファイル（例: 次のhandoff） |
+| `ref` | 一般参照（デフォルト） |
+| `input` | この文書が消費するファイル |
+| `output` | この文書が生成するファイル |
+| `next` | シーケンス上の次のファイル（例: 次のhandoff） |
+
+**旧形式との対応:**
+
+| 旧（`<doc:>` タグ形式） | 新（frontmatter） |
+|---|---|
+| `file_type` | `type` |
+| `summary` | `description` |
+| `created_by` + `created_at` | `generated.by` + `generated.at` |
+| `updated_by` + `updated_at`（Footer） | `updated.by` + `updated.at` |
+| Form Block の `<ns:field>` | `{ns}.{field}` |
+| 残り 9 フィールド | 同名の拡張キー |
+
+**`okf_version` を宣言する条件:** OKF の生産者適合条件は「全 `.md` が解析可能な frontmatter を持ち、非空の `type` を持つ」ことである。本仕様に従って作成されたファイルはこれを満たす。**旧形式のファイルが残るプロジェクトでは、変換を終えるまでこの宣言は真にならない。変換前に宣言してはならない（MUST NOT）。**
+
+## 5.1 actor 表記
+
+`owner` / `generated.by` / `updated.by` / change_log の `by` / decision の承認者は、次の3形式のいずれかで書かなければならない（MUST）。
+
+| 形式 | 意味 | 例 |
+|-----|------|---|
+| `{agent-name}` | エージェントが行った | `architect` |
+| `human:{id}` | 人間が行った | `human:product-owner` |
+| `process:{id}` | エージェントではない自動処理が行った | `process:gate-guard` |
+
+**理由:** 従来はエージェント名しか入らず、**人間の承認と機械の生成を区別できなかった。** waiver がユーザー承認を得ていても、その事実は本文にしか現れず機械では判定できない。3形式に分ければ「この判断を人間が確認したか」が構造から読める。
+
+## 5.2 sources
+
+**引用した数値と、他者の判断の引用にのみ付ける（MUST）。** すべての記述に求めると記述量が膨らみ、規則が「増やす」方向にしか働かなくなる。
+
+| キー | 型 | 必須 | 説明 |
+|-----|------|------|------|
+| `id` | string | Yes | 本文から参照するための識別子 |
+| `resource` | string | Yes | ファイルパスまたは URL |
+| `author` | string | No | 作成者。§5.1 の actor 表記に従う |
+| `last_modified` | string | No | 最終更新日（`YYYY-MM-DD`） |
+
+本文からはこの `id` で引用する。**どの数値がどこ由来かを書く場所がなかったために、報告書で出所そのものが争点になった。** その再発を防ぐための最小限の構造である。
 
 ---
 
 # 6. Footer 仕様
 
-Footerは全ファイルタイプ共通。エージェントは書込みのたびにchange_logに新しい `<entry>` を追記しなければならない（MUST）。
+**更新者と更新時刻は frontmatter の `updated` が持つ**（第5章）。Footer が担うのは変更履歴だけである。
+
+change_log は**本文末尾の表**として書く。frontmatter には置かない — 追記のたびに frontmatter が伸び続け、「文書レベルの属性」という役割から外れるためである。
 
 **Footer テンプレート:**
 
 ```markdown
-<!-- ============================================================
-     FOOTER | append change_log entry on every write
-     ============================================================ -->
-
-## Last Updated
-
-<!-- FIELD: updated_by | type: string | required: true -->
-
-<doc:updated_by>{agent-name}</doc:updated_by>
-
-<!-- FIELD: updated_at | type: datetime | required: true -->
-
-<doc:updated_at>{ISO-8601-timestamp}</doc:updated_at>
-
 ## Change Log
 
-<!-- FIELD: change_log | type: list | append-only | DO NOT MODIFY OR DELETE EXISTING ENTRIES -->
-
-<doc:change_log>
-<entry at="{ISO-8601-timestamp}" by="{agent-name}" action="created" />
-</doc:change_log>
+| at | by | action |
+|---|---|---|
+| {ISO-8601-timestamp} | {actor} | created |
 ```
 
 **change_log ルール:**
 
-- 追記専用（append-only）: 既存エントリの変更・削除は厳禁（NEVER）
-- 各書込み操作で新しい `<entry>` を追加しなければならない（MUST）
-- `action` フィールドに変更内容を記述する（例: "created", "updated phase to 2", "archived previous version to old/"）
+- 追記専用（append-only）: 既存の行の変更・削除は厳禁（NEVER）
+- 各書込み操作で新しい行を追加しなければならない（MUST）。あわせて frontmatter の `updated` を更新しなければならない（MUST）
+- `by` は §5.1 の actor 表記に従わなければならない（MUST）。**人間の承認を機械が判定できるのはこの列だけである**
+- `action` に変更内容を記述する（例: "created", "updated phase to 2", "archived previous version to old/"）
 
 ---
 
 # 7. ファイルタイプ（Common Block管理対象）
 
-**名前空間命名規則:** 名前空間はfile_type名をそのまま使用する。略称は禁止（例: ~~`cr:`~~ → `change-request:`）。原則2単語以下、最大3単語。`doc:` はCommon Block + Footer専用で予約済み。カテゴリにサブタイプがある場合はカテゴリを先頭に置く（例: `spec-foundation:`, `spec-architecture:`）。
+**名前空間命名規則:** 名前空間はfile_type名をそのまま使用する。略称は禁止（例: ~~`cr:`~~ → `change-request:`）。原則2単語以下、最大3単語。**Common Block は名前空間を持たず frontmatter のトップレベルに置く。** カテゴリにサブタイプがある場合はカテゴリを先頭に置く（例: `spec-foundation:`, `spec-architecture:`）。
 
 **Tier の意味:**
 
@@ -843,50 +835,60 @@ external-dependency-spec（抽象テンプレート）
 
 # 8. 名前空間プレフィックス
 
-名前空間プレフィックスは標準HTML/XMLタグとの衝突を防ぎ、フィールドを機械的にパース可能にする。命名規則は§7を参照。
+名前空間は Form Block のキーを file_type ごとにまとめ、拡張キーどうしの衝突を防ぐ。frontmatter では名前空間がマッピングのキーになり、その配下に各フィールドが入る。命名規則は§7を参照。
+
+**Common Block には名前空間がない。** 旧 `doc:` 名前空間は廃止した。第5章のキーはすべて frontmatter のトップレベルに置く。
 
 | 名前空間 | 使用箇所 | 例 |
 |---------|----------|-----|
-| `doc:` | Common Block + Footer（予約） | `<doc:schema_version>0.0</doc:schema_version>` |
-| `pipeline-state:` | pipeline-state Form Block | `<pipeline-state:phase>2</pipeline-state:phase>` |
-| `handoff:` | handoff Form Block | `<handoff:from>srs-writer</handoff:from>` |
-| `progress:` | progress Form Block | `<progress:completion_pct>45</progress:completion_pct>` |
-| `interview-record:` | interview-record Form Block | `<interview-record:interview_status>completed</interview-record:interview_status>` |
-| `wbs:` | wbs Form Block | `<wbs:task_total>24</wbs:task_total>` |
-| `test-plan:` | test-plan Form Block | `<test-plan:test_level>unit,integration,e2e</test-plan:test_level>` |
-| `review:` | review Form Block | `<review:result>pass</review:result>` |
-| `decision:` | decision Form Block | `<decision:id>DEC-001</decision:id>` |
-| `risk:` | risk Form Block | `<risk:score>6</risk:score>` |
-| `defect:` | defect Form Block | `<defect:severity>high</defect:severity>` |
-| `change-request:` | change-request Form Block | `<change-request:impact_level>medium</change-request:impact_level>` |
-| `traceability:` | traceability Form Block | `<traceability:coverage_pct>85</traceability:coverage_pct>` |
-| `license-report:` | license-report Form Block | `<license-report:compatible_count>12</license-report:compatible_count>` |
-| `performance-report:` | performance-report Form Block | `<performance-report:nfr_pass_rate>100%</performance-report:nfr_pass_rate>` |
-| `spec-foundation:` | spec-foundation Form Block | `<spec-foundation:fr_count>15</spec-foundation:fr_count>` |
-| `spec-architecture:` | spec-architecture Form Block | `<spec-architecture:completed_chapters>3,4</spec-architecture:completed_chapters>` |
-| `threat-model:` | threat-model Form Block | `<threat-model:threat_count>8</threat-model:threat_count>` |
-| `security-architecture:` | security-architecture Form Block | `<security-architecture:owasp_coverage>10/10</security-architecture:owasp_coverage>` |
-| `observability-design:` | observability-design Form Block | `<observability-design:log_format>structured-json</observability-design:log_format>` |
-| `hw-requirement-spec:` | hw-requirement-spec Form Block | `<hw-requirement-spec:interface_count>4</hw-requirement-spec:interface_count>` |
-| `ai-requirement-spec:` | ai-requirement-spec Form Block | `<ai-requirement-spec:model_capability>reasoning,code-generation</ai-requirement-spec:model_capability>` |
-| `framework-requirement-spec:` | framework-requirement-spec Form Block | `<framework-requirement-spec:framework_name>PostgreSQL</framework-requirement-spec:framework_name>` |
-| `executive-dashboard:` | executive-dashboard Form Block | `<executive-dashboard:health>green</executive-dashboard:health>` |
-| `final-report:` | final-report Form Block | `<final-report:goal_achievement>achieved</final-report:goal_achievement>` |
-| `user-order:` | user-order Form Block | `<user-order:format>ANMS</user-order:format>` |
-| `security-scan-report:` | security-scan-report Form Block | `<security-scan-report:scan_type>sast</security-scan-report:scan_type>` |
-| `user-manual:` | user-manual Form Block | `<user-manual:target_audience>end-user</user-manual:target_audience>` |
-| `runbook:` | runbook Form Block | `<runbook:last_drill_date>2026-03-15</runbook:last_drill_date>` |
-| `incident-report:` | incident-report Form Block | `<incident-report:severity>P1</incident-report:severity>` |
-| `disaster-recovery-plan:` | disaster-recovery-plan Form Block | `<disaster-recovery-plan:rto_hours>4</disaster-recovery-plan:rto_hours>` |
-| `stakeholder-register:` | stakeholder-register Form Block | `<stakeholder-register:stakeholder_count>5</stakeholder-register:stakeholder_count>` |
-| `retrospective-report:` | retrospective-report Form Block | `<retrospective-report:approval_status>proposed</retrospective-report:approval_status>` |
-| `field-issue:` | field-issue Form Block | `<field-issue:type>defect</field-issue:type>` |
+| `pipeline-state:` | pipeline-state Form Block | `pipeline-state.phase: 2` |
+| `handoff:` | handoff Form Block | `handoff.from: srs-writer` |
+| `progress:` | progress Form Block | `progress.completion_pct: 45` |
+| `interview-record:` | interview-record Form Block | `interview-record.interview_status: completed` |
+| `wbs:` | wbs Form Block | `wbs.task_total: 24` |
+| `test-plan:` | test-plan Form Block | `test-plan.test_level: unit,integration,e2e` |
+| `review:` | review Form Block | `review.result: pass` |
+| `decision:` | decision Form Block | `decision.id: DEC-001` |
+| `risk:` | risk Form Block | `risk.score: 6` |
+| `defect:` | defect Form Block | `defect.severity: high` |
+| `change-request:` | change-request Form Block | `change-request.impact_level: medium` |
+| `traceability:` | traceability Form Block | `traceability.coverage_pct: 85` |
+| `license-report:` | license-report Form Block | `license-report.compatible_count: 12` |
+| `performance-report:` | performance-report Form Block | `performance-report.nfr_pass_rate: 100%` |
+| `spec-foundation:` | spec-foundation Form Block | `spec-foundation.fr_count: 15` |
+| `spec-architecture:` | spec-architecture Form Block | `spec-architecture.completed_chapters: 3,4` |
+| `threat-model:` | threat-model Form Block | `threat-model.threat_count: 8` |
+| `security-architecture:` | security-architecture Form Block | `security-architecture.owasp_coverage: 10/10` |
+| `observability-design:` | observability-design Form Block | `observability-design.log_format: structured-json` |
+| `hw-requirement-spec:` | hw-requirement-spec Form Block | `hw-requirement-spec.interface_count: 4` |
+| `ai-requirement-spec:` | ai-requirement-spec Form Block | `ai-requirement-spec.model_capability: reasoning,code-generation` |
+| `framework-requirement-spec:` | framework-requirement-spec Form Block | `framework-requirement-spec.framework_name: PostgreSQL` |
+| `executive-dashboard:` | executive-dashboard Form Block | `executive-dashboard.health: green` |
+| `final-report:` | final-report Form Block | `final-report.goal_achievement: achieved` |
+| `user-order:` | user-order Form Block | `user-order.format: ANMS` |
+| `security-scan-report:` | security-scan-report Form Block | `security-scan-report.scan_type: sast` |
+| `user-manual:` | user-manual Form Block | `user-manual.target_audience: end-user` |
+| `runbook:` | runbook Form Block | `runbook.last_drill_date: 2026-03-15` |
+| `incident-report:` | incident-report Form Block | `incident-report.severity: P1` |
+| `disaster-recovery-plan:` | disaster-recovery-plan Form Block | `disaster-recovery-plan.rto_hours: 4` |
+| `stakeholder-register:` | stakeholder-register Form Block | `stakeholder-register.stakeholder_count: 5` |
+| `retrospective-report:` | retrospective-report Form Block | `retrospective-report.approval_status: proposed` |
+| `field-issue:` | field-issue Form Block | `field-issue.type: defect` |
 
 ---
 
 # 9. Form Block 仕様
 
-各Form BlockはCommon BlockとDetail Blockの間に位置する。名前空間プレフィックスはfile_typeに対応する。
+Form Block は Common Block と同じ frontmatter の中にあり、**file_type の名前空間をキーとしてネストする。**
+
+**Fields 表の `{namespace}:{field_name}` は frontmatter 上の位置を表す。** `test-plan:coverage_target_pct` は次を指す。
+
+```yaml
+test-plan:
+  coverage_target_pct: 80
+```
+
+この対応は全 37 file_type に一律であり、以下の Fields 表はそのまま読める。
 
 ## 9.0 Form Block 定義メタテンプレート
 
@@ -951,7 +953,7 @@ external-dependency-spec（抽象テンプレート）
 | pipeline-state:blocked_by | string | No | ブロッキング条件 | — |
 | pipeline-state:needs_human | boolean | Yes | ユーザー待ちか？ | true / false |
 | pipeline-state:human_action | string | No | ユーザーが行うべきアクション | — |
-| pipeline-state:current_gate | list | No | 活性中の品質ゲート。**1 つの遷移が複数のゲートを持つ場合はタグを繰り返す**（planning → の遷移は GATE-INTERVIEW と GATE-PLANNING の 2 つ）。カンマ区切りの単一文字列にしない | — |
+| pipeline-state:current_gate | list | No | 活性中の品質ゲート。**YAML のリストで書く**（planning → の遷移は GATE-INTERVIEW と GATE-PLANNING の 2 つ）。カンマ区切りの単一文字列にしない | — |
 | pipeline-state:gate_result | enum | No | ゲート結果 | pending / pass / fail |
 | pipeline-state:gate_fail_target | string | No | ゲート失敗時の戻り先フェーズ | — |
 | pipeline-state:latest_handoff | string | No | 最新の引継ぎファイルパス | — |
@@ -1023,7 +1025,7 @@ external-dependency-spec（抽象テンプレート）
 | decision:id | string | Yes | DEC-NNN | — |
 | decision:category | enum | Yes | 意思決定カテゴリ | architecture / security / technology / process / requirement |
 | decision:decision_status | enum | Yes | 意思決定ステータス | proposed / approved / rejected / superseded |
-| decision:approved_by | string | No | 承認者（ユーザーまたは orchestrator）。未承認時は空 | — |
+| decision:approved_by | actor | No | 承認者。未承認時は空 | §5.1 の actor 表記（`human:{id}` / `process:{id}` / エージェント名） |
 
 ### Detail Block Guidance
 
@@ -1115,7 +1117,7 @@ stateDiagram-v2
 | change-request:cause | enum | Yes | 変更原因（ユーザー起点のみ） | requirement-addition / requirement-change / scope-change |
 | change-request:impact_level | enum | Yes | 影響度 | high → ユーザー承認必須 / medium / low |
 | change-request:change_request_status | enum | Yes | 変更要求ステータス | submitted / in-analysis / approved / rejected / implemented |
-| change-request:approved_by | string | No | 承認者。未決定時は空 | — |
+| change-request:approved_by | actor | No | 承認者。未決定時は空 | §5.1 の actor 表記 |
 
 ### Detail Block Guidance
 
@@ -1594,6 +1596,7 @@ field-issue の詳細を記載する。field-test-engineer がフィードバッ
 | tech-decision:rationale | text | Yes | 判断根拠 | — |
 | tech-decision:waiver | string | No | waiver の有無と参照 | none / waiver 記録への参照 |
 | tech-decision:reevaluate_at | string | No | 再評価の時期（waiver 時は必須） | — |
+| tech-decision:approved_by | actor | No | 判断を承認した主体（**waiver 時は必須**） | §5.1 の actor 表記。**waiver のユーザー承認が本文にしか無いと機械で判定できない** |
 
 ### Detail Block Guidance
 
@@ -1613,7 +1616,7 @@ field-issue の詳細を記載する。field-test-engineer がフィードバッ
 | governance-change-log:source_report | string | Yes | 適用元の retrospective-report | ファイル名 |
 | governance-change-log:target_file | string | Yes | 変更したガバナンスファイル | パス |
 | governance-change-log:apply_status | enum | Yes | 適用結果 | applied / partially-applied / rejected |
-| governance-change-log:approved_by | enum | Yes | 承認主体 | user / orchestrator |
+| governance-change-log:approved_by | actor | Yes | 承認主体 | §5.1 の actor 表記。**`user` とだけ書かない**（人間なら `human:{id}`） |
 | governance-change-log:safety_check_result | enum | Yes | 安全チェックの結果 | pass / fail |
 | governance-change-log:rejected_reason | text | No | 適用しなかった理由（rejected / partially-applied の場合は必須） | — |
 
@@ -1750,7 +1753,7 @@ archived   → 変更しない（参照専用）
 |---|------|-------------|
 | フレームワーク層 | process-rules/, essays/ | 日英ペアで提供。プロジェクトとは独立 |
 | プロジェクト設定層 | CLAUDE.md の言語設定 | プロジェクト開始時にユーザーが選択 |
-| ファイル層 | Common Block `doc:language` | 各ファイルが自分の言語を宣言 |
+| ファイル層 | Common Block の `language` | 各ファイルが自分の言語を宣言 |
 
 ## 12.2 プロジェクト言語設定
 
@@ -1841,7 +1844,7 @@ CLAUDE.md に以下を設定する（setup フェーズで AI が提案）:
 | 決定事項 | 根拠 |
 |---------|------|
 | 3ディレクトリ分離 | オーケストレーション（PM）、成果物（docs）、プロセス記録を分離。プロセスに関心がない人はproject-records/を無視できる |
-| カスタムXML風名前空間タグ | HTMLとの衝突防止、正規表現でパース可能、Markdownレンダラーで人間可読 |
+| YAML frontmatter（OKF v0.2） | 標準形式であり専用パーサが要らない。`yq`・各言語・GitHub 表示・エディタがそのまま読む。**独自形式は検査ツールを自前で持つ義務を生む** |
 | 追記専用change_log | 監査証跡の完全性を保証。エージェントは履歴を書き換えられない |
 | シングルトンpipeline-state | 「今どこにいるか」の唯一の真実の源 |
 | オーナーベースの書込み制御 | 競合編集の防止。各ファイルの責任が明確 |

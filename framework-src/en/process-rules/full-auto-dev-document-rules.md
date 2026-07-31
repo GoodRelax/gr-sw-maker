@@ -1,6 +1,6 @@
-# full-auto-dev Document Management Rules v0.0.0
+# full-auto-dev Document Management Rules v0.1.0
 
-## Version 0.0.0 | Date: 2026-03-15
+## Version 0.1.0 | Date: 2026-08-01
 
 > **Status:** Pre-release (before PoC). Will be promoted to v1.0.0 after PoC completion.
 
@@ -26,13 +26,13 @@ The version of this document itself is managed in **MAJOR.MINOR.PATCH** format.
 | **MINOR** | Changes/additions to Form Block | Only files of the affected type | Only affected types need review |
 | **PATCH** | Detail Block Guidance / wording corrections | No impact | Can be used as-is |
 
-The `doc:schema_version` of managed files records the **MAJOR.MINOR** of this document (PATCH is omitted).
+The `schema_version` of managed files records the **MAJOR.MINOR** of this document (PATCH is omitted).
 
 **Release status:**
 
 | Version | Condition | Meaning |
 |-----------|------|------|
-| 0.x.x | Before PoC | Design stage. Common Block and all else can be freely changed |
+| 0.x.x | Before PoC | Design stage. Common Block and all else can be freely changed. **While here, a container change moves MINOR** (MAJOR is reserved for the promotion to 1.0.0) |
 | 1.0.0 | PoC completed and verified | Official version. MAJOR changes require a migration guide |
 
 ## 1.2 Framework Convention Revision Rules
@@ -303,23 +303,23 @@ Common to all old/ directories:
 
 # 4. Block Structure
 
-All managed `.md` files follow the following 4-part structure.
+All managed `.md` files follow the following 4-part structure. **The Common Block and the Form Block share one YAML frontmatter; the Detail Block and the Footer are in the body.**
 
 **Block diagram:**
 
 ```mermaid
 graph TD
-    A["Common Block<br/>Shared across all file_types<br/>doc: namespace"]
-    B["Form Block<br/>file_type-specific<br/>Dedicated namespace"]
-    C["Detail Block<br/>Detailed description zone<br/>No namespace required"]
-    D["Footer<br/>Change history<br/>doc: namespace"]
+    A["Common Block<br/>Shared across all file_types<br/>Top level of the frontmatter"]
+    B["Form Block<br/>file_type-specific<br/>Under the namespace key"]
+    C["Detail Block<br/>Detailed description zone<br/>Markdown body"]
+    D["Footer<br/>Change history<br/>Table at the end of the body"]
 
-    A -->|"next"| B
-    B -->|"next"| C
+    A -->|"same frontmatter"| B
+    B -->|"closes the frontmatter"| C
     C -->|"next"| D
 ```
 
-The role of each block is clear. The Common Block identifies the file, the Form Block defines file-type-specific structured formats (structures that AI should follow), the Detail Block describes detailed explanations, rationale, and evidence, and the Footer tracks change history.
+The role of each block is clear. The Common Block identifies the file, the Form Block defines file-type-specific structured formats (structures that AI should follow), the Detail Block describes detailed explanations, rationale, and evidence, and the Footer tracks change history. **Structured values sit in the frontmatter and prose sits in the body**, so the part a machine reads and the part a person reads are separated without any parsing.
 
 **A file carries exactly one Form Block (MUST). Repeated entries belong to a table in the Detail Block.** All 37 file_types in §9 take this shape, and what a Form Block holds is a **document-level attribute** such as a count, a status or an id. The `test-plan` Form Block, for instance, holds `test_case_count`, while the list of test cases lives in a Detail Block table. `wbs`, `traceability`, `risk-register`, `threat-model` and `license-report` are the same shape. **This rule is what makes a parser that has to detect repeated Form Blocks unnecessary.**
 
@@ -367,7 +367,7 @@ security-reviewer creates a threat model. Other agents reference it for implemen
 
 | Information | Candidates | Decision | Rationale |
 |------|------|------|------|
-| File purpose | Common? Form? | **Common** (`doc:purpose`) | Field shared across all file types |
+| File purpose | Common? Form? | **Common** (`purpose`) | Field shared across all file types |
 | Adopted threat analysis methodology (STRIDE, DREAD, etc.) | Form? Detail? | **Form Block** (`threat-model:methodology`) | Agent parses to determine methodology. Can also be displayed on dashboard |
 | Total number of identified threats | Form? Detail? | **Form Block** (`threat-model:threat_count`) | Numeric metric. Aggregated by progress-monitor |
 | Number of unmitigated Critical threats | Form? Detail? | **Form Block** (`threat-model:unmitigated_critical_count`) | Used by technical-authority for the gate decision (-> §9.4.1 GATE-DESIGN) |
@@ -424,7 +424,7 @@ srs-writer creates Ch1-2, architect details Ch3-6.
 | Information | Candidates | Decision | Rationale |
 |------|------|------|------|
 | Specification format (ANMS/ANPS) | Form? Detail? | **Form Block** (`spec-foundation:spec_format`) | Agent determines reading method |
-| Completed chapters (within Ch1-2) | Form? Detail? | **Form Block** (`spec-foundation:completed_chapters`) | architect determines if handoff is possible. Different concept from doc:document_status (entire document vs. chapter-level) |
+| Completed chapters (within Ch1-2) | Form? Detail? | **Form Block** (`spec-foundation:completed_chapters`) | architect determines if handoff is possible. Different concept from document_status (entire document vs. chapter-level) |
 | Completed chapters | Form? Detail? | **Form Block** (`spec-architecture:completed_chapters`) | architect determines work start position |
 | Functional requirement count / Non-functional requirement count | Form? Detail? | **Form Block** (`spec-foundation:fr_count`, `spec-foundation:nfr_count`) | Denominator for traceability coverage calculation |
 | Full text of Ch1-6 | Form? Detail? | **Detail Block** | Specification body following ANMS/ANPS format |
@@ -517,181 +517,173 @@ stateDiagram-v2
 
 # 5. Common Block Specification
 
-Field order is fixed. Agents MUST NOT reorder fields or omit required fields.
+The Common Block is written as **YAML frontmatter**. It MUST be placed at the top of the file, delimited by `---`. A bespoke tag format MUST NOT be used.
 
-**Field order (optimized for AI reading flow):**
+**The container format follows Open Knowledge Format (OKF) v0.2.** The former `<doc:field>` form required a dedicated parser, whereas YAML frontmatter is read as-is by `yq`, Python, JS, GitHub rendering and most editors. **Do not build your own where a standard exists.**
+
+**Key order (optimized for the AI reading flow):**
 
 ```
-── Identification (what and how to read) ──
-schema_version → file_type → language
-── State (is it safe to touch?) ──
-→ document_status → document_version
-── Workflow (is this my job?) ──
-→ owner → commissioned_by → consumed_by
-── Context (what is this about?) ──
-→ project → purpose → summary
-── References (what is related?) ──
-→ related_docs
-── Provenance (when and by whom?) ──
-→ created_by → created_at
+-- OKF core (what this is) --
+okf_version -> type -> description
+-- Identification (how to read it) --
+-> schema_version -> language
+-- State (may I touch it) --
+-> document_status -> document_version
+-- Workflow (is this my job) --
+-> owner -> commissioned_by -> consumed_by
+-- Context (what is this about) --
+-> project -> purpose
+-- References (what is related) --
+-> related_docs -> sources
+-- Provenance and update (when, by whom) --
+-> generated -> updated
+-- file_type specific --
+-> {namespace}
 ```
 
-**Field definitions:**
+**Key definitions:**
 
-| Field | Type | Required | Group | Description |
-|-----------|------|------|---------|------|
-| schema_version | string | Yes | Identification | Schema version (currently "0.0") |
-| file_type | enum | Yes | Identification | One of the registered file types (see Chapter 7) |
-| language | string (ISO 639-1) | Yes | Identification | Language of this file (e.g., `ja`, `en`, `fr`) |
-| document_status | enum: draft / in-review / approved / archived | Yes | State | Document lifecycle status |
-| document_version | string | Yes | State | Version number in `{major}.{minor}` form (e.g. `1.2`). **The file name is immutable; the version lives in this field** |
-| owner | string | Yes | Workflow | Agent with write permission |
-| commissioned_by | string | Yes | Workflow | Trigger for this document's creation (values: `user`, `orchestrator`, `phase-{name}`, or `{agent-name}`) |
-| consumed_by | list | Yes | Workflow | Agents that will use this document next. **Repeat the tag when there are several consumers** (`<doc:consumed_by>a</doc:consumed_by><doc:consumed_by>b</doc:consumed_by>`). Do not use a single comma-separated string |
-| project | string | Yes | Context | Project name |
-| purpose | string | Yes | Context | Why this file exists and what action is expected |
-| summary | string | Yes | Context | Brief description of file contents |
-| related_docs | list | No | References | References to input/output/next files |
-| created_by | string | Yes | Provenance | Agent that created the file |
-| created_at | datetime | Yes | Provenance | ISO 8601 creation timestamp (UTC) |
+| Key | Type | Required | Class | Description |
+|-----|------|----------|-------|-------------|
+| okf_version | string | Yes | OKF | The OKF version this conforms to. Currently `"0.2"` |
+| type | string | Yes | OKF | One of the registered file types (see Section 7). **The only key OKF requires** |
+| description | string | Yes | OKF | A concise description of the file contents |
+| schema_version | string | Yes | Extension | This framework's schema version (currently `"0.1"`) |
+| language | string (ISO 639-1) | Yes | Extension | The language this file is written in (e.g. `ja`, `en`, `fr`) |
+| document_status | enum: draft / in-review / approved / archived | Yes | Extension | Document lifecycle status. **OKF's `status` is not used** (its value range differs) |
+| document_version | string | Yes | Extension | Version number in `{major}.{minor}` form (e.g. `1.2`). **The filename stays fixed; the version lives in this key** |
+| owner | actor | Yes | Extension | The actor holding write permission. Follows the notation in 5.1 |
+| commissioned_by | string | Yes | Extension | What triggered this document (values: `user`, `orchestrator`, `phase-{name}`, or `{agent-name}`) |
+| consumed_by | list | Yes | Extension | The agents that use this document next. **Written as a YAML list** (repeating a tag is no longer needed) |
+| project | string | Yes | Extension | Project name |
+| purpose | string | Yes | Extension | Why this file exists and what action is expected |
+| related_docs | list | No | Extension | References to input/output/next files. Each entry's key is `ref` / `input` / `output` / `next` |
+| sources | list | No | OKF | Where quoted figures and others' judgements came from. See 5.2 |
+| generated | map | Yes | OKF | `by` (the actor that created it) and `at` (ISO 8601, UTC) |
+| updated | map | Yes | Extension | `by` and `at`, refreshed on every write (Section 6) |
+| {namespace} | map | Per file_type | Extension | The file-type-specific Form Block (Section 9), nested under the namespace name |
 
 **Common Block template:**
 
-```markdown
-<!-- ============================================================
-     COMMON BLOCK | DO NOT MODIFY STRUCTURE OR FIELD NAMES
-     ============================================================ -->
+```yaml
+---
+okf_version: "0.2"
+type: {file_type}
+description: {summary}
 
-## Identification
+schema_version: "0.1"
+language: {language_code}
 
-<!-- FIELD: schema_version | type: string | required: true -->
+document_status: draft
+document_version: "0.1"
 
-<doc:schema_version>0.0</doc:schema_version>
+owner: {actor}
+commissioned_by: {trigger}
+consumed_by:
+  - {agent-name}
 
-<!-- FIELD: file_type | type: enum | required: true -->
+project: {project-name}
+purpose: {purpose}
 
-<doc:file_type>{file_type}</doc:file_type>
+related_docs:
+  - ref: {path-to-related-file}
 
-<!-- FIELD: language | type: string (ISO 639-1) | required: true -->
+sources:
+  - id: {citation-id}
+    resource: {path-or-url}
+    author: {actor}
+    last_modified: {YYYY-MM-DD}
 
-<doc:language>{language_code}</doc:language>
+generated:
+  by: {actor}
+  at: {ISO-8601-timestamp}
+updated:
+  by: {actor}
+  at: {ISO-8601-timestamp}
 
-## Document State
-
-<!-- FIELD: document_status | type: enum | values: draft,in-review,approved,archived | required: true -->
-
-<doc:document_status>draft</doc:document_status>
-
-<!-- FIELD: document_version | type: string | required: true -->
-
-<doc:document_version>0.1</doc:document_version>
-
-## Workflow
-
-<!-- FIELD: owner | type: string | required: true -->
-
-<doc:owner>{agent-name}</doc:owner>
-
-<!-- FIELD: commissioned_by | type: string | required: true -->
-<!-- Trigger for this document's creation: user, orchestrator, phase-{name}, or {agent-name} -->
-
-<doc:commissioned_by>{trigger}</doc:commissioned_by>
-
-<!-- FIELD: consumed_by | type: string | required: true -->
-<!-- Which agent will use this document next -->
-
-<doc:consumed_by>{agent-name}</doc:consumed_by>
-
-## Context
-
-<!-- FIELD: project | type: string | required: true -->
-
-<doc:project>{project-name}</doc:project>
-
-<!-- FIELD: purpose | type: string | required: true -->
-<!-- Tell the agent WHY this file exists and what action is expected -->
-
-<doc:purpose>
-{purpose}
-</doc:purpose>
-
-<!-- FIELD: summary | type: string | required: true -->
-
-<doc:summary>
-{summary}
-</doc:summary>
-
-## References
-
-<!-- FIELD: related_docs | type: list | required: false -->
-
-<doc:related_docs>
-<doc:ref>{path-to-related-file}</doc:ref>
-</doc:related_docs>
-
-## Provenance
-
-<!-- FIELD: created_by | type: string | required: true -->
-
-<doc:created_by>{agent-name}</doc:created_by>
-
-<!-- FIELD: created_at | type: datetime | required: true -->
-
-<doc:created_at>{ISO-8601-timestamp}</doc:created_at>
+{namespace}:
+  {field_name}: {value}
+---
 ```
 
-**related_docs sub-tags:**
+**related_docs keys:**
 
-| Sub-tag | Meaning |
+| Key | Meaning |
 |---------|------|
-| `<doc:ref>` | General reference (default) |
-| `<doc:input>` | File consumed by this document |
-| `<doc:output>` | File produced by this document |
-| `<doc:next>` | Next file in the sequence (e.g., next handoff) |
+| `ref` | General reference (default) |
+| `input` | A file this document consumes |
+| `output` | A file this document produces |
+| `next` | The next file in sequence (e.g. the next handoff) |
+
+**Correspondence with the former format:**
+
+| Former (`<doc:>` tag form) | New (frontmatter) |
+|---|---|
+| `file_type` | `type` |
+| `summary` | `description` |
+| `created_by` + `created_at` | `generated.by` + `generated.at` |
+| `updated_by` + `updated_at` (Footer) | `updated.by` + `updated.at` |
+| Form Block `<ns:field>` | `{ns}.{field}` |
+| The remaining 9 fields | Extension keys under the same name |
+
+**When `okf_version` may be declared:** the OKF producer conformance condition is that every `.md` has parseable frontmatter and a non-empty `type`. A file created under this specification satisfies it. **In a project where files in the former format remain, the declaration is not true until the conversion is finished. It MUST NOT be declared before that.**
+
+## 5.1 Actor Notation
+
+`owner`, `generated.by`, `updated.by`, the `by` of a change_log entry and the approver of a decision MUST be written in one of these three forms.
+
+| Form | Meaning | Example |
+|-----|------|---|
+| `{agent-name}` | An agent did it | `architect` |
+| `human:{id}` | A human did it | `human:product-owner` |
+| `process:{id}` | An automated process that is not an agent did it | `process:gate-guard` |
+
+**Why:** previously only an agent name fitted, so **human approval and machine generation could not be told apart.** A waiver may carry user approval, but that fact appeared only in prose and no machine could judge it. Splitting the three forms makes "did a human confirm this" readable from the structure.
+
+## 5.2 sources
+
+**Attach it only to quoted figures and to quoted judgements of others (MUST).** Requiring it everywhere inflates the volume of writing and leaves the rules pushing only in the direction of more.
+
+| Key | Type | Required | Description |
+|-----|------|----------|-------------|
+| `id` | string | Yes | The identifier the body cites |
+| `resource` | string | Yes | A file path or URL |
+| `author` | string | No | Who produced it. Follows the actor notation in 5.1 |
+| `last_modified` | string | No | Date last modified (`YYYY-MM-DD`) |
+
+The body cites this `id`. **Because there was nowhere to record which figure came from where, the provenance itself became the point of contention in a report.** This is the smallest structure that prevents a repeat.
 
 ---
 
 # 6. Footer Specification
 
-The Footer is shared across all file types. Agents MUST append a new `<entry>` to the change_log on every write.
+**The updating actor and timestamp live in the frontmatter `updated` key** (Section 5). All the Footer carries is the change history.
+
+The change_log is written as **a table at the end of the body**, not in the frontmatter: it grows with every append, which would take the frontmatter out of its role as a set of document-level attributes.
 
 **Footer template:**
 
 ```markdown
-<!-- ============================================================
-     FOOTER | append change_log entry on every write
-     ============================================================ -->
-
-## Last Updated
-
-<!-- FIELD: updated_by | type: string | required: true -->
-
-<doc:updated_by>{agent-name}</doc:updated_by>
-
-<!-- FIELD: updated_at | type: datetime | required: true -->
-
-<doc:updated_at>{ISO-8601-timestamp}</doc:updated_at>
-
 ## Change Log
 
-<!-- FIELD: change_log | type: list | append-only | DO NOT MODIFY OR DELETE EXISTING ENTRIES -->
-
-<doc:change_log>
-<entry at="{ISO-8601-timestamp}" by="{agent-name}" action="created" />
-</doc:change_log>
+| at | by | action |
+|---|---|---|
+| {ISO-8601-timestamp} | {actor} | created |
 ```
 
 **change_log rules:**
 
-- Append-only: Modification or deletion of existing entries is strictly prohibited (NEVER)
-- A new `<entry>` MUST be added on each write operation
-- The `action` field describes the change content (e.g., "created", "updated phase to 2", "archived previous version to old/")
+- Append-only: modifying or deleting an existing row is NEVER permitted
+- Every write operation MUST add a new row, and MUST refresh the frontmatter `updated` key at the same time
+- `by` MUST follow the actor notation in 5.1. **This column is the only place a machine can judge that a human approved something**
+- `action` describes what changed (e.g. "created", "updated phase to 2", "archived previous version to old/")
 
 ---
 
 # 7. File Types (Common Block Managed)
 
-**Namespace naming convention:** Namespaces use the file_type name as-is. Abbreviations are prohibited (e.g., ~~`cr:`~~ -> `change-request:`). As a rule, 2 words or fewer, maximum 3 words. `doc:` is reserved exclusively for Common Block + Footer. When a category has sub-types, place the category first (e.g., `spec-foundation:`, `spec-architecture:`).
+**Namespace naming convention:** Namespaces use the file_type name as-is. Abbreviations are prohibited (e.g., ~~`cr:`~~ -> `change-request:`). As a rule, 2 words or fewer, maximum 3 words. **The Common Block has no namespace and sits at the top level of the frontmatter.** When a category has sub-types, place the category first (e.g., `spec-foundation:`, `spec-architecture:`).
 
 **What the tiers mean:**
 
@@ -843,50 +835,60 @@ Standard values for `commissioned_by` (creation trigger) and `consumed_by` (next
 
 # 8. Namespace Prefixes
 
-Namespace prefixes prevent collisions with standard HTML/XML tags and make fields machine-parsable. See section 7 for naming conventions.
+A namespace groups the Form Block keys of one file_type and keeps extension keys from colliding. In the frontmatter the namespace is a mapping key, and the fields sit under it. See section 7 for naming conventions.
+
+**The Common Block has no namespace.** The former `doc:` namespace is retired: every key in Section 5 sits at the top level of the frontmatter.
 
 | Namespace | Usage Location | Example |
 |---------|----------|-----|
-| `doc:` | Common Block + Footer (reserved) | `<doc:schema_version>0.0</doc:schema_version>` |
-| `pipeline-state:` | pipeline-state Form Block | `<pipeline-state:phase>2</pipeline-state:phase>` |
-| `handoff:` | handoff Form Block | `<handoff:from>srs-writer</handoff:from>` |
-| `progress:` | progress Form Block | `<progress:completion_pct>45</progress:completion_pct>` |
-| `interview-record:` | interview-record Form Block | `<interview-record:interview_status>completed</interview-record:interview_status>` |
-| `wbs:` | wbs Form Block | `<wbs:task_total>24</wbs:task_total>` |
-| `test-plan:` | test-plan Form Block | `<test-plan:test_level>unit,integration,e2e</test-plan:test_level>` |
-| `review:` | review Form Block | `<review:result>pass</review:result>` |
-| `decision:` | decision Form Block | `<decision:id>DEC-001</decision:id>` |
-| `risk:` | risk Form Block | `<risk:score>6</risk:score>` |
-| `defect:` | defect Form Block | `<defect:severity>high</defect:severity>` |
-| `change-request:` | change-request Form Block | `<change-request:impact_level>medium</change-request:impact_level>` |
-| `traceability:` | traceability Form Block | `<traceability:coverage_pct>85</traceability:coverage_pct>` |
-| `license-report:` | license-report Form Block | `<license-report:compatible_count>12</license-report:compatible_count>` |
-| `performance-report:` | performance-report Form Block | `<performance-report:nfr_pass_rate>100%</performance-report:nfr_pass_rate>` |
-| `spec-foundation:` | spec-foundation Form Block | `<spec-foundation:fr_count>15</spec-foundation:fr_count>` |
-| `spec-architecture:` | spec-architecture Form Block | `<spec-architecture:completed_chapters>3,4</spec-architecture:completed_chapters>` |
-| `threat-model:` | threat-model Form Block | `<threat-model:threat_count>8</threat-model:threat_count>` |
-| `security-architecture:` | security-architecture Form Block | `<security-architecture:owasp_coverage>10/10</security-architecture:owasp_coverage>` |
-| `observability-design:` | observability-design Form Block | `<observability-design:log_format>structured-json</observability-design:log_format>` |
-| `hw-requirement-spec:` | hw-requirement-spec Form Block | `<hw-requirement-spec:interface_count>4</hw-requirement-spec:interface_count>` |
-| `ai-requirement-spec:` | ai-requirement-spec Form Block | `<ai-requirement-spec:model_capability>reasoning,code-generation</ai-requirement-spec:model_capability>` |
-| `framework-requirement-spec:` | framework-requirement-spec Form Block | `<framework-requirement-spec:framework_name>PostgreSQL</framework-requirement-spec:framework_name>` |
-| `executive-dashboard:` | executive-dashboard Form Block | `<executive-dashboard:health>green</executive-dashboard:health>` |
-| `final-report:` | final-report Form Block | `<final-report:goal_achievement>achieved</final-report:goal_achievement>` |
-| `user-order:` | user-order Form Block | `<user-order:format>ANMS</user-order:format>` |
-| `security-scan-report:` | security-scan-report Form Block | `<security-scan-report:scan_type>sast</security-scan-report:scan_type>` |
-| `user-manual:` | user-manual Form Block | `<user-manual:target_audience>end-user</user-manual:target_audience>` |
-| `runbook:` | runbook Form Block | `<runbook:last_drill_date>2026-03-15</runbook:last_drill_date>` |
-| `incident-report:` | incident-report Form Block | `<incident-report:severity>P1</incident-report:severity>` |
-| `disaster-recovery-plan:` | disaster-recovery-plan Form Block | `<disaster-recovery-plan:rto_hours>4</disaster-recovery-plan:rto_hours>` |
-| `stakeholder-register:` | stakeholder-register Form Block | `<stakeholder-register:stakeholder_count>5</stakeholder-register:stakeholder_count>` |
-| `retrospective-report:` | retrospective-report Form Block | `<retrospective-report:approval_status>proposed</retrospective-report:approval_status>` |
-| `field-issue:` | field-issue Form Block | `<field-issue:type>defect</field-issue:type>` |
+| `pipeline-state:` | pipeline-state Form Block | `pipeline-state.phase: 2` |
+| `handoff:` | handoff Form Block | `handoff.from: srs-writer` |
+| `progress:` | progress Form Block | `progress.completion_pct: 45` |
+| `interview-record:` | interview-record Form Block | `interview-record.interview_status: completed` |
+| `wbs:` | wbs Form Block | `wbs.task_total: 24` |
+| `test-plan:` | test-plan Form Block | `test-plan.test_level: unit,integration,e2e` |
+| `review:` | review Form Block | `review.result: pass` |
+| `decision:` | decision Form Block | `decision.id: DEC-001` |
+| `risk:` | risk Form Block | `risk.score: 6` |
+| `defect:` | defect Form Block | `defect.severity: high` |
+| `change-request:` | change-request Form Block | `change-request.impact_level: medium` |
+| `traceability:` | traceability Form Block | `traceability.coverage_pct: 85` |
+| `license-report:` | license-report Form Block | `license-report.compatible_count: 12` |
+| `performance-report:` | performance-report Form Block | `performance-report.nfr_pass_rate: 100%` |
+| `spec-foundation:` | spec-foundation Form Block | `spec-foundation.fr_count: 15` |
+| `spec-architecture:` | spec-architecture Form Block | `spec-architecture.completed_chapters: 3,4` |
+| `threat-model:` | threat-model Form Block | `threat-model.threat_count: 8` |
+| `security-architecture:` | security-architecture Form Block | `security-architecture.owasp_coverage: 10/10` |
+| `observability-design:` | observability-design Form Block | `observability-design.log_format: structured-json` |
+| `hw-requirement-spec:` | hw-requirement-spec Form Block | `hw-requirement-spec.interface_count: 4` |
+| `ai-requirement-spec:` | ai-requirement-spec Form Block | `ai-requirement-spec.model_capability: reasoning,code-generation` |
+| `framework-requirement-spec:` | framework-requirement-spec Form Block | `framework-requirement-spec.framework_name: PostgreSQL` |
+| `executive-dashboard:` | executive-dashboard Form Block | `executive-dashboard.health: green` |
+| `final-report:` | final-report Form Block | `final-report.goal_achievement: achieved` |
+| `user-order:` | user-order Form Block | `user-order.format: ANMS` |
+| `security-scan-report:` | security-scan-report Form Block | `security-scan-report.scan_type: sast` |
+| `user-manual:` | user-manual Form Block | `user-manual.target_audience: end-user` |
+| `runbook:` | runbook Form Block | `runbook.last_drill_date: 2026-03-15` |
+| `incident-report:` | incident-report Form Block | `incident-report.severity: P1` |
+| `disaster-recovery-plan:` | disaster-recovery-plan Form Block | `disaster-recovery-plan.rto_hours: 4` |
+| `stakeholder-register:` | stakeholder-register Form Block | `stakeholder-register.stakeholder_count: 5` |
+| `retrospective-report:` | retrospective-report Form Block | `retrospective-report.approval_status: proposed` |
+| `field-issue:` | field-issue Form Block | `field-issue.type: defect` |
 
 ---
 
 # 9. Form Block Specification
 
-Each Form Block is positioned between the Common Block and the Detail Block. The namespace prefix corresponds to the file_type.
+The Form Block lives in the same frontmatter as the Common Block, **nested under the file_type's namespace as a key.**
+
+**The `{namespace}:{field_name}` in a Fields table names a position in the frontmatter.** `test-plan:coverage_target_pct` means:
+
+```yaml
+test-plan:
+  coverage_target_pct: 80
+```
+
+The correspondence is uniform across all 37 file_types, so the Fields tables below read as they stand.
 
 ## 9.0 Form Block Definition Meta-Template
 
@@ -951,7 +953,7 @@ When defining a new Form Block, the following 2-section structure MUST be follow
 | pipeline-state:blocked_by | string | No | Blocking condition | — |
 | pipeline-state:needs_human | boolean | Yes | Waiting for user? | true / false |
 | pipeline-state:human_action | string | No | Action the user should take | — |
-| pipeline-state:current_gate | list | No | Active quality gate. **Repeat the tag when one transition carries several gates** (the transition out of planning carries both GATE-INTERVIEW and GATE-PLANNING). Do not use a single comma-separated string | — |
+| pipeline-state:current_gate | list | No | Active quality gate. **Write it as a YAML list** (the transition out of planning carries both GATE-INTERVIEW and GATE-PLANNING). Do not use a single comma-separated string | — |
 | pipeline-state:gate_result | enum | No | Gate result | pending / pass / fail |
 | pipeline-state:gate_fail_target | string | No | Fallback phase on gate failure | — |
 | pipeline-state:latest_handoff | string | No | Path to the latest handoff file | — |
@@ -1023,7 +1025,7 @@ Dispositions: **fixed** = corrected and verified, **deferred** = acknowledged bu
 | decision:id | string | Yes | DEC-NNN | — |
 | decision:category | enum | Yes | Decision category | architecture / security / technology / process / requirement |
 | decision:decision_status | enum | Yes | Decision status | proposed / approved / rejected / superseded |
-| decision:approved_by | string | No | Approver (user or orchestrator). Empty when unapproved | — |
+| decision:approved_by | actor | No | Approver. Empty when unapproved | Actor notation from 5.1 (`human:{id}` / `process:{id}` / agent name) |
 
 ### Detail Block Guidance
 
@@ -1115,7 +1117,7 @@ stateDiagram-v2
 | change-request:cause | enum | Yes | Change cause (user-initiated only) | requirement-addition / requirement-change / scope-change |
 | change-request:impact_level | enum | Yes | Impact level | high -> user approval required / medium / low |
 | change-request:change_request_status | enum | Yes | Change request status | submitted / in-analysis / approved / rejected / implemented |
-| change-request:approved_by | string | No | Approver. Empty when undecided | — |
+| change-request:approved_by | actor | No | Approver. Empty when undecided | Actor notation from 5.1 |
 
 ### Detail Block Guidance
 
@@ -1594,6 +1596,7 @@ Describe the details of the field-issue. field-test-engineer records feedback (s
 | tech-decision:rationale | text | Yes | Rationale for the decision | — |
 | tech-decision:waiver | string | No | Presence of and reference to a waiver | none / reference to the waiver record |
 | tech-decision:reevaluate_at | string | No | Re-evaluation timing (required when a waiver is granted) | — |
+| tech-decision:approved_by | actor | No | Who approved the decision (**required when a waiver is granted**) | Actor notation from 5.1. **A waiver's user approval left in prose cannot be judged by machine** |
 
 ### Detail Block Guidance
 
@@ -1613,7 +1616,7 @@ Judgments made on grounds of cost, schedule or risk are recorded in decision (ow
 | governance-change-log:source_report | string | Yes | The retrospective-report the change came from | File name |
 | governance-change-log:target_file | string | Yes | The governance file that was changed | Path |
 | governance-change-log:apply_status | enum | Yes | Result of application | applied / partially-applied / rejected |
-| governance-change-log:approved_by | enum | Yes | Who approved it | user / orchestrator |
+| governance-change-log:approved_by | actor | Yes | Who approved it | Actor notation from 5.1. **Do not write bare `user`** (a human is `human:{id}`) |
 | governance-change-log:safety_check_result | enum | Yes | Result of the safety check | pass / fail |
 | governance-change-log:rejected_reason | text | No | Why it was not applied (required for rejected / partially-applied) | — |
 
@@ -1750,7 +1753,7 @@ Language design consists of 3 layers.
 |---|------|-------------|
 | Framework layer | process-rules/, essays/ | Provided as Japanese/English pairs. Independent of the project |
 | Project settings layer | CLAUDE.md language settings | Selected by user at project start |
-| File layer | Common Block `doc:language` | Each file declares its own language |
+| File layer | Common Block `language` | Each file declares its own language |
 
 ## 12.2 Project Language Settings
 
@@ -1841,7 +1844,7 @@ Language-specific subfolders (`ja/`, `en/`) are not adopted. Reason: When agents
 | Decision | Rationale |
 |---------|------|
 | 3-directory separation | Separates orchestration (PM), artifacts (docs), and process records. Those not interested in process can ignore project-records/ |
-| Custom XML-style namespace tags | Prevents collisions with HTML, parsable via regex, human-readable in Markdown renderers |
+| YAML frontmatter (OKF v0.2) | A standard format needing no dedicated parser: `yq`, every language, GitHub rendering and editors read it as-is. **A bespoke format obliges you to build the checking tools yourself** |
 | Append-only change_log | Guarantees audit trail integrity. Agents cannot rewrite history |
 | Singleton pipeline-state | The single source of truth for "where we are now" |
 | Owner-based write control | Prevents conflicting edits. Clear responsibility for each file |

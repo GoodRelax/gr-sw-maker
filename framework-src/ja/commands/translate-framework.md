@@ -41,7 +41,7 @@ gr-sw-maker フレームワーク文書を $ARGUMENTS に翻訳してくださ�
 | フェーズ名 | `setup`, `planning`, `design` | enum 値 |
 | S0-S6 セクション見出し | `## Activation`, `## Ownership`, `## Procedure`, `## Rules`, `## Exception` | プロンプト構造規約で規定 |
 | サブセクション見出し | `### Purpose`, `### Start Conditions`, `### End Conditions`, `### In`, `### Out`, `### Work` | 同上 |
-| フィールド名・名前空間プレフィックス | `doc:file_type`, `impact_level` | 機械パース |
+| フィールド名・名前空間プレフィックス | `type`, `impact_level` | 機械パース |
 | HTML コメント（FIELD 注釈） | `<!-- FIELD: ... -->` | 機械パース |
 | ソースコード識別子 | 変数名、関数名 | 国際慣習 |
 

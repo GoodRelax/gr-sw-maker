@@ -37,9 +37,11 @@ Concepts defined by this framework that are not found in dictionaries.
 | ANMS | AI-Native Minimal Spec. A specification format in a single Markdown file. For projects that fit within one context window |
 | ANPS | AI-Native Plural Spec. A specification format using multiple Markdown files + Common Block. For medium-scale projects |
 | ANGS | AI-Native Graph Spec. A specification format using GraphDB + Git. For large-scale projects. MD serves as views |
-| Common Block | A metadata block common to all file_type. Identity proof of the file (identification, state, workflow, context, provenance) |
-| Form Block | A structured field block specific to each file_type. Parsed by agents for decisions and actions |
-| Detail Block | The detailed description zone. The body of domain knowledge. Read by both humans and agents for understanding |
+| Common Block | Metadata common to all file_type. Identity proof of the file (identification, state, workflow, context, provenance). **Sits at the top level of the YAML frontmatter** |
+| Form Block | Structured fields specific to each file_type. Parsed by agents for decisions and actions. **Nested under a namespace key in the frontmatter, one per file** |
+| Detail Block | The detailed description zone. The body of domain knowledge. Read by both humans and agents for understanding. **Outside the frontmatter, in the markdown body** |
+| OKF | Open Knowledge Format, a standard container format for knowledge documents. This framework follows v0.2 and uses `type`, `description`, `generated` and `sources` |
+| actor | The notation for an acting party: `{agent-name}`, `human:{id}` or `process:{id}`. **Introduced so that human approval and machine generation can be told apart mechanically** |
 | Footer | The update history block. Append-only. For auditing |
 | In | Agent input. Files that exist at the start of work. Immutable (read-only) |
 | Out | Agent output. The final deliverable at the end of work. Corresponds to End Conditions. Becomes the In for the next agent |
