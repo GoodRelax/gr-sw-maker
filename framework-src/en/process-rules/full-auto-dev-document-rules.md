@@ -319,7 +319,9 @@ graph TD
     C -->|"next"| D
 ```
 
-The role of each block is clear. The Common Block identifies the file, the Form Block defines file-type-specific structured formats (structures that AI should follow), the Detail Block describes detailed explanations, rationale, and evidence, and the Footer tracks change history. Multiple Form Blocks can be placed within a single file (e.g., a series of test cases).
+The role of each block is clear. The Common Block identifies the file, the Form Block defines file-type-specific structured formats (structures that AI should follow), the Detail Block describes detailed explanations, rationale, and evidence, and the Footer tracks change history.
+
+**A file carries exactly one Form Block (MUST). Repeated entries belong to a table in the Detail Block.** All 37 file_types in §9 take this shape, and what a Form Block holds is a **document-level attribute** such as a count, a status or an id. The `test-plan` Form Block, for instance, holds `test_case_count`, while the list of test cases lives in a Detail Block table. `wbs`, `traceability`, `risk-register`, `threat-model` and `license-report` are the same shape. **This rule is what makes a parser that has to detect repeated Form Blocks unnecessary.**
 
 ## 4.1 Information Placement Criteria
 
@@ -922,6 +924,7 @@ When defining a new Form Block, the following 2-section structure MUST be follow
 | commissioned_by, consumed_by | Common Block | Fields shared across all types |
 | document_version | Common Block | Fields shared across all types |
 | Namespace, singleton, directory | Section 7 file_type table | Type registration information |
+| Number of Form Blocks | Section 4 | **An invariant shared by every type (one per file).** Not declared per type |
 
 **Rules for the "Value Range / Constraints" column in the Fields table:**
 

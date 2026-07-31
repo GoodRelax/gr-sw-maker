@@ -319,7 +319,9 @@ graph TD
     C -->|"次"| D
 ```
 
-各ブロックの役割は明確である。Common Blockはファイルを識別し、Form Blockはファイルタイプ固有の定型フォーマット（AIが従うべき構造）を定義し、Detail Blockは詳細な説明・根拠・証拠を記述し、Footerは変更履歴を追跡する。Form Blockは1ファイル内に複数配置できる（例: テストケースの連続）。
+各ブロックの役割は明確である。Common Blockはファイルを識別し、Form Blockはファイルタイプ固有の定型フォーマット（AIが従うべき構造）を定義し、Detail Blockは詳細な説明・根拠・証拠を記述し、Footerは変更履歴を追跡する。
+
+**Form Block は 1 ファイルに 1 つである（MUST）。複数のエントリは Detail Block の表が担う。** §9 の 37 の file_type はすべてこの形をとっており、Form Block が持つのは件数・状態・ID といった**文書レベルの属性**である。例えば `test-plan` の Form Block は `test_case_count`（総数）を持ち、テストケースの一覧は Detail Block の表にある。`wbs`・`traceability`・`risk-register`・`threat-model`・`license-report` も同型である。**この規約により、Form Block を繰り返し検出するパーサは不要になる。**
 
 ## 4.1 情報の配置基準
 
@@ -922,6 +924,7 @@ external-dependency-spec（抽象テンプレート）
 | commissioned_by, consumed_by | Common Block | 全タイプ共通フィールド |
 | document_version | Common Block | 全タイプ共通フィールド |
 | 名前空間、シングルトン、ディレクトリ | §7 file_type テーブル | タイプの登録情報 |
+| Form Block の個数 | §4 | **全タイプ共通の不変条件（1 ファイルに 1 つ）。** タイプごとに宣言しない |
 
 **Fields テーブルの「値域・制約」列の記述ルール:**
 
