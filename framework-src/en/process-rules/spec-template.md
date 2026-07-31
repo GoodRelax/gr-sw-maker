@@ -86,14 +86,16 @@ Note: `shall` in EARS syntax is synonymous with `SHALL` as defined in Chapter 1.
 
 Software structure and design decisions. Defines the technical structure to realize Chapter 2 requirements.
 
-| Section | Name                 | Content                                                                |
-| ------- | -------------------- | ---------------------------------------------------------------------- |
-| 3.1     | Architecture Concept | Type of architecture adopted (CA, Hexagonal, Layered, etc.) and legend definition |
-| 3.2     | Components           | Partitioning of parts and responsibilities. Component diagram (color-coded per 3.1 legend). If the project involves AI/LLM integration, also define prompt template placement (e.g., `src/prompts/`), input/output schemas, test policy, and hallucination countermeasures |
-| 3.3     | File Structure       | Directory structure. Mapping between components and folders            |
-| 3.4     | Domain Model         | Definition of structure, relationships, and state. Class diagram (color-coded per 3.1 legend), ER diagram, state transition diagram |
-| 3.5     | Behavior             | Process flows and interactions. Sequence diagrams, activity diagrams   |
-| 3.6     | Decisions            | ADR (Architecture Decision Records). Rationale, alternatives, decision-maker. Michael Nygard's ADR format (Status / Context / Decision / Consequences) is recommended. **ADR-000 "Comparison against the minimal configuration" MUST be included** (the smallest configuration that satisfies the requirements, what the adopted design adds, and why each addition is necessary. R2.18) |
+| Section | Name                 | When it applies | Content                                                                |
+| ------- | -------------------- | --------------- | ---------------------------------------------------------------------- |
+| 3.1     | Architecture Concept | Always          | Type of architecture adopted (CA, Hexagonal, Layered, etc.) and legend definition |
+| 3.2     | Components           | Always          | Partitioning of parts and responsibilities. Component diagram (color-coded per 3.1 legend). If the project involves AI/LLM integration, also define prompt template placement (e.g., `src/prompts/`), input/output schemas, test policy, and hallucination countermeasures |
+| 3.3     | File Structure       | Always          | Directory structure. Mapping between components and folders            |
+| 3.4     | Domain Model         | Always, **but each diagram has its own condition** | Definition of structure, relationships, and state. Class diagram (color-coded per 3.1 legend, **when several types carry structure**), ER diagram (**when a persistent store exists**), state transition diagram (**when state persists across invocations**) |
+| 3.5     | Behavior             | Always, **but each diagram has its own condition** | Process flows and interactions. Sequence diagrams (**when components interact**), activity diagrams (**when branching or concurrency is substantial**) |
+| 3.6     | Decisions            | Always          | ADR (Architecture Decision Records). Rationale, alternatives, decision-maker. Michael Nygard's ADR format (Status / Context / Decision / Consequences) is recommended. **ADR-000 "Comparison against the minimal configuration" MUST be included** (the smallest configuration that satisfies the requirements, what the adopted design adds, and why each addition is necessary. R2.18) |
+
+**A diagram whose condition does not hold MUST NOT be drawn.** Record each omitted diagram in Ch3.6 as "not applicable" with a one-line reason (MUST). **Choosing not to draw one is itself a design decision: without the record, nobody can later tell "considered and judged unnecessary" from "forgotten".**
 
 Component and class diagrams MUST be color-coded by architecture layer. **What the coding must convey is the dependency direction, not the number of layers.** The default uses Clean Architecture's 4 layers (see legend below). If the layer count is not four, or if adopting a different architecture, define a custom legend in Section 3.1.
 
