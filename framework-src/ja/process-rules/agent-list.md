@@ -434,7 +434,7 @@ kotodama-kun を**使用しない**エージェント:
 
 | 分類 | 件数 |
 |---|---:|
-| Common Block 管理対象の file_type（文書管理規則 §7） | 37 |
+| Common Block 管理対象の file_type（文書管理規則 §7） | 38 |
 | うち条件付き（該当プロセス有効時のみ） | field-issue, hw-requirement-spec, ai-requirement-spec, framework-requirement-spec |
 | file_type ではない生成物 | openapi.yaml, src/, tests/, infra/, cost-log.json, test-progress.json, defect-curve.json |
 

@@ -796,7 +796,7 @@ The record and reality diverge when the interruption landed before the update. R
 
 #### 4.0.3 Creating a Handoff
 
-**Context usage cannot be observed.** No official telemetry reports how much of the context window remains, and **an estimate must never be compared against a threshold (MUST NOT)**: supplying the denominator locally would create exactly the second source §3.2.7 forbids. What is observable is **that a compaction happened**, visible as `compaction_count` in `project-management/progress/session-state.json` rising above the previous phase. When it has risen, create a `handoff` so there is a resumption point. **This is an after-the-fact record, not a warning ahead of time, and whether to interrupt is the user's call.**
+**Context usage cannot be observed.** No official telemetry reports how much of the context window remains, and **an estimate must never be compared against a threshold (MUST NOT)**: supplying the denominator locally would create exactly the second source §3.2.7 forbids. What is observable is **that a compaction happened**, visible as `compaction_count` in `project-management/progress/session-state.json` rising above the previous phase. When it has risen, create a `session-handoff` so there is a resumption point (`/session-handoff`). **It is a different file_type from the inter-agent `handoff`.** **This is an after-the-fact record, not a warning ahead of time, and whether to interrupt is the user's call.**
 
 #### 4.0.4 The `aborted` State
 

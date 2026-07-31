@@ -434,7 +434,7 @@ Which agents are activated in which phases.
 
 | Category | Count |
 |---|---:|
-| file_types under Common Block management (Document Rules §7) | 37 |
+| file_types under Common Block management (Document Rules §7) | 38 |
 | Of which conditional (only when the corresponding process is enabled) | field-issue, hw-requirement-spec, ai-requirement-spec, framework-requirement-spec |
 | Generated artifacts that are not file_types | openapi.yaml, src/, tests/, infra/, cost-log.json, test-progress.json, defect-curve.json |
 

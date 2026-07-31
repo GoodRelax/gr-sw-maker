@@ -104,6 +104,7 @@ process-rules/ 配下の全ファイル（本文書を含む）に適用する�
   project-management/             # オーケストレーション + PM成果物
     pipeline-state.md
     handoff/
+    session-handoff/
     progress/
     old/
   docs/                           # 設計成果物（最終成果物）
@@ -168,6 +169,7 @@ process-rules/ 配下の全ファイル（本文書を含む）に適用する�
 |---------|--------|------|
 | パイプライン状態 | `pipeline-state.md` | シングルトン。連番・タイムスタンプなし |
 | 引継ぎ | `handoff-001-20260314-102530.md` | 標準フォーマット |
+| セッション引継ぎ | `session-handoff-001-20260314-102530.md` | 標準フォーマット |
 | 進捗レポート | `progress-001-20260314-150000.md` | 標準フォーマット |
 | コストログ | `cost-log.json` | 時系列JSON。Common Block対象外。owner: progress-monitor、consumed_by: orchestrator |
 | テスト推移 | `test-progress.json` | 時系列JSON。Common Block対象外。owner: test-engineer、consumed_by: progress-monitor |
@@ -321,7 +323,7 @@ graph TD
 
 各ブロックの役割は明確である。Common Blockはファイルを識別し、Form Blockはファイルタイプ固有の定型フォーマット（AIが従うべき構造）を定義し、Detail Blockは詳細な説明・根拠・証拠を記述し、Footerは変更履歴を追跡する。**構造化された値は frontmatter に、散文は本文にある** — 機械が読む部分と人が読む部分が、解析なしで分かれている。
 
-**Form Block は 1 ファイルに 1 つである（MUST）。複数のエントリは Detail Block の表が担う。** §9 の 37 の file_type はすべてこの形をとっており、Form Block が持つのは件数・状態・ID といった**文書レベルの属性**である。例えば `test-plan` の Form Block は `test_case_count`（総数）を持ち、テストケースの一覧は Detail Block の表にある。`wbs`・`traceability`・`risk-register`・`threat-model`・`license-report` も同型である。**この規約により、Form Block を繰り返し検出するパーサは不要になる。**
+**Form Block は 1 ファイルに 1 つである（MUST）。複数のエントリは Detail Block の表が担う。** §9 の 38 の file_type はすべてこの形をとっており、Form Block が持つのは件数・状態・ID といった**文書レベルの属性**である。例えば `test-plan` の Form Block は `test_case_count`（総数）を持ち、テストケースの一覧は Detail Block の表にある。`wbs`・`traceability`・`risk-register`・`threat-model`・`license-report` も同型である。**この規約により、Form Block を繰り返し検出するパーサは不要になる。**
 
 ## 4.1 情報の配置基準
 
@@ -712,12 +714,13 @@ change_log は**本文末尾の表**として書く。frontmatter には置か�
 | Standard | 標準プロセスで作成する。§3.1.1 の免除マトリクスに従う |
 | Conditional | 該当する条件付きプロセスが有効な場合にのみ作成する |
 
-37 の file_type を一度に覚える必要はない。**Core の 9 種を理解すれば全自動開発は回る。**
+38 の file_type を一度に覚える必要はない。**Core の 9 種を理解すれば全自動開発は回る。**
 
 | file_type | 名前空間 | 目的 | ディレクトリ | シングルトン? | Tier |
 |-----------|---------|------|-------------|:----------:|:----:|
 | pipeline-state | `pipeline-state:` | パイプラインオーケストレーション状態 | `project-management/` | Yes | Core |
-| handoff | `handoff:` | エージェント間タスク引継ぎ | `project-management/handoff/` | No | Standard |
+| handoff | `handoff:` | エージェント間タスク引継ぎ（**エージェント境界**を越える） | `project-management/handoff/` | No | Standard |
+| session-handoff | `session-handoff:` | セッション間の作業引継ぎ（**セッション境界**を越える）。会話履歴からしか復元できない情報を残す | `project-management/session-handoff/` | No | Standard |
 | progress | `progress:` | プロジェクト進捗とメトリクス | `project-management/progress/` | No | Standard |
 | interview-record | `interview-record:` | インタビュー記録 | `project-management/` | Yes | Standard |
 | wbs | `wbs:` | WBS・ガントチャート | `project-management/progress/` | Yes | Standard |
@@ -814,6 +817,7 @@ external-dependency-spec（抽象テンプレート）
 |-----------|----------------|-------------|-------|
 | pipeline-state | `orchestrator` | 全エージェント | orchestrator |
 | handoff | フェーズ遷移時（例: `phase-planning`） | to-agent | orchestrator |
+| session-handoff | `user`（`/session-handoff` の起動） | main-session | main-session |
 | progress | `phase-design`（以降更新） | orchestrator, ユーザー | progress-monitor |
 | interview-record | `phase-planning` | architect, orchestrator | srs-writer |
 | wbs | `phase-design` | progress-monitor, orchestrator | progress-monitor |
@@ -862,6 +866,7 @@ external-dependency-spec（抽象テンプレート）
 |---------|----------|-----|
 | `pipeline-state:` | pipeline-state Form Block | `pipeline-state.phase: 2` |
 | `handoff:` | handoff Form Block | `handoff.from: srs-writer` |
+| `session-handoff:` | session-handoff Form Block | `session-handoff.phase: design` |
 | `progress:` | progress Form Block | `progress.completion_pct: 45` |
 | `interview-record:` | interview-record Form Block | `interview-record.interview_status: completed` |
 | `wbs:` | wbs Form Block | `wbs.task_total: 24` |
@@ -907,7 +912,7 @@ test-plan:
   coverage_target_pct: 80
 ```
 
-この対応は全 37 file_type に一律であり、以下の Fields 表はそのまま読める。
+この対応は全 38 file_type に一律であり、以下の Fields 表はそのまま読める。
 
 ## 9.0 Form Block 定義メタテンプレート
 
@@ -1705,6 +1710,34 @@ owner は architect である。`infra/` の実装は implementer が行い、�
 
 ---
 
+## 9.38 session-handoff（名前空間: session-handoff:）
+
+> **`handoff` との違い:** `handoff` は**エージェント境界**を越える引継ぎで、owner は orchestrator である。`session-handoff` は**セッション境界**を越える引継ぎで、owner は `main-session` である。**サブエージェントは会話履歴を持たないため、これを書けるのは main-session だけである。**
+
+### Fields
+
+| フィールド | 型 | 必須 | 説明 | 値域・制約 |
+|-----------|------|------|------|-----------|
+| session-handoff:phase | enum | Yes | 中断時点のフェーズ | setup / planning / dependency-selection / design / implementation / testing / delivery / operation |
+| session-handoff:next_action | string | Yes | 次のセッションが最初に取るべき行動 | — |
+| session-handoff:plan_delta_count | int | Yes | 計画と実際の差分の件数 | 0以上。**0 でない場合は Detail Block に列挙する** |
+| session-handoff:self_inflicted_defect_count | int | Yes | 自分で作り込んで自分で直した defect の件数 | 0以上。**0 でない場合は Detail Block に列挙する** |
+
+### Detail Block Guidance
+
+**次の 2 項目を必ず含める（MUST）。**
+
+| 項目 | なぜ必須か |
+|---|---|
+| **計画との差分** | 計画書だけを読むと未着手と誤認し、**完了済みの作業を二重に行う** |
+| **自分で作り込んで自分で直した defect** | 成果物には成功した最終状態しか残らない。**書かなければ次のセッションが同じ踏み方をする** |
+
+**どちらも会話履歴からしか復元できない。** ファイルには成功した最終状態しか残らないため、失敗の経路をファイルから再構築することはできない。**これが owner を main-session とする理由である。**
+
+あわせて、未解決の論点、ユーザーとの合意事項のうちファイルに書いていないもの、次に読むべきファイルを記載する。
+
+---
+
 # 10. バージョニングルール
 
 バージョニングは変更時点の文書**ステータス**によって決定される。
@@ -1774,6 +1807,7 @@ archived   → 変更しない（参照専用）
 | architect | disaster-recovery-plan | 災害復旧計画の完全制御 |
 | orchestrator | stakeholder-register | ステークホルダー登録簿の完全制御 |
 | orchestrator | handoff | Handoff エントリの作成。`to` エージェントはステータス更新のみ可 |
+| main-session | session-handoff | 完全制御。**会話履歴を持つ main-session のみが書ける**（§11 の値域注記） |
 | process-improver | retrospective-report | ふりかえり・プロセス改善記録の完全制御 |
 | field-test-engineer | field-issue | 実機テストフィードバックの完全制御（条件付き: 実機テスト有効時）。feedback-classifier と field-issue-analyst は Detail Block に追記可 |
 

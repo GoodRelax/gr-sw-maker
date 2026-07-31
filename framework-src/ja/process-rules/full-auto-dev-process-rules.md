@@ -796,7 +796,7 @@ full-auto-dev コマンドの setup フェーズで、リードエージェン�
 
 #### 4.0.3 引き継ぎの作成
 
-**コンテキスト使用率は観測できない。** 公式のテレメトリに文脈の残量を表す指標は存在せず、**推定値を閾値と比較してはならない（MUST NOT）。**分母を自前で持てば §3.2.7 が禁じた second source を作ることになる。観測できるのは**圧縮が起きたこと**であり、`project-management/progress/session-state.json` の `compaction_count` が前フェーズより増えたことで判る。増えていれば `handoff` を作成し、再開点を残す。**これは事前の警告ではなく事後の記録であり、中断の要否はユーザーが判断する。**
+**コンテキスト使用率は観測できない。** 公式のテレメトリに文脈の残量を表す指標は存在せず、**推定値を閾値と比較してはならない（MUST NOT）。**分母を自前で持てば §3.2.7 が禁じた second source を作ることになる。観測できるのは**圧縮が起きたこと**であり、`project-management/progress/session-state.json` の `compaction_count` が前フェーズより増えたことで判る。増えていれば `session-handoff` を作成し、再開点を残す（`/session-handoff`）。**エージェント間の `handoff` とは別の file_type である。****これは事前の警告ではなく事後の記録であり、中断の要否はユーザーが判断する。**
 
 #### 4.0.4 `aborted` 状態
 

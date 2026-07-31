@@ -104,6 +104,7 @@ Revision rules applicable to all files under process-rules/ (including this docu
   project-management/             # Orchestration + PM artifacts
     pipeline-state.md
     handoff/
+    session-handoff/
     progress/
     old/
   docs/                           # Design artifacts (final deliverables)
@@ -168,6 +169,7 @@ Files used for pipeline management, inter-agent handoffs, and progress managemen
 |---------|--------|------|
 | Pipeline state | `pipeline-state.md` | Singleton. No serial number or timestamp |
 | Handoff | `handoff-001-20260314-102530.md` | Standard format |
+| Session handoff | `session-handoff-001-20260314-102530.md` | Standard format |
 | Progress report | `progress-001-20260314-150000.md` | Standard format |
 | Cost log | `cost-log.json` | Time-series JSON. Not subject to Common Block. owner: progress-monitor, consumed_by: orchestrator |
 | Test progress | `test-progress.json` | Time-series JSON. Not subject to Common Block. owner: test-engineer, consumed_by: progress-monitor |
@@ -321,7 +323,7 @@ graph TD
 
 The role of each block is clear. The Common Block identifies the file, the Form Block defines file-type-specific structured formats (structures that AI should follow), the Detail Block describes detailed explanations, rationale, and evidence, and the Footer tracks change history. **Structured values sit in the frontmatter and prose sits in the body**, so the part a machine reads and the part a person reads are separated without any parsing.
 
-**A file carries exactly one Form Block (MUST). Repeated entries belong to a table in the Detail Block.** All 37 file_types in §9 take this shape, and what a Form Block holds is a **document-level attribute** such as a count, a status or an id. The `test-plan` Form Block, for instance, holds `test_case_count`, while the list of test cases lives in a Detail Block table. `wbs`, `traceability`, `risk-register`, `threat-model` and `license-report` are the same shape. **This rule is what makes a parser that has to detect repeated Form Blocks unnecessary.**
+**A file carries exactly one Form Block (MUST). Repeated entries belong to a table in the Detail Block.** All 38 file_types in §9 take this shape, and what a Form Block holds is a **document-level attribute** such as a count, a status or an id. The `test-plan` Form Block, for instance, holds `test_case_count`, while the list of test cases lives in a Detail Block table. `wbs`, `traceability`, `risk-register`, `threat-model` and `license-report` are the same shape. **This rule is what makes a parser that has to detect repeated Form Blocks unnecessary.**
 
 ## 4.1 Information Placement Criteria
 
@@ -712,12 +714,13 @@ The `change_log` records what was changed, but **nobody looks at whether the cha
 | Standard | Produced by the standard process. Follows the exemption matrix in §3.1.1 |
 | Conditional | Produced only when the corresponding conditional process is enabled |
 
-There is no need to learn all 37 file_types at once. **Understanding the nine Core ones is enough to run the pipeline.**
+There is no need to learn all 38 file_types at once. **Understanding the nine Core ones is enough to run the pipeline.**
 
 | file_type | Namespace | Purpose | Directory | Singleton? | Tier |
 |-----------|---------|------|-------------|:----------:|:----:|
 | pipeline-state | `pipeline-state:` | Pipeline orchestration state | `project-management/` | Yes | Core |
-| handoff | `handoff:` | Inter-agent task handoff | `project-management/handoff/` | No | Standard |
+| handoff | `handoff:` | Inter-agent task handoff (crosses an **agent boundary**) | `project-management/handoff/` | No | Standard |
+| session-handoff | `session-handoff:` | Handoff of work between sessions (crosses a **session boundary**), holding what only the conversation can supply | `project-management/session-handoff/` | No | Standard |
 | progress | `progress:` | Project progress and metrics | `project-management/progress/` | No | Standard |
 | interview-record | `interview-record:` | Interview record | `project-management/` | Yes | Standard |
 | wbs | `wbs:` | WBS / Gantt chart | `project-management/progress/` | Yes | Standard |
@@ -814,6 +817,7 @@ Standard values for `commissioned_by` (creation trigger) and `consumed_by` (next
 |-----------|----------------|-------------|-------|
 | pipeline-state | `orchestrator` | All agents | orchestrator |
 | handoff | Phase transition (e.g., `phase-planning`) | to-agent | orchestrator |
+| session-handoff | `user` (invoking `/session-handoff`) | main-session | main-session |
 | progress | `phase-design` (updated thereafter) | orchestrator, user | progress-monitor |
 | interview-record | `phase-planning` | architect, orchestrator | srs-writer |
 | wbs | `phase-design` | progress-monitor, orchestrator | progress-monitor |
@@ -862,6 +866,7 @@ A namespace groups the Form Block keys of one file_type and keeps extension keys
 |---------|----------|-----|
 | `pipeline-state:` | pipeline-state Form Block | `pipeline-state.phase: 2` |
 | `handoff:` | handoff Form Block | `handoff.from: srs-writer` |
+| `session-handoff:` | session-handoff Form Block | `session-handoff.phase: design` |
 | `progress:` | progress Form Block | `progress.completion_pct: 45` |
 | `interview-record:` | interview-record Form Block | `interview-record.interview_status: completed` |
 | `wbs:` | wbs Form Block | `wbs.task_total: 24` |
@@ -907,7 +912,7 @@ test-plan:
   coverage_target_pct: 80
 ```
 
-The correspondence is uniform across all 37 file_types, so the Fields tables below read as they stand.
+The correspondence is uniform across all 38 file_types, so the Fields tables below read as they stand.
 
 ## 9.0 Form Block Definition Meta-Template
 
@@ -1705,6 +1710,34 @@ Record the register listing the individual `risk` entries. Each row carries risk
 
 ---
 
+## 9.38 session-handoff (namespace: session-handoff:)
+
+> **How it differs from `handoff`:** `handoff` crosses an **agent boundary** and is owned by the orchestrator. `session-handoff` crosses a **session boundary** and is owned by `main-session`. **A subagent holds no conversation history, so main-session is the only thing that can write it.**
+
+### Fields
+
+| Field | Type | Required | Description | Value Range / Constraints |
+|-----------|------|------|------|-----------|
+| session-handoff:phase | enum | Yes | The phase at the point of interruption | setup / planning / dependency-selection / design / implementation / testing / delivery / operation |
+| session-handoff:next_action | string | Yes | The first thing the next session should do | — |
+| session-handoff:plan_delta_count | int | Yes | Number of differences between the plan and what happened | 0 or more. **When not zero, enumerate them in the Detail Block** |
+| session-handoff:self_inflicted_defect_count | int | Yes | Number of defects this session introduced and then fixed itself | 0 or more. **When not zero, enumerate them in the Detail Block** |
+
+### Detail Block Guidance
+
+**These two items MUST both be present.**
+
+| Item | Why it is required |
+|---|---|
+| **The delta against the plan** | Reading the plan alone, work already finished looks untouched, and **gets done a second time** |
+| **Defects this session caused and fixed** | Deliverables retain only the successful end state. **Left unwritten, the next session walks into the same hole** |
+
+**Neither can be reconstructed from anything but the conversation.** Files keep the successful end state, so the route through the failures cannot be rebuilt from them. **That is why the owner is main-session.**
+
+Alongside them, record the open questions, any agreement with the user that is not written into a file, and which files to read next.
+
+---
+
 # 10. Versioning Rules
 
 Versioning is determined by the document **status** at the time of change.
@@ -1774,6 +1807,7 @@ Each file has exactly one `owner`. Only the owner can modify Common Block and Fo
 | architect | disaster-recovery-plan | Full control of disaster recovery plan |
 | orchestrator | stakeholder-register | Full control of stakeholder register |
 | orchestrator | handoff | Creation of handoff entries. `to` agent may only update status |
+| main-session | session-handoff | Full control. **Only main-session, which holds the conversation history, can write it** (see the range note in section 11) |
 | process-improver | retrospective-report | Full control of retrospective and process improvement records |
 | field-test-engineer | field-issue | Full control of field testing feedback (conditional: field testing enabled). feedback-classifier and field-issue-analyst may append to Detail Block |
 
