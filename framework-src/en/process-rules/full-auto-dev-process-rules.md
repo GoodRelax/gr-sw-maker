@@ -786,6 +786,7 @@ What `pipeline-state` records is **the minimum needed to resume**: the current p
 
 #### 4.0.2 Resumption Procedure
 
+0. Read `project_status` in `pipeline-state`. **If it is `completed` or `aborted`, do not resume.** Resuming a finished project **re-requests quality gates that already passed**
 1. Read `pipeline-state` and identify the current phase and the outstanding tasks
 2. Inspect the deliverable directories for that phase and detect any difference between the record and reality
 3. Where they differ, **reality wins, not the record.** Update pipeline-state to match reality
@@ -799,7 +800,9 @@ The record and reality diverge when the interruption landed before the update. R
 
 #### 4.0.4 The `aborted` State
 
-When the user decides to cancel the project, set the `pipeline-state` status to `aborted` and record the reason and the extent completed at that point. **`aborted` is not completion.** No final-report is produced, and the project is left in a resumable state.
+When the user decides to cancel the project, set `project_status` in `pipeline-state` to `aborted` and record the reason and the extent completed at that point. **`aborted` is not completion.** No final-report is produced, and the project is left in a resumable state.
+
+**On completion, set `project_status` to `completed` (MUST).** Because there was nowhere to write it back, the trial's `pipeline-state` stayed `pending` to the end even after GATE-DELIVERY passed.
 
 ---
 

@@ -954,6 +954,21 @@ When defining a new Form Block, the following 2-section structure MUST be follow
 - Trigger conditions: Describe the result with `->` (e.g., `>=6 -> notify user`)
 - Gate conditions: **reference the gate ID in Process Rules §9.4.1** (e.g. `-> Process Rules §9.4.1 GATE-DESIGN`). Do not write the threshold itself here. §9.4.1 is the single source of truth for gate conditions, and writing them in several places guarantees drift
 
+### 9.0.1 Designing a Value Range (MUST)
+
+When defining an enum, consider whether each of these four **meta-states** can be observed, and MUST either include it in the range or record why it is excluded.
+
+| Meta-state | Meaning | What happened in the trial |
+|---|---|---|
+| **Not applicable** | The concept does not apply to this case | `tech-decision:verdict` had no such value, so it was written as prose in the Detail Block |
+| **Undecided** | Not settled yet | `spec-foundation` had no chapter-level approval state, so a decision stood in for it |
+| **Unmeasurable** | Measurement was attempted and produced no value | `final-report:total_cost_usd` required a number, leaving nowhere to say "not measured" |
+| **Finished** | The subject completed or was abandoned and will not transition again | `pipeline-state` had no completed state, so **it stayed `pending` even after GATE-DELIVERY passed** |
+
+**Why:** five events of this shape occurred in the trial, every one of them from listing the healthy values and omitting the meta-states. **In four the agent recognised the value was out of range and recorded prose instead. The one that left no record at all was the one with nowhere to write back to.**
+
+**Record the decision to exclude, too.** It is what later distinguishes "considered and judged unnecessary" from "never considered".
+
 ---
 
 ## 9.1 pipeline-state (Namespace: pipeline-state:)
@@ -976,6 +991,7 @@ When defining a new Form Block, the following 2-section structure MUST be follow
 | pipeline-state:gate_result | enum | No | Gate result | pending / pass / fail |
 | pipeline-state:gate_fail_target | string | No | Fallback phase on gate failure | — |
 | pipeline-state:latest_handoff | string | No | Path to the latest handoff file | — |
+| pipeline-state:project_status | enum | Yes | State of the project as a whole | in-progress / completed / aborted. **Do not express this by widening `phase`**, which would put something that is not a phase into a phase's range |
 
 **active_agents entry format:**
 
@@ -1232,6 +1248,7 @@ Describe scope and strategy per test level, test case list (ID, target requireme
 | spec-foundation:fr_count | int | Yes | Total number of functional requirements | — |
 | spec-foundation:nfr_count | int | Yes | Total number of non-functional requirements | — |
 | spec-foundation:completed_chapters | string | Yes | Completed chapters (comma-separated) | 1 / 2 |
+| spec-foundation:approved_chapters | string | No | Chapters **approved by the user** (comma-separated) | 1 / 2. Omit while none are approved. `completed_chapters` is the writer's completion; this is approval, a different thing |
 
 ### Detail Block Guidance
 
@@ -1408,7 +1425,7 @@ Describe a concise user-facing summary (recent progress, next milestone, key ris
 | Field | Type | Required | Description | Value Range / Constraints |
 |-----------|------|------|------|-----------|
 | final-report:goal_achievement | enum | Yes | Project goal achievement level | achieved / partially-achieved / not-achieved |
-| final-report:total_cost_usd | number | Yes | Total API cost | — |
+| final-report:total_cost_usd | number | No | Total API cost | **Omit it when measurement was unavailable.** State the gap in the Detail Block and in cost-log.json, and **never fill in an estimate (MUST NOT)** (§3.2.7) |
 | final-report:total_defect_count | int | Yes | Cumulative defect count | — |
 | final-report:open_defect_count | int | Yes | Unresolved defect count | -> Process Rules §9.4.1 GATE-DELIVERY |
 | final-report:lesson_count | int | Yes | Number of lessons | — |
@@ -1611,7 +1628,7 @@ Describe the details of the field-issue. field-test-engineer records feedback (s
 | tech-decision:decision_status | enum | Yes | State of the decision | proposed / decided / superseded |
 | tech-decision:phase | enum | Yes | Target phase | setup / planning / dependency-selection / design / implementation / testing / delivery / operation |
 | tech-decision:gate | string | No | Target gate (for a gate decision) | GATE-XXX |
-| tech-decision:verdict | enum | No | Gate verdict (for a gate decision) | PASS / FAIL |
+| tech-decision:verdict | enum | No | Gate verdict (for a gate decision) | PASS / FAIL / CONDITIONAL / NOT-APPLICABLE. **CONDITIONAL and NOT-APPLICABLE carry their reason in the Detail Block** |
 | tech-decision:fail_count | integer | No | Consecutive FAIL count on the same gate | 0 or greater |
 | tech-decision:send_back_to | enum | No | Where to send back (on FAIL) | design / implementation |
 | tech-decision:rationale | text | Yes | Rationale for the decision | — |

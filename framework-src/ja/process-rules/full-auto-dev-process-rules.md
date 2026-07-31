@@ -786,6 +786,7 @@ full-auto-dev コマンドの setup フェーズで、リードエージェン�
 
 #### 4.0.2 再開手順
 
+0. `pipeline-state` の `project_status` を読む。**`completed` または `aborted` なら再開しない。** 完了済みプロジェクトを再開すると、**通過済みの品質ゲートを再要請することになる**
 1. `pipeline-state` を読み、現在のフェーズと未完了タスクを特定する
 2. 該当フェーズの成果物ディレクトリを確認し、記録と実体の差分を検出する
 3. 差分がある場合、**記録ではなく実体を正とする**。pipeline-state を実体に合わせて更新する
@@ -799,7 +800,9 @@ full-auto-dev コマンドの setup フェーズで、リードエージェン�
 
 #### 4.0.4 `aborted` 状態
 
-ユーザーがプロジェクトの中止を決めた場合、`pipeline-state` の状態を `aborted` とし、中止理由と中止時点の完了範囲を記録する。**`aborted` は完了ではない。** final-report は作成せず、再開可能な状態のまま残す。
+ユーザーがプロジェクトの中止を決めた場合、`pipeline-state` の `project_status` を `aborted` とし、中止理由と中止時点の完了範囲を記録する。**`aborted` は完了ではない。** final-report は作成せず、再開可能な状態のまま残す。
+
+**プロジェクトが完了した場合は `project_status` を `completed` とする（MUST）。** GATE-DELIVERY を通過しても書き戻す先が無かったため、本試行の `pipeline-state` は最後まで `pending` のまま残った。
 
 ---
 

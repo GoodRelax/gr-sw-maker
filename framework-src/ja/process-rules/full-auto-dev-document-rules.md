@@ -954,6 +954,21 @@ test-plan:
 - トリガー条件: `→` で結果を記述する（例: `≧6 → ユーザーに通知`）
 - ゲート条件: **プロセス規則 §9.4.1 のゲート ID を参照する**（例: `→ プロセス規則 §9.4.1 GATE-DESIGN`）。閾値そのものをここに書かない。ゲート条件の正本は §9.4.1 であり、複数箇所に書くと必ず乖離する
 
+### 9.0.1 値域設計の原則（MUST）
+
+enum を定義するときは、次の 4 種の**メタ状態**が観測されうるかを検討し、**値域に含めるか、含めない理由を記録しなければならない（MUST）。**
+
+| メタ状態 | 意味 | 本試行での実例 |
+|---|---|---|
+| **非該当** | その概念がこのケースに当てはまらない | `tech-decision:verdict` に「非該当」がなく、Detail Block に文章で書いた |
+| **未確定** | まだ決まっていない | `spec-foundation` に章単位の承認状態がなく、decision で代替した |
+| **計測不能** | 測ろうとしたが値が得られない | `final-report:total_cost_usd` が number 必須で「計測不能」を書けなかった |
+| **終了** | 対象が完了・中止し、以後遷移しない | `pipeline-state` に完了状態がなく、**GATE-DELIVERY 合格後も `pending` のまま残った** |
+
+**なぜ:** 本試行で同型の事象が **5 件**発生した。いずれも正常系の値だけを列挙し、メタ状態を値域に含めていなかったことに起因する。**4 件はエージェントが値域外だと自覚して Detail Block に書き残した。記録に残らなかったのは、書き戻す先が無かった 1 件だけである。**
+
+**含めない判断も記録する。** 「検討したうえで不要と判断した」のか「考えなかった」のかを、後から区別できるようにするためである。
+
 ---
 
 ## 9.1 pipeline-state（名前空間: pipeline-state:）
@@ -976,6 +991,7 @@ test-plan:
 | pipeline-state:gate_result | enum | No | ゲート結果 | pending / pass / fail |
 | pipeline-state:gate_fail_target | string | No | ゲート失敗時の戻り先フェーズ | — |
 | pipeline-state:latest_handoff | string | No | 最新の引継ぎファイルパス | — |
+| pipeline-state:project_status | enum | Yes | プロジェクト全体の状態 | in-progress / completed / aborted。**`phase` の値域を広げて表現しない**（フェーズでないものをフェーズの値域に入れることになる） |
 
 **active_agents エントリ形式:**
 
@@ -1232,6 +1248,7 @@ WBSテーブル（タスクID、タスク名、担当エージェント、依存
 | spec-foundation:fr_count | int | Yes | 機能要求の総数 | — |
 | spec-foundation:nfr_count | int | Yes | 非機能要求の総数 | — |
 | spec-foundation:completed_chapters | string | Yes | 完了済みチャプター（カンマ区切り） | 1 / 2 |
+| spec-foundation:approved_chapters | string | No | **ユーザー承認済み**チャプター（カンマ区切り） | 1 / 2。未承認なら省略。`completed_chapters` は書き手の完了、本フィールドは承認であり別概念 |
 
 ### Detail Block Guidance
 
@@ -1408,7 +1425,7 @@ external-dependency-spec 共通章構成に従う。非標準I/Fの詳細仕様�
 | フィールド | 型 | 必須 | 説明 | 値域・制約 |
 |-----------|------|------|------|-----------|
 | final-report:goal_achievement | enum | Yes | プロジェクト目標達成度 | achieved / partially-achieved / not-achieved |
-| final-report:total_cost_usd | number | Yes | 総APIコスト | — |
+| final-report:total_cost_usd | number | No | 総APIコスト | **計測できなかった場合は省略する。** 欠測である旨を Detail Block と cost-log.json に明記し、**推測で埋めてはならない（MUST NOT）**（§3.2.7） |
 | final-report:total_defect_count | int | Yes | 累計 defect 数 | — |
 | final-report:open_defect_count | int | Yes | 未解決 defect 数 | → プロセス規則 §9.4.1 GATE-DELIVERY |
 | final-report:lesson_count | int | Yes | 教訓の件数 | — |
@@ -1611,7 +1628,7 @@ field-issue の詳細を記載する。field-test-engineer がフィードバッ
 | tech-decision:decision_status | enum | Yes | 判断の状態 | proposed / decided / superseded |
 | tech-decision:phase | enum | Yes | 対象フェーズ | setup / planning / dependency-selection / design / implementation / testing / delivery / operation |
 | tech-decision:gate | string | No | 対象ゲート（ゲート判定の場合） | GATE-XXX |
-| tech-decision:verdict | enum | No | ゲート判定結果（ゲート判定の場合） | PASS / FAIL |
+| tech-decision:verdict | enum | No | ゲート判定結果（ゲート判定の場合） | PASS / FAIL / CONDITIONAL / NOT-APPLICABLE。**CONDITIONAL と NOT-APPLICABLE は理由を Detail Block に書く** |
 | tech-decision:fail_count | integer | No | 同一ゲートの連続 FAIL 回数 | 0 以上 |
 | tech-decision:send_back_to | enum | No | 戻し先（FAIL の場合） | design / implementation |
 | tech-decision:rationale | text | Yes | 判断根拠 | — |
