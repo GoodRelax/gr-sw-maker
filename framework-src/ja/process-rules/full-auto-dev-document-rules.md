@@ -1315,7 +1315,7 @@ WBSテーブル（タスクID、タスク名、担当エージェント、依存
 |-----------|------|------|------|-----------|
 | security-scan-report:scan_type | enum | Yes | スキャン種別 | sast / sca / dast / secret-scan / manual |
 | security-scan-report:tool_name | string | Yes | 使用ツール名 | — |
-| security-scan-report:finding_critical | int | Yes | Critical検出数 | → プロセス規則 §9.4.1 GATE-IMPL |
+| security-scan-report:finding_critical | int | Yes | Critical検出数 | **重大度は `tool_name` のスキャナが付けた格付けに従う。** → プロセス規則 §9.4.1 GATE-IMPL |
 | security-scan-report:finding_high | int | Yes | High検出数 | → プロセス規則 §9.4.1 GATE-IMPL |
 | security-scan-report:finding_medium | int | Yes | Medium検出数 | — |
 | security-scan-report:finding_low | int | Yes | Low検出数 | — |
@@ -1731,7 +1731,11 @@ archived   → 変更しない（参照専用）
 
 # 11. オーナーシップモデル
 
-各ファイルにはただ1つの `owner` エージェントが存在する。オーナーのみがCommon BlockとForm Blockのフィールドを変更できる。
+各ファイルにはただ1つの `owner` が存在する。オーナーのみがCommon BlockとForm Blockのフィールドを変更できる。
+
+**`owner` の値域:** `agent-list.md` §1 のエージェント名、または `main-session`。
+
+**`main-session` は会話履歴を保持する進行統括であり、サブエージェントでは復元できない情報を持つ成果物にのみ指定できる（MUST）。** 無条件に開けると、書きにくい成果物を何でも main-session に押し付ける逃げ道になる。**`agent-list.md` §1 には追加しない** — 名簿はサブエージェント定義ファイルの一覧であり、main-session に定義ファイルは存在しないためである。
 
 | オーナー | ファイル（file_type） | 書込み範囲 |
 |---------|---------|-----------|

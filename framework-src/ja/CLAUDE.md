@@ -104,7 +104,7 @@ setup フェーズでユーザーと合意する。全エージェントおよ�
 | コードカバレッジ | [例: 80%] 以上 | カバレッジツール |
 | E2Eテスト | 主要ユーザーフロー PASS | Ch4 Gherkin シナリオに対応 |
 | 性能テスト | NFR数値目標をすべて達成 | [例: k6] |
-| セキュリティ脆弱性 | Critical: 0, High: 0 | SAST/SCA スキャン結果 |
+| セキュリティ脆弱性 | Critical: 0, High: 0 | SAST/SCA スキャン結果（`security-scan-report`）。**重大度はスキャナ自身の格付けに従う。** CodeQL と npm audit では格付けが異なるため、**ツールと尺度を setup フェーズで選定し、決定を記録する** |
 | レビュー指摘 | Critical: 0, High: 0 | review-agent の出力 |
 | コーディング規約準拠 | 違反 0 件 | Linter 実行結果 |
 | コスト予算 | [記入必須: 例 50 USD] | アラート閾値の分母。cost-log.json の `budget_usd` に転記する。**未記入だと下行の相対閾値が比較対象を持たない** |

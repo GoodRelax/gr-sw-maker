@@ -104,7 +104,7 @@ Agreed with the user during setup. All agents and quality gates reference this s
 | Code coverage | [e.g., 80%] or higher | Coverage tools |
 | E2E tests | Major user flows PASS | Corresponds to Ch4 Gherkin scenarios |
 | Performance tests | All NFR numerical targets achieved | [e.g., k6] |
-| Security vulnerabilities | Critical: 0, High: 0 | SAST/SCA scan results |
+| Security vulnerabilities | Critical: 0, High: 0 | SAST/SCA scan results (`security-scan-report`). **Severity is whatever the scanner itself rated it.** CodeQL and npm audit do not rate alike, so **select the tool and its scale during setup and record the decision** |
 | Review findings | Critical: 0, High: 0 | review-agent output |
 | Coding convention compliance | 0 violations | Linter execution results |
 | Cost budget | [REQUIRED: e.g. 50 USD] | The denominator of the alert threshold. Copy it into `budget_usd` in cost-log.json. **Left empty, the relative threshold below has nothing to compare against** |

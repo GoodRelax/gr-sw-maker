@@ -1315,7 +1315,7 @@ Describe authentication/authorization design, encryption policy, input validatio
 |-----------|------|------|------|-----------|
 | security-scan-report:scan_type | enum | Yes | Scan type | sast / sca / dast / secret-scan / manual |
 | security-scan-report:tool_name | string | Yes | Tool name used | — |
-| security-scan-report:finding_critical | int | Yes | Critical finding count | -> Process Rules §9.4.1 GATE-IMPL |
+| security-scan-report:finding_critical | int | Yes | Critical finding count | **Severity follows the rating given by the scanner named in `tool_name`.** -> Process Rules §9.4.1 GATE-IMPL |
 | security-scan-report:finding_high | int | Yes | High finding count | -> Process Rules §9.4.1 GATE-IMPL |
 | security-scan-report:finding_medium | int | Yes | Medium finding count | — |
 | security-scan-report:finding_low | int | Yes | Low finding count | — |
@@ -1731,7 +1731,11 @@ archived   → Do not modify (reference only)
 
 # 11. Ownership Model
 
-Each file has exactly one `owner` agent. Only the owner can modify Common Block and Form Block fields.
+Each file has exactly one `owner`. Only the owner can modify Common Block and Form Block fields.
+
+**Range of `owner`:** an agent name from `agent-list.md` §1, or `main-session`.
+
+**`main-session` is the progress lead that holds the conversation history, and MUST only be named for deliverables carrying information a subagent cannot reconstruct.** Opened unconditionally it becomes an escape hatch for pushing any awkward deliverable onto the main session. **It is not added to `agent-list.md` §1**, because that roster lists subagent definition files and the main session has none.
 
 | Owner | File (file_type) | Write Scope |
 |---------|---------|-----------|

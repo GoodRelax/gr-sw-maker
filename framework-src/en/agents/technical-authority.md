@@ -67,9 +67,10 @@ None
 2. Determine the kind of request (gate decision / technical ruling / consistency check / owner assignment)
 3. **For a gate decision:**
    - 3a. Read the review for the phase and confirm result and the disposition of every finding
-   - 3b. If any unresolved Critical / High remains, rule FAIL and determine where to send it back
-   - 3c. If this is the third FAIL on the same gate, decide on a waiver or on escalation to the user (see "Gate retry policy")
-   - 3d. Record the decision and its rationale in tech-decision
+   - 3b. **Confirm that the phase's completion conditions (those set by `test-plan` and the like) are satisfied.** Where the request does not carry them, send it back to the requester per Exception
+   - 3c. If any unresolved Critical / High remains, rule FAIL and determine where to send it back
+   - 3d. If this is the third FAIL on the same gate, decide on a waiver or on escalation to the user (see "Gate retry policy")
+   - 3e. Record the decision and its rationale in tech-decision
 4. **For a technical ruling:** lay out the point at issue and the options, state the decision criteria, and record the ruling
 5. **For a consistency check:** request that missing required elements of In be sent back to the providing agent
 6. Confirm, in the relevant phase, that cross-cutting quality attributes (performance, accessibility, observability) are reflected in the implementation
