@@ -96,7 +96,7 @@ The following depend on Claude Code features. **They may be omitted when porting
 
 The only question it answers is whether a passing review for that gate exists in `project-records/reviews/`. Whether the review was sound is technical-authority's ruling, not a machine's.
 
-**Set `GR_SW_MAKER_SKIP_GATE_GUARD=1` if a false positive blocks work.** Every unexpected condition -- hook absent, payload malformed, path unrecognised -- allows the write, so that a bug in the guard cannot stop all work.
+**Set `GR_SW_MAKER_SKIP_GATE_GUARD=1` if a false positive blocks work.** Every unexpected condition -- hook absent, payload malformed, path unrecognised -- allows the write, so that a defect in the guard cannot stop all work.
 
 ---
 

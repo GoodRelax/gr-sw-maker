@@ -5,7 +5,7 @@
 > **対象バージョン:** Claude Code (2026年2月時点最新 — Opus 4.6 / Sonnet 4.6 対応)
 > **前提条件:** Claude Pro/Team/Enterprise サブスクリプション、またはAnthropic APIアカウント
 > **本文書の位置づけ:** full-auto-devフレームワークのプロセス規則。Claude Codeの公式機能に基づき構成しているが、Agent Teams等の実験的機能を含む。最新の仕様は公式ドキュメント (https://code.claude.com/docs/en/overview) を必ず参照すること。
-> **関連文書:** [文書管理規則](full-auto-dev-document-rules.md) v0.0.0 — ファイル命名・ブロック構造・バージョニング等の文書管理ルール。PoC完了後に v1.0.0 へ昇格予定。
+> **関連文書:** [文書管理規則](full-auto-dev-document-rules.md) v0.1.0 — ファイル命名・ブロック構造・バージョニング等の文書管理ルール。PoC完了後に v1.0.0 へ昇格予定。
 
 ---
 
@@ -363,7 +363,7 @@ flowchart TD
 | **Large** | 1週間超。複数チーム相当の並列実装、外部システム連携あり | 業務システム、マイクロサービス群 |
 | **Critical** | 規模を問わず、安全性・金銭・個人情報のいずれかに直結する | 医療機器連携、決済システム、認証基盤 |
 
-> **Critical は規模区分ではなく性質区分である。** Micro 相当の規模でも、故障が人身・金銭・個人情報に直結するなら Critical として扱う。判定はプロジェクト規模ではなく影響の性質で行う。
+> **Critical は規模区分ではなく性質区分である。** Micro 相当の規模でも、failure が人身・金銭・個人情報に直結するなら Critical として扱う。判定はプロジェクト規模ではなく影響の性質で行う。
 
 **免除マトリクス:**
 
@@ -734,7 +734,7 @@ CLAUDE.md「条件付きプロセス」に記載する項目名は下表で固�
 | 1 | 法的調査 | 法規制・業界標準への準拠が必要 |
 | 2 | 特許調査 | 実装方式が既存特許に抵触しうる |
 | 3 | 技術動向調査 | 技術選定に外部動向の把握が要る |
-| 4 | 機能安全(HARA/FMEA/FTA) | 故障が人身・重大損害に直結する |
+| 4 | 機能安全(HARA/FMEA/FTA) | failure が人身・重大損害に直結する |
 | 5 | アクセシビリティ(WCAG 2.1) | 公共性のある UI を持つ |
 | 6 | HW連携 | 物理デバイスと接続する |
 | 7 | AI/LLM連携 | 製品が AI/LLM を呼び出す |
@@ -1517,7 +1517,7 @@ project_root/
       framework-translation-verifier.md ... 翻訳一致性検証エージェント
       user-manual-writer.md       ... ユーザーマニュアル作成エージェント
       runbook-writer.md           ... 運用手順書作成エージェント
-      incident-reporter.md        ... インシデント報告エージェント
+      incident-reporter.md        ... incident 報告エージェント
       process-improver.md         ... プロセス改善エージェント
       decree-writer.md            ... ガバナンスファイル改定エージェント
       field-test-engineer.md      ... フィールドテストエージェント（条件付き）
@@ -1599,7 +1599,7 @@ project_root/
 - **製品のAI/LLMプロンプトはsrc/配下（コードと同等の管理対象）。** プロジェクトを回すプロンプトは.claude/配下（メタレイヤー）。混在させない
 - 運用規則は以下を参照する:
   - process-rules/full-auto-dev-process-rules.md（プロセス規則）
-  - process-rules/full-auto-dev-document-rules.md v0.0.0（文書管理規則）
+  - process-rules/full-auto-dev-document-rules.md v0.1.0（文書管理規則）
 
 ## 言語設定
 
@@ -1703,7 +1703,7 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 - **Framework Translation Verifier Agent（framework-translation-verifier）**: リリース前にフレームワーク文書の多言語間翻訳一致性を検証する
 - **User Manual Writer Agent（user-manual-writer）**: delivery フェーズでユーザーマニュアルを docs/ に作成する
 - **Runbook Writer Agent（runbook-writer）**: delivery フェーズで運用手順書を docs/operations/ に作成する
-- **Incident Reporter Agent（incident-reporter）**: operation フェーズでインシデント報告書を project-records/incidents/ に作成する
+- **Incident Reporter Agent（incident-reporter）**: operation フェーズで incident 報告書を project-records/incidents/ に作成する
 - **Process Improver Agent（process-improver）**: 各フェーズ完了時にふりかえりを実施し、defect パターンの根本原因分析とプロセス改善策を提案する
 - **Decree Writer Agent（decree-writer）**: 承認済みの改善策をガバナンスファイル（CLAUDE.md、エージェント定義、process-rules）に安全に適用する。自己変更禁止・品質ゲート保護等の安全チェックを経て変更を実行し、before/after diff を記録する
 - **Field Test Engineer Agent（field-test-engineer）**（条件付き: 実機テスト有効時）: ユーザーとの実機テスト、フィードバック記録、修正後の実機検証を行う。field-issue チケットの owner
@@ -2015,7 +2015,7 @@ review-agent が出す戻り先は推奨であり、確定は technical-authorit
 
 #### 9.1.4 メトリクス集計の除外
 
-`defect` および `field-issue` のうち、`closed_reason` が `rejected` / `cannot-reproduce` / `withdrawn` のものは、**defect 密度・修正率・品質メトリクスの集計対象から除外する。** これらは製品の欠陥ではないため、含めると品質指標が実態から乖離する。
+`defect` および `field-issue` のうち、`closed_reason` が `rejected` / `cannot-reproduce` / `withdrawn` のものは、**defect 密度・修正率・品質メトリクスの集計対象から除外する。** これらは製品の fault ではないため、含めると品質指標が実態から乖離する。
 
 除外した件数は progress レポートに別掲し、隠さない。
 
@@ -2136,14 +2136,14 @@ flowchart LR
 
 **対応規則:**
 
-| 重大度 | 許容される対応 | ゲート要件 |
+| 重大度 | 許容される対応 | ゲート要求 |
 |--------|-------------|-----------|
 | Critical | 修正済みのみ | フェーズ遷移にはゼロであること（CLAUDE.md 品質目標に準拠） |
 | High | 修正済みのみ | フェーズ遷移にはゼロであること（CLAUDE.md 品質目標に準拠） |
 | Medium | 修正済み / 据置き / 受容済み | 全件に対応記録があること |
 | Low | 修正済み / 据置き / 受容済み | 全件に対応記録があること |
 
-**記録要件:**
+**記録要求:**
 - **修正済み（fixed）**: 指摘を修正した。再レビュー報告で解消を確認
 - **据置き（deferred）**: 指摘を認識するが据置く。`project-records/decisions/` に据置き理由・リスク評価・計画的解消時期を記載した decision 記録を**必ず**作成する
 - **受容済み（accepted）**: 指摘を現状のまま受容する。理由をレビュー報告の指摘対応テーブルに記録する
@@ -2868,7 +2868,7 @@ PM Agent はこのスキーマに従って `project-management/progress/progress
 | `framework-translation-verifier`  | フレームワーク文書の多言語間翻訳一致性検証                            | sonnet | 品質保証     |
 | `user-manual-writer`              | ユーザーマニュアルの作成                                              | sonnet | 納品物       |
 | `runbook-writer`                  | 運用手順書（Runbook）の作成                                           | sonnet | 納品物       |
-| `incident-reporter`               | インシデント報告書の作成                                              | sonnet | 運用         |
+| `incident-reporter`               | incident 報告書の作成                                              | sonnet | 運用         |
 | `process-improver`                | ふりかえり・根本原因分析・プロセス改善策の提案                        | sonnet | 改善         |
 | `decree-writer`                   | 承認済み改善策のガバナンスファイルへの安全な適用                      | sonnet | 改善         |
 | `field-test-engineer`             | ユーザーとの実機テスト、フィードバック記録、修正後の実機検証          | sonnet | 条件付き     |

@@ -22,7 +22,7 @@
 - Code under src/, tests under tests/, IaC under infra/
 - Refer to the following operational rules:
   - process-rules/full-auto-dev-process-rules.md (Process Rules: phase definitions, quality management)
-  - process-rules/full-auto-dev-document-rules.md **v0.0.0** (Document Rules: naming, block structure, versioning. Pre-release before PoC)
+  - process-rules/full-auto-dev-document-rules.md **v0.1.0** (Document Rules: naming, block structure, versioning. Pre-release before PoC)
   - process-rules/agent-list.md (Agent List: roster, ownership, data flow)
   - process-rules/prompt-structure.md (Prompt Structure Convention: S0-S6)
   - process-rules/glossary.md (Glossary: selection rationale, abbreviation criteria, confusable pair distinctions)

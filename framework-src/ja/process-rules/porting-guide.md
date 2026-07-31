@@ -14,7 +14,7 @@
 
 | パス | 内容 |
 |---|---|
-| `framework-src/{lang}/process-rules/defect-taxonomy.md` | 不具合分類 |
+| `framework-src/{lang}/process-rules/defect-taxonomy.md` | defect 分類 |
 | `framework-src/{lang}/process-rules/field-issue-handling-rules.md` | 実機テスト フィードバック管理規則 |
 | `framework-src/{lang}/process-rules/spec-template.md` | 仕様テンプレート |
 | `framework-src/{lang}/user-order.md` | ユーザー要求（3問形式） |
@@ -96,7 +96,7 @@
 
 判定は「該当ゲートの合格レビューが `project-records/reviews/` に実在するか」のみを見る。レビューの内容が妥当かどうかは technical-authority の裁定であり、機械は判断しない。
 
-**誤検知で作業が止まった場合は `GR_SW_MAKER_SKIP_GATE_GUARD=1` を設定する。** フックが不在・入力が壊れている・対象外のパスといった想定外の状況では、すべて書込みを許可する側に倒れる。検証器のバグで全作業が止まる事態を避けるためである。
+**誤検知で作業が止まった場合は `GR_SW_MAKER_SKIP_GATE_GUARD=1` を設定する。** フックが不在・入力が壊れている・対象外のパスといった想定外の状況では、すべて書込みを許可する側に倒れる。検証器の defect で全作業が止まる事態を避けるためである。
 
 ---
 

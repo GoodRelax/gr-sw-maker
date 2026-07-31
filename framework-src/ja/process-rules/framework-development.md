@@ -45,7 +45,7 @@ framework-src/
 
 ### 2.1 この構成を採る理由
 
-**リンクが原本ツリーと展開後ツリーの両方で解決する。** `framework-src/ja/process-rules/glossary.md` 内の `[不具合分類](defect-taxonomy.md)` は、原本ツリーでも展開後の `process-rules/` でも同じ文字列のまま正しく解決する。サフィックス方式では後者でしか解決しなかった。
+**リンクが原本ツリーと展開後ツリーの両方で解決する。** `framework-src/ja/process-rules/glossary.md` 内の `[defect 分類](defect-taxonomy.md)` は、原本ツリーでも展開後の `process-rules/` でも同じ文字列のまま正しく解決する。サフィックス方式では後者でしか解決しなかった。
 
 **エージェント名の衝突が構造的に起きない。** Claude Code が走査するのは `.claude/agents/` である。`framework-src/ja/agents/` はパスに `.claude/` を含まないため走査対象外となり、同名エージェントが複数登録されることがない。
 
@@ -165,7 +165,7 @@ git config core.hooksPath tools/hooks
 
 ## 6. 検査を手元で走らせる
 
-以下はすべて依存ライブラリなしで動く。CI（`.github/workflows/framework-check.yml`）が同じ 6 つを実行するため、**手元で通れば CI も通る。**
+以下はすべて依存ライブラリなしで動く。CI（`.github/workflows/framework-check.yml`）が同じ 7 つを実行するため、**手元で通れば CI も通る。**
 
 | コマンド | 検査内容 |
 |---|---|
@@ -174,6 +174,7 @@ git config core.hooksPath tools/hooks
 | `node tools/check-roster.mjs` | エージェント名簿と実体の一致、frontmatter の `name` / `model`、レビュー観点の配線 |
 | `node tools/check-links.mjs` | デッドリンク、節番号参照の実在 |
 | `node tools/check-tagnames.mjs` | Form Block のタグ名が §9 の Fields 表に実在すること |
+| `node tools/check-terms.mjs` | 用語集 §1 が非採用とした語が本文に混入していないこと |
 | `node tools/check-setup.mjs` | `setup.js` の展開内容・冪等性・言語切替・`.bak` 退避 |
 
 `check-setup.mjs` は一時ディレクトリに `setup.js` と `framework-src/` を複製してから実行するため、**作業中の `CLAUDE.md` や `user-order.md` を壊さない。**

@@ -157,7 +157,7 @@ AI がプロジェクト構成（`CLAUDE.md`）を自動生成し、あなたに
 
 - **約 93% の行はフォーマット変換が不要です。** 作業は 3 箇所に集中します。エージェント定義 22 本の frontmatter（247 行）、コマンド 5 本（589 行）、`CLAUDE.md` のヘッダ
 - **ベンダー固有の語は 197 箇所**（製品名・モデル名・`.claude/` パス）。移植ガイド自身を除く 39 ファイル中 32 ファイルに散在しており、一括置換で対応します
-- **プラットフォーム固有の記述を一切含まない文書が 4 つあります:** 不具合分類、実機テスト フィードバック管理規則、仕様テンプレート、`user-order.md`
+- **プラットフォーム固有の記述を一切含まない文書が 4 つあります:** defect 分類、実機テスト フィードバック管理規則、仕様テンプレート、`user-order.md`
 
 大半のファイルは書き直しではなく局所的な修正で済みます。ただし数字に表れないものが 2 つあります。
 
@@ -211,7 +211,7 @@ gr-sw-maker フレームワーク自体のメンテナンスを行う場合、�
 - **clone 後は `node setup.js ja`（または `en`）を実行する。** 実行するまで `CLAUDE.md` もエージェント定義も存在しない。
 - **`README.md` / `README-ja.md`** は GitHub の表示に必要なため直接 tracked しており、`setup.js` では生成しない。
 - **`essays/research/*.md`** は単一言語の調査レポート — `setup.js` の生成物ではなく、通常通り tracked。
-- **`tools/` には性質の違う 2 種類のスクリプトがある。** `check-parity` / `check-roster` / `check-links` / `check-tagnames` / `check-setup` / `jsonl2md` は本リポジトリを守る検査で CI が実行する。`gate-guard` と `otel-sink` と `session-meter` はユーザープロジェクト内で動くもので、`create.js` が配布するのはこの 3 本だけ。
+- **`tools/` には性質の違う 2 種類のスクリプトがある。** `check-parity` / `check-roster` / `check-links` / `check-tagnames` / `check-terms` / `check-setup` / `jsonl2md` は本リポジトリを守る検査で CI が実行する。`gate-guard` と `otel-sink` と `session-meter` はユーザープロジェクト内で動くもので、`create.js` が配布するのはこの 3 本だけ。
 - **clone ごとに 1 度フックを有効化する:** `git config core.hooksPath tools/hooks`。片方の言語だけを変更したコミットを拒否する。
 - 詳細な規約と検査の手元実行は[フレームワーク開発ガイド](framework-src/ja/process-rules/framework-development.md)を参照。
 
@@ -228,7 +228,7 @@ gr-sw-maker フレームワーク自体のメンテナンスを行う場合、�
 | [プロンプト構造規約](framework-src/ja/process-rules/prompt-structure.md) | S0-S6 エージェント定義規約 |
 | [仕様テンプレート](framework-src/ja/process-rules/spec-template.md) | ANMS 仕様テンプレート（STFB 構造） |
 | [用語集](framework-src/ja/process-rules/glossary.md) | フレームワーク用語の定義と選定理由 |
-| [不具合分類](framework-src/ja/process-rules/defect-taxonomy.md) | error / fault / failure / defect / incident 因果連鎖 |
+| [defect 分類](framework-src/ja/process-rules/defect-taxonomy.md) | error / fault / failure / defect / incident 因果連鎖 |
 | [実機テスト フィードバック管理規則](framework-src/ja/process-rules/field-issue-handling-rules.md) | 実機テストのフィードバック管理（条件付き） |
 | [移植ガイド](framework-src/ja/process-rules/porting-guide.md) | 他 AI プラットフォームへの変換仕様 |
 | [フレームワーク開発ガイド](framework-src/ja/process-rules/framework-development.md) | リポジトリ規約、検査、npm publish 手順 |

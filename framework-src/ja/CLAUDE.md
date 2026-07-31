@@ -22,11 +22,11 @@
 - コードはsrc/配下、テストはtests/配下、IaCはinfra/配下に配置する
 - 運用規則は以下を参照する:
   - process-rules/full-auto-dev-process-rules.md（プロセス規則: フェーズ定義・品質管理）
-  - process-rules/full-auto-dev-document-rules.md **v0.0.0**（文書管理規則: 命名・ブロック構造・バージョニング。PoC前のPre-release）
+  - process-rules/full-auto-dev-document-rules.md **v0.1.0**（文書管理規則: 命名・ブロック構造・バージョニング。PoC前のPre-release）
   - process-rules/agent-list.md（エージェント一覧: 名簿・オーナーシップ・データフロー）
   - process-rules/prompt-structure.md（プロンプト構造規約: S0-S6）
   - process-rules/glossary.md（用語集: 選定理由・略称判定・紛らわしい対の区別）
-  - process-rules/defect-taxonomy.md（不具合系用語の体系: error/fault/failure/defect/incident/hazard の定義と使い分け）
+  - process-rules/defect-taxonomy.md（defect 系用語の体系: error/fault/failure/defect/incident/hazard の定義と使い分け）
   - process-rules/review-standards.md（レビュー観点規約: R1-R7）
   - process-rules/field-issue-handling-rules.md（実機テスト フィードバック管理規則: 条件付き）
 
@@ -144,7 +144,7 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 - **Framework Translation Verifier Agent（framework-translation-verifier）**: リリース前にフレームワーク文書の多言語間翻訳一致性を検証する
 - **User Manual Writer Agent（user-manual-writer）**: delivery フェーズでユーザーマニュアルを docs/ に作成する
 - **Runbook Writer Agent（runbook-writer）**: delivery フェーズで運用手順書を docs/operations/ に作成する
-- **Incident Reporter Agent（incident-reporter）**: operation フェーズでインシデント報告書を project-records/incidents/ に作成する
+- **Incident Reporter Agent（incident-reporter）**: operation フェーズで incident 報告書を project-records/incidents/ に作成する
 - **Process Improver Agent（process-improver）**: 各フェーズ完了時にふりかえりを実施し、defect パターンの根本原因分析とプロセス改善策を提案する
 - **Decree Writer Agent（decree-writer）**: 承認済みの改善策をガバナンスファイル（CLAUDE.md、エージェント定義、process-rules）に安全に適用する。自己変更禁止・品質ゲート保護等の安全チェックを経て変更を実行し、before/after diff を記録する
 - **Field Test Engineer Agent（field-test-engineer）**（条件付き: 実機テスト有効時）: ユーザーとの実機テスト、フィードバック記録、修正後の実機検証を行う。field-issue チケットの owner

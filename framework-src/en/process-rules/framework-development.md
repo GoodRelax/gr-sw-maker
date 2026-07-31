@@ -165,7 +165,7 @@ When writing a section number into an agent's "rule sections to read", confirm t
 
 ## 6. Running the Checks Locally
 
-All of these run with no dependencies. CI (`.github/workflows/framework-check.yml`) runs the same six, so **if they pass here they pass there.**
+All of these run with no dependencies. CI (`.github/workflows/framework-check.yml`) runs the same seven, so **if they pass here they pass there.**
 
 | Command | What it checks |
 |---|---|
@@ -174,6 +174,7 @@ All of these run with no dependencies. CI (`.github/workflows/framework-check.ym
 | `node tools/check-roster.mjs` | Roster against the definitions, frontmatter `name` / `model`, review perspective wiring |
 | `node tools/check-links.mjs` | Dead links and section citations |
 | `node tools/check-tagnames.mjs` | Form Block tag names against the §9 Fields tables |
+| `node tools/check-terms.mjs` | That no term rejected by glossary section 1 has crept into the prose |
 | `node tools/check-setup.mjs` | What `setup.js` deploys, idempotency, language switching, `.bak` protection |
 
 `check-setup.mjs` copies `setup.js` and `framework-src/` into a temporary directory before running, so **it never touches the `CLAUDE.md` or `user-order.md` you are working on.**

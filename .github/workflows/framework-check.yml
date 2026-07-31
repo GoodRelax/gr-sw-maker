@@ -43,6 +43,11 @@ jobs:
       - name: tagnames
         run: node tools/check-tagnames.mjs
 
+      # Terms the glossary rejected, which reached four phases of the trial
+      # before anything looked for them.
+      - name: terms
+        run: node tools/check-terms.mjs
+
       # Deploy fidelity, idempotency, language switching, and the .bak that
       # protects an edited user-order.md.
       - name: setup

@@ -25,7 +25,7 @@
 | 13 | framework-translation-verifier | フレームワーク文書の多言語間翻訳一致性を検証 | sonnet | delivery（リリース前） |
 | 14 | user-manual-writer | ユーザーマニュアルの作成 | sonnet | delivery |
 | 15 | runbook-writer | 運用手順書（Runbook）の作成 | sonnet | delivery |
-| 16 | incident-reporter | インシデント報告書の作成 | sonnet | operation |
+| 16 | incident-reporter | incident 報告書の作成 | sonnet | operation |
 | 17 | process-improver | ふりかえり・根本原因分析・プロセス改善策の提案 | sonnet | 全フェーズ（フェーズ完了時） |
 
 > **model 割当の根拠:** kotodama-kun は和製英語の判定と文書横断の同義語検出を行う。いずれも意味理解を要し、かつ全エージェントの Out 生成時に呼ばれるため呼出頻度が最も高い。誤検出と見逃しの双方がフレームワーク全体に波及するため sonnet を割り当てる。

@@ -5,7 +5,7 @@
 > **Target Version:** Claude Code (latest as of February 2026 — Opus 4.6 / Sonnet 4.6 compatible)
 > **Prerequisites:** Claude Pro/Team/Enterprise subscription, or Anthropic API account
 > **Document Status:** Process rules for the full-auto-dev framework. Structured based on official Claude Code features, but includes experimental features such as Agent Teams. Always refer to the official documentation (https://code.claude.com/docs/en/overview) for the latest specifications.
-> **Related Documents:** [Document Management Rules](full-auto-dev-document-rules.md) v0.0.0 — Document management rules for file naming, block structure, versioning, etc. Scheduled for promotion to v1.0.0 after PoC completion.
+> **Related Documents:** [Document Management Rules](full-auto-dev-document-rules.md) v0.1.0 — Document management rules for file naming, block structure, versioning, etc. Scheduled for promotion to v1.0.0 after PoC completion.
 
 ---
 
@@ -1599,7 +1599,7 @@ This structure is based on conventions that Claude Code automatically recognizes
 - **Product AI/LLM prompts are placed under src/ (managed as equivalent to code).** Prompts for running the project are placed under .claude/ (meta layer). Do not mix them
 - Refer to the following for operational rules:
   - process-rules/full-auto-dev-process-rules.md (Process rules)
-  - process-rules/full-auto-dev-document-rules.md v0.0.0 (Document management rules)
+  - process-rules/full-auto-dev-document-rules.md v0.1.0 (Document management rules)
 
 ## Language Settings
 
