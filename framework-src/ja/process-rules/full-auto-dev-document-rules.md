@@ -1412,10 +1412,12 @@ external-dependency-spec 共通章構成に従う。非標準I/Fの詳細仕様�
 | final-report:total_defect_count | int | Yes | 累計 defect 数 | — |
 | final-report:open_defect_count | int | Yes | 未解決 defect 数 | → プロセス規則 §9.4.1 GATE-DELIVERY |
 | final-report:lesson_count | int | Yes | 教訓の件数 | — |
+| final-report:unapplied_improvement_count | int | Yes | 未適用の改善策の数（`retrospective-report` のうち `approval_status` が `applied` 以外のもの） | 0以上。**0 でない場合は Detail Block に内訳を書く** |
+| final-report:oldest_unapplied_improvement_at | string | No | 未適用のうち最も古い提案日（`YYYY-MM-DD`） | 未適用が 0 件なら省略 |
 
 ### Detail Block Guidance
 
-プロジェクト総括（目標達成評価・スコープ充足・品質サマリー）、コスト分析（フェーズ別消費）、教訓（Lessons Learned）、残課題・推奨事項を記載する。
+プロジェクト総括（目標達成評価・スコープ充足・品質サマリー）、コスト分析（フェーズ別消費）、教訓（Lessons Learned）、残課題・推奨事項を記載する。**未適用の改善策がある場合は、件数だけでなく内訳（対象・提案日・未適用の理由）を記載する。** 提案が滞留していること自体は fault ではないが、**見えないまま次のプロジェクトへ持ち越すと、同じ真因が再発しても誰も気づかない。**
 
 ---
 

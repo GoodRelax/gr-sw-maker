@@ -1412,10 +1412,12 @@ Describe a concise user-facing summary (recent progress, next milestone, key ris
 | final-report:total_defect_count | int | Yes | Cumulative defect count | — |
 | final-report:open_defect_count | int | Yes | Unresolved defect count | -> Process Rules §9.4.1 GATE-DELIVERY |
 | final-report:lesson_count | int | Yes | Number of lessons | — |
+| final-report:unapplied_improvement_count | int | Yes | Improvements not yet applied (`retrospective-report` entries whose `approval_status` is anything but `applied`) | 0 or more. **When not zero, break it down in the Detail Block** |
+| final-report:oldest_unapplied_improvement_at | string | No | Proposal date of the oldest unapplied improvement (`YYYY-MM-DD`) | Omit when none are outstanding |
 
 ### Detail Block Guidance
 
-Describe project summary (goal achievement assessment, scope fulfillment, quality summary), cost analysis (consumption by phase), lessons learned, remaining issues, and recommendations.
+Describe project summary (goal achievement assessment, scope fulfillment, quality summary), cost analysis (consumption by phase), lessons learned, remaining issues, and recommendations. **Where improvements remain unapplied, record the breakdown - what, proposed when, and why it is still outstanding - not only the count.** A backlog of proposals is not itself a defect, but **carried into the next project unseen, nobody notices when the same root cause recurs.**
 
 ---
 

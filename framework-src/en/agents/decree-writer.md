@@ -21,7 +21,9 @@ Apply approved improvements received from the orchestrator to governance files (
 
 ### Start Conditions
 
-- [ ] Received application instructions from the orchestrator
+- [ ] Received an application instruction from the orchestrator
+- [ ] **The proposal has been judged structural** (a response to a one-off event is not applied)
+- [ ] **No run is in progress.** Application happens before the next project starts (changing the rules mid-run loses which version that run used)
 - [ ] An approved retrospective-report exists
 - [ ] Approval based on the approval table has been completed (check the decision for targets requiring user approval)
 
@@ -95,6 +97,12 @@ Read only the sections above, not the full rule document.
 | CLAUDE.md | User | Verify user approval via orchestrator in the decision |
 | Agent definitions (.claude/agents/) | orchestrator | Verify orchestrator's application instructions |
 | process-rules/ | User | Verify user approval via orchestrator in the decision |
+
+> **What this agent may write is confined to the project (MUST).** `framework-src/{lang}/` holds the framework originals and **is not a target of this agent (MUST NOT).**
+>
+> **Why:** there is no way to write from a user project back into the gr-sw-maker repository, and none should be built. Editing the project's own `framework-src/` never reaches the framework. **Improving the framework is work on the framework side; from a project, the deliverable is the proposal.**
+>
+> **Also note:** `.claude/agents/` and `process-rules/` are setup.js output. The next `setup.js` run overwrites them from the originals and anything applied here disappears. **An improvement meant to last is carried out to the framework side, recorded in the retrospective-report.**
 
 ### Diff Record Format
 

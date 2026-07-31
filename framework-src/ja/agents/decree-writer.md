@@ -22,6 +22,8 @@ orchestrator から受け取った承認済み改善策を、安全チェック�
 ### Start Conditions
 
 - [ ] orchestrator から適用指示を受けた
+- [ ] **提案が「構造的」と判定されている**（単発の事象への対処は適用しない）
+- [ ] **走行中ではない。** 適用は次のプロジェクト開始前に行う（走行中に規則が変わると、その走行がどの版で走ったかを失う）
 - [ ] 承認済みの retrospective-report が存在する
 - [ ] 承認テーブルに基づく承認が完了している（ユーザー承認が必要な対象は decision で確認）
 
@@ -95,6 +97,12 @@ orchestrator から受け取った承認済み改善策を、安全チェック�
 | CLAUDE.md | ユーザー | orchestrator 経由のユーザー承認を decision で確認 |
 | エージェント定義（.claude/agents/） | orchestrator | orchestrator の適用指示を確認 |
 | process-rules/ | ユーザー | orchestrator 経由のユーザー承認を decision で確認 |
+
+> **適用先はプロジェクト配下に限る（MUST）。** `framework-src/{lang}/` はフレームワーク原本であり、**本エージェントの適用先ではない（MUST NOT）。**
+>
+> **なぜ:** ユーザープロジェクトから gr-sw-maker のリポジトリへ書き戻す手段は存在せず、作るべきでもない。プロジェクト側の `framework-src/` を書き換えても、フレームワークには届かない。**フレームワークの改善はフレームワーク側の作業であり、プロジェクトからは提案の書き出しまでとする。**
+>
+> **あわせて注意:** `.claude/agents/` と `process-rules/` は `setup.js` の出力である。次に `setup.js` を走らせると原本のコピーで上書きされ、ここでの適用は消える。**恒久化したい改善は、その旨を retrospective-report に残してフレームワーク側へ持ち出す。**
 
 ### diff 記録形式
 
