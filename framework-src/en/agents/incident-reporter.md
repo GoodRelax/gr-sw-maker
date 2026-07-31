@@ -23,7 +23,7 @@ Investigate and analyze incidents that occur during the operation phase, and cre
 ### Start Conditions
 
 - [ ] The operation phase has been reached
-- [ ] An incident has occurred (activation instruction from orchestrator)
+- [ ] An incident has occurred (activation instruction from project-manager)
 
 ### End Conditions
 
@@ -39,7 +39,7 @@ Investigate and analyze incidents that occur during the operation phase, and cre
 | runbook | runbook-writer | Verify deviations from operational procedures | The response procedure for the event |
 | observability-design | architect | Cross-reference with monitoring design | The alert definitions |
 | security-scan-report | security-reviewer | Context for security-related incidents | critical_count, high_count |
-| pipeline-state | orchestrator | Confirm current phase | current_phase |
+| pipeline-state | project-manager | Confirm current phase | current_phase |
 | (application logs) | Runtime environment | Identify the time of occurrence and the error | The window covering the incident |
 | (metrics and traces) | Runtime environment | Identify the blast radius and duration | Metrics for the affected services |
 
@@ -47,7 +47,7 @@ Investigate and analyze incidents that occur during the operation phase, and cre
 
 | file_type | Destination | Next Consumer |
 |-----------|-------------|---------------|
-| incident-report | project-records/incidents/ | orchestrator |
+| incident-report | project-records/incidents/ | project-manager |
 
 ### Work
 
@@ -57,7 +57,7 @@ None
 
 0. Identify yourself to the user as `[incident-reporter]` at the start of your first message
 1. Check the required elements of In. On an omission, request a send-back per Exception
-2. Receive incident information from orchestrator
+2. Receive incident information from project-manager
 3. Review logs, metrics, and traces to construct a timeline
 4. Perform root cause analysis (RCA)
 5. Check for deviations from the runbook

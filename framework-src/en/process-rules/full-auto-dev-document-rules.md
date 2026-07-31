@@ -141,7 +141,7 @@ Revision rules applicable to all files under process-rules/ (including this docu
 
 | Directory | Stored Content | Primary Users |
 |-------------|----------|-----------|
-| `project-management/` | Orchestration state, handoffs, progress, WBS, cost | orchestrator, progress-monitor |
+| `project-management/` | Orchestration state, handoffs, progress, WBS, cost | project-manager, progress-monitor |
 | `docs/` | Specifications, API documents, security design — "what was built" | All agents, users, downstream consumers |
 | `project-records/` | Reviews, decisions, risks, defects, CRs — "how it was built" | Auditors, reviewers, process-oriented stakeholders |
 
@@ -171,7 +171,7 @@ Files used for pipeline management, inter-agent handoffs, and progress managemen
 | Handoff | `handoff-001-20260314-102530.md` | Standard format |
 | Session handoff | `session-handoff-001-20260314-102530.md` | Standard format |
 | Progress report | `progress-001-20260314-150000.md` | Standard format |
-| Cost log | `cost-log.json` | Time-series JSON. Not subject to Common Block. owner: progress-monitor, consumed_by: orchestrator |
+| Cost log | `cost-log.json` | Time-series JSON. Not subject to Common Block. owner: progress-monitor, consumed_by: project-manager |
 | Test progress | `test-progress.json` | Time-series JSON. Not subject to Common Block. owner: test-engineer, consumed_by: progress-monitor |
 | defect curve | `defect-curve.json` | Time-series JSON. Not subject to Common Block. owner: test-engineer, consumed_by: progress-monitor |
 | WBS | `wbs.md` | Singleton |
@@ -379,13 +379,13 @@ security-reviewer creates a threat model. Other agents reference it for implemen
 
 ### Example 2: wbs.md (WBS)
 
-progress-monitor manages the WBS. orchestrator references it for phase progression decisions.
+progress-monitor manages the WBS. project-manager references it for phase progression decisions.
 
 | Information | Candidates | Decision | Rationale |
 |------|------|------|------|
 | Total task count | Form? Detail? | **Form Block** (`wbs:task_total`) | Input for completion rate calculation |
 | Completed task count | Form? Detail? | **Form Block** (`wbs:task_completed`) | Displayed on dashboard |
-| WBS completion rate | Form? Detail? | **Form Block** (`wbs:completion_pct`) | Derivable from the two rows above, but orchestrator uses it immediately for progression decisions |
+| WBS completion rate | Form? Detail? | **Form Block** (`wbs:completion_pct`) | Derivable from the two rows above, but project-manager uses it immediately for progression decisions |
 | Details of each task (assignee, duration, dependencies) | Form? Detail? | **Detail Block** | Task details are domain knowledge |
 
 **Decision point:** The completion rate can be derived from the task table in Detail Block, but even derived values belong in Form Block if agents use them immediately for decisions.
@@ -398,7 +398,7 @@ progress-monitor updates the project-wide summary. Users grasp the situation at 
 |------|------|------|------|
 | Current phase | Form? Detail? | **Form Block** (`executive-dashboard:phase`) | Synced with pipeline-state |
 | Overall project completion rate | Form? Detail? | **Form Block** (`executive-dashboard:completion_pct`) | Numeric metric |
-| Overall health status (green/yellow/red) | Form? Detail? | **Form Block** (`executive-dashboard:health`) | orchestrator determines whether to escalate |
+| Overall health status (green/yellow/red) | Form? Detail? | **Form Block** (`executive-dashboard:health`) | project-manager determines whether to escalate |
 | Current blocker (empty if none) | Form? Detail? | **Form Block** (`executive-dashboard:blocker`) | Escalation if not empty. It holds a summary rather than a count because pipeline-state:blocked already carries the machine-readable blocking state |
 | Detailed summary per phase | Form? Detail? | **Detail Block** | Summary text for humans to read |
 
@@ -406,7 +406,7 @@ progress-monitor updates the project-wide summary. Users grasp the situation at 
 
 ### Example 4: final-report.md (Final Report)
 
-orchestrator creates it in the delivery phase. Material for users to decide on project closure.
+project-manager creates it in the delivery phase. Material for users to decide on project closure.
 
 | Information | Candidates | Decision | Rationale |
 |------|------|------|------|
@@ -556,7 +556,7 @@ okf_version -> type -> description
 | document_status | enum: draft / in-review / approved / archived | Yes | Extension | Document lifecycle status. **OKF's `status` is not used** (its value range differs) |
 | document_version | string | Yes | Extension | Version number in `{major}.{minor}` form (e.g. `1.2`). **The filename stays fixed; the version lives in this key** |
 | owner | actor | Yes | Extension | The actor holding write permission. Follows the notation in 5.1 |
-| commissioned_by | string | Yes | Extension | What triggered this document (values: `user`, `orchestrator`, `phase-{name}`, or `{agent-name}`) |
+| commissioned_by | string | Yes | Extension | What triggered this document (values: `user`, `project-manager`, `phase-{name}`, or `{agent-name}`) |
 | consumed_by | list | Yes | Extension | The agents that use this document next. **Written as a YAML list** (repeating a tag is no longer needed) |
 | project | string | Yes | Extension | Project name |
 | purpose | string | Yes | Extension | Why this file exists and what action is expected |
@@ -794,7 +794,7 @@ Standard values for `commissioned_by` (creation trigger) and `consumed_by` (next
 | Value | Meaning |
 |---|------|
 | `user` | Directly created by the user |
-| `orchestrator` | Created by orchestrator as part of its own responsibilities |
+| `project-manager` | Created by project-manager as part of its own responsibilities |
 | `phase-{name}` | Triggered by phase transition per process rules |
 | `{agent-name}` | Triggered by an event from a specific agent |
 
@@ -815,25 +815,25 @@ Standard values for `commissioned_by` (creation trigger) and `consumed_by` (next
 
 | file_type | commissioned_by | consumed_by | owner |
 |-----------|----------------|-------------|-------|
-| pipeline-state | `orchestrator` | All agents | orchestrator |
-| handoff | Phase transition (e.g., `phase-planning`) | to-agent | orchestrator |
-| session-handoff | `user` (invoking `/session-handoff`) | main-session | main-session |
-| progress | `phase-design` (updated thereafter) | orchestrator, user | progress-monitor |
-| interview-record | `phase-planning` | architect, orchestrator | srs-writer |
-| wbs | `phase-design` | progress-monitor, orchestrator | progress-monitor |
+| pipeline-state | `project-manager` | All agents | project-manager |
+| handoff | Phase transition (e.g., `phase-planning`) | to-agent | project-manager |
+| session-handoff | `user` (invoking `/session-handoff`) | main-agent | main-agent |
+| progress | `phase-design` (updated thereafter) | project-manager, user | progress-monitor |
+| interview-record | `phase-planning` | architect, project-manager | srs-writer |
+| wbs | `phase-design` | progress-monitor, project-manager | progress-monitor |
 | test-plan | `phase-design` | test-engineer, review-agent | test-engineer |
-| review | Phase gate (e.g., `phase-planning`) | orchestrator, target agent | review-agent |
-| decision | Agent that needed the decision | All agents | orchestrator |
-| tech-decision | When a gate decision or technical ruling is requested | Main session, orchestrator, all implementation agents | technical-authority |
-| governance-change-log | When an improvement is applied | orchestrator, user, process-improver | decree-writer |
+| review | Phase gate (e.g., `phase-planning`) | project-manager, target agent | review-agent |
+| decision | Agent that needed the decision | All agents | project-manager |
+| tech-decision | When a gate decision or technical ruling is requested | Main agent, project-manager, all implementation agents | technical-authority |
+| governance-change-log | When an improvement is applied | project-manager, user, process-improver | decree-writer |
 | deployment-design | `phase-design` | implementer, runbook-writer, technical-authority | architect |
-| risk-register | `phase-planning` (updated thereafter) | orchestrator, technical-authority | risk-manager |
-| risk | `phase-planning` | risk-manager, orchestrator | risk-manager |
+| risk-register | `phase-planning` (updated thereafter) | project-manager, technical-authority | risk-manager |
+| risk | `phase-planning` | risk-manager, project-manager | risk-manager |
 | defect | `test-engineer` | Agent assigned to fix | test-engineer |
-| change-request | `user` (user-initiated change requests only) | change-manager, orchestrator | change-manager |
+| change-request | `user` (user-initiated change requests only) | change-manager, project-manager | change-manager |
 | traceability | `phase-implementation` | review-agent | test-engineer |
-| license-report | `phase-implementation` | orchestrator, security-reviewer | license-checker |
-| performance-report | `phase-testing` | review-agent, orchestrator | test-engineer |
+| license-report | `phase-implementation` | project-manager, security-reviewer | license-checker |
+| performance-report | `phase-testing` | review-agent, project-manager | test-engineer |
 | spec-foundation | `phase-planning` | architect, review-agent | srs-writer |
 | spec-architecture | `phase-design` | Implementation agents, review-agent | architect |
 | threat-model | `phase-design` | architect, implementation agents | security-reviewer |
@@ -842,17 +842,17 @@ Standard values for `commissioned_by` (creation trigger) and `consumed_by` (next
 | hw-requirement-spec | `phase-design` | architect (Adapter layer design), test-engineer (integration test planning) | architect |
 | ai-requirement-spec | `phase-design` | architect (Adapter layer design), implementation agents | architect |
 | framework-requirement-spec | `phase-design` | architect (Adapter layer design), implementation agents | architect |
-| executive-dashboard | `phase-setup` | User, orchestrator | orchestrator |
-| final-report | `phase-delivery` | User | orchestrator |
+| executive-dashboard | `phase-setup` | User, project-manager | project-manager |
+| final-report | `phase-delivery` | User | project-manager |
 | user-order | `user` | srs-writer | srs-writer |
-| security-scan-report | `phase-implementation` (ad hoc thereafter) | review-agent, orchestrator | security-reviewer |
+| security-scan-report | `phase-implementation` (ad hoc thereafter) | review-agent, project-manager | security-reviewer |
 | user-manual | `phase-delivery` | User | user-manual-writer |
 | runbook | `phase-delivery` | Operations team | runbook-writer |
-| incident-report | `phase-operation` (ad hoc) | orchestrator, user | incident-reporter |
-| disaster-recovery-plan | `phase-design` | Operations team, orchestrator | architect |
-| stakeholder-register | `phase-setup` | All agents | orchestrator |
-| retrospective-report | Phase completion (ad hoc) | orchestrator | process-improver |
-| field-issue | During field testing (as needed) | orchestrator, implementer, test-engineer | field-test-engineer |
+| incident-report | `phase-operation` (ad hoc) | project-manager, user | incident-reporter |
+| disaster-recovery-plan | `phase-design` | Operations team, project-manager | architect |
+| stakeholder-register | `phase-setup` | All agents | project-manager |
+| retrospective-report | Phase completion (ad hoc) | project-manager | process-improver |
+| field-issue | During field testing (as needed) | project-manager, implementer, test-engineer | field-test-engineer |
 
 ---
 
@@ -1214,7 +1214,7 @@ Describe per-session records (questions, answers, agreements) in table format. P
 | wbs:task_total | int | Yes | Total task count | — |
 | wbs:task_completed | int | Yes | Completed task count | — |
 | wbs:task_in_progress | int | Yes | In-progress task count | — |
-| wbs:task_blocked | int | Yes | Blocked task count | >=1 -> notify orchestrator |
+| wbs:task_blocked | int | Yes | Blocked task count | >=1 -> notify project-manager |
 | wbs:completion_pct | int | Yes | WBS completion rate | 0-100 |
 
 ### Detail Block Guidance
@@ -1645,7 +1645,7 @@ Describe the details of the field-issue. field-test-engineer records feedback (s
 
 Record the point at issue, the options compared, and the options not adopted with the reason. For a gate decision, include a table mapping the findings of the referenced review to their disposition. When a waiver is granted, always record the user approval, the scope of impact, and the re-evaluation timing (Process Rules §9.1).
 
-Judgments made on grounds of cost, schedule or risk are recorded in decision (owner: orchestrator), not in this file_type.
+Judgments made on grounds of cost, schedule or risk are recorded in decision (owner: project-manager), not in this file_type.
 
 ---
 
@@ -1712,7 +1712,7 @@ Record the register listing the individual `risk` entries. Each row carries risk
 
 ## 9.38 session-handoff (namespace: session-handoff:)
 
-> **How it differs from `handoff`:** `handoff` crosses an **agent boundary** and is owned by the orchestrator. `session-handoff` crosses a **session boundary** and is owned by `main-session`. **A subagent holds no conversation history, so main-session is the only thing that can write it.**
+> **How it differs from `handoff`:** `handoff` crosses an **agent boundary** and is owned by the project-manager. `session-handoff` crosses a **session boundary** and is owned by `main-agent`. **A subagent holds no conversation history, so main-agent is the only thing that can write it.**
 
 ### Fields
 
@@ -1732,7 +1732,7 @@ Record the register listing the individual `risk` entries. Each row carries risk
 | **The delta against the plan** | Reading the plan alone, work already finished looks untouched, and **gets done a second time** |
 | **Defects this session caused and fixed** | Deliverables retain only the successful end state. **Left unwritten, the next session walks into the same hole** |
 
-**Neither can be reconstructed from anything but the conversation.** Files keep the successful end state, so the route through the failures cannot be rebuilt from them. **That is why the owner is main-session.**
+**Neither can be reconstructed from anything but the conversation.** Files keep the successful end state, so the route through the failures cannot be rebuilt from them. **That is why the owner is main-agent.**
 
 Alongside them, record the open questions, any agreement with the user that is not written into a file, and which files to read next.
 
@@ -1766,16 +1766,16 @@ archived   → Do not modify (reference only)
 
 Each file has exactly one `owner`. Only the owner can modify Common Block and Form Block fields.
 
-**Range of `owner`:** an agent name from `agent-list.md` §1, or `main-session`.
+**Range of `owner`:** an agent name from `agent-list.md` §1, or `main-agent`.
 
-**`main-session` is the progress lead that holds the conversation history, and MUST only be named for deliverables carrying information a subagent cannot reconstruct.** Opened unconditionally it becomes an escape hatch for pushing any awkward deliverable onto the main session. **It is not added to `agent-list.md` §1**, because that roster lists subagent definition files and the main session has none.
+**`main-agent` is the progress lead that holds the conversation history, and MUST only be named for deliverables carrying information a subagent cannot reconstruct.** Opened unconditionally it becomes an escape hatch for pushing any awkward deliverable onto the main agent. **It is not added to `agent-list.md` §1**, because that roster lists subagent definition files and the main agent has none.
 
 | Owner | File (file_type) | Write Scope |
 |---------|---------|-----------|
-| orchestrator | pipeline-state | Full control. Only orchestrator writes this file |
-| orchestrator | executive-dashboard | Full control of project-wide dashboard |
-| orchestrator | final-report | Full control of project final report |
-| orchestrator | decision | Full control of decision records |
+| project-manager | pipeline-state | Full control. Only project-manager writes this file |
+| project-manager | executive-dashboard | Full control of project-wide dashboard |
+| project-manager | final-report | Full control of project final report |
+| project-manager | decision | Full control of decision records |
 | technical-authority | tech-decision | Full control of technical ruling and gate decision records |
 | decree-writer | governance-change-log | Full control of governance application records |
 | architect | deployment-design | Full control of the deployment design; the infra/ implementation belongs to implementer |
@@ -1805,15 +1805,15 @@ Each file has exactly one `owner`. Only the owner can modify Common Block and Fo
 | runbook-writer | runbook | Full control of runbook |
 | incident-reporter | incident-report | Full control of incident records |
 | architect | disaster-recovery-plan | Full control of disaster recovery plan |
-| orchestrator | stakeholder-register | Full control of stakeholder register |
-| orchestrator | handoff | Creation of handoff entries. `to` agent may only update status |
-| main-session | session-handoff | Full control. **Only main-session, which holds the conversation history, can write it** (see the range note in section 11) |
+| project-manager | stakeholder-register | Full control of stakeholder register |
+| project-manager | handoff | Creation of handoff entries. `to` agent may only update status |
+| main-agent | session-handoff | Full control. **Only main-agent, which holds the conversation history, can write it** (see the range note in section 11) |
 | process-improver | retrospective-report | Full control of retrospective and process improvement records |
 | field-test-engineer | field-issue | Full control of field testing feedback (conditional: field testing enabled). feedback-classifier and field-issue-analyst may append to Detail Block |
 
 **Detail Block exception:** Any agent MAY append to the Detail Block of a file they do not own, provided they record the append in the change_log.
 
-**decree-writer delegated write permission:** decree-writer does not own any file_type, but performs writes to CLAUDE.md, agent definitions (.claude/agents/), and process-rules/ based on approved retrospective-reports. Prior approval is required based on the approval table (CLAUDE.md / process-rules = user approval, agent definitions = orchestrator approval). All changes are recorded as before/after diff in project-records/improvement/.
+**decree-writer delegated write permission:** decree-writer does not own any file_type, but performs writes to CLAUDE.md, agent definitions (.claude/agents/), and process-rules/ based on approved retrospective-reports. Prior approval is required based on the approval table (CLAUDE.md / process-rules = user approval, agent definitions = project-manager approval). All changes are recorded as before/after diff in project-records/improvement/.
 
 **Handoff ownership:** Created by the `from` agent. After `status` becomes `in-progress`, the `to` agent can update the status.
 

@@ -41,7 +41,7 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
 | user-order | user | コンセプトの読み込み | 3 問すべてに回答 |
-| CLAUDE.md | orchestrator (setup) | 言語設定・仕様形式・技術スタックの確認 | 言語設定・仕様形式・技術スタックの各節 |
+| CLAUDE.md | project-manager (setup) | 言語設定・仕様形式・技術スタックの確認 | 言語設定・仕様形式・技術スタックの各節 |
 | spec-template | framework | 章構成と記法の参照 | Ch1-2 の章構成 |
 
 ### Out
@@ -49,7 +49,7 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
 | spec-foundation | docs/spec/{project}-spec.md (ANMS) or docs/spec/{project}-spec-ch1-2.md (ANPS) | architect, review-agent |
-| interview-record | project-management/interview-record.md | architect, orchestrator |
+| interview-record | project-management/interview-record.md | architect, project-manager |
 
 ### Work
 
@@ -117,7 +117,7 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 | 異常 | 対応 |
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
-| user-order.md の必須項目が不足 | 作業を開始しない。orchestrator に不足項目を報告 |
-| 要求の解釈が複数可能で判断できない | 自分で選ばない。選択肢を明示して orchestrator に判断を求める |
-| スコープが ANMS に収まらない | 無理に押し込まない。orchestrator に仕様形式の再選定を提案 |
-| インタビューでドメイン知識が不足 | 推測で埋めない。orchestrator に追加インタビューを要請 |
+| user-order.md の必須項目が不足 | 作業を開始しない。project-manager に不足項目を報告 |
+| 要求の解釈が複数可能で判断できない | 自分で選ばない。選択肢を明示して project-manager に判断を求める |
+| スコープが ANMS に収まらない | 無理に押し込まない。project-manager に仕様形式の再選定を提案 |
+| インタビューでドメイン知識が不足 | 推測で埋めない。project-manager に追加インタビューを要請 |

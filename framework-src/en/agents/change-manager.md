@@ -39,14 +39,14 @@ Control scope changes after specification approval to prevent uncontrolled chang
 | spec-foundation | srs-writer | Subject of change impact analysis | Approved Ch1-2; an ID on every FR/NFR |
 | spec-architecture | architect | Subject of change impact analysis | Ch3-4; traces on every Gherkin in Ch4 |
 | (src/, tests/) | implementer, test-engineer | Subject of change impact analysis | A directory layout that identifies the change target |
-| CLAUDE.md | orchestrator (setup) | Reference for project settings | The quality target and critical-decision-criteria sections |
+| CLAUDE.md | project-manager (setup) | Reference for project settings | The quality target and critical-decision-criteria sections |
 | field-issue (type=cr) | feedback-classifier | Accept a scope change originating from field testing | issue_id; type = cr; the requested change |
 
 ### Out
 
 | file_type | Destination | Next Consumer |
 |-----------|-------------|---------------|
-| change-request | project-records/change-requests/change-request-{NNN}-{YYYYMMDD}-{HHMMSS}.md | orchestrator |
+| change-request | project-records/change-requests/change-request-{NNN}-{YYYYMMDD}-{HHMMSS}.md | project-manager |
 
 ### Work
 
@@ -59,8 +59,8 @@ None
 2. Accept the change request from the user
 3. Create a change-request file and fill in the required fields
 4. Analyze the scope of impact (impact on specifications, tests, and schedule)
-5. Submit the impact analysis results to the orchestrator
-6. If impact_level = high, request user approval or rejection via the orchestrator
+5. Submit the impact analysis results to the project-manager
+6. If impact_level = high, request user approval or rejection via the project-manager
 7. Record rejected changes along with the reason
 8. For approved changes, issue modification instructions to the responsible agents
 
@@ -93,7 +93,7 @@ Read only the sections above, not the full rule document.
 | Impact Level | Condition | Action |
 |--------------|-----------|--------|
 | High | Changes spanning multiple modules, schedule impact of 1 day or more | Must confirm with the user |
-| Medium | Changes within a single module, no schedule impact | Orchestrator decides and records |
+| Medium | Changes within a single module, no schedule impact | Project Manager decides and records |
 | Low | Comments or documentation only | Execute autonomously and record |
 
 ### Constraints
@@ -106,6 +106,6 @@ Read only the sections above, not the full rule document.
 | Anomaly | Action |
 |---------|--------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| A change request arrives before the specification has been approved | Out of scope for change management. Propose specification revision during the planning phase to the orchestrator |
-| The change request content is too ambiguous to perform impact analysis | Do not proceed with analysis. Request the orchestrator to ask the user for further details |
-| The change request contradicts an existing requirement | Explicitly identify the contradiction and report to the orchestrator. Request a user decision on which takes priority |
+| A change request arrives before the specification has been approved | Out of scope for change management. Propose specification revision during the planning phase to the project-manager |
+| The change request content is too ambiguous to perform impact analysis | Do not proceed with analysis. Request the project-manager to ask the user for further details |
+| The change request contradicts an existing requirement | Explicitly identify the contradiction and report to the project-manager. Request a user decision on which takes priority |

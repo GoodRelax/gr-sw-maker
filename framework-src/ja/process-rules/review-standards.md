@@ -365,8 +365,8 @@ review-agent が指摘を起票した後、以下の対応ワークフローを�
 ### 対応フロー
 
 1. review-agent が重大度（Critical / High / Medium / Low）付きで指摘を起票
-2. 担当エージェント（または orchestrator）が各指摘をトリアージし、対応を記録
-3. orchestrator がフェーズ遷移前に全指摘に対応記録があることを検証
+2. 担当エージェント（または project-manager）が各指摘をトリアージし、対応を記録
+3. project-manager がフェーズ遷移前に全指摘に対応記録があることを検証
 
 ### 重大度別の対応ルール
 

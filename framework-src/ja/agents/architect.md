@@ -43,8 +43,8 @@ docs/spec/ の仕様書 Ch3-6 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 |-----------|--------|------|---------|
 | spec-foundation | srs-writer | Ch1-2 の要求を読み込み、Ch3-6 を詳細化する | Ch1 全体, Ch2 の全 FR/NFR に ID |
 | interview-record | srs-writer | インタビュー結果からドメイン知識を補完する | 合意事項の節 |
-| decision | orchestrator | 過去の意思決定との整合性を確認する | decision_status, 対象範囲 |
-| CLAUDE.md | orchestrator (setup) | 技術スタック・コーディング規約の確認 | 技術スタック・コーディング規約・品質目標の各節 |
+| decision | project-manager | 過去の意思決定との整合性を確認する | decision_status, 対象範囲 |
+| CLAUDE.md | project-manager (setup) | 技術スタック・コーディング規約の確認 | 技術スタック・コーディング規約・品質目標の各節 |
 | spec-template | framework | Ch3-6 の記法を確認する | Ch3-6 の章構成 |
 
 ### Out
@@ -135,7 +135,7 @@ docs/spec/ の仕様書 Ch3-6 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 | 異常 | 対応 |
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
-| Ch1-2 の要求が曖昧で設計に落とせない | 設計を進めない。orchestrator に Ch1-2 の要求精緻化を要請 |
-| 技術スタックの選定が未確定 | 推測で選ばない。orchestrator にユーザー判断を求める |
-| 条件付きプロセスの外部依存が未選定 | 該当する requirement-spec の作成を保留し、orchestrator に dependency-selection の実施を要請 |
-| OpenAPI の設計が Ch2 の要求と矛盾する | 矛盾を明示して orchestrator に報告。Ch2 修正か設計変更かの判断を求める |
+| Ch1-2 の要求が曖昧で設計に落とせない | 設計を進めない。project-manager に Ch1-2 の要求精緻化を要請 |
+| 技術スタックの選定が未確定 | 推測で選ばない。project-manager にユーザー判断を求める |
+| 条件付きプロセスの外部依存が未選定 | 該当する requirement-spec の作成を保留し、project-manager に dependency-selection の実施を要請 |
+| OpenAPI の設計が Ch2 の要求と矛盾する | 矛盾を明示して project-manager に報告。Ch2 修正か設計変更かの判断を求める |

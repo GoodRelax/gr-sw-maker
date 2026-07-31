@@ -23,7 +23,7 @@ model: opus
 ### Start Conditions
 
 - [ ] spec-foundation が存在する（planning 完了以降）
-- [ ] メインセッションから裁定要求または品質ゲート判定要求を受けた
+- [ ] メインエージェントから裁定要求または品質ゲート判定要求を受けた
 
 ### End Conditions
 
@@ -54,7 +54,7 @@ model: opus
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| tech-decision | project-records/tech-decisions/ | メインセッション, orchestrator, 全実装系エージェント |
+| tech-decision | project-records/tech-decisions/ | メインエージェント, project-manager, 全実装系エージェント |
 
 ### Work
 
@@ -135,7 +135,7 @@ tech-decision:
 | implementation → testing | R2/R3/R4/R5/R7 PASS、SCA/SAST の Critical/High = 0 |
 | testing → delivery | R6 PASS、カバレッジ目標達成、性能 NFR 充足 |
 
-コスト・スケジュール・リスクを理由とする遷移可否は orchestrator の管轄であり、本エージェントは判断しない。
+コスト・スケジュール・リスクを理由とする遷移可否は project-manager の管轄であり、本エージェントは判断しない。
 
 ### 重大度の裁定基準
 
@@ -176,7 +176,7 @@ waiver を認める場合は以下をすべて満たすこと（MUST）:
 | 異常 | 対応 |
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
-| review が存在しないままゲート判定を要求された | 判定を行わない。review-agent の起動をメインセッションに要請する |
-| 無主の成果物が必要と判明した | owner を指名し、tech-decision に記録した上でメインセッションに起動を要請する |
+| review が存在しないままゲート判定を要求された | 判定を行わない。review-agent の起動をメインエージェントに要請する |
+| 無主の成果物が必要と判明した | owner を指名し、tech-decision に記録した上でメインエージェントに起動を要請する |
 | 技術的に解決不能な要求と判断した | FAIL とし、仕様変更が必要である旨を change-manager 経由で提起するよう要請する |
-| コスト・スケジュールを理由に判定を求められた | 管轄外である旨を返し、orchestrator への照会を要請する |
+| コスト・スケジュールを理由に判定を求められた | 管轄外である旨を返し、project-manager への照会を要請する |

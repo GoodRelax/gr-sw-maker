@@ -10,7 +10,7 @@
 
 | # | name | Role | model | Primary Phase |
 |:-:|------|------|:-----:|--------------|
-| 1 | orchestrator | Records progress state, consolidates PM information (progress, cost, risk, change requests), reports to the user | opus | All phases |
+| 1 | project-manager | Records progress state, consolidates PM information (progress, cost, risk, change requests), reports to the user | opus | All phases |
 | 2 | srs-writer | User concept structuring, interviews, spec Ch1-2 creation | opus | planning |
 | 3 | architect | Spec Ch3-6 elaboration, OpenAPI / observability / external dependency requirement design | opus | design |
 | 4 | security-reviewer | Threat modeling, security design, vulnerability scanning | opus | design, implementation |
@@ -41,7 +41,7 @@
 
 Derived from Document Management Rules §11. **Each file_type has a single owner.**
 
-### orchestrator
+### project-manager
 
 | file_type | Directory | S/M | Primary Phase |
 |-----------|-----------|:---:|--------------|
@@ -194,7 +194,7 @@ Derived from Document Management Rules §11. **Each file_type has a single owner
 | Input | Provider | Purpose |
 |-------|----------|---------|
 | retrospective-report | process-improver | Reference for improvements to be applied |
-| decision | orchestrator | Confirmation of approval records |
+| decision | project-manager | Confirmation of approval records |
 
 ### field-test-engineer (conditional: field testing enabled)
 
@@ -230,7 +230,7 @@ Derived from Document Management Rules §11. **Each file_type has a single owner
 |-----------|------------|:-----:|------------|
 | tech-decision | project-records/tech-decisions/ | Multi | planning onward |
 
-> technical-authority produces no deliverables; it only rules and records. Its jurisdiction differs from decision (owned by orchestrator): technical consistency and gate verdicts go in tech-decision, while judgments made on grounds of cost, schedule or risk go in decision.
+> technical-authority produces no deliverables; it only rules and records. Its jurisdiction differs from decision (owned by project-manager): technical consistency and gate verdicts go in tech-decision, while judgments made on grounds of cost, schedule or risk go in decision.
 
 ---
 
@@ -243,7 +243,7 @@ Shows dependencies between agents through the flow of file_types and actions.
 ```mermaid
 flowchart TD
     User["User"]
-    Orch["orchestrator"]
+    Orch["project-manager"]
     SRS["srs-writer"]
     Arch["architect"]
     Sec["security-reviewer"]
@@ -320,7 +320,7 @@ flowchart LR
     User["User"] -->|"feedback"| FTE["field-test-engineer"]
     FTE -->|"field-issue"| FC["feedback-classifier"]
     FC -->|"field-issue"| FIA["field-issue-analyst"]
-    FIA -->|"field-issue"| Orch["orchestrator"]
+    FIA -->|"field-issue"| Orch["project-manager"]
     Orch -->|"field-issue"| Existing["Existing agents<br/>srs-writer architect<br/>review-agent implementer<br/>test-engineer"]
     Existing -->|"automated test results"| FTE
 
@@ -341,7 +341,7 @@ flowchart LR
     Arch["architect"] -->|"spec-architecture"| UMW
     Arch -->|"spec-architecture<br/>observability-design<br/>disaster-recovery-plan"| RBW
     Sec["security-reviewer"] -->|"threat-model"| RBW
-    UMW["user-manual-writer"] -->|"user-manual"| Orch["orchestrator"]
+    UMW["user-manual-writer"] -->|"user-manual"| Orch["project-manager"]
     RBW["runbook-writer"] -->|"runbook"| Orch
     IR["incident-reporter"] -->|"incident-report"| Orch
 
@@ -351,7 +351,7 @@ flowchart LR
     style Orch fill:#FF8C00,stroke:#333,color:#000
 ```
 
-During the delivery phase, user-manual-writer and runbook-writer are activated. They reference upstream agent design documents as input and deliver artifacts to orchestrator. incident-reporter is activated during the operation phase.
+During the delivery phase, user-manual-writer and runbook-writer are activated. They reference upstream agent design documents as input and deliver artifacts to project-manager. incident-reporter is activated during the operation phase.
 
 **kotodama-kun (Terminology Check):**
 
@@ -369,13 +369,13 @@ flowchart LR
     RBW["runbook-writer"] -.-> Koto
     PI["process-improver"] -.-> Koto
 
-    Koto["kotodama-kun"] -.->|"terminology-issue"| Orch["orchestrator"]
+    Koto["kotodama-kun"] -.->|"terminology-issue"| Orch["project-manager"]
 
     style Koto fill:#af7ac5,stroke:#333,color:#fff
     style Orch fill:#FF8C00,stroke:#333,color:#000
 ```
 
-All agents that generate Out request a terminology check from kotodama-kun before handoff. Significant terminology inconsistencies are reported to orchestrator as a review file_type. See the Procedure section of each agent definition for details.
+All agents that generate Out request a terminology check from kotodama-kun before handoff. Significant terminology inconsistencies are reported to project-manager as a review file_type. See the Procedure section of each agent definition for details.
 
 **Label Distinction:**
 
@@ -389,19 +389,19 @@ All agents that generate Out request a terminology check from kotodama-kun befor
 | Action Label | Sender | Receiver | Description |
 |-------------|--------|----------|-------------|
 | change-request-input | User | change-manager | User-initiated change request (recorded as change-request file_type after acceptance) |
-| retrospective-trigger | orchestrator | process-improver | Instruction to initiate retrospective at phase completion |
-| approved-improvement | orchestrator | decree-writer | Instruction to apply approved improvement (decision record serves as basis) |
-| apply-completion | decree-writer | orchestrator | Report of improvement application completion (before/after diff recorded in project-records/improvement/) |
+| retrospective-trigger | project-manager | process-improver | Instruction to initiate retrospective at phase completion |
+| approved-improvement | project-manager | decree-writer | Instruction to apply approved improvement (decision record serves as basis) |
+| apply-completion | decree-writer | project-manager | Report of improvement application completion (before/after diff recorded in project-records/improvement/) |
 
 **About kotodama-kun (Terminology Check):**
 
-kotodama-kun does not have arrows in the diagram, but all agents that generate Out request a terminology check before handoff. See the Procedure section of each agent definition for details. Significant terminology inconsistencies are reported to orchestrator as a review file_type.
+kotodama-kun does not have arrows in the diagram, but all agents that generate Out request a terminology check before handoff. See the Procedure section of each agent definition for details. Significant terminology inconsistencies are reported to project-manager as a review file_type.
 
 Agents that **do not use** kotodama-kun:
 
 | Agent | Reason |
 |-------|--------|
-| orchestrator | Does not generate file_type content itself (management and forwarding only) |
+| project-manager | Does not generate file_type content itself (management and forwarding only) |
 | review-agent | Evaluates other agents' artifacts |
 | change-manager | Only records user-initiated change requests; minimal terminology creation |
 | license-checker | Records external license names as-is |
@@ -419,14 +419,14 @@ Which agents are activated in which phases.
 
 | Phase | Activated Agents | Quality Gate |
 |-------|-----------------|-------------|
-| setup | orchestrator | CLAUDE.md approval |
-| planning | orchestrator, srs-writer, kotodama-kun, review-agent, technical-authority, process-improver, decree-writer | R1 PASS -> spec approval |
-| dependency-selection | orchestrator, architect, kotodama-kun, license-checker, technical-authority | User selection approval |
-| design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5/R7 PASS |
-| implementation | orchestrator, implementer, test-engineer (unit), security-reviewer (SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5/R7 PASS, SCA clear |
-| testing | orchestrator, test-engineer, kotodama-kun, review-agent, technical-authority, progress-monitor, process-improver, decree-writer, field-test-engineer (conditional), feedback-classifier (conditional), field-issue-analyst (conditional) | R6 PASS, all tests PASS |
-| delivery | orchestrator, kotodama-kun, review-agent, technical-authority, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R7 all PASS, translation consistency verification PASS, user acceptance |
-| operation | orchestrator, security-reviewer (patching), progress-monitor, incident-reporter, process-improver, decree-writer | SLA achieved |
+| setup | project-manager | CLAUDE.md approval |
+| planning | project-manager, srs-writer, kotodama-kun, review-agent, technical-authority, process-improver, decree-writer | R1 PASS -> spec approval |
+| dependency-selection | project-manager, architect, kotodama-kun, license-checker, technical-authority | User selection approval |
+| design | project-manager, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5/R7 PASS |
+| implementation | project-manager, implementer, test-engineer (unit), security-reviewer (SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5/R7 PASS, SCA clear |
+| testing | project-manager, test-engineer, kotodama-kun, review-agent, technical-authority, progress-monitor, process-improver, decree-writer, field-test-engineer (conditional), feedback-classifier (conditional), field-issue-analyst (conditional) | R6 PASS, all tests PASS |
+| delivery | project-manager, kotodama-kun, review-agent, technical-authority, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R7 all PASS, translation consistency verification PASS, user acceptance |
+| operation | project-manager, security-reviewer (patching), progress-monitor, incident-reporter, process-improver, decree-writer | SLA achieved |
 
 ---
 

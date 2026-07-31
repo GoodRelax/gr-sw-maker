@@ -10,11 +10,11 @@
    - 不足しているフィールドや不要なフィールドはないか
 5. project-records/improvement/retrospective-{今日の日付}.md に分析結果と改善策を記録する
 
-## 承認フェーズ（orchestrator が実施）
+## 承認フェーズ（project-manager が実施）
 
 6. 改善策の承認判断を行う:
    - CLAUDE.md / process-rules の変更 → ユーザーに承認を求める
-   - エージェント定義の変更 → orchestrator が判断する
+   - エージェント定義の変更 → project-manager が判断する
 
 ## 適用フェーズ（decree-writer が実施）
 

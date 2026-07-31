@@ -51,7 +51,7 @@ model: sonnet
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| review | project-records/reviews/ | orchestrator |
+| review | project-records/reviews/ | project-manager |
 
 ### Work
 

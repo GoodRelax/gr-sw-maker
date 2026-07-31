@@ -41,13 +41,13 @@ model: sonnet
 | observability-design | architect | 監視・アラート設計の理解 | アラート定義と閾値 |
 | disaster-recovery-plan | architect | DR手順の理解 | RTO/RPO と復旧手順 |
 | threat-model | security-reviewer | セキュリティ運用の理解 | 運用時に残存するリスク |
-| pipeline-state | orchestrator | 現在のフェーズ確認 | current_phase |
+| pipeline-state | project-manager | 現在のフェーズ確認 | current_phase |
 
 ### Out
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| runbook | docs/operations/ | orchestrator |
+| runbook | docs/operations/ | project-manager |
 
 ### Work
 
@@ -95,5 +95,5 @@ model: sonnet
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | 可観測性設計が不十分でアラート対応手順を書けない | 手順を推測で書かない。architect への設計補完要請を完了報告に含めて返す |
 | DR手順がインフラ構成と不整合 | 不整合を明示し、defect 起票要請を完了報告に含めて返す |
-| delivery フェーズ未到達 | 作業を開始しない。orchestrator に testing フェーズの完了状況を確認する |
+| delivery フェーズ未到達 | 作業を開始しない。project-manager に testing フェーズの完了状況を確認する |
 | infra/ の IaC コードが未完成 | **作業を止めない。** deployment-design を根拠に手順を書き、各コマンドに導出元（deployment-design の該当節）を併記する。IaC 完成後の検証要請を完了報告に含めて返す |

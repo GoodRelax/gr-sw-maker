@@ -23,7 +23,7 @@ Guarantee that specification, design, implementation and test fit together, and 
 ### Start Conditions
 
 - [ ] spec-foundation exists (planning complete or later)
-- [ ] A ruling request or quality-gate decision request was received from the main session
+- [ ] A ruling request or quality-gate decision request was received from the main agent
 
 ### End Conditions
 
@@ -54,7 +54,7 @@ Guarantee that specification, design, implementation and test fit together, and 
 
 | file_type | Destination | Next consumer |
 |-----------|--------|-----------|
-| tech-decision | project-records/tech-decisions/ | Main session, orchestrator, all implementation agents |
+| tech-decision | project-records/tech-decisions/ | Main agent, project-manager, all implementation agents |
 
 ### Work
 
@@ -135,7 +135,7 @@ tech-decision:
 | implementation → testing | R2/R3/R4/R5/R7 PASS, SCA/SAST Critical/High = 0 |
 | testing → delivery | R6 PASS, coverage target met, performance NFRs satisfied |
 
-Whether a transition may proceed for reasons of cost, schedule or risk is orchestrator's jurisdiction; this agent does not rule on it.
+Whether a transition may proceed for reasons of cost, schedule or risk is project-manager's jurisdiction; this agent does not rule on it.
 
 ### Severity ruling criteria
 
@@ -176,7 +176,7 @@ Granting a waiver requires all of the following (MUST):
 | Abnormality | Response |
 |------|------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| A gate decision was requested with no review present | Do not rule. Request that the main session launch review-agent |
-| An ownerless deliverable turns out to be required | Assign an owner, record it in tech-decision, and request that the main session launch that agent |
+| A gate decision was requested with no review present | Do not rule. Request that the main agent launch review-agent |
+| An ownerless deliverable turns out to be required | Assign an owner, record it in tech-decision, and request that the main agent launch that agent |
 | The request is judged technically unsolvable | Rule FAIL and request that the need for a specification change be raised via change-manager |
-| A decision is requested on grounds of cost or schedule | Reply that it is out of jurisdiction and request referral to orchestrator |
+| A decision is requested on grounds of cost or schedule | Reply that it is out of jurisdiction and request referral to project-manager |

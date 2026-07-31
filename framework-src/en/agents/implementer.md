@@ -47,7 +47,7 @@ Transform design documents into working code. Adhere to Clean Architecture and D
 | security-architecture | security-reviewer | Follow security design | The authentication and authorization scheme |
 | observability-design | architect | Implement logging, metrics, and tracing | Log format, metric definitions, trace specification |
 | defect | test-engineer | Fix reported defects | defect_id; severity; reproduction steps |
-| CLAUDE.md | orchestrator (setup) | Reference coding conventions and tech stack | The coding standards and technology stack sections |
+| CLAUDE.md | project-manager (setup) | Reference coding conventions and tech stack | The coding standards and technology stack sections |
 
 ### Out
 
@@ -109,7 +109,7 @@ Use Git worktree to implement each feature on a dedicated branch in parallel:
 | Anomaly | Response |
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| Design document descriptions are ambiguous and cannot be translated into implementation | Do not implement based on assumptions. Request the orchestrator to ask the architect for design refinement |
-| Implementation as designed is impossible due to tech stack constraints | Propose alternatives and request a decision from the orchestrator |
-| External dependency (library/API) is unavailable | Stop work and report to the orchestrator. If using mocks/stubs as a temporary measure, record it explicitly |
+| Design document descriptions are ambiguous and cannot be translated into implementation | Do not implement based on assumptions. Request the project-manager to ask the architect for design refinement |
+| Implementation as designed is impossible due to tech stack constraints | Propose alternatives and request a decision from the project-manager |
+| External dependency (library/API) is unavailable | Stop work and report to the project-manager. If using mocks/stubs as a temporary measure, record it explicitly |
 | Unit test pass rate falls below the threshold in CLAUDE.md "Quality Targets" | Analyze the cause of the test failures and fix them. If the cause is rooted in the design, state that in the completion report |

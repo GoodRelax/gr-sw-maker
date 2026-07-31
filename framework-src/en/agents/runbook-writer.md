@@ -41,13 +41,13 @@ Collect information from design documents, infrastructure code, and observabilit
 | observability-design | architect | Understanding monitoring and alerting design | Alert definitions and thresholds |
 | disaster-recovery-plan | architect | Understanding DR procedures | RTO/RPO and the recovery procedure |
 | threat-model | security-reviewer | Understanding security operations | Risks that remain during operation |
-| pipeline-state | orchestrator | Confirming current phase | current_phase |
+| pipeline-state | project-manager | Confirming current phase | current_phase |
 
 ### Out
 
 | file_type | Output location | Next consumer |
 |-----------|-----------------|---------------|
-| runbook | docs/operations/ | orchestrator |
+| runbook | docs/operations/ | project-manager |
 
 ### Work
 
@@ -95,5 +95,5 @@ Read only the sections above, not the full rule document.
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Observability design is insufficient and alert response procedures cannot be written | Do not write procedures from guesswork. Return the design-supplementation request for architect in the completion report |
 | DR procedures are inconsistent with infrastructure configuration | State the inconsistency and return the defect-filing request in the completion report |
-| Delivery phase not reached | Do not start work. Confirm the testing phase completion status with orchestrator |
+| Delivery phase not reached | Do not start work. Confirm the testing phase completion status with project-manager |
 | IaC code under infra/ is incomplete | **Do not stop.** Write the procedures from deployment-design and annotate each command with where it was derived from (the relevant section of deployment-design). Return the request to verify once the IaC is complete in the completion report |

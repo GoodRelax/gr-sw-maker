@@ -10,11 +10,11 @@ Conduct the following retrospective:
    - Are there any missing or unnecessary fields?
 5. Record the analysis results and improvement measures in project-records/improvement/retrospective-{today's date}.md
 
-## Approval Phase (performed by orchestrator)
+## Approval Phase (performed by project-manager)
 
 6. Make approval decisions on improvement measures:
    - Changes to CLAUDE.md / process-rules → Request user approval
-   - Changes to agent definitions → orchestrator decides
+   - Changes to agent definitions → project-manager decides
 
 ## Application Phase (performed by decree-writer)
 

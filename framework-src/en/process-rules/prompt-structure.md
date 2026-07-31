@@ -12,7 +12,7 @@
 3. **Separate normal and abnormal flows.** Procedure is for the normal flow, Exception is for the abnormal flow
 4. **Unify section names with abstract concepts.** Do not use names of specific remediation methods as section names
 5. **Agent = Function.** In (arguments) → Procedure → Out (return values). Work is local variables; delete them once Out is produced
-6. **An agent never launches another agent.** Launching is the sole prerogative of the main session. When another agent's work is needed, the agent **returns the request as part of its completion report**. This is the same relation as a function that does not call another function but returns a value to its caller (see §3.4)
+6. **An agent never launches another agent.** Launching is the sole prerogative of the main agent. When another agent's work is needed, the agent **returns the request as part of its completion report**. This is the same relation as a function that does not call another function but returns a value to its caller (see §3.4)
 7. **Contracts are checked at the entrance.** In specifies not only "which file" but "what must be inside it". Filling a gap by guessing is how a handoff degrades silently (see §3.3 and §3.6)
 
 ---
@@ -127,7 +127,7 @@ Criteria for judging work completion. Checklist format. Complete when all condit
 
 **Rules:**
 - Each item in End Conditions MUST correspond to an Out in Ownership
-- The orchestrator agent verifies End Conditions during phase transitions
+- The project-manager agent verifies End Conditions during phase transitions
 - **An agent active across multiple phases MUST list its End Conditions per phase**
 
 **Per-phase End Conditions:**
@@ -232,18 +232,18 @@ Temporary files used only during work. Document only when they exist.
 - Each step begins with a verb
 - Procedure covers normal flow only. Write abnormal-case branches in Exception
 - **Step 1 begins with "check the required elements of In" (MUST).** Contract violations are detected at the entrance
-- **Self-identification rule (all agents):** When communicating with the user for the first time, the agent MUST state its name in bracket notation (e.g., `[orchestrator]`, `[review-agent]`). This enables the user to identify which agent is speaking, aids debugging, and improves session transcript readability
+- **Self-identification rule (all agents):** When communicating with the user for the first time, the agent MUST state its name in bracket notation (e.g., `[project-manager]`, `[review-agent]`). This enables the user to identify which agent is speaking, aids debugging, and improves session transcript readability
 
 **Launching other agents (Design Principle 6):**
 
-An agent never launches another agent. Launching is the sole prerogative of the main session.
+An agent never launches another agent. Launching is the sole prerogative of the main agent.
 
 | Never write | Write instead |
 |---|---|
 | "Launch kotodama-kun to check terminology" | "Return the terminology-check request in the completion report" |
 | "Ask review-agent to review it" | "Return the review request in the completion report" |
 
-**Why:** a sub-agent cannot launch another sub-agent. An instruction that says "launch" is not executed, and **it is skipped silently rather than raising an error**. Whoever wrote it believes it ran, so the omission never surfaces. Carrying the request in the return value lets the main session decide on the launch, and makes whether it happened observable.
+**Why:** a sub-agent cannot launch another sub-agent. An instruction that says "launch" is not executed, and **it is skipped silently rather than raising an error**. Whoever wrote it believes it ran, so the omission never surfaces. Carrying the request in the return value lets the main agent decide on the launch, and makes whether it happened observable.
 
 ### 3.5 S5: Rules
 
@@ -305,10 +305,10 @@ When Out is **aggregated mechanically** downstream, as with `review:critical_cou
 
 | Abnormality | Response |
 |------|------|
-| {Description of abnormal condition} | {Safe response. Principle: Do not proceed by guessing. Report to orchestrator} |
+| {Description of abnormal condition} | {Safe response. Principle: Do not proceed by guessing. Report to project-manager} |
 ```
 
-**Common principle:** When uncertain, do not proceed by guessing. Report to orchestrator.
+**Common principle:** When uncertain, do not proceed by guessing. Report to project-manager.
 
 **Common Exception row (mandatory for all agents):**
 
@@ -325,7 +325,7 @@ Listing the violating fields is required so that the sender knows what to fix. "
 **Rules:**
 - Cover three categories: Start Conditions unmet, unexpected situations during Procedure, and End Conditions unachievable
 - Always include the common Exception row above (MUST)
-- The default report target is orchestrator. Whether orchestrator asks the user is orchestrator's decision
+- The default report target is project-manager. Whether project-manager asks the user is project-manager's decision
 - Responses describe "actions that err on the side of safety" (stop, delegate the decision, present options, etc.)
 
 ---

@@ -48,7 +48,7 @@ field-issue は実機テストフェーズ専用の正式記録であり、既�
 
 本規則で使用するエージェントの役割・責務は [エージェント一覧](agent-list.md) を参照（Single Source of Truth）。本規則では重複定義しない。
 
-本規則に関与するエージェント: field-test-engineer, feedback-classifier, field-issue-analyst, orchestrator, srs-writer, architect, implementer, review-agent, test-engineer
+本規則に関与するエージェント: field-test-engineer, feedback-classifier, field-issue-analyst, project-manager, srs-writer, architect, implementer, review-agent, test-engineer
 
 ---
 
@@ -73,7 +73,7 @@ flowchart TD
     FIA_C1["field-issue-analyst<br/>対策立案<br/>影響範囲 副作用<br/>代替案比較"]
     FIA_C2["field-issue-analyst<br/>対策確定"]
 
-    ORC["orchestrator<br/>承認"]
+    ORC["project-manager<br/>承認"]
     USR["ユーザー<br/>承認"]
     SPEC["srs-writer / architect<br/>仕様書更新"]
     SREV["review-agent<br/>仕様書レビュー<br/>R2 R4 R5"]
@@ -158,7 +158,7 @@ field-issue は `verified` だけで終わるわけではない。**3 つの終�
 | §6.10 コードレビューが FAIL | `fixed`（implementer） | 実装の修正が不十分 |
 | §6.12 実機検証で NG | `reported` に新規チケットを起票 | 元のチケットは閉じ、新事象として追跡する |
 
-**戻り先を決めずに次へ進んではならない（MUST NOT）。** どこへ戻すか決まらない場合は orchestrator に報告し、判断を仰ぐ。
+**戻り先を決めずに次へ進んではならない（MUST NOT）。** どこへ戻すか決まらない場合は project-manager に報告し、判断を仰ぐ。
 
 各ステータス遷移には以下のゲート条件を満たす必要がある（MUST）。
 
@@ -222,7 +222,7 @@ field-issue は `verified` だけで終わるわけではない。**3 つの終�
 
 | 項目 | 内容 |
 |---|---|
-| 担当（defect） | orchestrator |
+| 担当（defect） | project-manager |
 | 担当（CR） | ユーザー |
 | 実施内容 | 対策案を承認する |
 | ゲート条件 | 承認者が対策案の内容を確認し、明示的に承認すること |
@@ -302,7 +302,7 @@ field-issue は `verified` だけで終わるわけではない。**3 つの終�
 | 定義 | 仕様書に記載された動作と実装が異なる | 仕様書に記載されていない新たな要求 |
 | 原因分析 | 必須（in-analysis → cause-identified） | 不要（スキップ） |
 | 対策立案 | 必須 | 必須 |
-| 承認者 | orchestrator | ユーザー |
+| 承認者 | project-manager | ユーザー |
 | 仕様書更新 | 仕様の曖昧さが原因の場合のみ（スキップ可） | 必須 |
 
 ---

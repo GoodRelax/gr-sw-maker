@@ -38,13 +38,13 @@ Collect information from specifications, design documents, and implementation co
 |-----------|--------|------|---------|
 | spec-foundation | srs-writer | Understanding functional requirements and user flows | The user flows in Ch1; an ID on every FR in Ch2 |
 | spec-architecture | architect | Understanding system configuration and APIs | The external interfaces in Ch3 |
-| pipeline-state | orchestrator | Confirming the current phase | current_phase |
+| pipeline-state | project-manager | Confirming the current phase | current_phase |
 
 ### Out
 
 | file_type | Destination | Next Consumer |
 |-----------|-------------|---------------|
-| user-manual | docs/ | orchestrator |
+| user-manual | docs/ | project-manager |
 
 ### Work
 
@@ -92,4 +92,4 @@ Read only the sections above, not the full rule document.
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Discovered a discrepancy between the specification and the implementation | State the discrepancy and return the defect-filing request in the completion report |
 | Operation procedures for non-functional requirements are unclear | Do not write from guesswork. Return the confirmation request for architect in the completion report |
-| Delivery phase not reached or tests have not PASSED | Do not start work. Confirm with orchestrator that the testing phase is complete |
+| Delivery phase not reached or tests have not PASSED | Do not start work. Confirm with project-manager that the testing phase is complete |

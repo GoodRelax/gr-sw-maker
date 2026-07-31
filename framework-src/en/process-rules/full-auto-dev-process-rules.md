@@ -130,7 +130,7 @@ flowchart TB
     end
 
     subgraph ClaudeCode["Claude Code Orchestration Layer"]
-        Orch["orchestrator<br/>Opus 4.6"]
+        Orch["project-manager<br/>Opus 4.6"]
         Plan["Plan Sub-agent"]
         Explore["Explore Sub-agent"]
     end
@@ -190,7 +190,7 @@ flowchart TB
     Orch -->|"Escalation<br/>Risk/Cost/Change"| H2
 ```
 
-This diagram shows the overall structure and information flow of fully automated development at the group level. The user participates in the project at three points: concept presentation, critical decisions, and acceptance testing. The orchestrator controls all phases and distributes tasks to five agent groups (Development Core, Process Management, Quality Guard, Document Creation, and Process Improvement — see agent-list §1 for the full roster). On escalation paths (risk score >= 6, cost budget 80% reached, change requests with impact_level=high), the orchestrator asks the user for decisions. For detailed file_type data flows between individual agents, refer to agent-list Section 3.
+This diagram shows the overall structure and information flow of fully automated development at the group level. The user participates in the project at three points: concept presentation, critical decisions, and acceptance testing. The project-manager controls all phases and distributes tasks to five agent groups (Development Core, Process Management, Quality Guard, Document Creation, and Process Improvement — see agent-list §1 for the full roster). On escalation paths (risk score >= 6, cost budget 80% reached, change requests with impact_level=high), the project-manager asks the user for decisions. For detailed file_type data flows between individual agents, refer to agent-list Section 3.
 
 ### 1.3 Key Claude Code Features Used
 
@@ -351,7 +351,7 @@ This chapter references ISO/IEC 12207, CMMI, and PMBOK to organize the processes
 
 ### 3.1.1 Scale-Down Criteria
 
-When the project scale is small, certain Mandatory and Recommended processes may be exempted. The orchestrator evaluates scale during the setup phase and records exemptions in the CLAUDE.md "Scale-Down Settings" section.
+When the project scale is small, certain Mandatory and Recommended processes may be exempted. The project-manager evaluates scale during the setup phase and records exemptions in the CLAUDE.md "Scale-Down Settings" section.
 
 **Scale Tiers:**
 
@@ -648,17 +648,17 @@ The process-improver agent handles retrospectives and root cause analysis, while
 
 | Trigger | Condition | Initiated By |
 |---------|------|--------|
-| Phase completion | After each phase's quality gate PASS | orchestrator |
-| defect surge | Cumulative discovered exceeds twice cumulative fixed (a condition observable at a single point in time; **day-over-day comparison is not used**) | progress-monitor -> orchestrator |
-| Review rejection | Same perspective flagged 3 or more times consecutively | review-agent -> orchestrator |
-| User request | User explicitly requests a retrospective | orchestrator |
+| Phase completion | After each phase's quality gate PASS | project-manager |
+| defect surge | Cumulative discovered exceeds twice cumulative fixed (a condition observable at a single point in time; **day-over-day comparison is not used**) | progress-monitor -> project-manager |
+| Review rejection | Same perspective flagged 3 or more times consecutively | review-agent -> project-manager |
+| User request | User explicitly requests a retrospective | project-manager |
 
 **Improvement Cycle:**
 
 1. process-improver analyzes defect tickets, review findings, and progress data
 2. Conducts root cause analysis (CMMI CAR: Why-Why analysis)
-3. Submits improvement measures as a retrospective-report to orchestrator
-4. orchestrator routes improvement approval (CLAUDE.md / process-rules require user approval; agent definitions require orchestrator approval)
+3. Submits improvement measures as a retrospective-report to project-manager
+4. project-manager routes improvement approval (CLAUDE.md / process-rules require user approval; agent definitions require project-manager approval)
 5. decree-writer applies approved improvements to governance files after safety checks (SR1-SR6)
 6. decree-writer records before/after diff in project-records/improvement/
 
@@ -1505,7 +1505,7 @@ project_root/
     research/                     ... Research reports
   .claude/
     agents/                       ... Custom agent definitions
-      orchestrator.md             ... Orchestrator (phase transitions, decision-making)
+      project-manager.md             ... Project Manager (phase transitions, decision-making)
       srs-writer.md               ... Specification creation (Ch1-2) agent
       architect.md                ... Specification elaboration (Ch3-6) agent
       security-reviewer.md        ... Security design agent
@@ -1691,7 +1691,7 @@ Agreed with the user during setup. All agents and quality gates reference this s
 
 When working with Agent Teams, use the following role definitions:
 
-- **Orchestrator Agent (orchestrator)**: Project-wide orchestration. Manages pipeline-state.md / executive-dashboard.md / final-report.md / decision records. Controls phase transitions and quality gates. Defined in `.claude/agents/orchestrator.md`
+- **Project Manager Agent (project-manager)**: Project-wide orchestration. Manages pipeline-state.md / executive-dashboard.md / final-report.md / decision records. Controls phase transitions and quality gates. Defined in `.claude/agents/project-manager.md`
 - **SRS Agent (srs-writer)**: Creates specification under docs/spec/ based on user-order.md (3-question format) + process-rules/spec-template.md (Ch1-2 Foundation & Requirements, format selected during setup phase). Structures user concepts
 - **Architect Agent (architect)**: Elaborates ANMS spec Ch3-6 under docs/spec/ (Architecture, Specification, Test Strategy, Design Principles). Generates OpenAPI spec under docs/api/
 - **Security Agent (security-reviewer)**: Creates security design under docs/security/. Reviews implementation code for vulnerabilities. Records scan results as security-scan-report under project-records/security/
@@ -1848,15 +1848,15 @@ Conduct the following retrospective:
    - Does the Common Block / Form Block structure match the actual state?
    - Are there missing or unnecessary fields?
 5. Record improvement measures as a retrospective-report in project-records/improvement/
-6. Submit to orchestrator and request approval
+6. Submit to project-manager and request approval
 
 ## Phase 2: Application (decree-writer)
 
-7. orchestrator approves the improvement measures (creates a decision record)
+7. project-manager approves the improvement measures (creates a decision record)
 8. decree-writer receives the approved improvement measures and conducts safety checks (SR1-SR6)
 9. Apply to target files based on the approval table
    - CLAUDE.md / process-rules/ -> User approval required
-   - .claude/agents/ -> orchestrator approval
+   - .claude/agents/ -> project-manager approval
 10. Record before/after diff in project-records/improvement/
 
 ## Recurrence Prevention Record Format
@@ -1864,7 +1864,7 @@ Conduct the following retrospective:
 - defect pattern: [Pattern description]
 - Root cause: [Why-Why analysis result]
 - Countermeasure: [Target file and change content]
-- Approval category: [User approval / orchestrator approval]
+- Approval category: [User approval / project-manager approval]
 - Effectiveness verification method: [Verification method in the next phase]
 ```
 
@@ -1971,14 +1971,14 @@ flowchart TD
 
 Each review gate is automatically executed by review-agent. Phase transitions are blocked until the quality thresholds defined in CLAUDE.md Quality Targets are met. Numeric values shown in the diagram above are illustrative defaults — actual thresholds are always read from CLAUDE.md.
 
-**Gate Enforcement Rule:** The orchestrator MUST verify the following before any phase transition:
+**Gate Enforcement Rule:** The project-manager MUST verify the following before any phase transition:
 1. The required review for the current gate exists in `project-records/reviews/` with `review:result = pass`
 2. All review findings have a recorded disposition (see Section 9.5 Review Finding Tracking)
 3. If the project is not exempt from WBS (see Section 3.1.1), WBS task statuses for the current phase are updated
 
 If any condition is not met, the phase MUST NOT advance. Missing reviews must be executed; missing dispositions must be recorded. **The only exception to this rule is a waiver, and a waiver is valid only when all three conditions in "Gate Retry Policy" below are satisfied.**
 
-The decision is made by technical-authority. The orchestrator receives that verdict (the `verdict` in tech-decision) and decides whether to proceed after adding the cost, schedule and risk perspective.
+The decision is made by technical-authority. The project-manager receives that verdict (the `verdict` in tech-decision) and decides whether to proceed after adding the cost, schedule and risk perspective.
 
 #### 9.1.1 Gate Retry Policy
 
@@ -2159,7 +2159,7 @@ flowchart LR
 | 2 | Medium | ... | deferred | DEC-003 |
 | 3 | Low | ... | accepted | Acceptable for project scope |
 
-The review-agent records this table in the Detail Block of the review report. The orchestrator verifies that all findings have dispositions before allowing phase transition.
+The review-agent records this table in the Detail Block of the review report. The project-manager verifies that all findings have dispositions before allowing phase transition.
 
 ---
 
@@ -2470,7 +2470,7 @@ Design alert rules during the design phase and define them in `docs/observabilit
 | HighErrorRate | Error rate > 1% (sustained 5 min) | Critical | Immediate investigation, consider rollback |
 | HighLatency | P99 > SLA latency (sustained 5 min) | High | Bottleneck investigation |
 | LowDiskSpace | Disk usage > 85% | Medium | Verify log rotation |
-| AgentStalled | Neither the pipeline-state phase, the WBS completed count, nor the deliverables have changed since the previous launch | High | progress-monitor reports the facts only to the orchestrator. **Elapsed time is not used as a condition** (an agent cannot measure time) |
+| AgentStalled | Neither the pipeline-state phase, the WBS completed count, nor the deliverables have changed since the previous launch | High | progress-monitor reports the facts only to the project-manager. **Elapsed time is not used as a condition** (an agent cannot measure time) |
 
 ### 11.3 Production Release Checklist
 
@@ -2642,7 +2642,7 @@ Follow the acceptance testing procedure guide created by Claude Code for final v
 ```mermaid
 sequenceDiagram
     participant User as User
-    participant Orch as orchestrator
+    participant Orch as project-manager
     participant SRS as srs-writer
     participant Koto as kotodama-kun
     participant Arch as architect
@@ -2856,7 +2856,7 @@ The PM Agent updates `project-management/progress/progress-report.json` accordin
 
 | Agent Name | Role | Model | Category |
 | --- | --- | --- | --- |
-| `orchestrator` | Overall project orchestration, phase transition control, decision recording | opus | Core |
+| `project-manager` | Overall project orchestration, phase transition control, decision recording | opus | Core |
 | `srs-writer` | Specification Ch1-2 (Foundation & Requirements) creation | opus | Core |
 | `architect` | Specification Ch3-6 elaboration, OpenAPI specification, migration design | opus | Core |
 | `security-reviewer` | Security design, vulnerability review, SCA | opus | Core |

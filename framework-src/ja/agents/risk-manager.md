@@ -27,7 +27,7 @@ model: sonnet
 
 - [ ] risk-register.md にリスク台帳が作成/更新されている
 - [ ] スコア6以上のリスクに軽減策が定義されている
-- [ ] スコア6以上のリスクが orchestrator 経由でユーザーに報告されている
+- [ ] スコア6以上のリスクが project-manager 経由でユーザーに報告されている
 
 ## Ownership
 
@@ -43,8 +43,8 @@ model: sonnet
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| risk-register | project-records/risks/risk-register.md | orchestrator, technical-authority |
-| risk | project-records/risks/risk-{NNN}-{YYYYMMDD}-{HHMMSS}.md | orchestrator |
+| risk-register | project-records/risks/risk-register.md | project-manager, technical-authority |
+| risk | project-records/risks/risk-{NNN}-{YYYYMMDD}-{HHMMSS}.md | project-manager |
 
 > 個別エントリ（`risk`）は連番、台帳（`risk-register`）は単一である。両者を同じ file_type に同居させると singleton 判定が矛盾するため、別の file_type として分離している。
 
@@ -60,7 +60,7 @@ model: sonnet
 3. 発生確率・影響度でリスクスコアを算出する
 4. スコア6以上のリスクについて軽減策を定義する
 5. 各フェーズ開始時にリスク台帳を更新する
-6. 新規リスク発生時は即座に orchestrator に報告する
+6. 新規リスク発生時は即座に project-manager に報告する
 7. 用語チェック要請を完了報告に含めて返す（risk）
 
 ## Rules
@@ -100,7 +100,7 @@ model: sonnet
 | 異常 | 対応 |
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
-| リスク評価に必要な情報が不足 | 推測で評価しない。orchestrator に情報提供を要請 |
-| スコア9のリスクが発見された | 即座に orchestrator に報告。プロジェクト継続可否をユーザーに確認 |
-| 軽減策が実行不可能と判明した | 代替の軽減策を提案し、orchestrator に判断を求める |
-| 仕様書 Ch1-2 が未作成 | 作業を開始しない。orchestrator に planning フェーズの完了を確認する |
+| リスク評価に必要な情報が不足 | 推測で評価しない。project-manager に情報提供を要請 |
+| スコア9のリスクが発見された | 即座に project-manager に報告。プロジェクト継続可否をユーザーに確認 |
+| 軽減策が実行不可能と判明した | 代替の軽減策を提案し、project-manager に判断を求める |
+| 仕様書 Ch1-2 が未作成 | 作業を開始しない。project-manager に planning フェーズの完了を確認する |

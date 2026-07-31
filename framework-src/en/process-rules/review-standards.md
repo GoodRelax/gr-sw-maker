@@ -365,8 +365,8 @@ After review-agent raises findings, the following disposition workflow applies. 
 ### Disposition Flow
 
 1. review-agent raises findings with severity (Critical / High / Medium / Low)
-2. The responsible agent (or orchestrator) triages each finding and records a disposition
-3. orchestrator verifies all findings have dispositions before allowing phase transition
+2. The responsible agent (or project-manager) triages each finding and records a disposition
+3. project-manager verifies all findings have dispositions before allowing phase transition
 
 ### Disposition Rules by Severity
 

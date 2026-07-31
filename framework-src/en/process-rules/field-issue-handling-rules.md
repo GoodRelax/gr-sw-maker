@@ -48,7 +48,7 @@ A field-issue is the official record specific to the field testing phase, clearl
 
 For the roles and responsibilities of agents used in this rule, refer to the [Agent List](agent-list.md) (Single Source of Truth). This rule does not duplicate those definitions.
 
-Agents involved in this rule: field-test-engineer, feedback-classifier, field-issue-analyst, orchestrator, srs-writer, architect, implementer, review-agent, test-engineer
+Agents involved in this rule: field-test-engineer, feedback-classifier, field-issue-analyst, project-manager, srs-writer, architect, implementer, review-agent, test-engineer
 
 ---
 
@@ -73,7 +73,7 @@ flowchart TD
     FIA_C1["field-issue-analyst<br/>Solution planning<br/>Impact scope Side effects<br/>Alternative comparison"]
     FIA_C2["field-issue-analyst<br/>Solution finalized"]
 
-    ORC["orchestrator<br/>Approval"]
+    ORC["project-manager<br/>Approval"]
     USR["User<br/>Approval"]
     SPEC["srs-writer / architect<br/>Update spec"]
     SREV["review-agent<br/>Spec review<br/>R2 R4 R5"]
@@ -158,7 +158,7 @@ A field-issue does not only end at `verified`. **There are three terminals.**
 | §6.10 code review FAILs | `fixed` (implementer) | The implementation fix is insufficient |
 | §6.12 field verification is rejected | Raise a new ticket at `reported` | Close the original and track the new behavior separately |
 
-**Never advance without deciding where it goes back (MUST NOT).** When the destination cannot be determined, report to orchestrator and ask.
+**Never advance without deciding where it goes back (MUST NOT).** When the destination cannot be determined, report to project-manager and ask.
 
 Each status transition MUST satisfy the following gate conditions.
 
@@ -222,7 +222,7 @@ Each status transition MUST satisfy the following gate conditions.
 
 | Item | Details |
 |---|---|
-| Responsible (defect) | orchestrator |
+| Responsible (defect) | project-manager |
 | Responsible (CR) | User |
 | Activities | Approve the solution proposal |
 | Gate condition | The approver has reviewed the solution proposal and explicitly approved it |
@@ -302,7 +302,7 @@ Each status transition MUST satisfy the following gate conditions.
 | Definition | Implementation differs from behavior documented in the spec | A new request not documented in the spec |
 | Root cause analysis | Required (in-analysis → cause-identified) | Not required (skipped) |
 | Solution planning | Required | Required |
-| Approver | orchestrator | User |
+| Approver | project-manager | User |
 | Spec update | Only when spec ambiguity is the cause (may be skipped) | Mandatory |
 
 ---

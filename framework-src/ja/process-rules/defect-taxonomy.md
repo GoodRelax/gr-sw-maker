@@ -286,7 +286,7 @@ flowchart TD
 |------|---------|---------|------|
 | **HARA** | 機能安全が有効な**全プロジェクトで必須** | setup フェーズ（機能安全の有効化と同時に確定） | architect（security-reviewer が支援） |
 | **FMEA** | HARA が有効 **かつ** アーキテクチャ（Ch3）が確定した段階で実施。SW-FMEA はモジュール分割が決まらないと意味がない | design フェーズ（Ch3 確定後） | architect |
-| **FTA** | 以下のいずれかに該当する場合: (a) HARA で特定された **ASIL C 以上**（または SIL 3 以上）の hazard の原因分析、(b) **複数の独立した fault が AND 条件で組み合わさって hazard に至る**パターンの可視化が必要、(c) operation フェーズで**重大 incident の根本原因分析**が因果関係が複雑で defect の RCA だけでは不十分な場合 | design フェーズ（HARA 後）、または operation フェーズ（incident 発生時） | architect（design）、orchestrator（operation） |
+| **FTA** | 以下のいずれかに該当する場合: (a) HARA で特定された **ASIL C 以上**（または SIL 3 以上）の hazard の原因分析、(b) **複数の独立した fault が AND 条件で組み合わさって hazard に至る**パターンの可視化が必要、(c) operation フェーズで**重大 incident の根本原因分析**が因果関係が複雑で defect の RCA だけでは不十分な場合 | design フェーズ（HARA 後）、または operation フェーズ（incident 発生時） | architect（design）、project-manager（operation） |
 
 ### 7.3 HARA の詳細
 

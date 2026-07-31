@@ -141,7 +141,7 @@ process-rules/ 配下の全ファイル（本文書を含む）に適用する�
 
 | ディレクトリ | 格納内容 | 主な利用者 |
 |-------------|----------|-----------|
-| `project-management/` | オーケストレーション状態、引継ぎ、進捗、WBS、コスト | orchestrator, progress-monitor |
+| `project-management/` | オーケストレーション状態、引継ぎ、進捗、WBS、コスト | project-manager, progress-monitor |
 | `docs/` | 仕様書、API文書、セキュリティ設計 — 「何を作ったか」 | 全エージェント、ユーザー、下流の利用者 |
 | `project-records/` | レビュー、意思決定、リスク、defect、CR — 「どう作ったか」 | 監査者、レビュアー、プロセス重視のステークホルダー |
 
@@ -171,7 +171,7 @@ process-rules/ 配下の全ファイル（本文書を含む）に適用する�
 | 引継ぎ | `handoff-001-20260314-102530.md` | 標準フォーマット |
 | セッション引継ぎ | `session-handoff-001-20260314-102530.md` | 標準フォーマット |
 | 進捗レポート | `progress-001-20260314-150000.md` | 標準フォーマット |
-| コストログ | `cost-log.json` | 時系列JSON。Common Block対象外。owner: progress-monitor、consumed_by: orchestrator |
+| コストログ | `cost-log.json` | 時系列JSON。Common Block対象外。owner: progress-monitor、consumed_by: project-manager |
 | テスト推移 | `test-progress.json` | 時系列JSON。Common Block対象外。owner: test-engineer、consumed_by: progress-monitor |
 | defect curve | `defect-curve.json` | 時系列JSON。Common Block対象外。owner: test-engineer、consumed_by: progress-monitor |
 | WBS | `wbs.md` | シングルトン |
@@ -379,13 +379,13 @@ security-reviewer が脅威モデルを作成。他のエージェントはこ�
 
 ### 実例2: wbs.md（WBS）
 
-progress-monitor がWBSを管理。orchestrator がフェーズ進行判断に参照する。
+progress-monitor がWBSを管理。project-manager がフェーズ進行判断に参照する。
 
 | 情報 | 候補 | 判断 | 理由 |
 |------|------|------|------|
 | 総タスク数 | Form? Detail? | **Form Block** (`wbs:task_total`) | 完了率算出の入力 |
 | 完了タスク数 | Form? Detail? | **Form Block** (`wbs:task_completed`) | dashboardに表示 |
-| WBS完了率 | Form? Detail? | **Form Block** (`wbs:completion_pct`) | 上2行から導出できるが、orchestrator が進行判断に即座に使う |
+| WBS完了率 | Form? Detail? | **Form Block** (`wbs:completion_pct`) | 上2行から導出できるが、project-manager が進行判断に即座に使う |
 | 各タスクの詳細（担当、期間、依存関係） | Form? Detail? | **Detail Block** | タスク詳細はドメイン知識 |
 
 **判断ポイント:** 完了率はDetail Block内のタスク表から導出できるが、導出値であってもエージェントが即座に判断に使うならForm Block。
@@ -398,7 +398,7 @@ progress-monitor が更新するプロジェクト全体の要約。ユーザー
 |------|------|------|------|
 | 現在のフェーズ | Form? Detail? | **Form Block** (`executive-dashboard:phase`) | pipeline-stateと同期 |
 | プロジェクト全体の完了率 | Form? Detail? | **Form Block** (`executive-dashboard:completion_pct`) | 数値メトリクス |
-| 全体のヘルスステータス（green/yellow/red） | Form? Detail? | **Form Block** (`executive-dashboard:health`) | orchestrator が報告要否を判断 |
+| 全体のヘルスステータス（green/yellow/red） | Form? Detail? | **Form Block** (`executive-dashboard:health`) | project-manager が報告要否を判断 |
 | 現在のブロッカー（なければ空） | Form? Detail? | **Form Block** (`executive-dashboard:blocker`) | 空でなければエスカレーション。件数ではなく要約を持つのは、機械可読なブロック状態を pipeline-state:blocked が既に持つため |
 | 各フェーズの詳細サマリー | Form? Detail? | **Detail Block** | 人間が読むための要約文 |
 
@@ -406,7 +406,7 @@ progress-monitor が更新するプロジェクト全体の要約。ユーザー
 
 ### 実例4: final-report.md（総括レポート）
 
-delivery フェーズで orchestrator が作成。ユーザーがプロジェクト終了を判断するための材料。
+delivery フェーズで project-manager が作成。ユーザーがプロジェクト終了を判断するための材料。
 
 | 情報 | 候補 | 判断 | 理由 |
 |------|------|------|------|
@@ -556,7 +556,7 @@ okf_version → type → description
 | document_status | enum: draft / in-review / approved / archived | Yes | 拡張 | 文書のライフサイクルステータス。**OKF の `status` は用いない**（値域が異なるため） |
 | document_version | string | Yes | 拡張 | `{メジャー}.{マイナー}` 形式の版番号（例: `1.2`）。**ファイル名は不変とし、版はこのキーで管理する** |
 | owner | actor | Yes | 拡張 | 書込み権限を持つ主体。§5.1 の表記に従う |
-| commissioned_by | string | Yes | 拡張 | この文書の作成トリガー（値: `user`, `orchestrator`, `phase-{name}`, または `{agent-name}`） |
+| commissioned_by | string | Yes | 拡張 | この文書の作成トリガー（値: `user`, `project-manager`, `phase-{name}`, または `{agent-name}`） |
 | consumed_by | list | Yes | 拡張 | この文書を次に利用するエージェント。**YAML のリストで書く**（タグの繰り返しは不要になった） |
 | project | string | Yes | 拡張 | プロジェクト名 |
 | purpose | string | Yes | 拡張 | このファイルが存在する理由と期待されるアクション |
@@ -794,7 +794,7 @@ external-dependency-spec（抽象テンプレート）
 | 値 | 意味 |
 |---|------|
 | `user` | ユーザーが直接作成 |
-| `orchestrator` | orchestrator が自身の責務として作成 |
+| `project-manager` | project-manager が自身の責務として作成 |
 | `phase-{name}` | プロセス規則のフェーズ遷移がトリガー |
 | `{agent-name}` | 特定エージェントのイベントがトリガー |
 
@@ -815,25 +815,25 @@ external-dependency-spec（抽象テンプレート）
 
 | file_type | commissioned_by | consumed_by | owner |
 |-----------|----------------|-------------|-------|
-| pipeline-state | `orchestrator` | 全エージェント | orchestrator |
-| handoff | フェーズ遷移時（例: `phase-planning`） | to-agent | orchestrator |
-| session-handoff | `user`（`/session-handoff` の起動） | main-session | main-session |
-| progress | `phase-design`（以降更新） | orchestrator, ユーザー | progress-monitor |
-| interview-record | `phase-planning` | architect, orchestrator | srs-writer |
-| wbs | `phase-design` | progress-monitor, orchestrator | progress-monitor |
+| pipeline-state | `project-manager` | 全エージェント | project-manager |
+| handoff | フェーズ遷移時（例: `phase-planning`） | to-agent | project-manager |
+| session-handoff | `user`（`/session-handoff` の起動） | main-agent | main-agent |
+| progress | `phase-design`（以降更新） | project-manager, ユーザー | progress-monitor |
+| interview-record | `phase-planning` | architect, project-manager | srs-writer |
+| wbs | `phase-design` | progress-monitor, project-manager | progress-monitor |
 | test-plan | `phase-design` | test-engineer, review-agent | test-engineer |
-| review | フェーズゲート（例: `phase-planning`） | orchestrator, 対象エージェント | review-agent |
-| decision | 判断を要したエージェント | 全エージェント | orchestrator |
-| tech-decision | ゲート判定・技術裁定の要求時 | メインセッション, orchestrator, 全実装系エージェント | technical-authority |
-| governance-change-log | 改善策の適用時 | orchestrator, ユーザー, process-improver | decree-writer |
+| review | フェーズゲート（例: `phase-planning`） | project-manager, 対象エージェント | review-agent |
+| decision | 判断を要したエージェント | 全エージェント | project-manager |
+| tech-decision | ゲート判定・技術裁定の要求時 | メインエージェント, project-manager, 全実装系エージェント | technical-authority |
+| governance-change-log | 改善策の適用時 | project-manager, ユーザー, process-improver | decree-writer |
 | deployment-design | `phase-design` | implementer, runbook-writer, technical-authority | architect |
-| risk-register | `phase-planning`（以降更新） | orchestrator, technical-authority | risk-manager |
-| risk | `phase-planning` | risk-manager, orchestrator | risk-manager |
+| risk-register | `phase-planning`（以降更新） | project-manager, technical-authority | risk-manager |
+| risk | `phase-planning` | risk-manager, project-manager | risk-manager |
 | defect | `test-engineer` | 修正担当エージェント | test-engineer |
-| change-request | `user`（ユーザー起点の変更要求のみ） | change-manager, orchestrator | change-manager |
+| change-request | `user`（ユーザー起点の変更要求のみ） | change-manager, project-manager | change-manager |
 | traceability | `phase-implementation` | review-agent | test-engineer |
-| license-report | `phase-implementation` | orchestrator, security-reviewer | license-checker |
-| performance-report | `phase-testing` | review-agent, orchestrator | test-engineer |
+| license-report | `phase-implementation` | project-manager, security-reviewer | license-checker |
+| performance-report | `phase-testing` | review-agent, project-manager | test-engineer |
 | spec-foundation | `phase-planning` | architect, review-agent | srs-writer |
 | spec-architecture | `phase-design` | 実装エージェント, review-agent | architect |
 | threat-model | `phase-design` | architect, 実装エージェント | security-reviewer |
@@ -842,17 +842,17 @@ external-dependency-spec（抽象テンプレート）
 | hw-requirement-spec | `phase-design` | architect（Adapter層設計）, test-engineer（結合テスト計画） | architect |
 | ai-requirement-spec | `phase-design` | architect（Adapter層設計）, 実装エージェント | architect |
 | framework-requirement-spec | `phase-design` | architect（Adapter層設計）, 実装エージェント | architect |
-| executive-dashboard | `phase-setup` | ユーザー, orchestrator | orchestrator |
-| final-report | `phase-delivery` | ユーザー | orchestrator |
+| executive-dashboard | `phase-setup` | ユーザー, project-manager | project-manager |
+| final-report | `phase-delivery` | ユーザー | project-manager |
 | user-order | `user` | srs-writer | srs-writer |
-| security-scan-report | `phase-implementation`（以降随時） | review-agent, orchestrator | security-reviewer |
+| security-scan-report | `phase-implementation`（以降随時） | review-agent, project-manager | security-reviewer |
 | user-manual | `phase-delivery` | ユーザー | user-manual-writer |
 | runbook | `phase-delivery` | 運用チーム | runbook-writer |
-| incident-report | `phase-operation`（随時） | orchestrator, ユーザー | incident-reporter |
-| disaster-recovery-plan | `phase-design` | 運用チーム, orchestrator | architect |
-| stakeholder-register | `phase-setup` | 全エージェント | orchestrator |
-| retrospective-report | フェーズ完了時（随時） | orchestrator | process-improver |
-| field-issue | 実機テスト中（随時） | orchestrator, implementer, test-engineer | field-test-engineer |
+| incident-report | `phase-operation`（随時） | project-manager, ユーザー | incident-reporter |
+| disaster-recovery-plan | `phase-design` | 運用チーム, project-manager | architect |
+| stakeholder-register | `phase-setup` | 全エージェント | project-manager |
+| retrospective-report | フェーズ完了時（随時） | project-manager | process-improver |
+| field-issue | 実機テスト中（随時） | project-manager, implementer, test-engineer | field-test-engineer |
 
 ---
 
@@ -1214,7 +1214,7 @@ Detail Blockにトレーサビリティマトリクスを記載する。マト�
 | wbs:task_total | int | Yes | 総タスク数 | — |
 | wbs:task_completed | int | Yes | 完了タスク数 | — |
 | wbs:task_in_progress | int | Yes | 進行中タスク数 | — |
-| wbs:task_blocked | int | Yes | ブロック中タスク数 | ≧1 → orchestrator に通知 |
+| wbs:task_blocked | int | Yes | ブロック中タスク数 | ≧1 → project-manager に通知 |
 | wbs:completion_pct | int | Yes | WBS完了率 | 0-100 |
 
 ### Detail Block Guidance
@@ -1645,7 +1645,7 @@ field-issue の詳細を記載する。field-test-engineer がフィードバッ
 
 裁定の争点、比較した選択肢、採用しなかった案とその理由を記載する。ゲート判定の場合は、参照した review の指摘と対応状況の対応表を含める。waiver を認めた場合は、ユーザー承認の記録・影響範囲・再評価時期を必ず記載する（プロセス規則 §9.1）。
 
-コスト・スケジュール・リスクを理由とする判断は本 file_type ではなく decision（owner: orchestrator）に記録する。
+コスト・スケジュール・リスクを理由とする判断は本 file_type ではなく decision（owner: project-manager）に記録する。
 
 ---
 
@@ -1712,7 +1712,7 @@ owner は architect である。`infra/` の実装は implementer が行い、�
 
 ## 9.38 session-handoff（名前空間: session-handoff:）
 
-> **`handoff` との違い:** `handoff` は**エージェント境界**を越える引継ぎで、owner は orchestrator である。`session-handoff` は**セッション境界**を越える引継ぎで、owner は `main-session` である。**サブエージェントは会話履歴を持たないため、これを書けるのは main-session だけである。**
+> **`handoff` との違い:** `handoff` は**エージェント境界**を越える引継ぎで、owner は project-manager である。`session-handoff` は**セッション境界**を越える引継ぎで、owner は `main-agent` である。**サブエージェントは会話履歴を持たないため、これを書けるのは main-agent だけである。**
 
 ### Fields
 
@@ -1732,7 +1732,7 @@ owner は architect である。`infra/` の実装は implementer が行い、�
 | **計画との差分** | 計画書だけを読むと未着手と誤認し、**完了済みの作業を二重に行う** |
 | **自分で作り込んで自分で直した defect** | 成果物には成功した最終状態しか残らない。**書かなければ次のセッションが同じ踏み方をする** |
 
-**どちらも会話履歴からしか復元できない。** ファイルには成功した最終状態しか残らないため、失敗の経路をファイルから再構築することはできない。**これが owner を main-session とする理由である。**
+**どちらも会話履歴からしか復元できない。** ファイルには成功した最終状態しか残らないため、失敗の経路をファイルから再構築することはできない。**これが owner を main-agent とする理由である。**
 
 あわせて、未解決の論点、ユーザーとの合意事項のうちファイルに書いていないもの、次に読むべきファイルを記載する。
 
@@ -1766,16 +1766,16 @@ archived   → 変更しない（参照専用）
 
 各ファイルにはただ1つの `owner` が存在する。オーナーのみがCommon BlockとForm Blockのフィールドを変更できる。
 
-**`owner` の値域:** `agent-list.md` §1 のエージェント名、または `main-session`。
+**`owner` の値域:** `agent-list.md` §1 のエージェント名、または `main-agent`。
 
-**`main-session` は会話履歴を保持する進行統括であり、サブエージェントでは復元できない情報を持つ成果物にのみ指定できる（MUST）。** 無条件に開けると、書きにくい成果物を何でも main-session に押し付ける逃げ道になる。**`agent-list.md` §1 には追加しない** — 名簿はサブエージェント定義ファイルの一覧であり、main-session に定義ファイルは存在しないためである。
+**`main-agent` は会話履歴を保持する進行統括であり、サブエージェントでは復元できない情報を持つ成果物にのみ指定できる（MUST）。** 無条件に開けると、書きにくい成果物を何でも main-agent に押し付ける逃げ道になる。**`agent-list.md` §1 には追加しない** — 名簿はサブエージェント定義ファイルの一覧であり、main-agent に定義ファイルは存在しないためである。
 
 | オーナー | ファイル（file_type） | 書込み範囲 |
 |---------|---------|-----------|
-| orchestrator | pipeline-state | 完全制御。orchestrator のみがこのファイルを書く |
-| orchestrator | executive-dashboard | プロジェクト全体ダッシュボードの完全制御 |
-| orchestrator | final-report | プロジェクト総括レポートの完全制御 |
-| orchestrator | decision | 意思決定記録の完全制御 |
+| project-manager | pipeline-state | 完全制御。project-manager のみがこのファイルを書く |
+| project-manager | executive-dashboard | プロジェクト全体ダッシュボードの完全制御 |
+| project-manager | final-report | プロジェクト総括レポートの完全制御 |
+| project-manager | decision | 意思決定記録の完全制御 |
 | technical-authority | tech-decision | 技術裁定・ゲート判定記録の完全制御 |
 | decree-writer | governance-change-log | ガバナンス適用記録の完全制御 |
 | architect | deployment-design | デプロイ設計の完全制御。infra/ の実装は implementer |
@@ -1805,15 +1805,15 @@ archived   → 変更しない（参照専用）
 | runbook-writer | runbook | 運用手順書の完全制御 |
 | incident-reporter | incident-report | incident 記録の完全制御 |
 | architect | disaster-recovery-plan | 災害復旧計画の完全制御 |
-| orchestrator | stakeholder-register | ステークホルダー登録簿の完全制御 |
-| orchestrator | handoff | Handoff エントリの作成。`to` エージェントはステータス更新のみ可 |
-| main-session | session-handoff | 完全制御。**会話履歴を持つ main-session のみが書ける**（§11 の値域注記） |
+| project-manager | stakeholder-register | ステークホルダー登録簿の完全制御 |
+| project-manager | handoff | Handoff エントリの作成。`to` エージェントはステータス更新のみ可 |
+| main-agent | session-handoff | 完全制御。**会話履歴を持つ main-agent のみが書ける**（§11 の値域注記） |
 | process-improver | retrospective-report | ふりかえり・プロセス改善記録の完全制御 |
 | field-test-engineer | field-issue | 実機テストフィードバックの完全制御（条件付き: 実機テスト有効時）。feedback-classifier と field-issue-analyst は Detail Block に追記可 |
 
 **Detail Block例外:** 任意のエージェントが、自分がオーナーでないファイルのDetail Blockに追記してよい（MAY）。ただしchange_logに追記を記録することが条件。
 
-**decree-writer の委任書き込み権限:** decree-writer は file_type を所有しないが、承認済み retrospective-report に基づき、CLAUDE.md・エージェント定義（.claude/agents/）・process-rules/ への書き込みを行う。適用には承認テーブル（CLAUDE.md / process-rules = ユーザー承認、エージェント定義 = orchestrator 承認）に基づく事前承認が必須。全変更の before/after diff を project-records/improvement/ に記録する。
+**decree-writer の委任書き込み権限:** decree-writer は file_type を所有しないが、承認済み retrospective-report に基づき、CLAUDE.md・エージェント定義（.claude/agents/）・process-rules/ への書き込みを行う。適用には承認テーブル（CLAUDE.md / process-rules = ユーザー承認、エージェント定義 = project-manager 承認）に基づく事前承認が必須。全変更の before/after diff を project-records/improvement/ に記録する。
 
 **Handoffのオーナーシップ:** `from` エージェントが作成。`status` が `in-progress` になった後は `to` エージェントがステータスを更新できる。
 

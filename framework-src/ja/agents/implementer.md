@@ -47,7 +47,7 @@ model: opus
 | security-architecture | security-reviewer | セキュリティ設計に従う | 認証・認可方式 |
 | observability-design | architect | ログ・メトリクス・トレーシングの実装 | ログ形式, メトリクス定義, トレース仕様 |
 | defect | test-engineer | 指摘された defect の修正 | defect_id, severity, 再現手順 |
-| CLAUDE.md | orchestrator (setup) | コーディング規約・技術スタックの確認 | コーディング規約・技術スタックの各節 |
+| CLAUDE.md | project-manager (setup) | コーディング規約・技術スタックの確認 | コーディング規約・技術スタックの各節 |
 
 ### Out
 
@@ -109,7 +109,7 @@ Git worktree を使用し、各機能を専用ブランチで並列実装する:
 | 異常 | 対応 |
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
-| 設計文書の記述が曖昧で実装に落とせない | 推測で実装しない。orchestrator に architect への設計精緻化を要請 |
-| 技術スタックの制約で設計通りの実装が不可能 | 代替案を提示して orchestrator に判断を求める |
-| 外部依存（ライブラリ・API）が利用不可 | 作業を停止し、orchestrator に報告。モック/スタブで暫定対応する場合は明示的に記録 |
+| 設計文書の記述が曖昧で実装に落とせない | 推測で実装しない。project-manager に architect への設計精緻化を要請 |
+| 技術スタックの制約で設計通りの実装が不可能 | 代替案を提示して project-manager に判断を求める |
+| 外部依存（ライブラリ・API）が利用不可 | 作業を停止し、project-manager に報告。モック/スタブで暫定対応する場合は明示的に記録 |
 | 単体テスト合格率が CLAUDE.md「品質目標」の閾値を下回る | テスト失敗の原因を分析し、修正する。原因が設計に起因する場合はその旨を完了報告に明記する |

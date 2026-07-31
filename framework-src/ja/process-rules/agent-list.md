@@ -10,7 +10,7 @@
 
 | # | name | 役割 | model | 主要フェーズ |
 |:-:|------|------|:-----:|------------|
-| 1 | orchestrator | 進行状態の記録、PM 情報（進捗・コスト・リスク・変更要求）の統合、ユーザーへの報告 | opus | 全フェーズ |
+| 1 | project-manager | 進行状態の記録、PM 情報（進捗・コスト・リスク・変更要求）の統合、ユーザーへの報告 | opus | 全フェーズ |
 | 2 | srs-writer | ユーザーコンセプトの構造化、インタビュー、仕様書 Ch1-2 作成 | opus | planning |
 | 3 | architect | 仕様書 Ch3-6 詳細化、OpenAPI・可観測性・外部依存要求の設計 | opus | design |
 | 4 | security-reviewer | 脅威モデリング、セキュリティ設計、脆弱性スキャン | opus | design, implementation |
@@ -41,7 +41,7 @@
 
 文書管理規則 §11 から導出。**各 file_type には唯一の owner が存在する。**
 
-### orchestrator
+### project-manager
 
 | file_type | ディレクトリ | 単/連 | 主要フェーズ |
 |-----------|------------|:-----:|------------|
@@ -194,7 +194,7 @@
 | 入力 | 提供元 | 用途 |
 |------|--------|------|
 | retrospective-report | process-improver | 適用すべき改善策の参照 |
-| decision | orchestrator | 承認記録の確認 |
+| decision | project-manager | 承認記録の確認 |
 
 ### field-test-engineer（条件付き: 実機テスト有効時）
 
@@ -230,7 +230,7 @@
 |-----------|------------|:-----:|------------|
 | tech-decision | project-records/tech-decisions/ | 連 | planning 以降 |
 
-> technical-authority は成果物を作成せず、裁定と記録のみを行う。decision（orchestrator 所有）とは管轄が異なる。技術的整合とゲート可否は tech-decision、コスト・スケジュール・リスクを理由とする判断は decision に記録する。
+> technical-authority は成果物を作成せず、裁定と記録のみを行う。decision（project-manager 所有）とは管轄が異なる。技術的整合とゲート可否は tech-decision、コスト・スケジュール・リスクを理由とする判断は decision に記録する。
 
 ---
 
@@ -243,7 +243,7 @@ file_type およびアクションの流れでエージェント間の依存関�
 ```mermaid
 flowchart TD
     User["User"]
-    Orch["orchestrator"]
+    Orch["project-manager"]
     SRS["srs-writer"]
     Arch["architect"]
     Sec["security-reviewer"]
@@ -320,7 +320,7 @@ flowchart LR
     User["User"] -->|"フィードバック"| FTE["field-test-engineer"]
     FTE -->|"field-issue"| FC["feedback-classifier"]
     FC -->|"field-issue"| FIA["field-issue-analyst"]
-    FIA -->|"field-issue"| Orch["orchestrator"]
+    FIA -->|"field-issue"| Orch["project-manager"]
     Orch -->|"field-issue"| Existing["既存エージェント群<br/>srs-writer architect<br/>review-agent implementer<br/>test-engineer"]
     Existing -->|"自動テスト結果"| FTE
 
@@ -341,7 +341,7 @@ flowchart LR
     Arch["architect"] -->|"spec-architecture"| UMW
     Arch -->|"spec-architecture<br/>observability-design<br/>disaster-recovery-plan"| RBW
     Sec["security-reviewer"] -->|"threat-model"| RBW
-    UMW["user-manual-writer"] -->|"user-manual"| Orch["orchestrator"]
+    UMW["user-manual-writer"] -->|"user-manual"| Orch["project-manager"]
     RBW["runbook-writer"] -->|"runbook"| Orch
     IR["incident-reporter"] -->|"incident-report"| Orch
 
@@ -351,7 +351,7 @@ flowchart LR
     style Orch fill:#FF8C00,stroke:#333,color:#000
 ```
 
-delivery フェーズで user-manual-writer と runbook-writer が起動される。入力として上流エージェントの設計文書を参照し、成果物を orchestrator に納品する。incident-reporter は operation フェーズで起動される。
+delivery フェーズで user-manual-writer と runbook-writer が起動される。入力として上流エージェントの設計文書を参照し、成果物を project-manager に納品する。incident-reporter は operation フェーズで起動される。
 
 **kotodama-kun（用語チェック）:**
 
@@ -369,13 +369,13 @@ flowchart LR
     RBW["runbook-writer"] -.-> Koto
     PI["process-improver"] -.-> Koto
 
-    Koto["kotodama-kun"] -.->|"terminology-issue"| Orch["orchestrator"]
+    Koto["kotodama-kun"] -.->|"terminology-issue"| Orch["project-manager"]
 
     style Koto fill:#af7ac5,stroke:#333,color:#fff
     style Orch fill:#FF8C00,stroke:#333,color:#000
 ```
 
-Out を生成する全エージェントが受け渡し前に kotodama-kun へ用語チェックを依頼する。重大な用語不整合は review file_type として orchestrator に報告される。詳細は各エージェント定義の Procedure を参照。
+Out を生成する全エージェントが受け渡し前に kotodama-kun へ用語チェックを依頼する。重大な用語不整合は review file_type として project-manager に報告される。詳細は各エージェント定義の Procedure を参照。
 
 **ラベルの区別:**
 
@@ -389,19 +389,19 @@ Out を生成する全エージェントが受け渡し前に kotodama-kun へ�
 | アクションラベル | 発信元 | 受信先 | 説明 |
 |----------------|--------|--------|------|
 | change-request-input | User | change-manager | ユーザー起点の変更要求（受付後 change-request file_type として記録） |
-| retrospective-trigger | orchestrator | process-improver | フェーズ完了時のふりかえり起動指示 |
-| approved-improvement | orchestrator | decree-writer | 承認済み改善策の適用指示（decision 記録が根拠） |
-| apply-completion | decree-writer | orchestrator | 改善策の適用完了報告（before/after diff は project-records/improvement/ に記録） |
+| retrospective-trigger | project-manager | process-improver | フェーズ完了時のふりかえり起動指示 |
+| approved-improvement | project-manager | decree-writer | 承認済み改善策の適用指示（decision 記録が根拠） |
+| apply-completion | decree-writer | project-manager | 改善策の適用完了報告（before/after diff は project-records/improvement/ に記録） |
 
 **kotodama-kun（用語チェック）について:**
 
-kotodama-kun は図中に矢印を持たないが、Out を生成する全エージェントが受け渡し前に用語チェックを依頼する。詳細は各エージェント定義の Procedure を参照。重大な用語不整合は review file_type として orchestrator に報告される。
+kotodama-kun は図中に矢印を持たないが、Out を生成する全エージェントが受け渡し前に用語チェックを依頼する。詳細は各エージェント定義の Procedure を参照。重大な用語不整合は review file_type として project-manager に報告される。
 
 kotodama-kun を**使用しない**エージェント:
 
 | エージェント | 理由 |
 |------------|------|
-| orchestrator | 自身は file_type の内容を生成しない（管理・転送のみ） |
+| project-manager | 自身は file_type の内容を生成しない（管理・転送のみ） |
 | review-agent | 他エージェントの成果物を評価する側 |
 | change-manager | ユーザー起点の変更要求を記録するだけで用語創出が少ない |
 | license-checker | 外部ライセンス名をそのまま記録 |
@@ -419,14 +419,14 @@ kotodama-kun を**使用しない**エージェント:
 
 | フェーズ | 起動されるエージェント | 品質ゲート |
 |---------|---------------------|-----------|
-| setup | orchestrator | CLAUDE.md 承認 |
-| planning | orchestrator, srs-writer, kotodama-kun, review-agent, technical-authority, process-improver, decree-writer | R1 PASS → 仕様書承認 |
-| dependency-selection | orchestrator, architect, kotodama-kun, license-checker, technical-authority | ユーザー選定承認 |
-| design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5/R7 PASS |
-| implementation | orchestrator, implementer, test-engineer(単体), security-reviewer(SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5/R7 PASS, SCA クリア |
-| testing | orchestrator, test-engineer, kotodama-kun, review-agent, technical-authority, progress-monitor, process-improver, decree-writer, field-test-engineer(条件付き), feedback-classifier(条件付き), field-issue-analyst(条件付き) | R6 PASS, 全テスト PASS |
-| delivery | orchestrator, kotodama-kun, review-agent, technical-authority, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R7 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
-| operation | orchestrator, security-reviewer(パッチ), progress-monitor, incident-reporter, process-improver, decree-writer | SLA 達成 |
+| setup | project-manager | CLAUDE.md 承認 |
+| planning | project-manager, srs-writer, kotodama-kun, review-agent, technical-authority, process-improver, decree-writer | R1 PASS → 仕様書承認 |
+| dependency-selection | project-manager, architect, kotodama-kun, license-checker, technical-authority | ユーザー選定承認 |
+| design | project-manager, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5/R7 PASS |
+| implementation | project-manager, implementer, test-engineer(単体), security-reviewer(SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5/R7 PASS, SCA クリア |
+| testing | project-manager, test-engineer, kotodama-kun, review-agent, technical-authority, progress-monitor, process-improver, decree-writer, field-test-engineer(条件付き), feedback-classifier(条件付き), field-issue-analyst(条件付き) | R6 PASS, 全テスト PASS |
+| delivery | project-manager, kotodama-kun, review-agent, technical-authority, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R7 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
+| operation | project-manager, security-reviewer(パッチ), progress-monitor, incident-reporter, process-improver, decree-writer | SLA 達成 |
 
 ---
 

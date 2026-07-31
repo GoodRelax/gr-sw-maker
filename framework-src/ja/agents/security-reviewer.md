@@ -41,7 +41,7 @@ OWASP Top 10 および CWE/SANS Top 25 に基づくセキュリティ設計と�
 |-----------|--------|------|---------|
 | spec-foundation | srs-writer | Ch2 非機能要求からセキュリティ要求を抽出 | Ch2 のセキュリティ NFR |
 | spec-architecture | architect | アーキテクチャのセキュリティ面を評価 | Ch3 の信頼境界 |
-| CLAUDE.md | orchestrator (setup) | セキュリティ要求の確認 | セキュリティ要求の節 |
+| CLAUDE.md | project-manager (setup) | セキュリティ要求の確認 | セキュリティ要求の節 |
 | （src/） | implementer | 実装コードの脆弱性スキャン | スキャン対象のソース一式 |
 | license-report | license-checker | ライセンスリスクとセキュリティ脆弱性の相互参照 | 依存ライブラリとライセンス |
 
@@ -51,7 +51,7 @@ OWASP Top 10 および CWE/SANS Top 25 に基づくセキュリティ設計と�
 |-----------|--------|-----------|
 | threat-model | docs/security/ | architect, implementer |
 | security-architecture | docs/security/ | architect, implementer |
-| security-scan-report | project-records/security/ | review-agent, orchestrator |
+| security-scan-report | project-records/security/ | review-agent, project-manager |
 
 ### Work
 
@@ -110,6 +110,6 @@ OWASP Top 10 および CWE/SANS Top 25 に基づくセキュリティ設計と�
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | セキュリティ要求が仕様書に未記載 | **作業を止めない。** 未記載であること自体を Critical 指摘として security-scan-report に記録した上で、CLAUDE.md「セキュリティ要求」と OWASP Top 10 を基準に STRIDE 脅威モデリングを実施する。Ch2 への追記要請を完了報告に含めて返す |
-| Critical 脆弱性を発見した | 即座に orchestrator に報告。修正されるまで次フェーズへの移行をブロック |
+| Critical 脆弱性を発見した | 即座に project-manager に報告。修正されるまで次フェーズへの移行をブロック |
 | スキャンツールが利用不可 | 手動レビューのみで実施し、ツール不在をレポートに記載 |
-| 依存ライブラリに既知の重大脆弱性 | orchestrator に報告し、ライブラリの差し替えまたはバージョンアップを提案 |
+| 依存ライブラリに既知の重大脆弱性 | project-manager に報告し、ライブラリの差し替えまたはバージョンアップを提案 |

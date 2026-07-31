@@ -39,7 +39,7 @@ Execute the following phases sequentially:
 0n2. Evaluate whether field testing is required (HW integration enabled and device operation must be confirmed with the user present)
     -> If applicable: activate field-test-engineer / feedback-classifier / field-issue-analyst in the testing phase
 0o. Report evaluation results to the user and request confirmation on adding conditional processes
-0p. Launch orchestrator to initialize project-management/pipeline-state.md
+0p. Launch project-manager to initialize project-management/pipeline-state.md
 
 ## Phase 1: Planning (Interview & Specification)
 1a. Analyze user-order.md
@@ -62,7 +62,7 @@ Execute the following phases sequentially:
 2b. Launch architect to evaluate and select external dependencies (HW/AI/Framework)
 2c. architect creates requirement-spec for each external dependency under docs/ (hw-requirement-spec, ai-requirement-spec, framework-requirement-spec)
 2d. architect designs Adapter layer interfaces (abstraction based on DIP)
-2e. Launch orchestrator to record selection results in project-records/decisions/
+2e. Launch project-manager to record selection results in project-records/decisions/
 2f. Report selection results to the user and request approval
 2g. Launch technical-authority to decide GATE-DEPENDENCY (Process Rules section 9.4.1)
 
@@ -111,7 +111,7 @@ Execute the following phases sequentially:
 6c. Execute deployment and confirm basic operation with smoke tests
 6d. Verify that monitoring and alerting configuration matches the observability design
 6e. Verify and document rollback procedures
-6f. Launch orchestrator to create the final report in final-report.md
+6f. Launch project-manager to create the final report in final-report.md
 6f2. Launch user-manual-writer to create the user manual under docs/
 6f3. Launch runbook-writer to create the operational runbook under docs/operations/
 6g. test-engineer creates the acceptance test procedures
@@ -132,7 +132,7 @@ Fb. Launch progress-monitor to read project-management/progress/session-state.js
     -> If session-state.json is absent or sink_heartbeat_at is stale: the measurement path has stopped. Record in cost-log.json that measurement was unavailable and report it to the user. **Never write an estimated consumption (MUST NOT)**
 Fc. If compaction_count in session-state.json has risen above the previous phase, a compaction has happened. Create a handoff so there is a resumption point
     -> Context usage cannot be observed. Never decide to interrupt from an estimated usage figure (MUST NOT); whether to interrupt is the user's call
-Fd. Launch orchestrator to update pipeline-state.md and executive-dashboard.md and report to the user
+Fd. Launch project-manager to update pipeline-state.md and executive-dashboard.md and report to the user
 Fe. Launch process-improver to run the retrospective and root cause analysis of defect patterns
 Ff. Only when the user has approved the improvements from Fe, launch decree-writer to apply them to the governance files
 Fg. When the user raises a change request after specification approval, launch change-manager for impact analysis and recording

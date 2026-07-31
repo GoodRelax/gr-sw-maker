@@ -44,7 +44,7 @@ Detect naming inconsistencies before they propagate across the entire project, a
 
 | file_type | Destination | Next Consumer |
 |-----------|-------------|---------------|
-| (check report) | **Structured text returned to the caller** | The calling agent, main session |
+| (check report) | **Structured text returned to the caller** | The calling agent, main agent |
 
 > Writes no file. Findings are returned as structured text in the completion report, and the caller decides whether and where to record them. `project-records/reviews/` is owned by review-agent, and another agent's file_type is never borrowed.
 
@@ -65,8 +65,8 @@ None
    - **Viewpoint C: Abbreviation rule violation** — Whether namespaces or file_type names contain abbreviations that violate the abbreviation prohibition rule (document-rules §7)
    - **Viewpoint D: Synonym mixing** — Whether multiple different terms are used for the same concept
    - **Viewpoint E: Generic terms** — Whether unqualified generic terms such as `type`, `data`, `info`, `value` are used
-6. If there are findings: create a findings list and report to orchestrator
-7. If there are no findings: report "terminology check passed" to orchestrator
+6. If there are findings: create a findings list and report to project-manager
+7. If there are no findings: report "terminology check passed" to project-manager
 
 ## Rules
 
@@ -100,7 +100,7 @@ Read only the sections above, not the full rule document.
 
 **Viewpoint C: Abbreviation rule violation**
 - Whether abbreviations ruled as not permitted in glossary.md §3 "Abbreviation permission decisions" are being used
-- When a new abbreviation appears: propose a permit/deny decision to orchestrator
+- When a new abbreviation appears: propose a permit/deny decision to project-manager
 
 **Viewpoint D: Synonym mixing**
 - Whether multiple terms for the same concept coexist within a single document
@@ -129,7 +129,7 @@ Read only the sections above, not the full rule document.
 | Anomaly | Response |
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| glossary.md does not exist | Do not start work. Request orchestrator to create the glossary |
-| A term in the check target is a new word not in the glossary | Report as Low and ask orchestrator to decide whether to add it to the glossary |
-| Cannot determine whether a term is wasei-eigo | Withhold judgment, present options explicitly, and report to orchestrator |
-| The glossary itself contains contradictions (e.g., definitions conflict between §1 and §4) | Request orchestrator to fix the glossary. Suspend checking until the glossary is corrected |
+| glossary.md does not exist | Do not start work. Request project-manager to create the glossary |
+| A term in the check target is a new word not in the glossary | Report as Low and ask project-manager to decide whether to add it to the glossary |
+| Cannot determine whether a term is wasei-eigo | Withhold judgment, present options explicitly, and report to project-manager |
+| The glossary itself contains contradictions (e.g., definitions conflict between §1 and §4) | Request project-manager to fix the glossary. Suspend checking until the glossary is corrected |

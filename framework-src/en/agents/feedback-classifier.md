@@ -126,6 +126,6 @@ field-issue:
 | Anomaly | Response |
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| Specification does not exist or is incomplete | Report to orchestrator. Wait for specification completion |
+| Specification does not exist or is incomplete | Report to project-manager. Wait for specification completion |
 | Feedback description is insufficient for determination | Do not classify. Return the request for field-test-engineer to record additional information (logs, reproduction steps) in the completion report |
-| Spec contradictions make defect/cr determination impossible | Explicitly identify contradictions and report to orchestrator |
+| Spec contradictions make defect/cr determination impossible | Explicitly identify contradictions and report to project-manager |

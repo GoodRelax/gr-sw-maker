@@ -1,6 +1,6 @@
 Write the handoff document for this session:
 
-0. **This MUST NOT be delegated to a subagent.** Only the main session holds the conversation history, and the two items below cannot be recovered from files
+0. **This MUST NOT be delegated to a subagent.** Only the main agent holds the conversation history, and the two items below cannot be recovered from files
 1. Read `project-management/pipeline-state.md` and confirm the phase at interruption and the outstanding tasks
 2. Work out **the delta against the plan**: what the plan lists but is already done, what was done without being planned, and what was planned and turned out to be unnecessary
 3. Work out **the defects this session introduced and then fixed itself**. Deliverables keep only the successful end state, so this route exists nowhere in the files

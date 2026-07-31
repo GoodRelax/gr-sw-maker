@@ -51,7 +51,7 @@ Scope of verification target search:
 
 | file_type | Destination | Next Consumer |
 |-----------|-------------|---------------|
-| review | project-records/reviews/ | orchestrator |
+| review | project-records/reviews/ | project-manager |
 
 ### Work
 

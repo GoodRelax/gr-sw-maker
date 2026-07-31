@@ -130,7 +130,7 @@ flowchart TB
     end
 
     subgraph ClaudeCode["Claude Code オーケストレーション層"]
-        Orch["orchestrator<br/>Opus 4.6"]
+        Orch["project-manager<br/>Opus 4.6"]
         Plan["Plan サブエージェント"]
         Explore["Explore サブエージェント"]
     end
@@ -190,7 +190,7 @@ flowchart TB
     Orch -->|"エスカレーション<br/>リスク/コスト/変更"| H2
 ```
 
-この図は全自動開発の全体構成と情報の流れをグループレベルで示す。ユーザーはコンセプト提示・重要判断・受入テストの3点でプロジェクトに関与する。orchestrator が全フェーズを制御し、5つのエージェントグループ（開発コア・プロセス管理・品質ガード・文書作成・プロセス改善、全ロールは agent-list §1 を参照）にタスクを分配する。エスカレーション経路（リスクスコア≧6、コスト予算80%到達、impact_level=high の変更要求）では orchestrator がユーザーに判断を仰ぐ。個別エージェント間の file_type データフローは agent-list §3 を参照。
+この図は全自動開発の全体構成と情報の流れをグループレベルで示す。ユーザーはコンセプト提示・重要判断・受入テストの3点でプロジェクトに関与する。project-manager が全フェーズを制御し、5つのエージェントグループ（開発コア・プロセス管理・品質ガード・文書作成・プロセス改善、全ロールは agent-list §1 を参照）にタスクを分配する。エスカレーション経路（リスクスコア≧6、コスト予算80%到達、impact_level=high の変更要求）では project-manager がユーザーに判断を仰ぐ。個別エージェント間の file_type データフローは agent-list §3 を参照。
 
 ### 1.3 前提となるClaude Codeの主要機能
 
@@ -351,7 +351,7 @@ flowchart TD
 
 ### 3.1.1 スケールダウン基準
 
-プロジェクト規模が小さい場合、一部の必須・推奨プロセスを免除できる。orchestrator は setup フェーズで規模を評価し、免除対象を CLAUDE.md の「スケールダウン設定」セクションに記録する。
+プロジェクト規模が小さい場合、一部の必須・推奨プロセスを免除できる。project-manager は setup フェーズで規模を評価し、免除対象を CLAUDE.md の「スケールダウン設定」セクションに記録する。
 
 **規模区分:**
 
@@ -648,17 +648,17 @@ process-improver エージェントがふりかえりと根本原因分析を担
 
 | トリガー | 条件 | 起動元 |
 |---------|------|--------|
-| フェーズ完了 | 各フェーズの品質ゲート PASS 後 | orchestrator |
-| defect 多発 | 累積発見数が累積修正数の 2 倍を超えた（単一時点で観測可能な条件とする。**前日比などの経時比較は用いない**） | progress-monitor → orchestrator |
-| レビュー差戻し | 同一観点の指摘が 3 回以上連続 | review-agent → orchestrator |
-| ユーザー要求 | ユーザーが明示的にふりかえりを要求 | orchestrator |
+| フェーズ完了 | 各フェーズの品質ゲート PASS 後 | project-manager |
+| defect 多発 | 累積発見数が累積修正数の 2 倍を超えた（単一時点で観測可能な条件とする。**前日比などの経時比較は用いない**） | progress-monitor → project-manager |
+| レビュー差戻し | 同一観点の指摘が 3 回以上連続 | review-agent → project-manager |
+| ユーザー要求 | ユーザーが明示的にふりかえりを要求 | project-manager |
 
 **改善サイクル:**
 
 1. process-improver が defect 票・レビュー指摘・進捗データを分析する
 2. 根本原因分析（CMMI CAR: Why-Why 分析）を実施する
-3. 改善策を retrospective-report として orchestrator に提出する
-4. orchestrator が改善策の承認ルーティングを行う（CLAUDE.md / process-rules はユーザー承認、エージェント定義は orchestrator 承認）
+3. 改善策を retrospective-report として project-manager に提出する
+4. project-manager が改善策の承認ルーティングを行う（CLAUDE.md / process-rules はユーザー承認、エージェント定義は project-manager 承認）
 5. decree-writer が安全チェック（SR1-SR6）後、承認済み改善策をガバナンスファイルに適用する
 6. decree-writer が before/after diff を project-records/improvement/ に記録する
 
@@ -1505,7 +1505,7 @@ project_root/
     research/                     ... 調査レポート
   .claude/
     agents/                       ... カスタムエージェント定義
-      orchestrator.md             ... オーケストレーター（フェーズ遷移・意思決定）
+      project-manager.md             ... オーケストレーター（フェーズ遷移・意思決定）
       srs-writer.md               ... 仕様書作成（Ch1-2）エージェント
       architect.md                ... 仕様書詳細化（Ch3-6）エージェント
       security-reviewer.md        ... セキュリティ設計エージェント
@@ -1691,7 +1691,7 @@ setup フェーズでユーザーと合意する。全エージェントおよ�
 
 Agent Teamsで作業する場合、以下のロール定義を使用する:
 
-- **Orchestrator Agent（orchestrator）**: プロジェクト全体のオーケストレーション。pipeline-state.md / executive-dashboard.md / final-report.md / decision記録を管理する。フェーズ遷移と品質ゲートを制御する。`.claude/agents/orchestrator.md` で定義
+- **Project Manager Agent（project-manager）**: プロジェクト全体のオーケストレーション。pipeline-state.md / executive-dashboard.md / final-report.md / decision記録を管理する。フェーズ遷移と品質ゲートを制御する。`.claude/agents/project-manager.md` で定義
 - **SRS Agent（srs-writer）**: user-order.md（3問形式）+ process-rules/spec-template.md を基に、仕様書を docs/spec/ に作成（Ch1-2 Foundation・Requirements、形式はsetupフェーズで選定）。ユーザーコンセプトを構造化する
 - **Architect Agent（architect）**: docs/spec/ の ANMS 仕様書 Ch3-6 を詳細化（Architecture・Specification・Test Strategy・Design Principles）。docs/api/ にOpenAPI仕様を生成する
 - **Security Agent（security-reviewer）**: docs/security/ にセキュリティ設計を作成。実装コードの脆弱性レビューを行う。スキャン結果はproject-records/security/にsecurity-scan-reportとして記録する
@@ -1848,15 +1848,15 @@ user-order.md を読み、setup フェーズから delivery フェーズまで�
    - Common Block / Form Block の構造は実態に合っているか
    - 不足しているフィールドや不要なフィールドはないか
 5. 改善策を retrospective-report として project-records/improvement/ に記録する
-6. orchestrator に提出し、承認を求める
+6. project-manager に提出し、承認を求める
 
 ## Phase 2: 適用（decree-writer）
 
-7. orchestrator が改善策を承認（decision 記録を作成）
+7. project-manager が改善策を承認（decision 記録を作成）
 8. decree-writer が承認済み改善策を受け取り、安全チェック（SR1-SR6）を実施する
 9. 承認テーブルに基づき対象ファイルに適用する
    - CLAUDE.md / process-rules/ → ユーザー承認必須
-   - .claude/agents/ → orchestrator 承認
+   - .claude/agents/ → project-manager 承認
 10. before/after diff を project-records/improvement/ に記録する
 
 ## 再発防止策の記録形式
@@ -1864,7 +1864,7 @@ user-order.md を読み、setup フェーズから delivery フェーズまで�
 - defect パターン: [パターンの説明]
 - 根本原因: [Why-Why分析の結果]
 - 対策: [対象ファイルと変更内容]
-- 承認区分: [ユーザー承認 / orchestrator 承認]
+- 承認区分: [ユーザー承認 / project-manager 承認]
 - 効果確認方法: [次フェーズでの確認方法]
 ```
 
@@ -1971,14 +1971,14 @@ flowchart TD
 
 各レビューゲートはreview-agentが自動実行する。CLAUDE.md 品質目標で定義された品質閾値が満たされるまで次フェーズへの移行をブロックする。上図中の数値は説明用のデフォルト値であり、実際の閾値は常に CLAUDE.md から読み取る。
 
-**ゲート強制チェックルール:** orchestrator はフェーズ遷移前に以下を検証しなければならない:
+**ゲート強制チェックルール:** project-manager はフェーズ遷移前に以下を検証しなければならない:
 1. 当該ゲートに必要なレビューが `project-records/reviews/` に存在し、`review:result = pass` であること
 2. 全レビュー指摘に対応記録があること（9.5節 レビュー指摘対応追跡 を参照）
 3. WBS 免除でないプロジェクト（3.1.1節参照）の場合、当該フェーズの WBS タスクステータスが更新されていること
 
 いずれかの条件が未充足の場合、次フェーズへ遷移してはならない。未実施のレビューは実行し、未記録の対応記録は記録すること。**本ルールの例外は waiver のみであり、waiver は下記「ゲート再試行ポリシー」の 3 条件をすべて満たした場合に限る。**
 
-判定の主体は technical-authority である。orchestrator はその判定結果（tech-decision の `verdict`）を受け取り、コスト・スケジュール・リスクの観点を加えて進行可否を決める。
+判定の主体は technical-authority である。project-manager はその判定結果（tech-decision の `verdict`）を受け取り、コスト・スケジュール・リスクの観点を加えて進行可否を決める。
 
 #### 9.1.1 ゲート再試行ポリシー
 
@@ -2159,7 +2159,7 @@ flowchart LR
 | 2 | Medium | ... | 据置き | DEC-003 |
 | 3 | Low | ... | 受容済み | プロジェクト範囲において許容 |
 
-review-agent がこのテーブルをレビュー報告の Detail Block に記録する。orchestrator はフェーズ遷移前に全指摘に対応記録があることを検証する。
+review-agent がこのテーブルをレビュー報告の Detail Block に記録する。project-manager はフェーズ遷移前に全指摘に対応記録があることを検証する。
 
 ---
 
@@ -2470,7 +2470,7 @@ async function login(email, password) {
 | HighErrorRate | エラーレート > 1%（5分継続）   | Critical | 即時調査・ロールバック検討                 |
 | HighLatency   | P99 > SLAレイテンシ（5分継続） | High     | ボトルネック調査                           |
 | LowDiskSpace  | ディスク使用率 > 85%           | Medium   | ログローテーション確認                     |
-| AgentStalled  | pipeline-state の phase・WBS 完了数・成果物のいずれも前回起動時から変化がない | High | progress-monitor が事実のみを orchestrator に報告する。**経過時間は条件にしない**（エージェントは時間を計測できない） |
+| AgentStalled  | pipeline-state の phase・WBS 完了数・成果物のいずれも前回起動時から変化がない | High | progress-monitor が事実のみを project-manager に報告する。**経過時間は条件にしない**（エージェントは時間を計測できない） |
 
 ### 11.3 本番リリースチェックリスト
 
@@ -2642,7 +2642,7 @@ Claude Codeが作成した受入テスト手順書に従い、ユーザーが最
 ```mermaid
 sequenceDiagram
     participant User as ユーザー
-    participant Orch as orchestrator
+    participant Orch as project-manager
     participant SRS as srs-writer
     participant Koto as kotodama-kun
     participant Arch as architect
@@ -2856,7 +2856,7 @@ PM Agent はこのスキーマに従って `project-management/progress/progress
 
 | エージェント名      | 役割                                                                | モデル | 区分         |
 | ------------------- | ------------------------------------------------------------------- | ------ | ------------ |
-| `orchestrator`                    | プロジェクト全体のオーケストレーション、フェーズ遷移制御、意思決定記録 | opus   | コア         |
+| `project-manager`                    | プロジェクト全体のオーケストレーション、フェーズ遷移制御、意思決定記録 | opus   | コア         |
 | `srs-writer`                      | 仕様書 Ch1-2（Foundation・Requirements）の作成                        | opus   | コア         |
 | `architect`                       | 仕様書 Ch3-6 詳細化・OpenAPI仕様・マイグレーション設計                | opus   | コア         |
 | `security-reviewer`               | セキュリティ設計・脆弱性レビュー・SCA                                 | opus   | コア         |

@@ -129,7 +129,7 @@ Agreed with the user during setup. All agents and quality gates reference this s
 
 When working with Agent Teams, use the following role definitions:
 
-- **Orchestrator Agent (orchestrator)**: Project-wide orchestration. Manages pipeline-state.md / executive-dashboard.md / final-report.md / decision records. Controls phase transitions and quality gates. Defined in `.claude/agents/orchestrator.md`
+- **Project Manager Agent (project-manager)**: Project-wide orchestration. Manages pipeline-state.md / executive-dashboard.md / final-report.md / decision records. Controls phase transitions and quality gates. Defined in `.claude/agents/project-manager.md`
 - **SRS Agent (srs-writer)**: Creates specification under docs/spec/ based on user-order.md (3-question format) + process-rules/spec-template.md (Ch1-2 Foundation & Requirements, format selected during setup phase). Structures user concepts
 - **Architect Agent (architect)**: Elaborates ANMS spec Ch3-6 under docs/spec/ (Architecture, Specification, Test Strategy, Design Principles). Generates OpenAPI spec under docs/api/
 - **Security Agent (security-reviewer)**: Creates security design under docs/security/. Reviews implementation code for vulnerabilities. Records scan results as security-scan-report under project-records/security/

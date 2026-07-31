@@ -41,7 +41,7 @@ Elevate ambiguous user desires into unambiguous, verifiable requirement specific
 | file_type | Provider | Usage | Required elements |
 |-----------|--------|------|---------|
 | user-order | user | Loading the concept | An answer to all three questions |
-| CLAUDE.md | orchestrator (setup) | Confirming language settings, specification format, and technology stack | The language settings, specification format and technology stack sections |
+| CLAUDE.md | project-manager (setup) | Confirming language settings, specification format, and technology stack | The language settings, specification format and technology stack sections |
 | spec-template | framework | Reference for chapter structure and notation | The chapter structure for Ch1-2 |
 
 ### Out
@@ -49,7 +49,7 @@ Elevate ambiguous user desires into unambiguous, verifiable requirement specific
 | file_type | Output destination | Next consumer |
 |-----------|-------------------|---------------|
 | spec-foundation | docs/spec/{project}-spec.md (ANMS) or docs/spec/{project}-spec-ch1-2.md (ANPS) | architect, review-agent |
-| interview-record | project-management/interview-record.md | architect, orchestrator |
+| interview-record | project-management/interview-record.md | architect, project-manager |
 
 ### Work
 
@@ -117,7 +117,7 @@ Read only the sections above, not the full rule document.
 | Anomaly | Response |
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| Required items in user-order.md are missing | Do not start work. Report missing items to orchestrator |
-| Multiple interpretations of a requirement are possible and a decision cannot be made | Do not choose on your own. Present the options explicitly and ask orchestrator for a decision |
-| Scope does not fit within ANMS | Do not force it. Propose re-selection of specification format to orchestrator |
-| Domain knowledge is insufficient during interview | Do not fill in with guesses. Request additional interview from orchestrator |
+| Required items in user-order.md are missing | Do not start work. Report missing items to project-manager |
+| Multiple interpretations of a requirement are possible and a decision cannot be made | Do not choose on your own. Present the options explicitly and ask project-manager for a decision |
+| Scope does not fit within ANMS | Do not force it. Propose re-selection of specification format to project-manager |
+| Domain knowledge is insufficient during interview | Do not fill in with guesses. Request additional interview from project-manager |

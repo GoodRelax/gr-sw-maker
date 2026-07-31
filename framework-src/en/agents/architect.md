@@ -43,8 +43,8 @@ Design the technical structure to realize the requirements from specification Ch
 |-----------|--------|------|---------|
 | spec-foundation | srs-writer | Read Ch1-2 requirements and detail Ch3-6 | All of Ch1; an ID on every FR/NFR in Ch2 |
 | interview-record | srs-writer | Supplement domain knowledge from interview results | The agreed-decisions section |
-| decision | orchestrator | Verify consistency with past decisions | decision_status; scope |
-| CLAUDE.md | orchestrator (setup) | Confirm technology stack and coding conventions | The technology stack, coding standards and quality target sections |
+| decision | project-manager | Verify consistency with past decisions | decision_status; scope |
+| CLAUDE.md | project-manager (setup) | Confirm technology stack and coding conventions | The technology stack, coding standards and quality target sections |
 | spec-template | framework | Confirm Ch3-6 notation | The chapter structure for Ch3-6 |
 
 ### Out
@@ -135,7 +135,7 @@ Read only the sections above, not the full rule document.
 | Anomaly | Response |
 |------|------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| Requirements in Ch1-2 are ambiguous and cannot be translated into design | Do not proceed with design. Request Ch1-2 requirement refinement from orchestrator |
-| Technology stack selection is undetermined | Do not guess. Request user decision from orchestrator |
-| External dependencies for conditional processes are unselected | Defer creation of the corresponding requirement-spec and request orchestrator to conduct dependency-selection |
-| OpenAPI design contradicts requirements in Ch2 | Explicitly state the contradiction and report to orchestrator. Request a decision on whether to modify Ch2 or change the design |
+| Requirements in Ch1-2 are ambiguous and cannot be translated into design | Do not proceed with design. Request Ch1-2 requirement refinement from project-manager |
+| Technology stack selection is undetermined | Do not guess. Request user decision from project-manager |
+| External dependencies for conditional processes are unselected | Defer creation of the corresponding requirement-spec and request project-manager to conduct dependency-selection |
+| OpenAPI design contradicts requirements in Ch2 | Explicitly state the contradiction and report to project-manager. Request a decision on whether to modify Ch2 or change the design |

@@ -44,7 +44,7 @@ For issues discovered during field testing, identify root causes, analyze impact
 
 | file_type | Destination | Next Consumer |
 |-----------|-------------|---------------|
-| field-issue (solution-proposed) | project-records/field-issues/ (update existing ticket) | orchestrator (defect) / User (cr) |
+| field-issue (solution-proposed) | project-records/field-issues/ (update existing ticket) | project-manager (defect) / User (cr) |
 
 ### Work
 
@@ -158,6 +158,6 @@ Follow the Field Issue Handling Rules (`process-rules/field-issue-handling-rules
 | Anomaly | Response |
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| Cannot identify root cause | Record investigation scope and hypotheses, request orchestrator to decide on additional investigation |
-| Impact scope is too broad to narrow down solutions | Enumerate all alternatives and request orchestrator to consult with user on direction |
+| Cannot identify root cause | Record investigation scope and hypotheses, request project-manager to decide on additional investigation |
+| Impact scope is too broad to narrow down solutions | Enumerate all alternatives and request project-manager to consult with user on direction |
 | Determined that defect/cr classification is incorrect | Do not change type directly. Return the reclassification request for feedback-classifier in the completion report |

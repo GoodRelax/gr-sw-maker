@@ -115,7 +115,7 @@ gr-sw-maker フレームワークの全エージェント定義ファイル（EN
 - [ ] C6: Exception テーブルが現実的な異常ケースをカバーしているか
 - [ ] C7: tools フロントマターが責務と整合しているか（read-only エージェントに Write がないか等）
 - [ ] C8: process-improver に Write/Edit がないこと、decree-writer に Write/Edit があることを確認
-- [ ] C9: kotodama-kun チェックが必要なエージェントの Procedure に用語チェック手順が含まれているか（対象外: orchestrator, review-agent, change-manager, license-checker, framework-translation-verifier, decree-writer）
+- [ ] C9: kotodama-kun チェックが必要なエージェントの Procedure に用語チェック手順が含まれているか（対象外: project-manager, review-agent, change-manager, license-checker, framework-translation-verifier, decree-writer）
 
 ## 出力形式
 
@@ -202,7 +202,7 @@ full-auto-dev-document-rules §7 の file_type マスターテーブルの実際
 - [ ] エスカレーション基準（リスク≧6、コスト80%、impact_level=high）が F02 と F01 で一致しているか
 - [ ] 変更管理フロー（F02 §3.2）の記述が一貫しているか
 - [ ] defect 状態遷移（F02 stateDiagram）が定義されているか
-- [ ] ふりかえりサイクル（process-improver → orchestrator → decree-writer）の3段階フローが F02 と F04 で矛盾なく記述されているか
+- [ ] ふりかえりサイクル（process-improver → project-manager → decree-writer）の3段階フローが F02 と F04 で矛盾なく記述されているか
 - [ ] 条件付きプロセス（13項目）が F01 と F02 で一致しているか
 
 ### Expert 2: エージェントアーキテクチャ（Agent Architecture）
@@ -215,7 +215,7 @@ full-auto-dev-document-rules §7 の file_type マスターテーブルの実際
 - [ ] F02 §1.2 全体アーキテクチャ図（グループレベル概要）が F04 §3（詳細図）と矛盾していないか
 - [ ] file_type を所有しないエージェント（kotodama-kun, framework-translation-verifier, decree-writer）の入出力パターンが一貫しているか
 - [ ] decree-writer の安全チェック（SR1-SR6）が F02 §3.3.3 の改善サイクルと整合しているか
-- [ ] decree-writer の承認テーブル（CLAUDE.md=ユーザー, agents=orchestrator, process-rules=ユーザー）が関連ファイルで一致しているか
+- [ ] decree-writer の承認テーブル（CLAUDE.md=ユーザー, agents=project-manager, process-rules=ユーザー）が関連ファイルで一致しているか
 
 ### Expert 3: 用語・文書構造（Terminology & Document Structure）
 

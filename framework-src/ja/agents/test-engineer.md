@@ -53,7 +53,7 @@ model: sonnet
 | test-plan | project-management/ | review-agent |
 | defect | project-records/defects/ | implementer |
 | traceability | project-records/traceability/ | review-agent |
-| performance-report | project-records/performance/ | review-agent, orchestrator |
+| performance-report | project-records/performance/ | review-agent, project-manager |
 | test-progress.json | project-management/progress/ | progress-monitor |
 | defect-curve.json | project-management/progress/ | progress-monitor |
 
@@ -128,7 +128,7 @@ defect:
 | 異常 | 対応 |
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
-| テスト対象コードが存在しない | 作業を開始しない。orchestrator に implementation の完了を確認 |
-| NFR の数値目標が未定義 | 性能テストを保留し、orchestrator に Ch2 への追記を要請 |
+| テスト対象コードが存在しない | 作業を開始しない。project-manager に implementation の完了を確認 |
+| NFR の数値目標が未定義 | 性能テストを保留し、project-manager に Ch2 への追記を要請 |
 | テスト合格率が基準を下回る | defect を作成し、修正要請を完了報告に含めて返す。原因が設計に起因する場合はその旨も併記する |
-| 性能テストで NFR 未達 | ボトルネックを特定し、defect として記録。orchestrator に報告 |
+| 性能テストで NFR 未達 | ボトルネックを特定し、defect として記録。project-manager に報告 |

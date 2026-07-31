@@ -57,7 +57,7 @@ model: opus
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| review | project-records/reviews/review-{対象}-{日付}.md | technical-authority, orchestrator, 対象エージェント |
+| review | project-records/reviews/review-{対象}-{日付}.md | technical-authority, project-manager, 対象エージェント |
 
 > 実装コードをレビューした場合、`purity_tag_coverage_pct` を必ず記載する（R7.6）。
 
@@ -153,7 +153,7 @@ review:
 
 - Critical: **0件**（必須）
 - High: **0件**（必須）
-- Medium: 件数を orchestrator に報告し対応方針の承認を得る
+- Medium: 件数を project-manager に報告し対応方針の承認を得る
 
 ### FAIL 時のルーティング
 
@@ -181,7 +181,7 @@ review:
 | 異常 | 対応 |
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
-| レビュー対象が不完全（作成途中） | レビューを開始しない。orchestrator に対象の完成を確認 |
-| review-standards.md が見つからない | 作業を開始しない。orchestrator に報告 |
-| Critical 指摘が修正されずに再レビュー依頼が来た | FAIL を維持し、orchestrator に未修正の Critical を報告 |
-| レビュー観点の適用が不明確（複合成果物等） | orchestrator に適用観点の判断を求める |
+| レビュー対象が不完全（作成途中） | レビューを開始しない。project-manager に対象の完成を確認 |
+| review-standards.md が見つからない | 作業を開始しない。project-manager に報告 |
+| Critical 指摘が修正されずに再レビュー依頼が来た | FAIL を維持し、project-manager に未修正の Critical を報告 |
+| レビュー観点の適用が不明確（複合成果物等） | project-manager に適用観点の判断を求める |

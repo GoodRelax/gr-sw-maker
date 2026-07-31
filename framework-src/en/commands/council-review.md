@@ -115,7 +115,7 @@ No code needs to be written. Read and analyze only.
 - [ ] C6: Does the Exception table cover realistic abnormal cases?
 - [ ] C7: Is the tools frontmatter consistent with the agent's responsibilities? (e.g., no Write for read-only agents)
 - [ ] C8: Verify that process-improver does NOT have Write/Edit, and decree-writer DOES have Write/Edit
-- [ ] C9: Do agents requiring kotodama-kun checks include terminology check steps in their Procedure? (Excluded: orchestrator, review-agent, change-manager, license-checker, framework-translation-verifier, decree-writer)
+- [ ] C9: Do agents requiring kotodama-kun checks include terminology check steps in their Procedure? (Excluded: project-manager, review-agent, change-manager, license-checker, framework-translation-verifier, decree-writer)
 
 ## Output Format
 
@@ -202,7 +202,7 @@ The following 4 experts conduct a review from a bird's-eye perspective.
 - [ ] Do the escalation criteria (risk≧6, cost 80%, impact_level=high) match between F02 and F01?
 - [ ] Is the change management flow (F02 §3.2) description consistent?
 - [ ] Is the defect state transition (F02 stateDiagram) defined?
-- [ ] Is the retrospective cycle (process-improver → orchestrator → decree-writer) 3-step flow described consistently in F02 and F04?
+- [ ] Is the retrospective cycle (process-improver → project-manager → decree-writer) 3-step flow described consistently in F02 and F04?
 - [ ] Do the conditional processes (13 items) match between F01 and F02?
 
 ### Expert 2: Agent Architecture
@@ -215,7 +215,7 @@ The following 4 experts conduct a review from a bird's-eye perspective.
 - [ ] Is the F02 §1.2 overall architecture diagram (group-level overview) consistent with F04 §3 (detailed diagrams)?
 - [ ] Are the input/output patterns of agents that do not own file_types (kotodama-kun, framework-translation-verifier, decree-writer) consistent?
 - [ ] Are decree-writer's safety checks (SR1-SR6) aligned with the improvement cycle in F02 §3.3.3?
-- [ ] Does decree-writer's approval table (CLAUDE.md=user, agents=orchestrator, process-rules=user) match across related files?
+- [ ] Does decree-writer's approval table (CLAUDE.md=user, agents=project-manager, process-rules=user) match across related files?
 
 ### Expert 3: Terminology & Document Structure
 

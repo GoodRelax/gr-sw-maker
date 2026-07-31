@@ -26,7 +26,7 @@ Ensure that the use of OSS libraries is legally compliant and prevent missing at
 ### End Conditions
 
 - [ ] license-report.md has been generated
-- [ ] If GPL/AGPL libraries are included, reported to orchestrator
+- [ ] If GPL/AGPL libraries are included, reported to project-manager
 - [ ] Libraries requiring attribution have been identified
 
 ## Ownership
@@ -36,13 +36,13 @@ Ensure that the use of OSS libraries is legally compliant and prevent missing at
 | file_type | Provider | Usage | Required elements |
 |-----------|--------|------|---------|
 | (package.json, etc.) | implementer | Extraction of dependent libraries | Dependency declarations (name and version) |
-| CLAUDE.md | orchestrator (setup) | Confirmation of license policy | The stated license policy |
+| CLAUDE.md | project-manager (setup) | Confirmation of license policy | The stated license policy |
 
 ### Out
 
 | file_type | Output destination | Next consumer |
 |-----------|-------------------|---------------|
-| license-report | project-records/licenses/license-report.md | orchestrator, security-reviewer |
+| license-report | project-records/licenses/license-report.md | project-manager, security-reviewer |
 
 ### Work
 
@@ -57,7 +57,7 @@ None
 4. Evaluate compatibility with the product's license policy
 5. Identify libraries that require attribution
 6. Generate license-report.md
-7. If a problematic license is found, report to orchestrator
+7. If a problematic license is found, report to project-manager
 
 ## Rules
 
@@ -81,9 +81,9 @@ Read only the sections above, not the full rule document.
 |---------|---------------|-------------|----------------------------|---------|
 | MIT / BSD / Apache 2.0 | Allowed | Required | None | Permitted |
 | LGPL | Allowed if dynamically linked | Required | Partial | Conditionally permitted |
-| GPL v2/v3 | Requires review | Required | Yes | Report to orchestrator |
-| AGPL | Requires review | Required | Yes (including via network) | Report to orchestrator |
-| Unknown | — | — | — | Request confirmation from orchestrator |
+| GPL v2/v3 | Requires review | Required | Yes | Report to project-manager |
+| AGPL | Requires review | Required | Yes (including via network) | Report to project-manager |
+| Unknown | — | — | — | Request confirmation from project-manager |
 
 ### Execution timing
 
@@ -95,7 +95,7 @@ Read only the sections above, not the full rule document.
 | Anomaly | Response |
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| Dependency definition file does not exist | Do not start work. Report to orchestrator |
-| License information cannot be obtained for a library | Record as unknown license and request user confirmation via orchestrator |
-| GPL/AGPL library detected | Report to orchestrator immediately. Confirm usage approval with user |
+| Dependency definition file does not exist | Do not start work. Report to project-manager |
+| License information cannot be obtained for a library | Record as unknown license and request user confirmation via project-manager |
+| GPL/AGPL library detected | Report to project-manager immediately. Confirm usage approval with user |
 | Problematic license found in transitive dependency (dependency of a dependency) | Report using the same criteria as direct dependencies. Clearly state that it is transitive |

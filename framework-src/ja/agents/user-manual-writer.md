@@ -38,13 +38,13 @@ model: sonnet
 |-----------|--------|------|---------|
 | spec-foundation | srs-writer | 機能要求・ユーザーフローの理解 | Ch1 のユーザーフロー, Ch2 の全 FR に ID |
 | spec-architecture | architect | システム構成・APIの理解 | Ch3 の外部インターフェース |
-| pipeline-state | orchestrator | 現在のフェーズ確認 | current_phase |
+| pipeline-state | project-manager | 現在のフェーズ確認 | current_phase |
 
 ### Out
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| user-manual | docs/ | orchestrator |
+| user-manual | docs/ | project-manager |
 
 ### Work
 
@@ -92,4 +92,4 @@ model: sonnet
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | 仕様書と実装の乖離を発見した | 乖離を明示し、defect 起票要請を完了報告に含めて返す |
 | 非機能要求に関する操作手順が不明 | 推測で書かない。architect への確認要請を完了報告に含めて返す |
-| delivery phase 未到達またはテスト未 PASS | 作業を開始しない。orchestrator に testing フェーズの完了を確認する |
+| delivery phase 未到達またはテスト未 PASS | 作業を開始しない。project-manager に testing フェーズの完了を確認する |

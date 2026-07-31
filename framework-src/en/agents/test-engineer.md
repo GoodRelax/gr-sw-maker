@@ -53,7 +53,7 @@ Verify that the requirements in the specification are correctly implemented in c
 | test-plan | project-management/ | review-agent |
 | defect | project-records/defects/ | implementer |
 | traceability | project-records/traceability/ | review-agent |
-| performance-report | project-records/performance/ | review-agent, orchestrator |
+| performance-report | project-records/performance/ | review-agent, project-manager |
 | test-progress.json | project-management/progress/ | progress-monitor |
 | defect-curve.json | project-management/progress/ | progress-monitor |
 
@@ -128,7 +128,7 @@ defect:
 | Anomaly | Response |
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| Code under test does not exist | Do not start work. Confirm with the orchestrator that implementation is complete |
-| NFR numerical targets are undefined | Suspend performance testing and request the orchestrator to add them to Ch2 |
+| Code under test does not exist | Do not start work. Confirm with the project-manager that implementation is complete |
+| NFR numerical targets are undefined | Suspend performance testing and request the project-manager to add them to Ch2 |
 | Test pass rate falls below the threshold | Create a defect and return the fix request in the completion report. If the cause is design-related, state that as well |
-| NFR not met in performance testing | Identify the bottleneck and record it as a defect. Report to the orchestrator |
+| NFR not met in performance testing | Identify the bottleneck and record it as a defect. Report to the project-manager |

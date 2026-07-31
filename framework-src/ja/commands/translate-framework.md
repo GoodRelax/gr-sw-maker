@@ -36,7 +36,7 @@ gr-sw-maker フレームワーク文書を $ARGUMENTS に翻訳してくださ�
 | 要素 | 例 | 理由 |
 |------|---|------|
 | YAML フロントマターのキー | `name:`, `description:`, `tools:`, `model:` | 機械パース |
-| YAML `name` フィールドの値 | `orchestrator`, `srs-writer` | エージェント名は英語固定 |
+| YAML `name` フィールドの値 | `project-manager`, `srs-writer` | エージェント名は英語固定 |
 | file_type 名 | `spec-foundation`, `pipeline-state`, `defect` | 名前空間として機能 |
 | フェーズ名 | `setup`, `planning`, `design` | enum 値 |
 | S0-S6 セクション見出し | `## Activation`, `## Ownership`, `## Procedure`, `## Rules`, `## Exception` | プロンプト構造規約で規定 |
@@ -67,7 +67,7 @@ gr-sw-maker フレームワーク文書を $ARGUMENTS に翻訳してくださ�
 2. `process-rules/glossary-{src}.md` の用語定義を参照し、専門用語の翻訳を一貫させる。用語集自体も翻訳する
 3. `process-rules/defect-taxonomy-{src}.md` の技術用語（error, fault, failure, defect, incident, hazard）はターゲット言語に定訳がある場合のみ翻訳し、なければ英語のまま使用する
 4. Mermaid 図のラベルはターゲット言語で記述してよい。ただし特殊記号（`\`, `/`, `|`, `<`, `>`, `{`, `}`）は使用禁止
-5. ファイル命名: `*-{src}.md` → `*-{target}.md`（例: `orchestrator-ja.md` → `orchestrator-fr.md`）
+5. ファイル命名: `*-{src}.md` → `*-{target}.md`（例: `project-manager-ja.md` → `project-manager-fr.md`）
 6. `CLAUDE.md` → `CLAUDE-{target}.md`、`user-order.md` → `user-order-{target}.md` として出力する
 
 ---

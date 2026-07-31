@@ -23,7 +23,7 @@ model: sonnet
 ### Start Conditions
 
 - [ ] operation フェーズに到達している
-- [ ] incident が発生した（orchestrator からの起動指示）
+- [ ] incident が発生した（project-manager からの起動指示）
 
 ### End Conditions
 
@@ -39,7 +39,7 @@ model: sonnet
 | runbook | runbook-writer | 運用手順との乖離確認 | 該当事象の対応手順 |
 | observability-design | architect | 監視設計との照合 | アラート定義 |
 | security-scan-report | security-reviewer | セキュリティ関連 incident の文脈 | critical_count, high_count |
-| pipeline-state | orchestrator | 現在のフェーズ確認 |
+| pipeline-state | project-manager | 現在のフェーズ確認 |
 | （アプリケーションログ） | 実行環境 | 事象発生時刻とエラーの特定 |
 | （メトリクス・トレース） | 実行環境 | 影響範囲と継続時間の特定 | current_phase |
 
@@ -47,7 +47,7 @@ model: sonnet
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| incident-report | project-records/incidents/ | orchestrator |
+| incident-report | project-records/incidents/ | project-manager |
 
 ### Work
 
@@ -57,7 +57,7 @@ model: sonnet
 
 0. 最初のメッセージの冒頭でユーザーに `[incident-reporter]` と名乗る
 1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
-2. orchestrator から incident 情報を受け取る
+2. project-manager から incident 情報を受け取る
 3. ログ・メトリクス・トレースを確認し、タイムラインを構築する
 4. 根本原因分析（RCA）を実施する
 5. runbook との乖離がないか確認する

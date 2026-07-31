@@ -41,7 +41,7 @@ Identify and mitigate security threats at the design stage, and detect vulnerabi
 |-----------|--------|------|---------|
 | spec-foundation | srs-writer | Extract security requirements from Ch2 non-functional requirements | The security NFRs in Ch2 |
 | spec-architecture | architect | Evaluate security aspects of the architecture | The trust boundaries in Ch3 |
-| CLAUDE.md | orchestrator (setup) | Confirm security requirements | The security requirements section |
+| CLAUDE.md | project-manager (setup) | Confirm security requirements | The security requirements section |
 | (src/) | implementer | Vulnerability scanning of implementation code | The complete source tree to be scanned |
 | license-report | license-checker | Cross-reference license risk with security vulnerabilities | Dependencies and their licenses |
 
@@ -51,7 +51,7 @@ Identify and mitigate security threats at the design stage, and detect vulnerabi
 |-----------|-------------|---------------|
 | threat-model | docs/security/ | architect, implementer |
 | security-architecture | docs/security/ | architect, implementer |
-| security-scan-report | project-records/security/ | review-agent, orchestrator |
+| security-scan-report | project-records/security/ | review-agent, project-manager |
 
 ### Work
 
@@ -110,6 +110,6 @@ For critical systems, AI-based security review is supplementary; final confirmat
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Security requirements not documented in the spec | **Do not stop.** Record the omission itself as a Critical finding in security-scan-report, then perform STRIDE threat modeling against CLAUDE.md "Security Requirements" and the OWASP Top 10. Return the request to add them to Ch2 in the completion report |
-| Critical vulnerability discovered | Report to orchestrator immediately. Block transition to the next phase until fixed |
+| Critical vulnerability discovered | Report to project-manager immediately. Block transition to the next phase until fixed |
 | Scan tools unavailable | Perform manual review only and note the absence of tools in the report |
-| Known critical vulnerability in a dependency library | Report to orchestrator and propose library replacement or version upgrade |
+| Known critical vulnerability in a dependency library | Report to project-manager and propose library replacement or version upgrade |

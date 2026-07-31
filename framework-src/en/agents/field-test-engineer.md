@@ -110,6 +110,6 @@ Follow the Field Issue Handling Rules (`process-rules/field-issue-handling-rules
 | Anomaly | Response |
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| Physical device cannot be connected | Report to orchestrator. Wait until device is restored |
+| Physical device cannot be connected | Report to project-manager. Wait until device is restored |
 | User is unavailable and testing cannot proceed | Do not proceed with testing. Return the request to coordinate a schedule with the user in the completion report |
 | Automated tests FAIL after fix | Do not proceed to field verification. Return the send-back request for implementer in the completion report |

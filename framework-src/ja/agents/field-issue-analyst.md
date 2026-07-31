@@ -44,7 +44,7 @@ model: opus
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| field-issue（solution-proposed） | project-records/field-issues/（既存チケットを更新） | orchestrator（defect）/ ユーザー（cr） |
+| field-issue（solution-proposed） | project-records/field-issues/（既存チケットを更新） | project-manager（defect）/ ユーザー（cr） |
 
 ### Work
 
@@ -158,6 +158,6 @@ field-issue:
 | 異常 | 対応 |
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
-| 根本原因を特定できない | 調査範囲と仮説を記録し、orchestrator に追加調査の判断を求める |
-| 影響範囲が広すぎて対策案を絞れない | 代替案を全て列挙し、orchestrator にユーザーとの方針相談を求める |
+| 根本原因を特定できない | 調査範囲と仮説を記録し、project-manager に追加調査の判断を求める |
+| 影響範囲が広すぎて対策案を絞れない | 代替案を全て列挙し、project-manager にユーザーとの方針相談を求める |
 | defect と cr の分類が誤っていると判断した場合 | 自身で type を変更しない。feedback-classifier への再分類要請を完了報告に含めて返す |

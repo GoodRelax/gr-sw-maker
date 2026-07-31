@@ -39,14 +39,14 @@ model: sonnet
 | spec-foundation | srs-writer | 変更影響の分析対象 | 承認済みの Ch1-2, 全 FR/NFR に ID |
 | spec-architecture | architect | 変更影響の分析対象 | Ch3-4, Ch4 の全 Gherkin に traces |
 | （src/, tests/） | implementer, test-engineer | 変更影響の分析対象 | 変更対象を特定できるディレクトリ構成 |
-| CLAUDE.md | orchestrator (setup) | プロジェクト設定の確認 | 品質目標・重要判断の基準の各節 |
+| CLAUDE.md | project-manager (setup) | プロジェクト設定の確認 | 品質目標・重要判断の基準の各節 |
 | field-issue（type=cr） | feedback-classifier | 実機テスト由来のスコープ変更の受付 | issue_id, type = cr, 変更内容 |
 
 ### Out
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| change-request | project-records/change-requests/change-request-{NNN}-{YYYYMMDD}-{HHMMSS}.md | orchestrator |
+| change-request | project-records/change-requests/change-request-{NNN}-{YYYYMMDD}-{HHMMSS}.md | project-manager |
 
 ### Work
 
@@ -59,8 +59,8 @@ model: sonnet
 2. ユーザーからの変更要求を受け付ける
 3. change-request ファイルを作成し、必須記載項目を記入する
 4. 影響範囲を分析する（仕様書・テスト・スケジュールへの影響）
-5. 影響分析結果を orchestrator に提出する
-6. impact_level = high の場合、orchestrator 経由でユーザーに承認/却下を求める
+5. 影響分析結果を project-manager に提出する
+6. impact_level = high の場合、project-manager 経由でユーザーに承認/却下を求める
 7. 却下された変更は理由とともに記録する
 8. 承認された変更は対象エージェントに修正指示を出す
 
@@ -93,7 +93,7 @@ model: sonnet
 | 影響度 | 条件 | 対応 |
 |--------|------|------|
 | High | 複数モジュールにわたる変更、スケジュール1日以上の影響 | 必ずユーザーに確認 |
-| Medium | 単一モジュール内の変更、スケジュール影響なし | orchestrator が判断し記録 |
+| Medium | 単一モジュール内の変更、スケジュール影響なし | project-manager が判断し記録 |
 | Low | コメント・ドキュメントのみ | 自律的に実施し記録 |
 
 ### Constraints
@@ -106,6 +106,6 @@ model: sonnet
 | 異常 | 対応 |
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
-| 仕様書がまだ承認されていない段階で変更要求が来た | 変更管理の対象外。orchestrator に planning フェーズでの仕様修正を提案 |
-| 変更要求の内容が曖昧で影響分析できない | 分析を進めない。orchestrator にユーザーへの詳細確認を要請 |
-| 変更要求が既存の要求と矛盾する | 矛盾を明示して orchestrator に報告。どちらを優先するかユーザー判断を求める |
+| 仕様書がまだ承認されていない段階で変更要求が来た | 変更管理の対象外。project-manager に planning フェーズでの仕様修正を提案 |
+| 変更要求の内容が曖昧で影響分析できない | 分析を進めない。project-manager にユーザーへの詳細確認を要請 |
+| 変更要求が既存の要求と矛盾する | 矛盾を明示して project-manager に報告。どちらを優先するかユーザー判断を求める |

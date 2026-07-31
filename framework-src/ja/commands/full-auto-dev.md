@@ -39,7 +39,7 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
 0n2. 実機テストの要否を評価する（HW連携が有効かつユーザー立会での実機動作確認が必要）
     → 該当する場合: testing フェーズで field-test-engineer / feedback-classifier / field-issue-analyst をアクティベートする
 0o. 評価結果をユーザーに報告し、条件付きプロセスの追加について確認を求める
-0p. orchestrator を起動し、project-management/pipeline-state.md を初期化する
+0p. project-manager を起動し、project-management/pipeline-state.md を初期化する
 
 ## Phase 1: 企画（インタビュー＆仕様）
 1a. user-order.md を解析する
@@ -62,7 +62,7 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
 2b. architect を起動し、外部依存（HW/AI/フレームワーク）の評価・選定を行う
 2c. architect が各外部依存の requirement-spec を docs/ 配下に作成する（hw-requirement-spec, ai-requirement-spec, framework-requirement-spec）
 2d. architect が Adapter層のI/F設計（DIPに基づく抽象化）を行う
-2e. orchestrator を起動し、選定結果を project-records/decisions/ に記録する
+2e. project-manager を起動し、選定結果を project-records/decisions/ に記録する
 2f. ユーザーに選定結果を報告し承認を求める
 2g. technical-authority を起動し GATE-DEPENDENCY を判定する（プロセス規則 §9.4.1）
 
@@ -111,7 +111,7 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
 6c. デプロイメントを実行し、スモークテストで基本動作を確認する
 6d. 監視・アラート設定が可観測性設計と一致しているか確認する
 6e. ロールバック手順を確認・文書化する
-6f. orchestrator を起動し、final-report.md に最終レポートを作成する
+6f. project-manager を起動し、final-report.md に最終レポートを作成する
 6f2. user-manual-writer を起動し、docs/ にユーザーマニュアルを作成する
 6f3. runbook-writer を起動し、docs/operations/ に運用手順書を作成する
 6g. test-engineer が受入テスト手順書を作成する
@@ -132,7 +132,7 @@ Fb. progress-monitor を起動し、project-management/progress/session-state.js
     → session-state.json が無い、または sink_heartbeat_at が古い場合: 計測経路が停止している。計測不能である旨を cost-log.json に記録し、ユーザーに報告する。**消費量を推測で書いてはならない（MUST NOT）**
 Fc. session-state.json の compaction_count が前フェーズより増えていたら文脈の圧縮が起きている。handoff を作成して再開点を残す
     → コンテキスト使用率は観測できない。使用率の推定値で中断を判断してはならない（MUST NOT）。中断の要否はユーザーが判断する
-Fd. orchestrator を起動し、pipeline-state.md と executive-dashboard.md を更新してユーザーに報告する
+Fd. project-manager を起動し、pipeline-state.md と executive-dashboard.md を更新してユーザーに報告する
 Fe. process-improver を起動し、ふりかえりと defect パターンの根本原因分析を実施する
 Ff. Fe の改善策がユーザーに承認された場合のみ、decree-writer を起動してガバナンスファイルに適用する
 Fg. 仕様書承認後にユーザーから変更要求が出た場合は、change-manager を起動して影響分析と記録を行う

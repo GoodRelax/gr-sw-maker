@@ -286,7 +286,7 @@ Safety analysis starts with HARA; FMEA and FTA are methods for deepening HARA re
 |--------|------------------|--------|-------------|
 | **HARA** | **Mandatory for all projects** where functional safety is enabled | setup phase (determined simultaneously with enabling functional safety) | architect (supported by security-reviewer) |
 | **FMEA** | HARA is enabled **and** architecture (Ch3) is finalized. SW-FMEA is meaningless without module decomposition | design phase (after Ch3 finalization) | architect |
-| **FTA** | Any of the following apply: (a) Cause analysis of hazards at **ASIL C or above** (or SIL 3 or above) identified by HARA, (b) Visualization is needed for patterns where **multiple independent faults combine under AND conditions to lead to a hazard**, (c) During operation phase, **root cause analysis of a critical incident** is too complex for defect RCA alone | design phase (after HARA), or operation phase (upon incident occurrence) | architect (design), orchestrator (operation) |
+| **FTA** | Any of the following apply: (a) Cause analysis of hazards at **ASIL C or above** (or SIL 3 or above) identified by HARA, (b) Visualization is needed for patterns where **multiple independent faults combine under AND conditions to lead to a hazard**, (c) During operation phase, **root cause analysis of a critical incident** is too complex for defect RCA alone | design phase (after HARA), or operation phase (upon incident occurrence) | architect (design), project-manager (operation) |
 
 ### 7.3 HARA Details
 

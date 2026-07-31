@@ -36,7 +36,7 @@ The following are language-independent machine-parseable identifiers and must no
 | Element | Example | Reason |
 |---------|---------|--------|
 | YAML frontmatter keys | `name:`, `description:`, `tools:`, `model:` | Machine parsing |
-| YAML `name` field values | `orchestrator`, `srs-writer` | Agent names are fixed in English |
+| YAML `name` field values | `project-manager`, `srs-writer` | Agent names are fixed in English |
 | file_type names | `spec-foundation`, `pipeline-state`, `defect` | Function as namespaces |
 | Phase names | `setup`, `planning`, `design` | Enum values |
 | S0-S6 section headings | `## Activation`, `## Ownership`, `## Procedure`, `## Rules`, `## Exception` | Defined by prompt structure conventions |
@@ -67,7 +67,7 @@ The following are language-independent machine-parseable identifiers and must no
 2. Refer to `process-rules/glossary-{src}.md` for term definitions and ensure consistent translation of technical terms. The glossary itself should also be translated
 3. For technical terms in `process-rules/defect-taxonomy-{src}.md` (error, fault, failure, defect, incident, hazard): translate only if an established translation exists in the target language; otherwise keep in English
 4. Mermaid diagram labels may be written in the target language. However, special symbols (`\`, `/`, `|`, `<`, `>`, `{`, `}`) are prohibited
-5. File naming: `*-{src}.md` → `*-{target}.md` (e.g., `orchestrator-ja.md` → `orchestrator-fr.md`)
+5. File naming: `*-{src}.md` → `*-{target}.md` (e.g., `project-manager-ja.md` → `project-manager-fr.md`)
 6. Output `CLAUDE.md` as `CLAUDE-{target}.md` and `user-order.md` as `user-order-{target}.md`
 
 ---

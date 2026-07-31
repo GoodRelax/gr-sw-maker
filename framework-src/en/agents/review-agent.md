@@ -57,7 +57,7 @@ Common to every phase: the review states an overall verdict (PASS / FAIL) and, o
 
 | file_type | Destination | Next Consumer |
 |-----------|-------------|---------------|
-| review | project-records/reviews/review-{target}-{date}.md | technical-authority, orchestrator, target agent |
+| review | project-records/reviews/review-{target}-{date}.md | technical-authority, project-manager, target agent |
 
 > When implementation code was reviewed, `purity_tag_coverage_pct` MUST be recorded (R7.6).
 
@@ -153,7 +153,7 @@ Finding disposition table (mandatory in every review report):
 
 - Critical: **0 findings** (mandatory)
 - High: **0 findings** (mandatory)
-- Medium: Report the count to orchestrator and obtain approval for the response plan
+- Medium: Report the count to project-manager and obtain approval for the response plan
 
 ### FAIL Routing
 
@@ -181,7 +181,7 @@ Finding disposition table (mandatory in every review report):
 | Anomaly | Response |
 |---------|----------|
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
-| Review target is incomplete (still being created) | Do not start the review. Confirm completion of the target with orchestrator |
-| review-standards.md is not found | Do not start work. Report to orchestrator |
-| Re-review requested without Critical findings being fixed | Maintain FAIL and report unfixed Critical findings to orchestrator |
-| Applicable review perspective is unclear (composite artifacts, etc.) | Request orchestrator to determine the applicable perspectives |
+| Review target is incomplete (still being created) | Do not start the review. Confirm completion of the target with project-manager |
+| review-standards.md is not found | Do not start work. Report to project-manager |
+| Re-review requested without Critical findings being fixed | Maintain FAIL and report unfixed Critical findings to project-manager |
+| Applicable review perspective is unclear (composite artifacts, etc.) | Request project-manager to determine the applicable perspectives |
