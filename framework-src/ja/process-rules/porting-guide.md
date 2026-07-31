@@ -75,12 +75,13 @@
 | 機構 | 用途 | 省略時の代替 |
 |---|---|---|
 | `tools/gate-guard.mjs`（`PreToolUse` フック） | ゲート未通過での `src/` `tests/` `infra/` 等への書込みを機械的に拒否する | 人間またはエージェントによる手動確認 |
-| `tools/session-meter.mjs`（`statusLine`） | コンテキスト使用率とコストを `session-state.json` に記録する | コスト追跡を手動記録に切り替える |
+| `tools/otel-sink.mjs`（OpenTelemetry の受け口） | コストとトークンを `session-state.json` に記録する。**主経路** | コスト追跡を手動記録に切り替える |
+| `tools/session-meter.mjs`（`statusLine`） | 補助経路。CLI でのみ動き、コンテキスト使用率を記録する | 省略してよい |
 | `.claude/settings.json` | 上記 2 つの登録先 | 不要 |
 
 **省略した場合、コスト予算アラートとゲート強制は働かない。** その旨をプロジェクトの CLAUDE.md 相当ファイルに明記し、代替手段を決めること。
 
-> **`statusLine` は Claude Code であっても、ステータス行を描画する環境でしか実行されない。** 実行されなければ `session-state.json` は生成されず、コスト追跡は移植先と同じく手動記録になる。プロセス側は欠測を明示する規定を持つ（プロセス規則 §3.2.7）。
+> **`statusLine` は Claude Code であっても、ステータス行を描画する環境でしか実行されない。デスクトップアプリでは発火しない。** 主経路を OpenTelemetry に置いたのはこのためである。ただし受け口が起動していなければテレメトリは黙って捨てられるため、プロセス側は `sink_heartbeat_at` の鮮度を検査して欠測を明示する規定を持つ（プロセス規則 §3.2.7）。
 
 ### gate-guard が守る対象
 

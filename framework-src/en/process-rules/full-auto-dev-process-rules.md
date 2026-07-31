@@ -543,11 +543,13 @@ Track the licenses of OSS libraries used and verify compatibility.
 
 progress-monitor tracks API token consumption and notifies the user once the alert threshold in CLAUDE.md "Quality Targets" is reached.
 
-**How it is measured:** a model cannot observe its own token consumption. `tools/session-meter.mjs`, registered as the `statusLine`, updates `project-management/progress/session-state.json` after every response, and progress-monitor reads it at each phase boundary and appends to `cost-log.json`. Because statusLine runs on every response, that file is never more than one turn stale.
+**How it is measured:** a model cannot observe its own token consumption. `tools/otel-sink.mjs` receives OpenTelemetry `api_request` events and records cost and tokens into `project-management/progress/session-state.json`. progress-monitor reads that at each phase boundary and appends to `cost-log.json`. Cost is taken as the `cost_usd` Claude Code computed; **never keep a local price table (MUST NOT)**, because it becomes a second source that has to be maintained.
 
 CLAUDE.md is the single source of truth for the threshold value; no number is written in this document.
 
-**The measurement path does not always run.** `statusLine` executes only where Claude Code draws a status line. Where it does not, `session-state.json` is never produced, and neither cost tracking nor the context threshold check can be performed. In that case, **state the gap explicitly in cost-log.json and in the phase report. Never fill in an estimated consumption (MUST NOT).** Proceeding silently without measurement means neither a cost overrun nor context exhaustion is ever detected.
+**The measurement path does not always run.** If the receiver is not started, telemetry is never received and is dropped in silence. So **check freshness, not just presence.** `sink_heartbeat_at` in `session-state.json` is refreshed while the receiver is alive whether or not traffic arrives, so a value far from the present time means the receiver has stopped. In that case, **state the gap explicitly in cost-log.json and in the phase report. Never fill in an estimated consumption (MUST NOT).** Proceeding silently without measurement means a cost overrun is never detected.
+
+**`statusLine` is an auxiliary path and runs only on the CLI.** `tools/session-meter.mjs` executes only where Claude Code draws a status line, and **does not fire in the desktop app.** Never rely on it as the primary path (MUST NOT).
 
 **Cost Tracking Format (project-management/progress/cost-log.json):**
 
@@ -793,7 +795,7 @@ The record and reality diverge when the interruption landed before the update. R
 
 #### 4.0.3 Creating a Handoff
 
-When context usage reaches the threshold in CLAUDE.md "Quality Targets", create a `handoff` before interrupting. Usage is judged by reading `context_used_pct` from `project-management/progress/session-state.json` (§3.2.7).
+**Context usage cannot be observed.** No official telemetry reports how much of the context window remains, and **an estimate must never be compared against a threshold (MUST NOT)**: supplying the denominator locally would create exactly the second source §3.2.7 forbids. What is observable is **that a compaction happened**, visible as `compaction_count` in `project-management/progress/session-state.json` rising above the previous phase. When it has risen, create a `handoff` so there is a resumption point. **This is an after-the-fact record, not a warning ahead of time, and whether to interrupt is the user's call.**
 
 #### 4.0.4 The `aborted` State
 

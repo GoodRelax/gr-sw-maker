@@ -1,17 +1,27 @@
 #!/usr/bin/env node
-// session-meter - record context usage and cost where an agent can read them.
+// session-meter - record context usage where an agent can read it.
 //
 // Registered as the statusLine in .claude/settings.json. Claude Code specific;
 // see "Claude Code specific machinery" in the porting guide.
 //
-// A model cannot observe its own token consumption during a conversation. The
-// statusLine can: it receives context_window and cost on stdin and runs after
-// every assistant response. Writing that to a file turns an unobservable
-// quantity into one any agent can read, never more than one turn stale.
+// Auxiliary, and CLI only
+// -----------------------
+// The status line runs only where Claude Code draws one, and it does not fire
+// in the desktop app. A five day trial produced no measurement at all because
+// this was the only path. Cost and tokens now come from tools/otel-sink.mjs
+// over OpenTelemetry (Process Rules 3.2.7), which runs in both.
 //
-// Consumers: progress-monitor appends the per-phase figures to cost-log.json at
-// each phase boundary, and the main session compares context_used_pct against
-// the handoff threshold in CLAUDE.md "Quality Targets" (Process Rules 3.2.7).
+// What this still adds is the one figure telemetry does not carry at all: no
+// metric or event reports context window usage, and the status line payload
+// does.
+//
+// Who owns which field
+// --------------------
+// otel-sink owns cost and tokens; this file owns context usage. So it merges
+// into session-state.json rather than rewriting it, and it does not write cost
+// even though the payload carries it. Two producers writing one cost figure
+// would be the second source that 3.2.7 forbids, and on the CLI both of these
+// run at once.
 //
 // No threshold appears in this file on purpose. CLAUDE.md is the single source
 // for thresholds; a copy here would be a second one that silently disagrees.
@@ -40,18 +50,26 @@ const context = payload?.context_window ?? {};
 const cost = payload?.cost ?? {};
 const projectDir = payload?.workspace?.project_dir ?? payload?.cwd ?? process.cwd();
 
+// model is deliberately absent: otel-sink records the model id, cost-log.json
+// is written from that, and the display name here would overwrite an id with a
+// label whenever both producers run.
 const state = {
   session_id: payload?.session_id ?? null,
-  model: payload?.model?.display_name ?? payload?.model?.id ?? null,
   context_used_pct: context.used_percentage ?? null,
   context_remaining_pct: context.remaining_percentage ?? null,
   context_window_size: context.context_window_size ?? null,
-  total_input_tokens: context.total_input_tokens ?? null,
-  total_output_tokens: context.total_output_tokens ?? null,
-  total_cost_usd: cost.total_cost_usd ?? null,
-  total_duration_ms: cost.total_duration_ms ?? null,
-  updated_at: new Date().toISOString(),
+  statusline_updated_at: new Date().toISOString(),
 };
+
+/** Whatever is already on disk, so otel-sink's fields survive this write. */
+function existingState(path) {
+  try {
+    const parsed = JSON.parse(readFileSync(path, "utf8"));
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
 
 // The status line is drawn after every response. It must never fail loudly: a
 // stack trace in place of the status line would be permanent visual noise, and
@@ -60,7 +78,9 @@ let recorded = false;
 try {
   if (payload) {
     mkdirSync(join(projectDir, STATE[0], STATE[1]), { recursive: true });
-    writeFileSync(join(projectDir, ...STATE), JSON.stringify(state, null, 2) + "\n", "utf8");
+    const path = join(projectDir, ...STATE);
+    const merged = { ...existingState(path), ...state };
+    writeFileSync(path, JSON.stringify(merged, null, 2) + "\n", "utf8");
     recorded = true;
   }
 } catch {
@@ -68,9 +88,12 @@ try {
 }
 
 const parts = [];
-if (state.model) parts.push(state.model);
+const modelLabel = payload?.model?.display_name ?? payload?.model?.id ?? null;
+if (modelLabel) parts.push(modelLabel);
 if (state.context_used_pct !== null) parts.push(`ctx ${state.context_used_pct}%`);
-if (state.total_cost_usd !== null) parts.push(`$${state.total_cost_usd.toFixed(2)}`);
+// Shown, not written. The figure on screen is for the person watching; the one
+// an agent reads comes from otel-sink.
+if (typeof cost.total_cost_usd === "number") parts.push(`$${cost.total_cost_usd.toFixed(2)}`);
 // A status line that renders while the file behind it was never written would
 // report health it cannot back up. progress-monitor would then read a stale
 // session-state.json, or none, and say nothing about it.

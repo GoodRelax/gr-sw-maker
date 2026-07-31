@@ -109,7 +109,6 @@ Agreed with the user during setup. All agents and quality gates reference this s
 | Coding convention compliance | 0 violations | Linter execution results |
 | Cost budget | [REQUIRED: e.g. 50 USD] | The denominator of the alert threshold. Copy it into `budget_usd` in cost-log.json. **Left empty, the relative threshold below has nothing to compare against** |
 | Cost budget alert threshold | [REQUIRED: e.g. 80%] of budget | Triggers user notification. **MUST NOT be left as a placeholder.** Unfilled, progress-monitor has nothing to compare against and the alert never fires |
-| Context handoff threshold | [REQUIRED: e.g. 80%] | On reaching it, create a handoff and interrupt the session. Compared against `context_used_pct` in session-state.json |
 | Patch response time | Critical: [e.g., 48h], High: [e.g., 1 week] | operation phase only |
 
 ## API Documentation

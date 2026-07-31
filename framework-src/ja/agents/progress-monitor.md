@@ -54,7 +54,7 @@ model: sonnet
 | wbs | project-management/progress/wbs.md | orchestrator |
 | （cost-log.json） | project-management/progress/cost-log.json | orchestrator |
 
-> cost-log.json は JSON 時系列データであり file_type（Common Block 管理対象）ではない。フェーズ境界で `session-state.json` を読み、当該フェーズのトークン消費とコストを追記する。
+> cost-log.json は JSON 時系列データであり file_type（Common Block 管理対象）ではない。フェーズ境界で `session-state.json` を読み、当該フェーズのトークン消費とコストを追記する。**読む前に `sink_heartbeat_at` の鮮度を確かめる。**古ければ値は現状を表していない。
 
 ### Work
 
@@ -119,5 +119,5 @@ model: sonnet
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
 | 進捗データのソースファイルが存在しない | 該当メトリクスの追跡をスキップし、orchestrator に報告 |
 | コスト予算が未設定 | コスト追跡を無効化し、orchestrator に予算設定を要請 |
-| session-state.json が存在しない | 計測経路が働いていない。cost-log.json に計測不能である旨を記録し、orchestrator に報告する。**消費量を推測で補ってはならない（MUST NOT）** |
+| session-state.json が存在しない、または `sink_heartbeat_at` が古い | 計測経路が働いていない。cost-log.json に計測不能である旨を記録し、orchestrator に報告する。**消費量を推測で補ってはならない（MUST NOT）** |
 | エージェント全体が応答不能 | orchestrator に即時報告。復旧手順の判断を委ねる |

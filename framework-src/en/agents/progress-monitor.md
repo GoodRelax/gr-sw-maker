@@ -54,7 +54,7 @@ Visualize project progress and quality with numerical data, detect anomalies ear
 | wbs | project-management/progress/wbs.md | orchestrator |
 | (cost-log.json) | project-management/progress/cost-log.json | orchestrator |
 
-> cost-log.json is JSON time-series data, not a file_type (not Common Block managed). At each phase boundary, read `session-state.json` and append that phase's token consumption and cost.
+> cost-log.json is JSON time-series data, not a file_type (not Common Block managed). At each phase boundary, read `session-state.json` and append that phase's token consumption and cost. **Check the freshness of `sink_heartbeat_at` before reading it.** If it is stale, the figures do not describe the present.
 
 ### Work
 
@@ -119,5 +119,5 @@ Report only the facts (what has not changed). Do not infer a cause and do not in
 | The Form Block of In does not conform to the definition in Document Rules §9 | Do not fill in by interpretation. List the violating fields and request a send-back |
 | Source file for progress data does not exist | Skip tracking the relevant metric and report to the orchestrator |
 | Cost budget is not configured | Disable cost tracking and request the orchestrator to set the budget |
-| session-state.json does not exist | The measurement path is not running. Record in cost-log.json that measurement was unavailable and report to the orchestrator. **Never substitute an estimated consumption (MUST NOT)** |
+| session-state.json is absent, or `sink_heartbeat_at` is stale | The measurement path is not running. Record in cost-log.json that measurement was unavailable and report to the orchestrator. **Never substitute an estimated consumption (MUST NOT)** |
 | All agents are unresponsive | Immediately report to the orchestrator. Delegate the recovery procedure decision |

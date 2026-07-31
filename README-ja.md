@@ -130,13 +130,13 @@ AI がプロジェクト構成（`CLAUDE.md`）を自動生成し、あなたに
 
 **どこに記録されるか**
 
-- `tools/session-meter.mjs` が statusLine として動き、応答ごとにコンテキスト使用率とコストを `project-management/progress/session-state.json` に書く
+- `tools/otel-sink.mjs` が OpenTelemetry の受け口として動き、コストとトークンを `project-management/progress/session-state.json` に書く
 - progress-monitor がフェーズ境界でそれを読み、フェーズ別の実績を `project-management/progress/cost-log.json` に追記する
-- **statusLine は Claude Code がステータス行を描画する環境でのみ動きます。** 動かない場合 `session-state.json` は生成されず、プロセスは推測で埋めずに欠測として記録します
+- **受け口を起動していなければテレメトリは黙って捨てられます。** そのためファイルには鮮度マーカーがあり、プロセスは推測で埋めずに欠測として記録します
 
 **ユーザーが設定するもの**
 
-`CLAUDE.md`「品質目標」のコスト予算アラート閾値とコンテキスト使用率の引継ぎ閾値。**どちらも記入必須です。** プレースホルダのまま放置すると比較対象が存在せず、アラートは永久に発火しません。
+`CLAUDE.md`「品質目標」のコスト予算とアラート閾値。**どちらも記入必須です。** プレースホルダのまま放置すると比較対象が存在せず、アラートは永久に発火しません。
 
 ---
 
@@ -162,7 +162,7 @@ AI がプロジェクト構成（`CLAUDE.md`）を自動生成し、あなたに
 大半のファイルは書き直しではなく局所的な修正で済みます。ただし数字に表れないものが 2 つあります。
 
 - **サブエージェントの並列実行を持たないプラットフォーム**では、並列実装（Agent Teams + git worktree）を逐次実行に再構成する必要があります
-- **`tools/gate-guard.mjs` と `tools/session-meter.mjs` は Claude Code 固有です。** 省略してもプロセスは成立しますが、ゲート強制とコストアラートは手動確認に置き換わります
+- **`tools/gate-guard.mjs`・`tools/otel-sink.mjs`・`tools/session-meter.mjs` は Claude Code 固有です。** 省略してもプロセスは成立しますが、ゲート強制とコストアラートは手動確認に置き換わります
 
 **上記はいずれも Claude Code 以外での動作を確認したものではありません。** 数値はファイルの構成を示すものであり、移植が完了した実績ではありません。
 
@@ -211,7 +211,7 @@ gr-sw-maker フレームワーク自体のメンテナンスを行う場合、�
 - **clone 後は `node setup.js ja`（または `en`）を実行する。** 実行するまで `CLAUDE.md` もエージェント定義も存在しない。
 - **`README.md` / `README-ja.md`** は GitHub の表示に必要なため直接 tracked しており、`setup.js` では生成しない。
 - **`essays/research/*.md`** は単一言語の調査レポート — `setup.js` の生成物ではなく、通常通り tracked。
-- **`tools/` には性質の違う 2 種類のスクリプトがある。** `check-parity` / `check-roster` / `check-links` / `check-tagnames` / `check-setup` / `jsonl2md` は本リポジトリを守る検査で CI が実行する。`gate-guard` と `session-meter` はユーザープロジェクト内で動くもので、`create.js` が配布するのはこの 2 本だけ。
+- **`tools/` には性質の違う 2 種類のスクリプトがある。** `check-parity` / `check-roster` / `check-links` / `check-tagnames` / `check-setup` / `jsonl2md` は本リポジトリを守る検査で CI が実行する。`gate-guard` と `otel-sink` と `session-meter` はユーザープロジェクト内で動くもので、`create.js` が配布するのはこの 3 本だけ。
 - **clone ごとに 1 度フックを有効化する:** `git config core.hooksPath tools/hooks`。片方の言語だけを変更したコミットを拒否する。
 - 詳細な規約と検査の手元実行は[フレームワーク開発ガイド](framework-src/ja/process-rules/framework-development.md)を参照。
 

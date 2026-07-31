@@ -543,11 +543,13 @@ stateDiagram-v2
 
 progress-monitor がAPIトークン消費を追跡し、CLAUDE.md「品質目標」のアラート閾値に到達した時点でユーザーに通知する。
 
-**計測方法:** モデル自身は自らのトークン消費量を観測できない。`statusLine` に登録した `tools/session-meter.mjs` が応答ごとに `project-management/progress/session-state.json` を更新し、progress-monitor がフェーズ境界でこれを読んで `cost-log.json` に追記する。statusLine は応答ごとに走るため、このファイルは最大 1 ターン分しか古くならない。
+**計測方法:** モデル自身は自らのトークン消費量を観測できない。`tools/otel-sink.mjs` が OpenTelemetry の `api_request` イベントを受け、コストとトークンを `project-management/progress/session-state.json` に記録する。progress-monitor はフェーズ境界でこれを読んで `cost-log.json` に追記する。コストは Claude Code が算出した `cost_usd` をそのまま用い、**単価表を自前で持たない（MUST NOT）。** 保守すべき second source を作らないためである。
 
 閾値の値は CLAUDE.md が唯一の正であり、本文書には数値を書かない。
 
-**計測経路が働かない場合がある。** `statusLine` は Claude Code がステータス行を描画する環境でのみ実行される。実行されなければ `session-state.json` は生成されず、コスト追跡とコンテキスト閾値の判定はどちらも成立しない。この場合、**欠測であることを cost-log.json とフェーズ報告に明記する。消費量を推測で埋めてはならない（MUST NOT）。**計測不能のまま黙って進むと、コスト超過もコンテキスト枯渇も検知されないまま進行する。
+**計測経路が働かない場合がある。** 受け口が起動していなければ、テレメトリは受け取られずに黙って捨てられる。したがって**存在だけでなく鮮度を検査する。** `session-state.json` の `sink_heartbeat_at` は受け口が生きている限りトラフィックの有無によらず更新されるため、これが現在時刻から大きく離れていれば受け口は停止している。この場合、**欠測であることを cost-log.json とフェーズ報告に明記する。消費量を推測で埋めてはならない（MUST NOT）。**計測不能のまま黙って進むと、コスト超過は検知されないまま進行する。
+
+**`statusLine` は補助経路であり、CLI でしか動かない。** `tools/session-meter.mjs` は Claude Code がステータス行を描画する環境でのみ実行され、**デスクトップアプリでは発火しない。**主経路として当てにしてはならない（MUST NOT）。
 
 **コスト追跡フォーマット (project-management/progress/cost-log.json):**
 
@@ -793,7 +795,7 @@ full-auto-dev コマンドの setup フェーズで、リードエージェン�
 
 #### 4.0.3 引き継ぎの作成
 
-コンテキスト使用率が CLAUDE.md「品質目標」の閾値に到達した場合、`handoff` を作成してから中断する。使用率は `project-management/progress/session-state.json` の `context_used_pct` を読んで判定する（§3.2.7）。
+**コンテキスト使用率は観測できない。** 公式のテレメトリに文脈の残量を表す指標は存在せず、**推定値を閾値と比較してはならない（MUST NOT）。**分母を自前で持てば §3.2.7 が禁じた second source を作ることになる。観測できるのは**圧縮が起きたこと**であり、`project-management/progress/session-state.json` の `compaction_count` が前フェーズより増えたことで判る。増えていれば `handoff` を作成し、再開点を残す。**これは事前の警告ではなく事後の記録であり、中断の要否はユーザーが判断する。**
 
 #### 4.0.4 `aborted` 状態
 

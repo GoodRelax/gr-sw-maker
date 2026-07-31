@@ -26,13 +26,19 @@ const FRAMEWORK_ONLY = [
   ".github",
 ];
 
-// tools/ cannot be removed wholesale: gate-guard and session-meter are
-// registered in .claude/settings.json and run inside a user project, while the
-// rest exist only to check this repository. An allowlist means a framework tool
-// added later stays behind by default, which is the safe direction: a check
-// script leaking into a user project is harmless noise, but a missing runtime
-// script leaves settings.json pointing at a file that does not exist.
-const USER_TOOLS = new Set(["gate-guard.mjs", "session-meter.mjs"]);
+// tools/ cannot be removed wholesale: gate-guard, otel-sink and session-meter
+// run inside a user project, while the rest exist only to check this
+// repository. An allowlist means a framework tool added later stays behind by
+// default, which is the safe direction: a check script leaking into a user
+// project is harmless noise, but a missing runtime script leaves settings.json
+// pointing at a file that does not exist.
+//
+// otel-sink ships but is not wired up by settings.json: it is the primary cost
+// measurement path (Process Rules 3.2.7) and the rules name it, so the file has
+// to be present, but it only records anything once the project opts in by
+// setting the telemetry env and starting it. Shipping the file does not turn
+// telemetry on.
+const USER_TOOLS = new Set(["gate-guard.mjs", "otel-sink.mjs", "session-meter.mjs"]);
 
 function usage() {
   console.error("Usage: npm init gr-sw-maker <project-name> [-- --ref <branch|tag|commit>]");

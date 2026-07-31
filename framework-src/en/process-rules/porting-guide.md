@@ -75,12 +75,13 @@ The following depend on Claude Code features. **They may be omitted when porting
 | Mechanism | Purpose | Substitute when omitted |
 |---|---|---|
 | `tools/gate-guard.mjs` (`PreToolUse` hook) | Mechanically refuses writes to `src/`, `tests/`, `infra/` and others before the gate has passed | Manual confirmation by a human or an agent |
-| `tools/session-meter.mjs` (`statusLine`) | Records context usage and cost into `session-state.json` | Switch cost tracking to manual recording |
+| `tools/otel-sink.mjs` (OpenTelemetry receiver) | Records cost and tokens into `session-state.json`. **The primary path** | Switch cost tracking to manual recording |
+| `tools/session-meter.mjs` (`statusLine`) | Auxiliary path. Runs on the CLI only, and records context usage | Safe to omit |
 | `.claude/settings.json` | Where the two above are registered | Not needed |
 
 **When omitted, the cost budget alert and gate enforcement do not operate.** State that in the project's CLAUDE.md equivalent and decide on a substitute.
 
-> **Even on Claude Code, `statusLine` runs only where a status line is drawn.** Where it is not, `session-state.json` is never produced and cost tracking falls back to manual recording, exactly as on a ported platform. The process side requires the gap to be stated (Process Rules §3.2.7).
+> **Even on Claude Code, `statusLine` runs only where a status line is drawn, and it does not fire in the desktop app.** That is why the primary path is OpenTelemetry. Telemetry is still dropped in silence when the receiver is not started, so the process side checks the freshness of `sink_heartbeat_at` and requires the gap to be stated (Process Rules §3.2.7).
 
 ### What gate-guard protects
 
