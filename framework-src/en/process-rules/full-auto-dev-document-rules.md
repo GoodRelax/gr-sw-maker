@@ -679,6 +679,25 @@ The change_log is written as **a table at the end of the body**, not in the fron
 - `by` MUST follow the actor notation in 5.1. **This column is the only place a machine can judge that a human approved something**
 - `action` describes what changed (e.g. "created", "updated phase to 2", "archived previous version to old/")
 
+## 6.1 Checking Dependents on Revision
+
+**A revision is not finished when the diff is applied (MUST).** Check whether the existing descriptions that depend on what changed have gone stale, and record the result in the change_log.
+
+The `change_log` records what was changed, but **nobody looks at whether the change left a dependent description out of date.** In the trial, a retrospective identified this pattern as structural after planning, nothing was changed in the rules, and the same pattern produced seven fresh instances during design.
+
+**Kinds of description to check:**
+
+| Kind | Count in the trial | What a miss produces |
+|---|:-:|---|
+| Diagrams (class, sequence, state, branching) | **4** | Prose and diagram disagree, and a reader cannot tell which one is current |
+| The Consequences of an ADR | 1 | The consequences of a decision keep an outdated premise |
+| Lines in the body stating an impact | 1 | The stated scope of impact is narrower than reality |
+| Identifiers in code | 1 | The name in the specification drifts from the name in the implementation |
+
+**How to record it:** state in the `action` column which kinds were checked and what came of it (e.g. `"updated Ch3.2; checked diagrams (2 updated), ADR consequences (no change)"`).
+
+**The limit of this rule:** it is self-reported, and **a kind not on the list is still missed.** What it buys is that, with the kinds enumerated, "not checked" becomes visible. It is a rule for visibility, not for completeness.
+
 ---
 
 # 7. File Types (Common Block Managed)

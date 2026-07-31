@@ -88,6 +88,7 @@ None
 11. If conditional processes are enabled, create the corresponding requirement-spec
 12. Return the terminology-check request in the completion report (spec-architecture, observability-design, each requirement-spec)
 13. Ensure traceability from requirement IDs to design elements
+14. **When revising, check that dependent descriptions followed.** Work through the four kinds in Document Rules 6.1 and record the result in the change_log (**seven unfollowed dependents arose in design alone during the trial**)
 
 ## Rules
 

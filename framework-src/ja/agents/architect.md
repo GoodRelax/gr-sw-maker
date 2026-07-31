@@ -88,6 +88,7 @@ docs/spec/ の仕様書 Ch3-6 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 11. 条件付きプロセスが有効な場合、該当する requirement-spec を作成する
 12. 用語チェック要請を完了報告に含めて返す（spec-architecture, observability-design, 各 requirement-spec）
 13. 要求IDから設計要素へのトレーサビリティを確保する
+14. **改訂の場合、従属記述の追随を確認する。** 文書管理規則 §6.1 の 4 種類について確認し、結果を change_log に記録する（**本試行では design だけで 7 件の未追随が発生した**）
 
 ## Rules
 
