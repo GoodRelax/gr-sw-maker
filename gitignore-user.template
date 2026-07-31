@@ -20,10 +20,13 @@ coverage/
 # Claude Code local settings
 .claude/settings.local.json
 
-# Rewritten by tools/session-meter.mjs after every response. progress-monitor
-# distills it into cost-log.json, which is the record worth keeping; this file
-# is the live reading.
+# Rewritten by tools/otel-sink.mjs as telemetry arrives, and on the CLI also by
+# tools/session-meter.mjs. progress-monitor distills it into cost-log.json,
+# which is the record worth keeping; this file is the live reading.
 project-management/progress/session-state.json
 
-# Scratch
-old/
+# old/ is deliberately NOT ignored. Document Rules 3.10 makes it the archive
+# destination: an approved document is moved to old/{name}-v{version}.md before
+# the new version takes its place. project-records/ is the audit trail, and
+# ignoring old/ would throw away the previous version of every approved
+# document the process was required to keep.
