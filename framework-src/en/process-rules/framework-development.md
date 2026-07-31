@@ -178,7 +178,7 @@ All of these run with no dependencies. CI (`.github/workflows/framework-check.ym
 
 `check-setup.mjs` copies `setup.js` and `framework-src/` into a temporary directory before running, so **it never touches the `CLAUDE.md` or `user-order.md` you are working on.**
 
-`tools/gate-guard.mjs` and `tools/session-meter.mjs` are runtime machinery rather than checks and are not listed here; see "Claude Code specific machinery" in the porting guide.
+`tools/gate-guard.mjs`, `tools/otel-sink.mjs` and `tools/session-meter.mjs` are runtime machinery rather than checks and are not listed here; see "Claude Code specific machinery" in the porting guide.
 
 ## 7. npm publish Procedure
 
