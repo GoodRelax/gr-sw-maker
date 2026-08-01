@@ -6,9 +6,9 @@ Execute the following phases sequentially:
 
 ## Phase 0: Conditional Process Evaluation (Mandatory — Execute Before Writing Specifications)
 0-pre. Start the measurement path (mandatory before the run; Process Rules §3.2.7)
-    - If `.claude/settings.local.json` carries no OpenTelemetry env, write it (`CLAUDE_CODE_ENABLE_TELEMETRY`, `OTEL_METRICS_EXPORTER`, `OTEL_LOGS_EXPORTER`, `OTEL_EXPORTER_OTLP_PROTOCOL=http/json`, `OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318`)
+    - If `.claude/settings.local.json` carries no OpenTelemetry env, write it (`CLAUDE_CODE_ENABLE_TELEMETRY=1`, `OTEL_METRICS_EXPORTER=otlp`, `OTEL_LOGS_EXPORTER=otlp`, `OTEL_EXPORTER_OTLP_PROTOCOL=http/json`, `OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318`, `OTEL_METRIC_EXPORT_INTERVAL=10000`, `OTEL_LOGS_EXPORT_INTERVAL=5000`. **Omit the last two and the default export intervals are long enough that the check below waits without cause**)
       → If it had to be written, ask the user to restart Claude Code. env is read only at startup, so nothing is exported until the restart
-    - Start the receiver. On Windows run `tools/start-otel-sink.bat` in its own window; on other systems run `node tools/otel-sink.mjs` in the background
+    - Start the receiver. On Windows run `cmd /c start "" "tools\start-otel-sink.bat"`; on other systems run `nohup node tools/otel-sink.mjs &`. **Never drop the empty `""` on Windows (MUST NOT).** `start` reads the first unquoted word as the program name rather than the window title, and fails saying that name was not found
     - Read project-management/progress/session-state.json and tell the two stopped states apart
       - The file is absent, or `sink_heartbeat_at` does not advance → the receiver is not running. Start it again
       - `sink_heartbeat_at` advances but `last_event_at` is null → the receiver is alive but the sender is off. Check the env and the restart

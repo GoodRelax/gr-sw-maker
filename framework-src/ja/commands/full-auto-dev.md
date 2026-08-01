@@ -6,9 +6,9 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
 
 ## Phase 0: 条件付きプロセスの評価（必須・仕様書作成前に実行）
 0-pre. 計測経路を起動する（走行開始前に必須。プロセス規則 §3.2.7）
-    - `.claude/settings.local.json` に OpenTelemetry の env が無ければ作成する（`CLAUDE_CODE_ENABLE_TELEMETRY`・`OTEL_METRICS_EXPORTER`・`OTEL_LOGS_EXPORTER`・`OTEL_EXPORTER_OTLP_PROTOCOL=http/json`・`OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318`）
+    - `.claude/settings.local.json` に OpenTelemetry の env が無ければ作成する（`CLAUDE_CODE_ENABLE_TELEMETRY=1`・`OTEL_METRICS_EXPORTER=otlp`・`OTEL_LOGS_EXPORTER=otlp`・`OTEL_EXPORTER_OTLP_PROTOCOL=http/json`・`OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318`・`OTEL_METRIC_EXPORT_INTERVAL=10000`・`OTEL_LOGS_EXPORT_INTERVAL=5000`。**後ろ 2 つを省くと既定の書き出し間隔が長く、下の確認が通らないまま待たされる**）
       → 作成した場合は Claude Code の再起動をユーザーに求める。env は起動時にしか読まれないため、再起動するまで送信は始まらない
-    - 受け口を起動する。Windows は `tools/start-otel-sink.bat` を別ウィンドウで、他の OS は `node tools/otel-sink.mjs` をバックグラウンドで起動する
+    - 受け口を起動する。Windows は `cmd /c start "" "tools\start-otel-sink.bat"`、他の OS は `nohup node tools/otel-sink.mjs &`。**Windows で空の `""` を省いてはならない（MUST NOT）。** `start` は引用符の無い最初の語をウィンドウ名ではなくプログラム名として解釈し、その名前が見つからないという別のエラーになる
     - project-management/progress/session-state.json を読み、2 つの停止形を切り分ける
       - ファイルが無い、または `sink_heartbeat_at` が進まない → 受け口が起動していない。起動し直す
       - `sink_heartbeat_at` は進むが `last_event_at` が null → 受け口は生きているが送信側が無効。env の配置と再起動を確認する
