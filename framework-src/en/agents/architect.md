@@ -75,10 +75,10 @@ None
 4. Detail Ch3 Architecture
    - 3.1 Architecture Concept: Define architectural approach and legend
    - 3.2 Components: Component diagram (layer color-coding required)
-   - 3.3 File Structure: Directory structure
+   - 3.3 File Structure: Directory structure. **Declare each component's public surface** (R2.19)
    - 3.4 Domain Model: Class diagram (layer color-coding required), ER diagram, state transition diagram
    - 3.5 Behavior: Sequence diagram, activity diagram
-   - 3.6 Decisions: ADR (Architecture Decision Records)
+   - 3.6 Decisions: ADR (Architecture Decision Records). **Where a cache is used, include an ADR for the cache policy** (R2.20)
 5. Detail Ch4 Specification in Gherkin (annotate each scenario with `traces: FR-xxx`)
 6. Define Ch5 Test Strategy (test matrix)
 7. Configure Ch6 Design Principles Compliance

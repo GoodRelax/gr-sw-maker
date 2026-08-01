@@ -216,7 +216,7 @@ Scenario: SC-002 [シナリオ名] (traces: FR-xxx)
 | -------- | -------------------- | ------------------------------------- | -------------------------------------------------------------------------- |
 | 命名     | Naming               | —                                     | 意図が伝わる命名か。ドメイン語彙（Chapter 1.8）と一致するか                |
 | 依存関係 | Dependency Direction | —                                     | 依存方向が Chapter 3.1 のアーキレイヤーに従っているか                       |
-| 依存関係 | SDP                  | Stable Dependencies Principle         | 依存先が自分より安定（変更頻度が低い）コンポーネントか                     |
+| 依存関係 | SDP                  | Stable Dependencies Principle         | 依存先が自分より安定（変更頻度が低い）コンポーネントか（R2.16）             |
 | 簡潔性   | KISS                 | Keep It Simple, Stupid                | 動作する最も単純な解決を選んでいるか                                       |
 | 簡潔性   | YAGNI                | You Aren't Gonna Need It             | 今必要でない機能を作っていないか。オーバーエンジニアリングしていないか     |
 | 簡潔性   | Minimal Comparison   | —                                     | Ch3.6 の ADR-000 で最小構成と比較し、増分の理由を示しているか（R2.18）     |

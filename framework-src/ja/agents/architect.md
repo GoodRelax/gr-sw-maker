@@ -75,10 +75,10 @@ docs/spec/ の仕様書 Ch3-6 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 4. Ch3 Architecture を詳細化する
    - 3.1 Architecture Concept: アーキテクチャ方式と凡例の定義
    - 3.2 Components: コンポーネント図（レイヤー色分け必須）
-   - 3.3 File Structure: ディレクトリ構成
+   - 3.3 File Structure: ディレクトリ構成。**各コンポーネントの公開面を宣言する**（R2.19）
    - 3.4 Domain Model: クラス図（レイヤー色分け必須）、ER図、状態遷移図
    - 3.5 Behavior: シーケンス図、アクティビティ図
-   - 3.6 Decisions: ADR（Architecture Decision Records）
+   - 3.6 Decisions: ADR（Architecture Decision Records）。**キャッシュを用いる場合はキャッシュ方針の ADR を含める**（R2.20）
 5. Ch4 Specification を Gherkin で詳細化する（各シナリオに `traces: FR-xxx` を付記）
 6. Ch5 Test Strategy を定義する（テストマトリクス）
 7. Ch6 Design Principles Compliance を設定する
