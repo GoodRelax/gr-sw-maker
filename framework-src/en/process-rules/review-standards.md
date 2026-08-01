@@ -183,6 +183,16 @@ Names are the primary interface of software. A name reveals its essence; code sh
 - Are iteration and subsequences expressed with an iterator / slice / range, rather than advancing an index by hand?
 - Is any endpoint adjusted by `±1` to make a length or a terminator come out right (**that adjustment is a sign half-open and closed are mixed**)?
 
+### Resource Lifetime
+- Is an acquired resource released by the language mechanism (`try-with-resources`, `using`, `defer`, `with`, RAII and the like)?
+- Is there a hand-written `close()` or `release()` that the exception path skips?
+- Are acquisition and release paired inside one function, rather than split across levels?
+
+### Time
+- Is elapsed time measured with a wall clock instead of a monotonic one?
+- Are stored and exchanged instants in UTC or carrying an offset? Is local time used for anything but display?
+- Is any date arithmetic done with a fixed number of seconds (`86400` and the like)?
+
 ---
 
 ## R4: Concurrency and State Transition Review Perspectives
@@ -447,6 +457,8 @@ A single standalone check sheet aggregating all review perspectives (R1–R7). K
 | R3.2 | Coding | MUST | Error messages carry debug context internally; no internal details (stack traces, DB errors) leaked to users | — | — |
 | R3.3 | Coding | MUST | All external input validated; Null/Undefined/empty handled; no unsafe type assertions | — | — |
 | R3.4 | Coding | MUST | Boundaries and indices: ranges are half-open `[start, end)` by default, and a closed range says so in its name (`endInclusive` and the like). Iteration and subsequences are expressed with an iterator / slice / range rather than advancing an index by hand. No endpoint is adjusted by `±1` to make a length or a terminator come out right. **"There is no off-by-one" cannot be judged by reading, so the rule governs how boundaries are expressed** | — | — |
+| R3.5 | Coding | MUST | Resource lifetime: an acquired resource (connection, file, socket, lock) is released by the language mechanism (`try-with-resources`, `using`, `defer`, `with`, RAII and the like). **A release written by hand is skipped on the exception path.** Where no mechanism exists, pair acquisition and release inside one function and wrap them in the equivalent of `finally`. This rule is how Ch6's Resource Lifecycle is checked; bounds and the absence of leaks are R5.3's business | — | — |
+| R3.6 | Coding | MUST | Handling time: measure elapsed time with a monotonic clock (**a wall clock can run backwards** through an NTP correction or a DST change). Store and exchange instants in UTC or carrying an offset; use local time for display only. Do not add or subtract dates with a fixed number of seconds (`86400` and the like); use the calendar API | — | — |
 | R4.1 | Concurrency | MUST | Multi-resource lock acquisition order is uniform and documented; no external calls / long processes inside DB transactions | — | — |
 | R4.2 | Concurrency | MUST | Concurrent shared-state access identified; Check-Then-Act and Read-Modify-Write made atomic (locks/atomics); no races across `await` | — | — |
 | R4.3 | State Transition | MUST | Multi-field updates are atomic (no observable intermediate glitch); implementation matches Spec Ch3 state transitions; event-notification timing (before/after) defined | — | — |

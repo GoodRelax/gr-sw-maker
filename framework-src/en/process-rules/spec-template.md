@@ -238,7 +238,7 @@ Add or remove principles based on the project's nature.
 | State Transitions | State Transition     | —                                     | Are transition condition retrieval and transition execution separated?       |
 | Concurrency       | Concurrency Safety   | —                                     | Are deadlocks, race conditions, and glitches prevented?                     |
 | Error Handling    | Error Propagation    | —                                     | Are errors propagated and handled properly, not silently swallowed?          |
-| Resource Mgmt     | Resource Lifecycle   | —                                     | Are resource acquisition and release (connections, files, memory) paired?    |
+| Resource Mgmt     | Resource Lifecycle   | —                                     | Are resource acquisition and release (connections, files, memory) paired? (R3.5) |
 | Immutability      | Immutability         | —                                     | Are values that need not change immutable?                                   |
 | Efficiency        | Resource Efficiency  | —                                     | Are CPU load, memory usage, and storage wear within acceptable limits?       |
 
