@@ -256,10 +256,10 @@ Design artifacts other than specifications, such as API definitions and security
 
 | Language | Convention | Example |
 |------|------|-----|
-| TypeScript | camelCase filenames, PascalCase components | `userService.ts`, `UserCard.tsx` |
-| Python | snake_case | `user_service.py` |
-| Go | snake_case | `user_service.go` |
-| Rust | snake_case | `user_service.rs` |
+| TypeScript | camelCase filenames, PascalCase components | `placeOrder.ts`, `UserCard.tsx` |
+| Python | snake_case | `place_order.py` |
+| Go | snake_case | `place_order.go` |
+| Rust | snake_case | `place_order.rs` |
 
 - **Not subject to** Common Block
 - Traceability is managed in `project-records/traceability/traceability-matrix.md`
@@ -270,7 +270,7 @@ Design artifacts other than specifications, such as API definitions and security
 
 | Type | Convention | Example |
 |------|------|-----|
-| Unit test | Target filename + `.test` / `.spec` | `userService.test.ts` |
+| Unit test | Target filename + `.test` / `.spec` | `placeOrder.test.ts` |
 | Integration test | Target + `.integration.test` | `api.integration.test.ts` |
 | E2E test | Flow name + `.e2e.test` | `login-flow.e2e.test.ts` |
 | Performance test | Target + `.perf` | `api-latency.perf.js` (k6) |

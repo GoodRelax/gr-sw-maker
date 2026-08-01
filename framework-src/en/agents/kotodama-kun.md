@@ -59,12 +59,13 @@ None
 2. Read the deliverable to be checked
 3. Read process-rules/glossary.md
 4. Read the project specification Ch1.8 Glossary (if it exists)
-5. Check against the following 5 viewpoints:
+5. Check against the following 6 viewpoints:
    - **Viewpoint A: Glossary mismatch** — Whether expressions different from terms defined in the glossary are used
    - **Viewpoint B: Wasei-eigo (Japanese-coined English)** — Whether wasei-eigo that does not work as actual English is used in identifiers
    - **Viewpoint C: Abbreviation rule violation** — Whether namespaces or file_type names contain abbreviations that violate the abbreviation prohibition rule (document-rules §7)
    - **Viewpoint D: Synonym mixing** — Whether multiple different terms are used for the same concept
    - **Viewpoint E: Generic terms** — Whether unqualified generic terms such as `type`, `data`, `info`, `value` are used
+   - **Viewpoint F: Part of speech and per-layer naming** — Whether **names appearing in the specification and design documents** (component, class and event names) follow the part of speech in the R2.1 Naming section. **Code under `src/` is out of scope** (review-agent's R2.1)
 6. If there are findings: create a findings list and report to project-manager
 7. If there are no findings: report "terminology check passed" to project-manager
 
@@ -87,7 +88,7 @@ How to determine: ask whether two terms "translate to the same English word" and
 
 Read only the sections above, not the full rule document.
 
-### Details of the 5 Check Viewpoints
+### Details of the 6 Check Viewpoints
 
 **Viewpoint A: Glossary mismatch**
 - Whether terms listed in the "Not Adopted" column of glossary.md §1 "Intentionally selected terms" are being used
@@ -110,12 +111,18 @@ Read only the sections above, not the full rule document.
 - Whether prohibited words defined in the CLAUDE.md naming convention (`type`, `data`, `info`, `value`, etc.) are used without qualification
 - Whether field names convey "what kind of status/type/count it is" from the name alone
 
+**Viewpoint F: Part of speech and per-layer naming**
+- **Scope is limited to component names in Ch3.2, class and event names in Ch3.4, and names appearing in Ch3.5.** Code under `src/` is review-agent's under R2.1, so it is not raised twice
+- Do not copy the criteria here; **read and apply the R2.1 Naming section of review-standards** (the part-of-speech rules and the per-layer table)
+- Two of these are easy to miss: **a use case nominalized** (`〜Service`), and **an event that is not past tense** (which makes it indistinguishable from a command)
+- Whether a quantity whose unit is fixed names that unit. **A value carrying its unit at runtime is out of scope** (the proviso in R2.1)
+
 ### Finding Severity
 
 | Severity | Definition | Example |
 |----------|------------|---------|
 | High | Wasei-eigo, abbreviation prohibition violation, use of a glossary non-adopted term | hearing (wasei-eigo), abbreviation used in namespace |
-| Medium | Synonym mixing, unqualified use of generic terms | Mixing bug and defect, bare status |
+| Medium | Synonym mixing, unqualified use of generic terms, part-of-speech deviation, a missing unit | Mixing bug and defect, bare status, `OrderService`, `timeout` |
 | Low | New term not registered in the glossary (requires judgment) | Recommend verifying whether naming of a new concept is appropriate |
 
 ### Out of Scope

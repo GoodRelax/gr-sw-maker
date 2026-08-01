@@ -72,7 +72,7 @@ None
 1. Check the required elements of In. On an omission, request a send-back per Exception
 2. Read the specification Ch1-2 and interview-record.md
 3. Perform layer classification (4-layer classification: Entity / Use Case / Adapter / Framework)
-4. Detail Ch3 Architecture
+4. Detail Ch3 Architecture. **Names appearing in 3.2-3.5 follow the part of speech in R2.1** (Entity a noun, Use Case a verb phrase, Adapter role + mechanism, **events past tense**, a quantity with a fixed unit naming it)
    - 3.1 Architecture Concept: Define architectural approach and legend
    - 3.2 Components: Component diagram (layer color-coding required)
    - 3.3 File Structure: Directory structure. **Declare each component's public surface** (R2.19)

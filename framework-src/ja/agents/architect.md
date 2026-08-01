@@ -72,7 +72,7 @@ docs/spec/ の仕様書 Ch3-6 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
 2. 仕様書 Ch1-2 と interview-record.md を読み込む
 3. レイヤー仕訳を実施する（Entity / Use Case / Adapter / Framework の4層分類）
-4. Ch3 Architecture を詳細化する
+4. Ch3 Architecture を詳細化する。**3.2-3.5 に現れる名前は R2.1 の品詞に従う**（Entity は名詞、Use Case は動詞句、Adapter は役割+方式、**イベントは過去形**、単位が固定の量は名前に単位）
    - 3.1 Architecture Concept: アーキテクチャ方式と凡例の定義
    - 3.2 Components: コンポーネント図（レイヤー色分け必須）
    - 3.3 File Structure: ディレクトリ構成。**各コンポーネントの公開面を宣言する**（R2.19）

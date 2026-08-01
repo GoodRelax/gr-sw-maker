@@ -256,10 +256,10 @@ API定義、セキュリティ設計など、仕様書以外の設計成果物�
 
 | 言語 | 規約 | 例 |
 |------|------|-----|
-| TypeScript | camelCase ファイル名、PascalCase コンポーネント | `userService.ts`, `UserCard.tsx` |
-| Python | snake_case | `user_service.py` |
-| Go | snake_case | `user_service.go` |
-| Rust | snake_case | `user_service.rs` |
+| TypeScript | camelCase ファイル名、PascalCase コンポーネント | `placeOrder.ts`, `UserCard.tsx` |
+| Python | snake_case | `place_order.py` |
+| Go | snake_case | `place_order.go` |
+| Rust | snake_case | `place_order.rs` |
 
 - Common Block **対象外**
 - トレーサビリティは `project-records/traceability/traceability-matrix.md` で管理
@@ -270,7 +270,7 @@ API定義、セキュリティ設計など、仕様書以外の設計成果物�
 
 | 種別 | 規約 | 例 |
 |------|------|-----|
-| 単体テスト | 対象ファイル名 + `.test` / `.spec` | `userService.test.ts` |
+| 単体テスト | 対象ファイル名 + `.test` / `.spec` | `placeOrder.test.ts` |
 | 結合テスト | 対象 + `.integration.test` | `api.integration.test.ts` |
 | E2Eテスト | フロー名 + `.e2e.test` | `login-flow.e2e.test.ts` |
 | 性能テスト | 対象 + `.perf` | `api-latency.perf.js`（k6） |

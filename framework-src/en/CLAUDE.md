@@ -79,7 +79,7 @@ Select specification format based on project scale:
 - Add JSDoc comments to all public functions
 - Handle errors explicitly
 - Log output: [e.g. structured logging (JSON), `console.log` prohibited (long-running service) / not applicable, stdout is the deliverable (CLI)]. Same as above
-- **Naming is sacred:** Generic meaningless words such as `type`, `data`, `info`, `value` are prohibited. Names must convey "what it is" at a glance. Qualify the type with a domain prefix (e.g., `status` → `decision_status`)
+- **Naming is sacred:** Generic meaningless words such as `type`, `data`, `info`, `value` are prohibited. Names must convey "what it is" at a glance. Qualify the type with a domain prefix (e.g., `status` → `decision_status`). **Part of speech and per-layer naming follow the R2.1 Naming section of review-standards** (classes are noun phrases, use cases are verb phrases, events are past tense, a quantity whose unit is fixed names that unit)
 - **AI/LLM Prompt Placement Principle:** Product prompts go under `src/` (equivalent to code). Project-driving prompts go under `.claude/` (meta layer). Do not mix them
 
 ## Security Requirements
