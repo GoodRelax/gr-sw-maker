@@ -5,6 +5,14 @@ Read user-order.md and start the nearly fully automated software development pro
 Execute the following phases sequentially:
 
 ## Phase 0: Conditional Process Evaluation (Mandatory — Execute Before Writing Specifications)
+0-pre. Start the measurement path (mandatory before the run; Process Rules §3.2.7)
+    - If `.claude/settings.local.json` carries no OpenTelemetry env, write it (`CLAUDE_CODE_ENABLE_TELEMETRY`, `OTEL_METRICS_EXPORTER`, `OTEL_LOGS_EXPORTER`, `OTEL_EXPORTER_OTLP_PROTOCOL=http/json`, `OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318`)
+      → If it had to be written, ask the user to restart Claude Code. env is read only at startup, so nothing is exported until the restart
+    - Start the receiver. On Windows run `tools/start-otel-sink.bat` in its own window; on other systems run `node tools/otel-sink.mjs` in the background
+    - Read project-management/progress/session-state.json and tell the two stopped states apart
+      - The file is absent, or `sink_heartbeat_at` does not advance → the receiver is not running. Start it again
+      - `sink_heartbeat_at` advances but `last_event_at` is null → the receiver is alive but the sender is off. Check the env and the restart
+    → Never proceed to Phase 1 until neither state holds (MUST NOT). Only the user may decide to run without measurement, and that decision is recorded as a decision
 0a. Read user-order.md
 0b. Validate user-order.md: Confirm the following mandatory items are documented
     - What do you want to build (What), and why (Why)

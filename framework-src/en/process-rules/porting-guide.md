@@ -75,7 +75,7 @@ The following depend on Claude Code features. **They may be omitted when porting
 | Mechanism | Purpose | Substitute when omitted |
 |---|---|---|
 | `tools/gate-guard.mjs` (`PreToolUse` hook) | Mechanically refuses writes to `src/`, `tests/`, `infra/` and others before the gate has passed | Manual confirmation by a human or an agent |
-| `tools/otel-sink.mjs` (OpenTelemetry receiver) | Records cost and tokens into `session-state.json`. **The primary path** | Switch cost tracking to manual recording |
+| `tools/otel-sink.mjs` (OpenTelemetry receiver) | Records cost and tokens into `session-state.json`. **The primary path**. On Windows `tools/start-otel-sink.bat` is the launcher wrapper | Switch cost tracking to manual recording |
 | `tools/session-meter.mjs` (`statusLine`) | Auxiliary path. Runs on the CLI only, and records context usage | Safe to omit |
 | `.claude/settings.json` | Where the two above are registered | Not needed |
 

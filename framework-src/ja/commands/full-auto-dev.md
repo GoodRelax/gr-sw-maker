@@ -5,6 +5,14 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
 以下のフェーズを順次実行します:
 
 ## Phase 0: 条件付きプロセスの評価（必須・仕様書作成前に実行）
+0-pre. 計測経路を起動する（走行開始前に必須。プロセス規則 §3.2.7）
+    - `.claude/settings.local.json` に OpenTelemetry の env が無ければ作成する（`CLAUDE_CODE_ENABLE_TELEMETRY`・`OTEL_METRICS_EXPORTER`・`OTEL_LOGS_EXPORTER`・`OTEL_EXPORTER_OTLP_PROTOCOL=http/json`・`OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318`）
+      → 作成した場合は Claude Code の再起動をユーザーに求める。env は起動時にしか読まれないため、再起動するまで送信は始まらない
+    - 受け口を起動する。Windows は `tools/start-otel-sink.bat` を別ウィンドウで、他の OS は `node tools/otel-sink.mjs` をバックグラウンドで起動する
+    - project-management/progress/session-state.json を読み、2 つの停止形を切り分ける
+      - ファイルが無い、または `sink_heartbeat_at` が進まない → 受け口が起動していない。起動し直す
+      - `sink_heartbeat_at` は進むが `last_event_at` が null → 受け口は生きているが送信側が無効。env の配置と再起動を確認する
+    → どちらでもない状態になるまで Phase 1 へ進んではならない（MUST NOT）。計測なしで進む判断はユーザーだけができ、その決定は decision に記録する
 0a. user-order.md を読み込む
 0b. user-order.mdのバリデーション: 以下の必須項目が記載されているか確認する
     - 何を作りたいか（What）、それはどうしてか（Why）

@@ -547,7 +547,7 @@ progress-monitor tracks API token consumption and notifies the user once the ale
 
 CLAUDE.md is the single source of truth for the threshold value; no number is written in this document.
 
-**The measurement path does not always run.** If the receiver is not started, telemetry is never received and is dropped in silence. So **check freshness, not just presence.** `sink_heartbeat_at` in `session-state.json` is refreshed while the receiver is alive whether or not traffic arrives, so a value far from the present time means the receiver has stopped. In that case, **state the gap explicitly in cost-log.json and in the phase report. Never fill in an estimated consumption (MUST NOT).** Proceeding silently without measurement means a cost overrun is never detected.
+**The measurement path does not always run.** If the receiver is not started, telemetry is never received and is dropped in silence. **The receiver is started in Phase 0 of `/full-auto-dev`** (`tools/start-otel-sink.bat` on Windows, `node tools/otel-sink.mjs` elsewhere). So **check freshness, not just presence.** `sink_heartbeat_at` in `session-state.json` is refreshed while the receiver is alive whether or not traffic arrives, so a value far from the present time means the receiver has stopped. In that case, **state the gap explicitly in cost-log.json and in the phase report. Never fill in an estimated consumption (MUST NOT).** Proceeding silently without measurement means a cost overrun is never detected.
 
 **`statusLine` is an auxiliary path and runs only on the CLI.** `tools/session-meter.mjs` executes only where Claude Code draws a status line, and **does not fire in the desktop app.** Never rely on it as the primary path (MUST NOT).
 

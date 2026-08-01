@@ -38,7 +38,14 @@ const FRAMEWORK_ONLY = [
 // to be present, but it only records anything once the project opts in by
 // setting the telemetry env and starting it. Shipping the file does not turn
 // telemetry on.
-const USER_TOOLS = new Set(["gate-guard.mjs", "otel-sink.mjs", "session-meter.mjs"]);
+const USER_TOOLS = new Set([
+  "gate-guard.mjs",
+  "otel-sink.mjs",
+  "session-meter.mjs",
+  // The launcher /full-auto-dev runs at Phase 0 to bring the receiver up. It is
+  // Windows only; elsewhere the same phase starts otel-sink.mjs directly.
+  "start-otel-sink.bat",
+]);
 
 function usage() {
   console.error("Usage: npm init gr-sw-maker <project-name> [-- --ref <branch|tag|commit>]");

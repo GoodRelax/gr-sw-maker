@@ -75,7 +75,7 @@
 | 機構 | 用途 | 省略時の代替 |
 |---|---|---|
 | `tools/gate-guard.mjs`（`PreToolUse` フック） | ゲート未通過での `src/` `tests/` `infra/` 等への書込みを機械的に拒否する | 人間またはエージェントによる手動確認 |
-| `tools/otel-sink.mjs`（OpenTelemetry の受け口） | コストとトークンを `session-state.json` に記録する。**主経路** | コスト追跡を手動記録に切り替える |
+| `tools/otel-sink.mjs`（OpenTelemetry の受け口） | コストとトークンを `session-state.json` に記録する。**主経路**。Windows では `tools/start-otel-sink.bat` が起動用のラッパである | コスト追跡を手動記録に切り替える |
 | `tools/session-meter.mjs`（`statusLine`） | 補助経路。CLI でのみ動き、コンテキスト使用率を記録する | 省略してよい |
 | `.claude/settings.json` | 上記 2 つの登録先 | 不要 |
 
