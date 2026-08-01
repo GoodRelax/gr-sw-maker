@@ -76,6 +76,11 @@ user-order.mdを読み込み、ほぼ全自動ソフトウェア開発を開始�
 
 ## Phase 3: 設計（仕様書 Ch1-2 承認後）
 3a. architect を起動し、docs/spec/ の仕様書 Ch3 (Architecture) を詳細化する（レイヤー仕訳を先行実施: 全コンポーネントをEntity/UseCase/Adapter/Frameworkに分類し、Ch3冒頭に明記）
+3a2. Ch3 の直後に、アーキテクチャをユーザーが確認するかどうかを尋ねる（MUST）
+    - **尋ねるときに理由を伝える。** ここが重要なマイルストーンであり、越えると変更の代償が跳ね上がると明示する。3b 以降の Ch4-6・OpenAPI・脅威モデル・可観測性設計・デプロイ設計・WBS・リスク台帳は、すべて Ch3 の上に積まれる
+    - 提示するのは 3 点。**アーキテクチャ図**・レイヤー仕訳・**ADR-000（最小構成との比較）**
+    - 「見る」場合は指摘を反映してから 3b へ進む。「任せる」場合も**尋ねた事実と回答を decision に記録してから**進む
+    → 尋ねずに 3b へ進んではならない（MUST NOT）。**より小さい構成を採らなかった理由が妥当かは人間にしか判定できない**（R2.18 が保証するのは比較を記録したことだけである）
 3b. architect が docs/spec/ の仕様書 Ch4 (Specification) を Gherkin で詳細化する
 3c. architect が docs/spec/ の仕様書 Ch5 (Test Strategy) を定義する
 3d. architect が docs/spec/ の仕様書 Ch6 (Design Principles Compliance) を設定する
