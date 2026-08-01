@@ -149,6 +149,12 @@ Names are the primary interface of software. A name reveals its essence; code sh
 - Is each component's public surface declared in Ch3.3? Is any component missing one?
 - Does a public surface leak implementation detail (internal-only types, mutable state)?
 
+**Cache Policy (R2.20; when a cache is used)**
+- Is what gets cached recorded in Ch3.6? Has an implicit cache been overlooked (memoization, lazy initialization, an ORM first-level cache, an intermediary HTTP cache)?
+- Is invalidation **tied to the upstream change**, rather than relying on expiry alone?
+- Is the acceptable staleness written as a number or a condition (not "as fresh as possible")?
+- Is the behavior on simultaneous expiry decided (no path where many requests fall through at once)?
+
 **Prompt Engineering (when AI/LLM integration is enabled)**
 - Are product prompt templates placed under `src/` (not mixed with the meta-layer under `.claude/`)?
 - Does each prompt have explicit input/output schemas (expected input types, expected output types)?
@@ -171,6 +177,11 @@ Names are the primary interface of software. A name reveals its essence; code sh
 - Is all external input (API arguments, environment variables, configuration files) validated?
 - Are Null/Undefined/empty array cases handled?
 - Are type assertions (`as Type`) not used without safety verification?
+
+### Boundaries and Indices
+- Are ranges uniformly half-open `[start, end)`? Where a closed range is used, does its name say so (`endInclusive` and the like)?
+- Are iteration and subsequences expressed with an iterator / slice / range, rather than advancing an index by hand?
+- Is any endpoint adjusted by `±1` to make a length or a terminator come out right (**that adjustment is a sign half-open and closed are mixed**)?
 
 ---
 
@@ -431,9 +442,11 @@ A single standalone check sheet aggregating all review perspectives (R1–R7). K
 | R2.17 | Design (AI/LLM) | SHOULD | Prompt engineering: prompts under `src/` with explicit I/O schemas, no ambiguous instructions, prompt tests, versioning policy, hallucination countermeasures | — | — |
 | R2.18 | Design | MUST | Comparison against the minimum: Ch3.6 contains ADR-000 "Comparison against the minimal configuration", stating the smallest configuration that satisfies the requirements, what the adopted design adds to it, and why each addition is necessary | — | — |
 | R2.19 | Design | MUST | Component boundary: no dependency on another component's internals. Only the public surface declared in Ch3.3 may be referenced ([glossary](glossary.md) 5.3). **This is a different axis from the layer axis (R2.16); never file a violation of one as a violation of the other.** With a single component, record NA and say so in the Remark | — | — |
+| R2.20 | Design | MUST | Cache policy: where a cache is used, the ADR in Ch3.6 states four things: what is cached, what invalidates it, how much staleness is acceptable, and what happens when entries expire together. **Staleness produces a different answer, not a slower one, so it is a correctness concern.** Bounds (TTL/size) are R5.3's business. With no cache, record NA and say so in the Remark | — | — |
 | R3.1 | Coding | MUST | Every external I/O (network/DB/file) has error handling; errors are not silently swallowed (no empty catch) | — | — |
 | R3.2 | Coding | MUST | Error messages carry debug context internally; no internal details (stack traces, DB errors) leaked to users | — | — |
 | R3.3 | Coding | MUST | All external input validated; Null/Undefined/empty handled; no unsafe type assertions | — | — |
+| R3.4 | Coding | MUST | Boundaries and indices: ranges are half-open `[start, end)` by default, and a closed range says so in its name (`endInclusive` and the like). Iteration and subsequences are expressed with an iterator / slice / range rather than advancing an index by hand. No endpoint is adjusted by `±1` to make a length or a terminator come out right. **"There is no off-by-one" cannot be judged by reading, so the rule governs how boundaries are expressed** | — | — |
 | R4.1 | Concurrency | MUST | Multi-resource lock acquisition order is uniform and documented; no external calls / long processes inside DB transactions | — | — |
 | R4.2 | Concurrency | MUST | Concurrent shared-state access identified; Check-Then-Act and Read-Modify-Write made atomic (locks/atomics); no races across `await` | — | — |
 | R4.3 | State Transition | MUST | Multi-field updates are atomic (no observable intermediate glitch); implementation matches Spec Ch3 state transitions; event-notification timing (before/after) defined | — | — |

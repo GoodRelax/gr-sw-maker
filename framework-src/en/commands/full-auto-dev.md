@@ -78,7 +78,7 @@ Execute the following phases sequentially:
 3a. Launch architect to detail Ch3 (Architecture) of the specification in docs/spec/ (perform layer classification first: classify all components into Entity/UseCase/Adapter/Framework and document at the beginning of Ch3)
 3a2. Right after Ch3, ask the user whether to review the architecture (MUST)
     - **Say why when asking.** State that this is the milestone past which change gets expensive: Ch4-6, the OpenAPI spec, the threat model, the observability design, the deployment design, the WBS and the risk register from 3b onward are all built on Ch3
-    - Present three things: the **architecture diagram**, the layer assignment, and **ADR-000 (the comparison against the minimum configuration)**
+    - Present the **architecture diagram**, the layer assignment, and **ADR-000 (the comparison against the minimum configuration)**. Where the design uses a cache, always present the **cache policy ADR** too (what is cached, what discards it, how stale it may get) (R2.20)
     - If the user reviews it, fold the comments in before 3b. If the user leaves it to you, **record that it was asked and what was answered as a decision** before proceeding
     → Never proceed to 3b without asking (MUST NOT). **Whether the reason for not taking a smaller configuration holds is something only a human can judge** (R2.18 guarantees only that the comparison was recorded)
 3b. architect details Ch4 (Specification) of the specification in docs/spec/ using Gherkin
