@@ -89,15 +89,85 @@ Clarifying distinctions between concepts that are similar but different.
 
 ## 5. Code Unit Hierarchy (containment)
 
-Purity is judged at the class/function level; physical separation is done at the module/component level. The layer axis (Entity/UseCase/Adapter/Framework) is orthogonal to this containment and is defined in spec-template Ch3.1 and the CA perspective of review-standards.
+Purity is judged at the class/function level; physical separation is done at the unit/module/component level. The layer axis (Entity/UseCase/Adapter/Framework) is orthogonal to this containment and is defined in spec-template Ch3.1 and the CA perspective of review-standards.
 
-| Level | Unit (EN) | Maps to | Contains |
-|-------|-----------|---------|----------|
-| 1 | member / local (property, method, local var/func, nested class) | — | statements, expressions |
-| 2 | class / function | — | members, locals, nested classes |
-| 3 | module | file | classes, functions |
-| 4 | component | folder (subfolder if many) | modules |
-| 5 | package / library | distribution unit | components |
-| 6 | application | — | packages, external libraries |
+**The hierarchy carries no numbers.** Containment is expressed by the chain of "contained in" and "contains". Adjacent rows agreeing is the evidence that containment closes, so a row added without being wired up shows up inside the table. Numbers drift whenever a conditional row is added, and serve no self-check.
 
-For distributed systems, insert "service / deployable" between levels 5 and 6.
+### 5.1 Structural Axis -- Physical Nesting of Code
+
+| Unit (EN) | Maps to | Contained in | Contains |
+|-----------|---------|--------------|----------|
+| member / local (property, method, local var/func, nested class) | — | class / function | statements, expressions |
+| class / function | — | unit | members, locals, nested classes |
+| unit | file (in C, the `.c` and `.h` pair) | module | classes, functions |
+| module | subfolder, or a set of files sharing a prefix | component | units |
+| component | folder + public surface | package (5.2) | modules, units |
+
+**The unit is what a unit test targets.** Never read the module as the target of a unit test (MUST NOT). Reading it that way piles mocks onto a grain that cannot be verified independently.
+
+**Containment of the structural axis:**
+
+```mermaid
+flowchart TD
+    MEMBER["member_local"]
+    CLASS["class_function"]
+    UNIT["unit<br/>file"]
+    MODULE["module<br/>subfolder"]
+    COMPONENT["component<br/>folder_and_public_surface"]
+    PACKAGE["package<br/>distribution_axis"]
+
+    MEMBER -->|"contained in"| CLASS
+    CLASS -->|"contained in"| UNIT
+    UNIT -->|"contained in"| MODULE
+    MODULE -->|"contained in"| COMPONENT
+    COMPONENT -->|"packed into"| PACKAGE
+```
+
+### 5.2 Distribution Axis -- the Unit of Handover
+
+**Do not chain it onto the structural axis.** The container of distribution and the form of execution are different axes, and chaining them turns distributed systems into an afterthought insertion.
+
+| Unit (EN) | Kind | Definition | Contains |
+|-----------|------|------------|----------|
+| package | container | Carries a version and dependencies; handed over through a registry or a file | components |
+| library | execution form | Does not start on its own; embedded into other software | the contents of a package |
+| application | execution form | Started directly by a user. Has an entry point | its own package + external libraries |
+| service | execution form | Resident, receives requests across a boundary. Also the unit of deployment | its own package + external libraries |
+
+In a distributed system an application (the whole system) consists of several services. **A service is not a row inserted under a condition; it is an execution form defined in parallel from the start.**
+
+### 5.3 The Public Surface of a Component
+
+> **A component declares a public surface (MUST). Other components may depend on the public surface only; depending on the internal implementation is forbidden (MUST NOT).** Break this and it stops being a unit of replacement, which was the reason for putting it in its own folder.
+>
+> **Prefer the visibility mechanism the language provides (SHOULD).** A directory convention holds only while someone checks it, whereas a language mechanism is enforced by the compiler. Use a directory only where no mechanism exists or the one that exists is weak.
+
+| Language | How the public surface is expressed |
+|----------|-------------------------------------|
+| Rust | `pub` / `mod`. Enforced by the language |
+| TypeScript / JavaScript | Only what `index.ts` exports is the public surface |
+| Python | `__all__` in `__init__.py`. Internal units take a `_` prefix |
+| Java / C# | package-private / `internal` |
+| Go | Capitalized names are public. Enforced by the language |
+| C / C++ | The mechanism is weak, so a directory expresses it (below) |
+
+**Layout when a directory expresses it:**
+
+```text
+src/components/bms/
+  include/
+    bms_api.hpp
+  private/
+    cell_monitor/
+      ltc6811.hpp
+      ltc6811.cpp
+      voltage_cal.hpp
+      voltage_cal.cpp
+    fault_detect/
+      over_volt.hpp
+      over_volt.cpp
+```
+
+`include/` is the public surface and the only place another component may reference. A reference into `private/` is raised as a violation. Enforce it in the build configuration where that is possible (`PUBLIC` and `PRIVATE` in CMake's `target_include_directories`). The subdirectories inside `private/` are modules, not components. **Only what carries a public surface may call itself a component.**
+
+**Choosing by scale:** with one component, put units directly under `src/` and create no `components/`. With two or a few, use `src/{component}/` and express the public surface with the language mechanism. Use the layout above only when there are many, or when the public surface has to be governed. **A default is provided, not required.** Forcing it at small scale reproduces over-design from the side of the rules.
