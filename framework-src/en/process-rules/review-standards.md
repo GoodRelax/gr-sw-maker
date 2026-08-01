@@ -67,7 +67,7 @@ Names are the primary interface of software. A name reveals its essence; code sh
 ### SOLID Principles
 
 **SRP (Single Responsibility Principle)**
-- Does a single class or module have multiple reasons to change?
+- Does a single class or unit have multiple reasons to change?
 - Watch for naming like "does X and Y" or classes with multiple unrelated methods
 - Example finding: `UserService` simultaneously handles authentication, profile management, and email sending
 
@@ -143,6 +143,11 @@ Names are the primary interface of software. A name reveals its essence; code sh
 - Is the structure such that changes in the infrastructure layer (DB, external API) do not propagate to business logic?
 - **Correctness of layer classification**: Is the layer classification appropriate? Are concepts that belong at the centre misclassified toward the outside? Conversely, are things that could remain outside unnecessarily elevated to the centre? Judge based on "is this essential to the project's purpose, or merely a means?" **The number of layers is not itself a finding.** A design that the default four layers (Entity/UseCase/Adapter/Framework) cannot express is appropriate where Ch3.1 defines its layers and dependency direction
 - **Appropriateness of the Adapter layer**: Is the Adapter layer so thin that external dependencies leak into the domain? Is it so thick that business logic has crept into the Adapter layer?
+
+**Component Boundary (R2.19; a different axis from CA)**
+- Does anything reference another component's internals directly (under `private/`, a `_` prefix, an import that bypasses the public entry)?
+- Is each component's public surface declared in Ch3.3? Is any component missing one?
+- Does a public surface leak implementation detail (internal-only types, mutable state)?
 
 **Prompt Engineering (when AI/LLM integration is enabled)**
 - Are product prompt templates placed under `src/` (not mixed with the meta-layer under `.claude/`)?
@@ -296,7 +301,7 @@ Classify functions and classes along the purity axis and separate non-pure effec
 
 ### Purity of Computation Logic (R7.2, MUST)
 
-Domain computation logic (business rules, decisions, transformations) is implemented as `pure` or `semi-pure-a`. Non-pure effects are not mixed into computation logic; they are separated into functions/modules dedicated to them.
+Domain computation logic (business rules, decisions, transformations) is implemented as `pure` or `semi-pure-a`. Non-pure effects are not mixed into computation logic; they are separated into functions/units dedicated to them.
 
 - Are deciding (what to do) and performing (actually causing the effect) housed in the same function?
 - Is I/O, log output, or lock acquisition embedded inside a business rule?
@@ -348,9 +353,9 @@ For production code excluding the exempt targets, the tag coverage (`purity_tag_
 
 ### Structural Separation (R7.7-R7.9, SHOULD)
 
-- Within a class/module, are members ordered pure -> semi-pure -> non-pure, with a section comment before the non-pure group? (R7.7)
+- Within a class/unit, are members ordered pure -> semi-pure -> non-pure, with a section comment before the non-pure group? (R7.7)
 - Does the class avoid mixing mutable state with pure computation, extracting pure logic into pure functions or value objects? (R7.8)
-- Are files/modules separated by purity (pure core and non-pure shell in different files)? (R7.9)
+- Are units separated by purity (pure core and non-pure shell in different files)? (R7.9)
 
 ### Expressing Failure (R7.10, SHOULD)
 
@@ -408,7 +413,7 @@ A single standalone check sheet aggregating all review perspectives (R1–R7). K
 | R1.5 | Requirements | SHOULD | Requirements are MECE; no gaps across stakeholders (admin / user / external system) | — | — |
 | R1.6 | Requirements | SHOULD | Negative requirements specify an alternative action; passive voice rewritten to active (clear responsibility); no double negatives | — | — |
 | R2.1 | Design | MUST | Naming reflects essence — the single most important design property (Screaming Architecture; software is kotodama). Accurate role names (no generic `data`/`info`/`tmp`/`obj`); verb+object functions; is/has/can booleans; plural collections; consistent domain terms | — | — |
-| R2.2 | Design | MUST | SRP: one class/module has a single reason to change (no "does X and Y") | — | — |
+| R2.2 | Design | MUST | SRP: one class/unit has a single reason to change (no "does X and Y") | — | — |
 | R2.3 | Design | SHOULD | OCP: open for extension, closed for modification; new behavior via strategy/template, not by editing if/switch | — | — |
 | R2.4 | Design | SHOULD | LSP: subclasses do not strengthen preconditions, weaken postconditions, or change the parent contract | — | — |
 | R2.5 | Design | SHOULD | ISP: no class implements interface methods it does not use; large interfaces split by usage | — | — |
@@ -425,6 +430,7 @@ A single standalone check sheet aggregating all review perspectives (R1–R7). K
 | R2.16 | Design | MUST | CA: dependency is one-way and points toward the least-changing centre; the centre is not contaminated by framework/DB; layer classification and the thickness of the outermost seam layer are correct. **The number of layers is not prescribed** (default is the four layers Entity/UseCase/Adapter/Framework; a different layering is compliant where Ch3.1 defines it) | — | — |
 | R2.17 | Design (AI/LLM) | SHOULD | Prompt engineering: prompts under `src/` with explicit I/O schemas, no ambiguous instructions, prompt tests, versioning policy, hallucination countermeasures | — | — |
 | R2.18 | Design | MUST | Comparison against the minimum: Ch3.6 contains ADR-000 "Comparison against the minimal configuration", stating the smallest configuration that satisfies the requirements, what the adopted design adds to it, and why each addition is necessary | — | — |
+| R2.19 | Design | MUST | Component boundary: no dependency on another component's internals. Only the public surface declared in Ch3.3 may be referenced ([glossary](glossary.md) 5.3). **This is a different axis from the layer axis (R2.16); never file a violation of one as a violation of the other.** With a single component, record NA and say so in the Remark | — | — |
 | R3.1 | Coding | MUST | Every external I/O (network/DB/file) has error handling; errors are not silently swallowed (no empty catch) | — | — |
 | R3.2 | Coding | MUST | Error messages carry debug context internally; no internal details (stack traces, DB errors) leaked to users | — | — |
 | R3.3 | Coding | MUST | All external input validated; Null/Undefined/empty handled; no unsafe type assertions | — | — |
@@ -439,12 +445,12 @@ A single standalone check sheet aggregating all review perspectives (R1–R7). K
 | R6.2 | Test | MUST | Boundary / abnormal / edge cases covered, not just normal; requirement coverage traces to FR-xxx | — | — |
 | R6.3 | Test | MUST | Test names express intent; mocks/stubs not so overused that real behavior goes unverified | — | — |
 | R7.1 | Purity | MUST | Every function/method is classified `pure` / `semi-pure-a` (reads immutable values) / `semi-pure-b` (reads mutable or nondeterministic state) / `non-pure` (mutable state or side effect) | — | — |
-| R7.2 | Purity | MUST | Domain computation logic (business rules, decisions, transformations) is `pure` or `semi-pure-a`; non-pure effects are not mixed in but separated into dedicated functions/modules. **Orthogonal to the layer axis (R2.16).** Domain-invariant exceptions are permitted on the computation side; I/O and system-caused exceptions are confined to the non-pure side | — | — |
+| R7.2 | Purity | MUST | Domain computation logic (business rules, decisions, transformations) is `pure` or `semi-pure-a`; non-pure effects are not mixed in but separated into dedicated functions/units. **Orthogonal to the layer axis (R2.16).** Domain-invariant exceptions are permitted on the computation side; I/O and system-caused exceptions are confined to the non-pure side | — | — |
 | R7.3 | Purity | SHOULD | `semi-pure-b` reads (clock, RNG, DB/file/network read) are collected at the top and injected as arguments where feasible, raising the function to `pure` | — | — |
 | R7.4 | Structure | MUST | No new external read is performed partway through processing (all reads complete before it begins). Where collecting everything is impossible, the **unit of consistency (chunk / snapshot / transaction) is stated explicitly** and collect-then-process order is preserved within it | — | — |
 | R7.5 | Purity | MUST | Pure-side classes are immutable class / value object / stateless class and hold no mutable state; mutable state or side-effecting methods make a class stateful (non-pure) | — | — |
 | R7.6 | Purity | MUST | Every function/method carries a `@purity` tag (`pure` / `semi-pure-a` / `semi-pure-b` / `non-pure`) inside a comment; unmarked is not allowed (grep-checkable). Exempt: test code, generated code, vendored third-party code, single-expression lambdas | — | — |
-| R7.7 | Structure | SHOULD | Within a class/module, members are ordered pure to semi-pure to non-pure, with a section comment before the non-pure group | — | — |
+| R7.7 | Structure | SHOULD | Within a class/unit, members are ordered pure to semi-pure to non-pure, with a section comment before the non-pure group | — | — |
 | R7.8 | Structure | SHOULD | A class does not mix mutable state with pure computation; pure logic is extracted into pure functions or value objects | — | — |
-| R7.9 | Structure | SHOULD | Files/modules are separated by purity (pure core and non-pure shell in different files) | — | — |
+| R7.9 | Structure | SHOULD | Units are separated by purity (pure core and non-pure shell in different files) | — | — |
 | R7.10 | Purity | SHOULD | Failures on the computation-logic side are expressed with a return type (Result / Either / Option); a domain exception may substitute in languages with no equivalent mechanism | — | — |
