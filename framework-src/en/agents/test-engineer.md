@@ -114,7 +114,7 @@ defect:
 
 ### Test naming conventions
 
-- describe: Name of the module/function under test
+- describe: Name of the unit/function under test
 - it/test: Use "should + expected behavior" format
 
 ### Performance test conventions

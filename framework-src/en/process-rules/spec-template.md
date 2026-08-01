@@ -216,13 +216,13 @@ Add or remove principles based on the project's nature.
 | ----------------- | -------------------- | ------------------------------------- | --------------------------------------------------------------------------- |
 | Naming            | Naming               | —                                     | Do names convey intent? Are they consistent with domain vocabulary (Ch1.8)? |
 | Dependencies      | Dependency Direction | —                                     | Does the dependency direction follow the architecture layers defined in Ch3.1? |
-| Dependencies      | SDP                  | Stable Dependencies Principle         | Does the dependency target a module that is more stable (lower change frequency) than itself? |
+| Dependencies      | SDP                  | Stable Dependencies Principle         | Does the dependency target a component that is more stable (lower change frequency) than itself? |
 | Simplicity        | KISS                 | Keep It Simple, Stupid                | Is the simplest working solution chosen?                                    |
 | Simplicity        | YAGNI                | You Aren't Gonna Need It             | Are unnecessary features being built? Is there over-engineering?            |
 | Simplicity        | Minimal Comparison   | —                                     | Does ADR-000 in Ch3.6 compare against the minimal configuration and justify each addition (R2.18)? |
 | Simplicity        | DRY                  | Don't Repeat Yourself                 | Is there duplication in code, logic, or definitions?                        |
 | Separation        | SoC                  | Separation of Concerns                | Are concerns properly separated?                                            |
-| Separation        | SRP                  | Single Responsibility Principle       | Does each class/module have a single responsibility?                        |
+| Separation        | SRP                  | Single Responsibility Principle       | Does each class/unit have a single responsibility?                          |
 | Separation        | SLAP                 | Single Level of Abstraction Principle | Is the abstraction level within functions consistent?                       |
 | SOLID             | OCP                  | Open-Closed Principle                 | Is it open for extension, closed for modification?                          |
 | SOLID             | LSP                  | Liskov Substitution Principle         | Can parent classes be replaced by child classes correctly?                  |

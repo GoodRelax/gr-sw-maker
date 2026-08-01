@@ -107,7 +107,7 @@
 
 - 開発計画立案（WBS/ガントチャート）、要員(AI)管理、リソース管理、進捗管理
 - 仕様書作成（Ch1-2: Foundation・Requirements、形式はANMS/ANPS/ANGSから選定）、セキュリティ設計、仕様書詳細化（Ch3-6: Architecture・Specification・Test Strategy・Design Principles）
-- SW実装、モジュール単体テスト、結合テスト、システムテスト、性能テスト
+- SW実装、ユニット単体テスト、結合テスト、システムテスト、性能テスト
 - テスト消化曲線の監視、defect curveの監視
 - ボトルネック/弱点領域へのリソース/人員(AI)追加
 - 各成果物の段階的レビュー（SW工学原則・並行性・パフォーマンス観点を含む）

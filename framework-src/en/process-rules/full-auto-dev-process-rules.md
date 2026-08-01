@@ -107,7 +107,7 @@ This manual is a practical guide for nearly fully automating the software develo
 
 - Development planning (WBS/Gantt charts), personnel (AI) management, resource management, progress management
 - Specification creation (Ch1-2: Foundation & Requirements, format selected from ANMS/ANPS/ANGS), security design, specification elaboration (Ch3-6: Architecture, Specification, Test Strategy, Design Principles)
-- SW implementation, module unit testing, integration testing, system testing, performance testing
+- SW implementation, unit testing, integration testing, system testing, performance testing
 - Test progress curve monitoring, defect curve monitoring
 - Resource/personnel (AI) allocation to bottlenecks/weak areas
 - Staged review of all deliverables (including SW engineering principles, concurrency, and performance perspectives)
