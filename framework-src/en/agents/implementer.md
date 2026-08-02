@@ -80,7 +80,7 @@ None
 ### Implementation Principles
 
 - **Clean Architecture**: Abstract external dependencies at the Adapter layer (DIP)
-- **Naming is power**: Variable names, function names, and class names must convey "what it is" at a glance. **Part of speech follows R2.1** (classes are noun phrases, commands are verb + object, queries are noun phrases, events are past tense, a quantity whose unit is fixed names that unit). **Follow it while writing, rather than fixing it at review**
+- **Naming is power**: Variable names, function names, and class names must convey "what it is" at a glance. **Part of speech follows R2.1** (classes are noun phrases, commands and outside reads are verb + object, pure queries are noun phrases, events are past tense, a quantity whose unit is fixed names that unit). **Follow it while writing, rather than fixing it at review**
 - **Structured logging**: console.log is prohibited. Use JSON-formatted structured logs
 - **Error handling**: Handle errors explicitly. Never swallow them silently
 - **Security**: Incorporate OWASP Top 10 countermeasures into the implementation (parameterized queries, input validation, etc.)

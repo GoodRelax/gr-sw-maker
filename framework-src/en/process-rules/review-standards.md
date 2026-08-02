@@ -59,22 +59,25 @@
 Names are the primary interface of software. A name reveals its essence; code should scream its intent (Screaming Architecture); software is kotodama — words shape what is built. In this framework, naming is the single most important review item, and is therefore MUST, not SHOULD.
 
 - Do variable names accurately represent their roles (no generic names like `data`, `info`, `tmp`, `obj`)?
-- Are commands (functions and methods that change state) named in verb + object form (no vague verbs like `process`, `handle`, `manage`; a query that only returns a value follows "Part of speech" below)?
+- Are commands (functions and methods that change state) named in verb + object form (no vague verbs like `process`, `handle`, `manage`; a method that only returns a value follows "Part of speech" below, where purity decides)?
 - Do Boolean variable/function names start with `is/has/can/should`?
 - Are collection variable names pluralized?
 - Are abbreviations used consistently (no mixing of `Usr` and `User`)?
 
-**Part of speech:**
+**Part of speech** (`pure` / `semi-pure-a` / `semi-pure-b` / `non-pure` are the four purity values; they are defined in the R7 section below, and the annotation convention is R7.6)**:**
 
 | Target | Part of speech | Example |
 |---|---|---|
 | Class, type | Noun or noun phrase | `Order`, `CellVoltage` |
-| Command (a method that changes state) | Verb + object | `cancelOrder` |
-| Query (a method that **only** returns a value) | Noun phrase, or `is/has/can` | `totalPrice`, `isExpired` |
+| Command (`non-pure`; changes state) | Verb + object | `cancelOrder` |
+| Query (`pure` / `semi-pure-a`) | Noun phrase, or `is/has/can` | `totalPrice`, `isExpired` |
+| Reading the outside world (`semi-pure-b`) | Verb + object | `readDocument`, `fetchUser` |
 | Property | Noun (Booleans and collections follow the rules above) | `retryCount`, `orders` |
 | Event | **Past tense** | `OrderPlaced`, `CellVoltageExceeded` |
 
 **Commands and events are told apart by form.** A command is **a request to make something happen** and can be refused. An event is **notice that something already happened** and cannot. When `PlaceOrder` and `OrderPlaced` differ in form, **whether the receiver may refuse is readable from the name.** The part of speech of a method mirrors the split R2.13 (CQS) makes.
+
+**Having no side effect and being cheap to call are different things.** A function that reads the clock, a random source, a database, a file or the network (`semi-pure-b`) takes **a verb**, even when it changes nothing and only returns a value. As a noun it stops saying that it is slow and can fail, and it gets called inside a loop (R2.14, POLA). Do not rename `readDocument()` to `document()`. **Use the R7 `@purity` tag as the test** — nothing has to be classified again.
 
 **A quantity whose unit is fixed names that unit.** `timeoutMs` / `voltageMv` / `capacityAh`. **A confused unit passes the type checker.** A value that carries its unit at runtime (`Quantity { amount, unit }` and the like) is out of scope, because there the unit is data rather than a name.
 
@@ -460,7 +463,7 @@ A single standalone check sheet aggregating all review perspectives (R1–R7). K
 | R1.4 | Requirements | SHOULD | Abnormal / semi-normal cases covered (timeout, interruption, concurrency, insufficient permission, data inconsistency, resource exhaustion); boundaries (min/max/empty/null) stated | — | — |
 | R1.5 | Requirements | SHOULD | Requirements are MECE; no gaps across stakeholders (admin / user / external system) | — | — |
 | R1.6 | Requirements | SHOULD | Negative requirements specify an alternative action; passive voice rewritten to active (clear responsibility); no double negatives | — | — |
-| R2.1 | Design | MUST | Naming reflects essence — the single most important design property (Screaming Architecture; software is kotodama). Accurate role names (no generic `data`/`info`/`tmp`/`obj`); verb+object commands; noun-phrase queries; is/has/can booleans; plural collections; consistent domain terms. Includes **part of speech** (classes are noun phrases, events are past tense, use cases are verb phrases) and **naming the unit of a quantity whose unit is fixed** (details in the Naming section) | — | — |
+| R2.1 | Design | MUST | Naming reflects essence — the single most important design property (Screaming Architecture; software is kotodama). Accurate role names (no generic `data`/`info`/`tmp`/`obj`); verb+object commands and outside reads; noun-phrase pure queries; is/has/can booleans; plural collections; consistent domain terms. Includes **part of speech** (classes are noun phrases, events are past tense, use cases are verb phrases) and **naming the unit of a quantity whose unit is fixed** (details in the Naming section) | — | — |
 | R2.2 | Design | MUST | SRP: one class/unit has a single reason to change (no "does X and Y") | — | — |
 | R2.3 | Design | SHOULD | OCP: open for extension, closed for modification; new behavior via strategy/template, not by editing if/switch | — | — |
 | R2.4 | Design | SHOULD | LSP: subclasses do not strengthen preconditions, weaken postconditions, or change the parent contract | — | — |
