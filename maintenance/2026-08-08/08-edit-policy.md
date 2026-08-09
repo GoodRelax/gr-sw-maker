@@ -68,7 +68,7 @@ StrictDoc の関係は 2 段で表す。
 | 段 | 何 | 値 |
 |:-:|---|---|
 | 1 | **`Type`** | 関係の**種類**。`Parent` / `File` など。StrictDoc が持つ組み込みの分類 |
-| 2 | **`Role`** | その `Parent` が**どういう意味の親か**。`Satisfies` / `Verifies` / `ResultOf` / `Affects` / `From` / `To` |
+| 2 | **`Role`** | その `Parent` が**どういう意味の親か**。`Satisfies` / `Verifies` / `ResultOf` の 3 種（決定 17 で `Affects` / `From` / `To` は消えた） |
 
 **`Type` だけでは「親」としか言えない。** 目標を満たす親なのか、検証する親なのか、単に効く先なのかを区別するのが `ROLE` である。**`.sgra` で宣言していない `ROLE` を書くと export が止まる**（実測）。
 
@@ -165,6 +165,9 @@ error source: strictdoc/backend/sdoc/grammar_reader.py:46, function: read()
 | 14 | **「システム構成図」の語の衝突は案 A で解く** — `§9.14` 側を「コンポーネント図」に改める | ユーザー |
 | **15** | **テストの 3 系統を、欄ではなくノード型（`TAG`）で分ける。** `USE_CASE_TEST` / `SPECIFICATION_TEST` / `NON_FUNCTIONAL_TEST`。**`TEST_KIND` 欄は廃止する** | ユーザー |
 | 16 | **`TAG` の綴りは UPPER_SNAKE_CASE とする。** 選択の余地は無い（§1.4 の実測） | StrictDoc |
+| **17** | **`ND` / `CN` をノード型にせず地の文に落とす。** `NODE` / `CONNECTION` 型と `Affects` / `From` / `To` を廃止する | ユーザー |
+| **18** | **`ADR` の UID を廃止する。** Architecture 章は完全に地の文になる | ユーザー |
+| 19 | **モデルとスキーマは記法ではなく役割で分ける。** ER 図はモデルであってスキーマではない。裸の「データモデル」を非採用語にする | ユーザー |
 
 ### 2.3 決定 15 を採る理由
 
@@ -272,7 +275,6 @@ flowchart BT
     NFR["REQUIREMENT_NonFunctional"] -->|Satisfies| GL
     SPF["SPECIFICATION_via_FR"] -->|Satisfies| FR
     SPN["SPECIFICATION_via_NFR"] -->|Satisfies| NFR
-    NFR -->|Affects| CN["CONNECTION"]
     TCU["USE_CASE_TEST"] -->|Verifies| UC
     TCF["SPECIFICATION_TEST"] -->|Verifies| SPF
     TCN["SPECIFICATION_TEST"] -->|Verifies| SPN
@@ -285,7 +287,7 @@ flowchart BT
 
 `GL` を根とし、`SP` が加わって機能側の鎖が 1 段深くなった。テストは 3 か所から刺さり、**1 つの `TC` は 1 か所しか指さない。**
 
-**鎖に載る `ROLE` は `Satisfies` / `Verifies` / `ResultOf` の 3 つである。** 鎖の外は `Affects` と `From` / `To` である。**削減候補の判定は、この 3 つの `ROLE` を持つ親があるかどうかだけで決まる。**
+**`ROLE` は `Satisfies` / `Verifies` / `ResultOf` の 3 種であり、すべてが鎖に載る。** 鎖の外の関係は無い（決定 17）。**削減候補の判定は「`Parent` 関係を 1 つでも持つか」だけになる。**
 
 **`FR` は自前のテストを持たない。** 覆われ判定は積み上げになる（§6 の D16d）。
 
@@ -308,9 +310,6 @@ flowchart BT
 - **Type**: `Parent` \
   **ID**: `GL-002` \
   **Role**: `Satisfies`
-- **Type**: `Parent` \
-  **ID**: `CN-001` \
-  **Role**: `Affects`
 
 **STATEMENT**: もし信頼できない経路から値を受け取ったならば、 システムは、 受け付ける集合との照合によって検証すること。
 ```
@@ -348,7 +347,7 @@ flowchart BT
 - **Type**: `File` \
   **Path**: `tests/test_input_coverage.py`
 
-**GIVEN**: `TRUSTED` が `Untrusted` である `CN` が構成に 1 つ以上ある。
+**GIVEN**: 信頼できない経路として Ch2 が挙げているものが 1 つ以上ある。
 
 **WHEN**: それぞれの経路へ、 受け付ける集合の外にある値を送る。
 
@@ -558,7 +557,7 @@ error: Semantic error: Markdown parsing error:
 | 同 §A-2 | 鎖の図に `SP` を足し、`TC` 3 系統に対応させる |
 | 同 §A-3 / §A-6 / §A-7 | **`--filter-nodes` を前提にした記述を削る（§7.5）。** ビューは文書分割で作る旨に改める。**§A-7 の「手段 1 が答えである」は取り下げる** |
 | 同 §A-3 の未確認 | **`DEEP_TRACEABILITY_SCREEN` の未実測を §7.3 の実測に置き換える** |
-| **`07-anms-sgra-draft.md`** | **`.sgra` を §5.1 の 11 種へ書き直す。** `TEST_CASE` を 3 型へ分け、`TEST_KIND` 欄を削る。§1 末尾の「分離を反映していない」注記を消す。**§7.2 の `Relations` 配置制約と §1.4 の綴りの規則を追記する** |
+| **`07-anms-sgra-draft.md`** | **`.sgra` を `09-element-inventory.md` §2 の 9 種へ書き直す。** `NODE` / `CONNECTION` を削り、 `TEST_CASE` を 3 型へ分け、`TEST_KIND` 欄を削る。§1 末尾の「分離を反映していない」注記を消す。**§7.2 の `Relations` 配置制約と §1.4 の綴りの規則を追記する** |
 | 同 | **`SPECIFICATION` と `TEST_RESULT` を足す。** `TEST_RESULT` は 3 系統で共用する 1 型とする |
 | **`05-strictdocstarter-feedback.md`** | **指摘 3 として「出力先を入力フォルダの中に置くと UID 重複で止まる」を足す**（`md-basic-ja` も当たる）。**指摘 4 として §7.2 の `Relations` 配置制約を検討する** |
 | **`01-spec-template-migration.md`** | **章が 8 → 14 に増え、ファイル番号が 0 始まりから 1 始まりに変わる。** 本書の置換手順に上乗せされる。**影響は未計測** |
@@ -574,7 +573,6 @@ error: Semantic error: Markdown parsing error:
 | 3 | **`runbook-writer` / `user-manual-writer` の In の参照先。** 「システム構成の理解」が欲しいのが物理配置（Ch2）なら、参照先ごと向け直す必要がある。**未確認** | 調べてからユーザー |
 | 4 | **ファイル番号を 1 始まりに変えることの承認。** `00-foundation` → `01-foundation`。**章番号との差をゼロにするためだが、既存の記述をすべて振り直す** | ユーザー |
 | 5 | **`_assets/` を複数の製品で共有する場合の衝突。** StrictDoc は `_assets` の名前を固定で扱う。**未検証** | 測ってからユーザー |
-| **6** | **`ADR` だけが接頭辞を持ちながらノード型を持たない**（§5.1）。**StrictDoc は `ADR-001` を検証せず、D21 も覆えない。** 案: (A) `ADR` に UID を振るのをやめ、章の見出しだけで扱う。(B) `DECISION` 型を足して鎖の外のノードにする。**A を推す** —— 設計判断をトレース対象にすると層が 1 つ増えるという既存の判断（`04-spec-format-unification.md` §3.2 決定 4）と一貫する | ユーザー |
 
 ---
 
