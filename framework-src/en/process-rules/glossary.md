@@ -91,9 +91,9 @@ Records of abbreviation usage decisions in namespaces (file_type names). Princip
 | SRS | Software Requirements Specification | Permitted for agent name only | `srs-writer` is an agent name (not subject to namespace rules). Cannot be used in namespaces |
 | DR | Disaster Recovery | Not permitted | Renamed to `disaster-recovery-plan`. Within the 3-word limit |
 | CR | Change Request | Not permitted | Renamed to field name `change_request_status` |
-| HW | Hardware | Permitted | Used in file_type `hw-requirement-spec`. `hardware-requirement-spec` exceeds the 4-word limit |
+| HW | Hardware | Permitted | A common term. The HW / SW pair is widely understood and reads as nothing else. `hardware-requirement-spec` is within the 3-word limit, yet the abbreviation is still preferred. **Word count is not the reason** |
 | AI | Artificial Intelligence | Permitted | A common term. Used in `ai-requirement-spec` |
-| FW | Framework | Not permitted | `framework-requirement-spec` is within the 3-word limit. Abbreviation unnecessary |
+| FW | Framework | Not permitted | **Ambiguous.** It also reads as firmware or forward. `framework-requirement-spec` is within the 3-word limit, so there is no reason to abbreviate |
 
 ## 4. Distinguishing Confusable Pairs
 

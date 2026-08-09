@@ -215,7 +215,9 @@ ANMS ──ファイルを部で割る──▶ ANPS-part ──部を章で割�
 | 語 | システム構成図（Ch2 側） | **変えない** |
 | 役割 | test-engineer | **test-designer ＋ tester**（手順 9） |
 
-> **章番号の移動は本表では表せない。** 件数は**未計測である**（手順 0）。
+> **章番号の移動は本表では表せない。** 件数は `maintenance/2026-08-09/01-chapter-number-census.md` が持つ（手順 0 は完了した）。
+
+> **本表が前提としている旧番号は v0.35 のものである。framework-src の現物は v0.34 である**（2026-08-09 の計測で判明）。**写像は v0.34 → v0.36 で取る。** 正本は `01-chapter-number-census.md` §1 であり、本表と食い違う場合はそちらが正しい。
 
 ### 2.8 レビュー指摘の置き場
 
@@ -595,9 +597,18 @@ flowchart TB
 
 ---
 
-### 手順 2. 仕様テンプレート `framework-src/ja/process-rules/spec-template.md`
+### 手順 2. 仕様テンプレート `framework-src/{lang}/process-rules/`
 
 > **本文は別途。** v0.36 の全文は本書に含まれない。**別ファイルとして起こし、それで置き換える。**
+
+> **本手順は 1 枚ではなく 2 枚を扱う**（2026-08-09 に改訂）。**テンプレートは骨格と規則に分けた。**
+>
+> | 置く先 | 中身 | 出どころ |
+> |---|---|---|
+> | `process-rules/spec-template.md`（置換） | **骨格。** そのまま `strictdoc export` が通る 1 枚 | `maintenance/2026-08-09/03-spec-template-skeleton.md` |
+> | `process-rules/spec-writing-rules.md`（**新設**） | **規則。** 章ごとの規則・EARS・Cockburn・通し例・検査 | `maintenance/2026-08-09/04-spec-writing-rules.md` |
+>
+> **分割の経緯と、参照 20 箇所をどちらへ向けるかの判断表は `maintenance/2026-08-09/05-step2-split.md` §4 にある。** `check-parity` の対は 41 → 42 に増える。
 
 **本文が満たすべき条件（受入基準）:**
 
@@ -618,19 +629,32 @@ flowchart TB
 | 13 | **記入例の読み替え表が §2.7 と一致すること** |
 | 14 | **レビュー指摘の書き方が書かれていないこと。** 指摘は `project-records/reviews/` が持つ（§2.8） |
 
-**確認:** 上の 14 件を 1 件ずつ照合する。`node tools/check-links.mjs` が通る。
+**確認:** 上の 14 件を 1 件ずつ照合する。**14 件は 2026-08-09 に照合済みで全件 PASS**（`05-step2-split.md` §3.4）。`node tools/check-links.mjs` と `node tools/check-parity.mjs` が通る。
 
 ---
 
 ### 手順 3. 文法と検出クエリの配布
 
-| # | やること | 配置先 |
-|:-:|---|---|
-| 1 | `spec.sgra` を置く（§2.9） | `framework-src/ja/templates/spec.sgra` |
-| 2 | `checks.jq` を置く（§2.10） | `tools/spec-query/checks.jq` |
-| 3 | 走らせ方を `spec-template` から参照できるようにする | — |
+| # | やること | 配置先 | 状態 |
+|:-:|---|---|:-:|
+| 1 | `spec.sgra` を置く（§2.9） | `tools/spec-query/spec.sgra` | **完了** |
+| 1b | **`spec-anms.sgra` を置く。** ANMS 用に 4 欄を `REQUIRED: False` にしたもの | `tools/spec-query/spec-anms.sgra` | **完了** |
+| 1c | **`create-gr-sw-maker` の `USER_TOOLS` に `spec-query` を足す** | `create-gr-sw-maker/bin/create.js` | **完了** |
+| 2 | `checks.jq` を置く（§2.10） | `tools/spec-query/checks.jq` | **完了。** 出力キーとコメントは英語（1 部しか置かない言語非依存のファイルのため）。**8 検出とも fault を仕込んで発火を確認した** |
+| 3 | 走らせ方を `spec-writing-rules` から参照できるようにする | — | **完了** |
 
-**確認:** §2.10 の手順で export が通り、`checks.jq` が動くこと。
+> **文法は 2 つある**（2026-08-09 に改訂）。**ANMS は `spec-anms.sgra`、ANPS は `spec.sgra`。** 両者の差は 4 欄の `REQUIRED` だけである（実測）。骨格は ANMS 前提で書かれており、ANPS へ移るときに `**Grammar**` の行を差し替えて `TEST_RESULT` の 4 欄を足す。**足りない欄は export が名指しする。**
+
+> **配置先を `framework-src/{lang}/templates/` から `tools/spec-query/` へ変更した**（2026-08-09、実測による）。理由は 2 つ。
+>
+> | # | 理由 |
+> |:-:|---|
+> | 1 | **`setup.js` は `.md` しか配らない**（`deployDir` の filter）。**`templates` という配布先そのものが `DIR_TARGETS` に無く、`.md` が 1 枚も無いフォルダは例外で止まる。** そのままでは文法は 1 バイトも届かない |
+> | 2 | **文法は言語に依存しない**（欄名は全言語で英語）。ja と en に二重化しても中身は同じで、**`check-parity` は `.md` しか比べないので、ずれても誰も気づかない** |
+>
+> **`tools/` は `create-gr-sw-maker` が許可リストで刈るので、`spec-query` を 1 行足した**（実測で、利用者プロジェクトに残ることを確認）。**文法は `**Grammar**` と同じフォルダに無いと解決しないので、仕様形式を決めた時点で仕様書のフォルダへ複製する手順が別に要る。** `14` が名指ししていた `apply-process-mode.js` は**存在しない**（確認済み）。
+
+**確認:** §2.10 の手順で export が通り、`checks.jq` が動くこと。**骨格を文法と並べて置けば単独で export が通ること**（実測済み）。
 
 ---
 
@@ -739,7 +763,9 @@ flowchart TB
 | 1 | **ja で行った全変更を en に反映する** |
 | 2 | **章題は §2.1 の英語をそのまま使う** |
 
-> **`check-parity` が 41 ファイル対で ja / en の行数一致を強制する。** ja を先に仕上げ、確認してから en に反映する。**行数を合わせる作業が別に要る。**
+> **本手順は「en は ja が全部終わってから」ではない**（2026-08-09 に改訂）。`framework-development.md` §5.1 は **ja と en の片方だけを変えるコミットを禁じており**（pre-commit フックが強制する）、後回しにできない。**各手順の中で ja と en を同時に直す。** 本手順に残るのは、章題を §2.1 の英語に揃えることと、通しで見直すことだけである。
+
+> **`check-parity` が 41 ファイル対で ja / en の行数一致を強制する。** 同時に直すので、**1 手順ごとに行数を合わせる。** 最後にまとめて合わせようとすると、どの手順で崩れたのかが分からなくなる。
 
 **確認:** `node tools/check-parity.mjs` が通る。
 
@@ -791,8 +817,11 @@ node tools/check-parity.mjs && node tools/check-roster.mjs && node tools/check-l
 | 1 | **`TAG` は `[A-Z]+(_[A-Z]+)*` に限られる。** kebab も camel も数字も通らない |
 | 2 | **欄名は `[A-Z]+[A-Za-z0-9_\-]*`。** `TAG` より緩いが、UPPER_SNAKE_CASE に統一する |
 | 3 | **`ROLE` は PascalCase。** `TAG` と規則が違う |
-| 4 | **`**Relations**:` はメタデータ欄の直後（空行なし）か、本文欄の後ろに置く。** 間に空行だけを挟むと export が止まる |
-| 5 | **メタデータ欄の最終行に行継続の `\` を残さない。** 欄を削るときは前の行の `\` も一緒に落とす |
+| 4 | **`**Relations**:` は本文の欄より後ろ、ノードの末尾に置く**（2026-08-09 の実測で改訂）。**「メタデータ欄の直後でもよい」は誤りだった** —— そのままでは export が通るが、整形で空行が入った瞬間に `duplicate field names` になる |
+| 5 | **行継続の `\` は書かない**（2026-08-09 の実測で改訂）。**「メタデータ欄は `\` でつなぐ」は誤りだった** —— 全廃しても通り、最終行に残った `\` が唯一の失敗形である |
+| 5a | **箇条書きを従える欄名（`SCENARIO` / `EXTENSIONS` / `Relations`）の後ろに空行を 1 つ置く。** 空行なしでも export は通るが、Prettier が入れるので置かないと保存のたびに差分が出る |
+| 5b | **親として書いた `UID` は同じ文書の中に実在しなければならない。** 空欄フォームだけを並べたひな形は export できない |
+| 5c | **記法の検査は「複製 → 整形 → export」の順で行う。** 壊れやすい形は整形をかけて初めて落ちるので、**export だけを検査にすると壊れた形を承認する** |
 | 6 | **`**Type**:` は省略できない。** `SECTION` も明示する |
 | 7 | **`File` 関係の鍵は `Path`。** 他を書くと export が止まる |
 | 8 | **文書ヘッダに独自の欄を書いてはならない。** エラーも警告も無く消える |

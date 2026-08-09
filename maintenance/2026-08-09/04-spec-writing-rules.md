@@ -41,13 +41,13 @@
 
 **記法は 1 つで、変わるのは分ける単位だけである。**
 
-| 仕様形式 | 分ける単位 | 枚数 | StrictDoc | `spec.sgra` | 使えるプロセス形式 |
+| 仕様形式 | 分ける単位 | 枚数 | StrictDoc | 文法 | 使えるプロセス形式 |
 |---|---|:-:|:-:|:-:|---|
-| **ANMS**（AI-Native Minimal Spec） | 分けない | 1 | **使わない** | **配る（回さない）** | 簡易のみ |
-| **ANPS-part**（AI-Native Plural Spec, 部単位） | 部 | 3 | 使う | 配って回す | 簡易 / 通常 / 厳密 |
-| **ANPS-chapter**（AI-Native Plural Spec, 章単位） | 章 | 14 | 使う | 配って回す | 簡易 / 通常 / 厳密 |
+| **ANMS**（AI-Native Minimal Spec） | 分けない | **1** | **使わない** | `spec-anms.sgra`（**配るが回さない**） | 簡易のみ |
+| **ANPS-part**（AI-Native Plural Spec, 部単位） | 部 | **4** | 使う | `spec.sgra` | 簡易 / 通常 / 厳密 |
+| **ANPS-chapter**（AI-Native Plural Spec, 章単位） | 章 | **15** | 使う | `spec.sgra` | 簡易 / 通常 / 厳密 |
 
-**ANMS でも記法は同じである。** StrictDoc を回さないだけであり、`spec.sgra` は配る。**回さないので export も検出クエリも使えないが、書き直しなしで次の段へ移れる。**
+**ANMS でも記法は同じである。** StrictDoc を回さないだけである。**回さないので export も検出クエリも使えない。**
 
 **移行の道筋:**
 
@@ -55,7 +55,7 @@
 ANMS ──ファイルを部で割る──▶ ANPS-part ──部を章で割る──▶ ANPS-chapter
 ```
 
-**記法が同じなので、どの段でも書き直しが要らない。** 割るだけである。
+> **「割るだけ」ではない（実測）。** 3 構成をすべて作って export し、トレースの鎖が 12 ノードで完全に一致することは確かめた。**しかし割る作業には、切る以外に 4 つの変換が要る。** 下の「分割の手順」を見よ。**要らないのは書き直しであって、変換ではない。**
 
 **移行の引き金（いずれかを満たしたら次へ）:**
 
@@ -71,20 +71,22 @@ ANMS ──ファイルを部で割る──▶ ANPS-part ──部を章で割�
 
 > **複数の章を 1 枚に入れるファイルは、範囲を名前に含める（MUST）。**
 
+> **付録は章番号を持たないので、席番号も `A` とする（MUST）** —— `A-appendix.md`。**付録を他のファイルへ混ぜてはならない（MUST NOT）。** 章の一覧が付録を `A` と呼んでいるのに、ファイル側だけ番号を与えると、席番号の規則が付録にだけ効かなくなる。
+
 | 仕様形式 | ファイル |
 |---|---|
 | **ANMS** | `01-11-spec.md` |
-| **ANPS-part** | `01-04-requirements.md` / `05-08-design.md` / `09-11-test.md` |
-| **ANPS-chapter** | 下の 14 枚 |
+| **ANPS-part** | `01-04-requirements.md` / `05-08-design.md` / `09-11-test.md` / `A-appendix.md` |
+| **ANPS-chapter** | 下の 15 枚 |
 
-**ANPS-chapter の 14 枚:**
+**ANPS-chapter の 15 枚:**
 
 ```text
 01-foundation.md              06-software-specification.md   10-sws-test-cases.md
 02-overview.md                07-test-strategy.md            10-sws-test-results.md
 03-use-cases.md               08-design-principles-check.md  11-nfr-test-cases.md
 04-requirements.md            09-uc-test-cases.md            11-nfr-test-results.md
-05-design.md                  09-uc-test-results.md
+05-design.md                  09-uc-test-results.md          A-appendix.md
 ```
 
 **同じ番号の 2 枚が並ぶ。名前が違えば共存する**（実測で確認済み）。
@@ -93,11 +95,34 @@ ANMS ──ファイルを部で割る──▶ ANPS-part ──部を章で割�
 
 | 何 | 枚数 | 中身 |
 |---|---|---|
-| `spec.sgra` | 1 | ノード型の文法。`apply-process-mode.js` が配置する |
+| 文法 | 1 | ノード型の文法。**ANMS は `spec-anms.sgra`、ANPS は `spec.sgra`。** 正本は `tools/spec-query/` にあり、**仕様形式を決めた時点で該当する 1 つを仕様書のフォルダへ複製する（MUST）** —— `**Grammar**` は同じフォルダを見るので、置かないと文法が適用されない |
 | `<同名>.meta.yaml` | `.md` 1 枚につき 1 枚 | Common Block。**StrictDoc は文書として拾わない**（実測） |
 | `_assets/fig-<name>.md` | 必要数 | 大きな図。**`**Grammar**` を宣言しない**（宣言するとパス解決で落ちる） |
 
-**`DOC` の UID は `DOC-` ＋ ファイル名（番号を除く）を大文字にしたものとする（MUST）。** `04-requirements.md` なら `DOC-REQUIREMENTS`、`01-11-spec.md` なら `DOC-SPEC` である。
+**`DOC` の UID は `DOC-` ＋ ファイル名（番号を除く）を大文字にしたものとする（MUST）。** `04-requirements.md` なら `DOC-REQUIREMENTS`、`01-11-spec.md` なら `DOC-SPEC`、`09-uc-test-cases.md` なら `DOC-UC-TEST-CASES` である。**ハイフンを含む UID は通る**（実測）。
+
+### 分割の手順
+
+**3 構成をすべて作って export し、実際に何が要るのかを測った。** トレースの鎖は 3 構成で 12 ノードとも完全に一致する —— **ファイルをまたぐ親子関係（`SWS-001 → FR-001`、`TC-002 → SWS-001`、`TR-002 → TC-002`）はすべて解決する。** 書き直しは要らない。**要るのは次の 4 つの変換である。**
+
+| # | 変換 | どの移行で要るか | 測った結果 |
+|:-:|---|---|---|
+| 1 | **切ったファイルごとに、H1 と `**Grammar**` / `**UID**` / `**Version**` を書き足す（MUST）** | ANPS-part / ANPS-chapter | 文書ヘッダの無いファイルは文法が適用されない |
+| 2 | **`**Grammar**` を `spec.sgra` に差し替え、`TEST_RESULT` に 4 欄を書き足す（MUST）** | ANMS → ANPS のとき | 足りない欄を export が名指しする。**`Hint` が文法の全欄を並べるので、1 回の編集で収束する** |
+| 3 | **章の途中で切るときは、章見出しを両方の枚に持たせる（MUST）** | ANPS-chapter のテスト 6 枚 | **これを怠ると `heading level forward jumps are not allowed: L1 -> L3` で止まる。** 節見出しを 1 段上げてもよいが、そちらは全見出しが動く |
+| 4 | **付録を `A-appendix.md` として独立させる（MUST）** | ANPS-part / ANPS-chapter | 付録はどの章範囲にも属さない |
+
+**2 の実測（Grammar 行だけを差し替えたときに出るもの）:**
+
+```text
+Semantic error: Node is missing a field that is required by grammar: EXECUTED_ON.
+Hint: Node fields: [UID, TITLE, RESULT, EVIDENCE],
+      grammar fields: [UID, TITLE, RESULT, EXECUTED_ON, TESTED_VERSION, ENVIRONMENT, EVIDENCE, REMARK].
+```
+
+**足した 4 欄は `RESULT` と `EVIDENCE` の間に置く（MUST）** —— 欄の並びは文法の宣言順に従う（「記法の規則」5 番）。**`EVIDENCE` は段落のまま残す**（同 8 番）。
+
+> **3 が最も見つけにくい。** ANPS-part（部で割る）は章の境目で切るので起きない。**章単位に割った瞬間、テストの 6 枚だけで起きる。** 部までしか試していないと、この失敗は最後まで表に出ない。
 
 ---
 
@@ -1386,6 +1411,9 @@ jq -f tools/spec-query/checks.jq out/json/json/index.json
 | **骨格を空欄フォームの並びにしない** | **親として書いた `UID` が実在しないと export が止まる（実測）。** 空欄だけを並べた骨格は検査できない。**閉じた最小の鎖にすれば、骨格自身が検査の対象になる** |
 | **骨格を ANMS の文法（`spec-anms.sgra`）で書く** | **すべてのプロジェクトが ANMS から始まる。** ANPS へ移るときに足りない欄は export が名指しで教えるので、**足す方向の移行は機械が案内できる。** 逆に ANPS 前提の骨格から始めると、ANMS の利用者が不要な 4 欄を消す判断を自分でしなければならない |
 | **記法の検査を「複製 → 整形 → export」の順にする** | **壊れやすい形は、そのままでは export が通ってしまう（実測）。** 整形を 1 回かけて初めて落ちる。**export だけを検査にすると、壊れた形を「通った」と誤って承認する** |
+| **「割るだけ」ではなく「4 つの変換」と書く** | **3 構成を実際に作って測った。** 鎖は一致するが、文書ヘッダの増設・文法の差し替え・章見出しの持ち回り・付録の独立は要る。**「割るだけ」と書くと、章単位に割った利用者が `L1 -> L3` で止まったときに、規則のどこを読めばよいのか分からない** |
+| **付録に席番号 `A` を与える** | **章の一覧は付録を `A` と呼んでいるのに、ファイルの一覧には付録が無かった。** どこへ入れるかが書かれていないと、書き手ごとに別の場所へ入る。**席番号の規則は付録にも同じように効かせる** |
+| **章の途中で切るとき、章見出しを両方の枚に持たせる** | **代案は節見出しを 1 段上げることだが、そちらは配下の全見出しが動く。** 1 行の複製で済むほうを採る。**「割るだけ」に最も近い形である** |
 | **節の一覧表から題名の欄を落とす** | **節の題名は骨格の見出し・本書の見出し・一覧表の 3 か所にあった。** 1 つ減らした。**残る 2 つのうち骨格が正本である**（写されるのは骨格だから） |
 | STFB / 上剛下柔 (SDP適用) | 章の順序は Stable Dependencies Principle に従う。上位=変更頻度が低い、下位=変更頻度が高い |
 | **部を 3 つに分ける** | **書き手が変わる境界と一致する。** 第 1 部 srs-writer、第 2 部 architect、第 3 部 test-designer / tester。**ANPS-part はこの境界でファイルを割る** |

@@ -81,10 +81,12 @@ Node is missing a field that is required by grammar: EXECUTED_ON.
 | 6 | **`**Relations**` は本文欄の後ろに置く（MUST）** | メタデータに隣接させると、整形で空行が入った瞬間に `duplicate field names` |
 | 7 | **1 行の欄しか持たない型は、最後の欄を段落として独立させる（MUST）** | 置き場が無くなり `Relations must directly follow requirement metadata without an empty line` |
 | 8 | **関係は `- ` で始まる箇条書きで、続く欄は字下げする（MUST）** | 1 行にまとめると `each relation dictionary must contain a mandatory 'Type' key` |
+| 9 | **`**SCENARIO**:` `**EXTENSIONS**:` `**Relations**:` のように箇条書きを従える欄名は、その後ろに空行を 1 つ置く（MUST）** | ——（空行なしでも export は通る）。**ただし Prettier が空行を入れるため、置かないと保存のたびに差分が出る。空行あり形が整形の不動点である** |
+| 10 | **親として書いた `UID` は同じ文書の中に実在しなければならない（MUST）** | `references parent requirement which doesn't exist`。**空欄フォームだけを並べたひな形は export できない** |
 
 > **規則 5 は特に危ない。** Markdown の慣習では章の区切りに `---` を置くが、StrictDoc の仕様書では書けない。**章見出しが区切りを兼ねる。**
 
-> **行末の `\`（強制改行）は要らない。** 欄の区切りには不要であり、**最終行に残すと export が止まる**唯一の失敗形でもある。本サンプルは 94 個すべてを外した。`maintenance/2026-08-08/06-file-inventory.md` が「1 行形は実測で確認済み」と書いているのは誤りで、0.27.1 では通らない。
+> **行末の `\`（強制改行）は要らない。** 欄の区切りには不要であり、**最終行に残すと export が止まる**唯一の失敗形でもある。本サンプルは 94 個すべてを外した。`maintenance/2026-08-08/06-file-inventory.md` が「1 行形は実測で確認済み」と書いているのは事実に反し、0.27.1 では通らない。
 
 ---
 
@@ -95,6 +97,15 @@ Node is missing a field that is required by grammar: EXECUTED_ON.
 Prettier や markdownlint は「リストの前後に空行を置く」規則を持つ。`**Relations**:` をメタデータ欄に隣接させていると、整形で入った空行がリストを切り離し、**`**Type**` がノードの欄として二重に読まれて `duplicate field names` になる。** エラーは原因（空行）を指さない。
 
 **本文欄の後ろに置けば、同じ空行が入っても解釈が変わらない。**
+
+> **壊れやすい形は、export だけでは捕まらない（2026-08-09 追測）。** メタデータに隣接させた形は、**そのままでは export が通り、整形を 1 回かけて初めて落ちる。**
+>
+> ```text
+> 整形前: Total execution time ... 1.47s
+> 整形後: Semantic error: duplicate field names in a valid requirement node are not allowed.
+> ```
+>
+> **したがって記法の検査は「複製する → 整形をかける → export する」の順で行う。** export だけを検査にすると、壊れた形を「通った」と承認する。
 
 **ノードの形（本サンプルの実物）:**
 
@@ -107,6 +118,7 @@ Prettier や markdownlint は「リストの前後に空行を置く」規則を
 **STATEMENT**: 語彙集に該当があるとき、 システムは、 その意味を利用者に返すこと。
 
 **Relations**:
+
 - **Type**: `Parent`
   **ID**: `UC-001`
   **Role**: `Satisfies`
@@ -124,6 +136,7 @@ Prettier や markdownlint は「リストの前後に空行を置く」規則を
 **EVIDENCE**: out/junit.xml#test_usecase::test_hit
 
 **Relations**:
+
 - **Type**: `Parent`
   **ID**: `TC-001`
   **Role**: `ResultOf`

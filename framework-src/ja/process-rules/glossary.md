@@ -91,9 +91,9 @@
 | SRS | Software Requirements Specification | エージェント名のみ許可 | `srs-writer` はエージェント名（名前空間ルール対象外）。名前空間には使用不可 |
 | DR | Disaster Recovery | 不許可 | `disaster-recovery-plan` に改名済み。3語で上限内 |
 | CR | Change Request | 不許可 | フィールド名 `change_request_status` に改名済み |
-| HW | Hardware | 許可 | file_type `hw-requirement-spec` で使用。`hardware-requirement-spec` は4語で上限超過 |
+| HW | Hardware | 許可 | 一般用語。HW / SW の対で広く通り、他の語と読み違えようがない。`hardware-requirement-spec` は3語で上限内だが、それでも略称を採る。**語数が理由ではない** |
 | AI | Artificial Intelligence | 許可 | 一般用語。`ai-requirement-spec` で使用 |
-| FW | Framework | 不許可 | `framework-requirement-spec` は3語で上限内。略称不要 |
+| FW | Framework | 不許可 | **多義的。** firmware とも forward とも読める。`framework-requirement-spec` は3語で上限内であり、略称を採る理由が無い |
 
 ## 4. 紛らわしい対の区別
 

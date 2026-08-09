@@ -45,6 +45,13 @@ const USER_TOOLS = new Set([
   // The launcher /full-auto-dev runs at Phase 0 to bring the receiver up. It is
   // Windows only; elsewhere the same phase starts otel-sink.mjs directly.
   "start-otel-sink.bat",
+  // The StrictDoc grammars and the detection queries the project's own
+  // specification is validated against. One copy each, not one per language: the
+  // field names are English in every language tree, so a per-language copy would
+  // drift with nothing to catch it. The grammar has to sit beside the spec files
+  // for "**Grammar**: spec.sgra" to resolve, so the spec form's setup copies the
+  // matching one into docs/spec/ - ANMS takes spec-anms.sgra, ANPS spec.sgra.
+  "spec-query",
 ]);
 
 function usage() {
