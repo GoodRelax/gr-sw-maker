@@ -1,5 +1,7 @@
 # `spec.sgra` — 文法の現物と実測
 
+> **本書は履歴である。** 定義と作業指示は `14-framework-update-plan.md` が持つ。**内容が食い違う場合は 14 が正しい。**
+
 **本書は現物の保全である。** `10-element-table.md`（どの型がどこに置かれるか）と `11-field-table.md`（型が何の欄を持つか）から起こした。**作業場所は session scratchpad のため、そのままでは失われる。**
 
 **`07-anms-sgra-draft.md` の文法を置き換える。** あちらは段 4 の記録であり、`NODE` / `CONNECTION` を持ち、`TEST_RESULT` を分離していない。**歴史として残すが、参照先は本書とする。**
