@@ -12,14 +12,14 @@
 | Ch5 Design | `xx-design.md (SD)` | `DOC-DESIGN` | `ADR` | 無し | — | — | architect | architect | implementer / review-agent / runbook-writer | Ch5.6 の各設計判断に UID を振る。トレースには載せない（決定 24） |
 | Ch6 Software Specification | `xx-software-specification.md (SD)` | `DOC-SOFTWARE-SPECIFICATION` | `SWS` | `SW_SPEC` | `FUNC_REQ` または `NON_FUNC_REQ` | `Parent` / `Satisfies` | architect | architect | implementer | 各詳細仕様に UID を振る。EARS 1 文で 1 件 |
 | Ch7 Test Strategy | `xx-test-strategy.md (SD)` | `DOC-TEST-STRATEGY` | — | — | — | — | architect | test-designer | test-designer / tester | 地の文のみ。3 系統のマトリクス |
-| Ch8 Design Principles Compliance | `xx-design-principles-check.md (SD)` | `DOC-DESIGN-PRINCIPLES-CHECK` | — | — | — | — | architect | review-agent | review-agent / technical-authority | 地の文のみ |
+| Ch8 Design Principles Compliance | `xx-design-principles-check.md (SD)` | `DOC-DESIGN-PRINCIPLES-CHECK` | — | — | — | — | architect | review-agent | review-agent / technical-authority | 地の文のみ。**全形式で必須**（簡易でも省かない） |
 | Ch9.1 Use Case Test Cases | `xx-uc-test-cases.md (SD)` | `DOC-UC-TEST-CASES` | `TC` | `USE_CASE_TEST` | `USE_CASE` | `Parent` / `Verifies` ＋ `File` | test-designer | test-designer | implementer / review-agent / tester | 各受入基準に UID を振る。`File` の鍵は `Path` |
 | Ch9.2 Use Case Test Results | `xx-uc-test-results.md (SD)` | `DOC-UC-TEST-RESULTS` | `TR` | `TEST_RESULT` | `USE_CASE_TEST` | `Parent` / `ResultOf` | tester | tester | progress-monitor / test-designer | 各実行記録に UID を振る。1 ケースに N 件 |
 | Ch10.1 Software Specification Test Cases | `xx-sws-test-cases.md (SD)` | `DOC-SWS-TEST-CASES` | `TC` | `SW_SPEC_TEST` | `SW_SPEC` | `Parent` / `Verifies` ＋ `File` | test-designer | test-designer | implementer / review-agent / tester | 同上。`TEST_LEVEL` を持つ |
 | Ch10.2 Software Specification Test Results | `xx-sws-test-results.md (SD)` | `DOC-SWS-TEST-RESULTS` | `TR` | `TEST_RESULT` | `SW_SPEC_TEST` | `Parent` / `ResultOf` | tester | tester | progress-monitor / test-designer | 同上 |
 | Ch11.1 Non-Functional Test Cases | `xx-nfr-test-cases.md (SD)` | `DOC-NFR-TEST-CASES` | `TC` | `NON_FUNC_TEST` | `NON_FUNC_REQ` | `Parent` / `Verifies` ＋ `File` | test-designer | test-designer | implementer / security-reviewer / tester | 同上 |
 | Ch11.2 Non-Functional Test Results | `xx-nfr-test-results.md (SD)` | `DOC-NFR-TEST-RESULTS` | `TR` | `TEST_RESULT` | `NON_FUNC_TEST` | `Parent` / `ResultOf` | tester | tester | progress-monitor / test-designer | 同上 |
-| 章に属さない | `_assets/fig-<name>.md (SD)` | `DOC-FIG-<NAME>` | — | — | — | — | 図を書いたエージェント | 同左 | 図を参照する者 | 30 行を超える図 1 つ。`Grammar` を宣言しない |
+| 章に属さない | `_assets/fig-<name>.md (SD)` | `DOC-FIG-<NAME>` | — | — | — | — | 図を書いたエージェント | 同左 | 図を参照する者 | 大きな図 1 つ。`Grammar` を宣言しない |
 
 ## 凡例
 
@@ -85,7 +85,7 @@ SWS                         UID 接頭
 | 場合 | 規則 | 例 |
 |---|---|---|
 | 通常の章 | **章題を kebab-case にする** | `Ch6 Software Specification` → `xx-software-specification.md` |
-| 同じ形の章が並ぶ場合（Ch9〜Ch11） | **先頭語を UID 接頭辞の小文字に置き換える** | `Ch10.1 Specification Test Cases` → `xx-sws-test-cases.md` |
+| 同じ形の章が並ぶ場合（Ch9〜Ch11） | **先頭語を UID 接頭辞の小文字に置き換える** | `Ch10.1 Software Specification Test Cases` → `xx-sws-test-cases.md` |
 
 **置き換えるのは 3 章が並んで区別が要るときだけである。** `Ch6 Software Specification` を `xx-sws.md` にはしない —— 並ぶ相手がおらず、短くする理由が無い。
 
@@ -121,16 +121,19 @@ SWS                         UID 接頭
 
 > **現行の `test-engineer` を 2 つに割ることになる。** `agent-list.md` と `CLAUDE.md` の名簿の変更であり、**段 5 でユーザーの許可を得てから行う。**
 
-> **未確認が 1 件ある。** 非機能テスト（Ch11）は security-reviewer がスキャンを走らせる場合がある。**そのとき `tester` が代理で記録するのか、`TEST_RESULT` に `EXECUTED_BY` 欄を足すのかは決めていない。**
+> **`TEST_RESULT` に `EXECUTED_BY` 欄は置かない。** 誰が実行するかはプロセスが定めており、**節ごとに `tester` と決まっている。** 節の外から実行者が変わる場合（security-reviewer がスキャンを走らせる等）も、記録するのは `tester` である。**欄にすると、プロセスで決まっていることを 1 件ずつ書き写すことになる。**
 
 ### 図を外に出す境目
 
-**30 行を超える図は `_assets/` に出す。**
+> **大きな図は `_assets/` に出す。行数で境目を定めない。**
 
-| 版 | 境目 | 根拠 |
-|---|---|---|
-| 従来 | 15 行 | v0.35 段 1 で定めた |
-| **現在** | **30 行** | **StrictDoc の 1 画面に収まる範囲**（ユーザー判断。**実測していない**） |
+**従来は「15 行を超えたら」と行数で定めていた。廃止する。** 図の大きさは行数だけでは決まらない —— ノードが 10 個の Mermaid は 12 行で書けるが、描画すると本文より大きくなる。**逆に 30 行の状態遷移図が縦に細く収まることもある。**
+
+**判定は「本文の流れが読めなくなるほど大きいか」で行う（SHOULD）。** 書いた者が判断し、review-agent が異議を出せる。
+
+### `_assets/` のファイル名
+
+> **`_assets/` の中でファイル名が衝突しなければよい（MUST）。** StrictDoc は `_assets` の名前を固定で扱うため、1 リポジトリに複数の製品を置く場合も同じフォルダを共有する。**製品ごとに分ける必要はない。名前が重ならないようにするだけでよい。**
 
 ### `DOC-` を残す理由
 
