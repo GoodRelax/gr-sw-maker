@@ -34,7 +34,7 @@
 | 対象 | 変更前 | 変更後 | 理由 |
 |---|---|---|---|
 | **`ND` / `CN`** | `NODE` / `CONNECTION` 型 | **地の文（`TEXT`）** | **自己完結した島だった。** `CN` を指すのは `NFR` の `Affects` だけ、`ND` を指すのは `CN` だけ。`TRUSTED` を使ったセキュリティ設計も `CARRIES_SOFTWARE` を使った運用手順も**設計にあるだけで未実装**であり、飾りになる公算が高い |
-| **`ADR`** | UID を持つが型は無い | **UID 廃止** | **型を持たない UID は StrictDoc が検証しない。** 設計判断をトレース対象にすると層が 1 つ増えるという既存の判断とも一貫する |
+| **`ADR`** | UID を持つが型は無い | **UID のまま残す** | **議論で `ADR-003` と名指せないと、そのたびに判断の中身を言い直すことになる。その費用のほうが高い**（決定 24）。**ただしトレースにはどこにも紐づけない** |
 
 **この 2 件により、`04-spec-format-unification.md` §3.2 の決定 1（`ND` / `CN` をノード型にする）は覆る。**
 
@@ -45,7 +45,7 @@
 | | 変更前 | **変更後** |
 |---|---|---|
 | 宣言する `TAG` | 11 種 | **9 種** |
-| UID 接頭辞 | 10 件 | **7 件** |
+| UID 接頭辞 | 10 件 | **8 件**（`ADR` を残す） |
 | `ROLE` | 6 種 | **3 種** |
 | 鎖の外の関係 | `Affects` / `From` / `To` | **無し** |
 
@@ -65,36 +65,22 @@
 
 ## 2. ノードの一覧
 
-**採番はすべて 3 桁のゼロ詰めとする（MUST）** — `SP-001`。**ランダム ID・GUID は使わない（MUST NOT）。**
+> **`08-edit-policy.md` §1.2 へ移した。** 各 Type の列（`.sgra` の `TAG:` と `.md` の `**Type**:`）を並べた形になっている。**ノードの定義はそちらを唯一の出所とする。**
 
-| UID 接頭辞 | `TAG`（ノード型） | 親の `TAG` | `ROLE` | ファイル | 備考 |
-|---|---|---|---|---|---|
-| — | `SECTION` | — | — | 全ノード文書 `.md (SD)` | 章の見出し。`IS_COMPOSITE: True` |
-| — | `TEXT` | — | — | 全ノード文書 `.md (SD)` | 地の文。**宣言しない。StrictDoc が作る** |
-| `GL` | `GOAL` | **無し（根）** | — | `xx-foundation.md (SD)` | **鎖の根。型名は `GOAL` のまま** |
-| `UC` | `USE_CASE` | `GOAL` | `Satisfies` | `xx-use-cases.md (SD)` | 主成功シナリオ・拡張は欄 |
-| `FR` | `REQUIREMENT` | `USE_CASE` | `Satisfies` | `xx-requirements.md (SD)` | `REQ_KIND: Functional` |
-| `NFR` | `REQUIREMENT` | `GOAL` | `Satisfies` | `xx-requirements.md (SD)` | `REQ_KIND: NonFunctional` |
-| `SP` | `SPECIFICATION` | `REQUIREMENT` | `Satisfies` | `xx-specification.md (SD)` | **EARS 1 文 1 件** |
-| `TC` | `USE_CASE_TEST` | `USE_CASE` | `Verifies` | `xx-uc-test-cases.md (SD)` | `File` 関係でテストコードを指す |
-| `TC` | `SPECIFICATION_TEST` | `SPECIFICATION` | `Verifies` | `xx-sp-test-cases.md (SD)` | 同上 |
-| `TC` | `NON_FUNCTIONAL_TEST` | `REQUIREMENT`（NFR のみ） | `Verifies` | `xx-nfr-test-cases.md (SD)` | 同上 |
-| `TR` | `TEST_RESULT` | **テスト 3 型のいずれか** | `ResultOf` | `xx-*-test-results.md (SD)` | **1 ケースに N 件。3 系統で 1 型を共用する** |
+**要点だけ再掲する。**
 
-**宣言する `TAG` は 9 種、UID 接頭辞は 7 件である。**
-
-**`TAG` の綴りは UPPER_SNAKE_CASE に限られる。** StrictDoc の文法が `[A-Z]+(_[A-Z]+)*` と定めており、kebab も camel も数字も通らない（実測）。
-
-> **`TC` / `TR` は 3 系統で接頭辞を共有し、番号は通しの単一連番とする。** 系統は `TAG` が持つので、接頭辞にも持たせると同じ情報が 2 か所に増える。**番号帯で系統を表してはならない（MUST NOT）** —— 件数が帯を超えた瞬間に壊れる。
-
----
+| 項目 | 数 |
+|---|---|
+| 宣言する `TAG` | **9 種** |
+| UID 接頭辞 | **8 件**（`GL` / `UC` / `FR` / `NFR` / `ADR` / `SP` / `TC` / `TR`）。**`ADR` だけノード型を持たない** |
+| `ROLE` | **3 種**（`Satisfies` / `Verifies` / `ResultOf`）。**すべて鎖に載る** |
 
 ## 3. ノードを持たないファイルの一覧
 
 | ファイル | 中身 | 備考 |
 |---|---|---|
 | `xx-configuration.md (SD)` | 構成図・機械・経路・持たないもの | **地の文（決定変更）。** 経路の信頼性は文で述べる |
-| `xx-architecture.md (SD)` | 方式・コンポーネント・ファイル構成・**ドメインモデル**・振る舞い・ADR | **UID を持たない見取り図。ADR も UID を持たない** |
+| `xx-design.md (SD)` | 方式・コンポーネント・ファイル構成・**ドメインモデル**・振る舞い・ADR | **ノードを持たない見取り図。`ADR` は UID を持つがノードではない** |
 | `xx-test-strategy.md (SD)` | 3 系統（UC / SP / NFR）のマトリクス | |
 | `xx-design-principles-check.md (SD)` | 設計原則ごとの確認表 | |
 | `spec.sgra` | **文法。** `TAG` / 欄 / 必須性 / 値域 / `RELATIONS` の宣言 | **ガバナンスの中核。全形式で必須** |
@@ -161,7 +147,7 @@ flowchart BT
 | 2 | System Configuration（システム構成） | `02-configuration.md (SD)` | **無し** |
 | 3 | Use Cases（ユースケース） | `03-use-cases.md (SD)` | `USE_CASE` |
 | 4 | Requirements（要求） | `04-requirements.md (SD)` | `REQUIREMENT` |
-| 5 | Architecture（アーキテクチャ） | `05-architecture.md (SD)` | **無し** |
+| 5 | **Design（設計）** | `05-design.md (SD)` | **無し**（`ADR` は UID のみ持つ） |
 | 6 | Specification（仕様） | `06-specification.md (SD)` | `SPECIFICATION` |
 | 7 | Test Strategy（テスト戦略） | `07-test-strategy.md (SD)` | 無し |
 | 8 | Design Principles Compliance（設計原則 準拠確認） | `08-design-principles-check.md (SD)` | 無し |
@@ -176,8 +162,8 @@ flowchart BT
 
 | 形式 | 枚数 | ファイル | 持つ章 |
 |---|:-:|---|---|
-| **簡易** | **1** | `01-spec.md (SD)` | Ch1〜Ch14 |
-| 中間 | 3 | `01-upper.md (SD)` / `05-design.md (SD)` / `09-test.md (SD)` | Ch1〜4 / Ch5〜8 / Ch9〜14 |
+| **簡易** | **1** | `01-14-spec.md (SD)` | Ch1〜Ch14 |
+| 中間 | 3 | `01-04-upper.md (SD)` / `05-08-design.md (SD)` / `09-14-test.md (SD)` | Ch1〜4 / Ch5〜8 / Ch9〜14 |
 | 分割 | 14 | 上の表のとおり | 1 章ずつ |
 
 ---
@@ -193,7 +179,7 @@ flowchart BT
 | **何のためにあるか** | **人が理解するため** | **機械が検証するため** |
 | 形 | クラス図 / ER 図 / 表 / 文章。**記法を問わない** | DDL / JSON Schema / XSD / Protobuf。**機械が読める形** |
 | 実装への依存 | しない | **する** |
-| 置き場所 | **Ch5 Architecture** | **Ch6 Specification** |
+| 置き場所 | **Ch5 Design** | **Ch6 Specification** |
 | 本フレームワークでの呼び名 | **ドメインモデル** | **データスキーマ** |
 
 **判定の問い:**
@@ -238,7 +224,7 @@ spec-template.md:191                  4.x Data Schema  データスキーマ
 
 | 場所 | 現 | 新 |
 |---|---|---|
-| `full-auto-dev-document-rules.md:1277` | データモデル | **ドメインモデル** |
+| `full-auto-dev-document-rules.md:1277` | データモデル | **ドメインモデル**。**同じ行の `Architecture` は `Design` に、章番号は Ch3 → Ch5 に動く**（決定 25） |
 | `full-auto-dev-document-rules.md:1273` | データモデルマイグレーション数 | **データスキーマのマイグレーション数** |
 | `agents/architect.md:3` | データモデル | **データスキーマ**（OpenAPI と並ぶので実装寄り） |
 | `full-auto-dev-process-rules.md:900` | データモデルサンプル | **ドメインモデルサンプル**（ER 図・エンティティ間関係の確認である） |
@@ -258,9 +244,5 @@ spec-template.md:191                  4.x Data Schema  データスキーマ
 
 | # | 内容 | 誰が決めるか |
 |:-:|---|---|
-| 1 | **Ch6 に、EARS 1 文で書けないものをどう置くか。** データスキーマ・UI 要素マップ・設定定義は表である。**提案: Ch6 は `SP` ノードと地の文の混在とする**（Ch1 が `GOAL` と地の文の混在であるのと同じ）。**帰結として、地の文で書いたスキーマは `SPECIFICATION_TEST` の検証対象にならない** | ユーザー |
-| 2 | **`USE_CASE_TEST` の `ROLE` を `Validates` に分けるか。** 受入テストは妥当性確認であり `Verifies` は正確でない。**推奨: 分ける。** 分けると `ROLE` が 4 種になる | ユーザー |
-| 3 | **`TR` に証跡の欄 `EVIDENCE` を持たせるか。** 手で書く以上、走行結果とずれうる。**推奨: 持たせる** | ユーザー |
-| 4 | **`runbook-writer` / `user-manual-writer` の In の参照先。** 「システム構成の理解」が欲しいのが物理配置（Ch2）なら、参照先ごと向け直す必要がある。**未確認** | 調べてからユーザー |
-| 5 | **ファイル番号を 1 始まりに変えることの承認。** `00-foundation` → `01-foundation` | ユーザー |
-| 6 | **`_assets/` を複数の製品で共有する場合の衝突。** StrictDoc は `_assets` の名前を固定で扱う。**未検証** | 測ってからユーザー |
+| 1 | **`runbook-writer` / `user-manual-writer` の In の参照先。** 「システム構成の理解」が欲しいのが物理配置（Ch2）なら、参照先ごと向け直す必要がある。**未確認** | 調べてからユーザー |
+| 2 | **`_assets/` を複数の製品で共有する場合の衝突。** StrictDoc は `_assets` の名前を固定で扱う。**未検証** | 測ってからユーザー |
