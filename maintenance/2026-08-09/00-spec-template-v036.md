@@ -668,35 +668,24 @@ GL-002 ◀─Satisfies─ NFR-005 ◀─Satisfies─ SWS-002 ◀─Verifies─ T
 
 > **EARS の型（Ubiquitous / Event-driven 等）を欄に持ってはならない（MUST NOT）。** 型は要求文そのものに現れる。**型名を別の欄に書くと、要求文を書き直したときに欄が古いまま残り、どちらを信じるかを決められなくなる。**
 
-**EARS 構文パターン:**
+**EARS 構文パターン（日英併記）:**
 
-| パターン | 構文 | 用途 |
-|---|---|---|
-| Ubiquitous | The [System] shall [Response]. | 常に成り立つ要求 |
-| Event-driven | **When** [Trigger], the [System] shall [Response]. | イベント起点の要求 |
-| State-driven | **While** [In State], the [System] shall [Response]. | 状態依存の要求 |
-| Unwanted Behavior | **If** [Trigger], then the [System] shall [Response]. | 異常系・例外処理 |
-| Optional Feature | **Where** [Feature is included], the [System] shall [Response]. | オプション機能・条件付き機能 |
-| Complex | **While** [In State], **when** [Trigger], the [System] shall [Response]. | 複合条件の要求。**状態が先、契機が後**（原論文の節順に従う） |
+| パターン | 英語構文 | 日本語の形 | 用途 |
+|---|---|---|---|
+| Ubiquitous | The [System] shall [Response]. | [System] は、[Response] すること。 | 常に成り立つ要求 |
+| Event-driven | **When** [Trigger], the [System] shall [Response]. | [Trigger] したとき、[System] は、[Response] すること。 | イベント起点の要求 |
+| State-driven | **While** [In State], the [System] shall [Response]. | [In State] の間、[System] は、[Response] すること。 | 状態依存の要求 |
+| Unwanted Behavior | **If** [Trigger], then the [System] shall [Response]. | もし [Trigger] ならば、[System] は、[Response] すること。 | 異常系・例外処理 |
+| Optional Feature | **Where** [Feature is included], the [System] shall [Response]. | [Feature] がある場合、[System] は、[Response] すること。 | オプション機能・条件付き機能 |
+| Complex | **While** [In State], **when** [Trigger], the [System] shall [Response]. | [In State] の間、[Trigger] したとき、[System] は、[Response] すること。 | 複合条件の要求。**状態が先、契機が後**（原論文の節順に従う） |
 
-※ EARS 構文中の `shall` は Chapter 1.9 Notation に定義する `SHALL` と同義。
+※ EARS 構文中の `shall` は Chapter 1.9 Notation に定義する `SHALL` と同義であり、日本語では「〜すること。」に当たる。
+
+> **`Where` は、製品にその機能が入っているかどうかで分ける。実行時に切り替わるものは State-driven である（MUST）。**
 
 **条件は主語より先に書く（MUST）。これが EARS の要点である。**
 
-主語を先頭に置いて「[System] は、〜の場合、〜すること。」と書くと、**読む側は条件に行き着くまで主語を抱えたままになり、条件の抜けにも気づけない。** 条件を先に出せば、**その要求がいつ効くのかが文頭で決まる。**
-
-**日本語での言い回し:**
-
-| 型 | 日本語の形 |
-|---|---|
-| Ubiquitous | [System] は、[Response] すること。 |
-| Event-driven | [Trigger] したとき、[System] は、[Response] すること。 |
-| State-driven | [In State] の間、[System] は、[Response] すること。 |
-| Unwanted Behavior | もし [Trigger] ならば、[System] は、[Response] すること。 |
-| Optional Feature | [Feature] を備える場合、[System] は、[Response] すること。 |
-| Complex | [In State] の間、[Trigger] したとき、[System] は、[Response] すること。 |
-
-**`shall` は「〜すること。」に当たる。** 事実の記述は「〜する。」、推奨は「〜が望ましい。」で区別する。**要求は必ず「〜すること。」で終える（MUST）** —— 語尾が揃っていると、要求かどうかを機械で見分けられる。
+**要求は必ず「〜すること。」で終える（MUST）。** 事実の記述は「〜する。」、推奨は「〜が望ましい。」で区別する。
 
 **`[System]` の定義。** EARS の `[System]` は、**Chapter 2.2 で「対象ソフトが載る」と記した機器の上で動くソフトウェアを指す。** Chapter 2 を書かずに Chapter 4 を書いてはならない（MUST NOT）。
 
