@@ -1,0 +1,11 @@
+# StrictDoc writes its output and its scaffolding into the folder it is given.
+# None of it is source: the export is regenerated on every run, and the two
+# files at the bottom are rewritten by StrictDocStarter each time the project
+# is opened.
+#
+# The spec itself (01-11-spec.md) and the two grammars stay tracked.
+
+output/
+__pycache__/
+strictdoc_config.py
+strictdoc-theme.css
