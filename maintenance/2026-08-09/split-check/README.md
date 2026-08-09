@@ -10,13 +10,15 @@
 
 ## 1. 何が入っているか
 
-| フォルダ | 仕様形式 | 枚数 | 文法 |
+| フォルダ | 仕様形式 | 枚数（`.md`） | 同梱した文法 |
 |---|---|:-:|---|
 | `anms/` | ANMS | **1** | `spec-anms.sgra` |
 | `anps-part/` | ANPS-part（部で割る） | **4** | `spec.sgra` |
 | `anps-chapter/` | ANPS-chapter（章で割る） | **15** | `spec.sgra` |
 
-**文法ファイルは置いていない。** 正本は `tools/spec-query/` にあり、同じものを 3 か所へ複製すると、ずれても誰も気づかない。**走らせるときに複製する**（下記）。
+> **各フォルダは文法を同梱しており、そのまま export できる（MUST 維持）。** `tools/spec-query/` の 1 部だけにして参照させる形も考えたが、**本フォルダは 2026-08-09 に測った凍結スナップショットである。** 正本の文法が後で変われば、同じコマンドが**別の文法に対して走り、記録と違う結果を黙って返す。** スナップショットは自分の入力を抱える。
+>
+> **`tools/spec-query/` の 1 部だけという原則は、配布される生きた成果物の話であって、日付の付いた測定記録には当てはまらない。**
 
 | 道具 | 何をするか |
 |---|---|
@@ -33,10 +35,10 @@
 node maintenance/2026-08-09/split-check/split-spec.mjs maintenance/2026-08-09/03-spec-template-skeleton.md /tmp/configs tools/spec-query/spec-anms.sgra tools/spec-query/spec.sgra
 ```
 
-**1 構成を export する（文法を複製してから）:**
+**1 構成を export する（文法は同梱済みなので、そのまま走る）:**
 
 ```bash
-cp tools/spec-query/spec.sgra maintenance/2026-08-09/split-check/anps-chapter/ && strictdoc export maintenance/2026-08-09/split-check/anps-chapter --formats=json --output-dir /tmp/out --no-parallelization
+strictdoc export maintenance/2026-08-09/split-check/anps-chapter --formats=json --output-dir /tmp/out --no-parallelization
 ```
 
 **検出クエリをかける:**
