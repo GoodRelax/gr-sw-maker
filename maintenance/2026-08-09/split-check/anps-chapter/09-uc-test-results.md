@@ -24,3 +24,20 @@
 - **Type**: `Parent`
   **ID**: `TC-001`
   **Role**: `ResultOf`
+
+#### [PASS] [2 つ目のテスト結果]
+
+**Type**: TEST_RESULT
+**UID**: TR-002
+**RESULT**: PASS
+**EXECUTED_ON**: [UTC の ISO 8601 日時を記入する]
+**TESTED_VERSION**: [被試験ソフトを一意に特定する commit SHA を記入する]
+**ENVIRONMENT**: [測った環境を記入する]
+
+**EVIDENCE**: [取り出せる位置]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `TC-002`
+  **Role**: `ResultOf`

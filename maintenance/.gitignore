@@ -1,0 +1,13 @@
+# StrictDoc writes its output and its scaffolding into whatever folder it is
+# given, so any spec folder under maintenance/ grows these the first time it is
+# exported or opened. None of it is source: the export is regenerated on every
+# run, and the two files at the bottom are rewritten by StrictDocStarter each
+# time the project is opened.
+#
+# What stays tracked is the input: the spec .md files and the .sgra grammars
+# beside them.
+
+output/
+__pycache__/
+strictdoc_config.py
+strictdoc-theme.css

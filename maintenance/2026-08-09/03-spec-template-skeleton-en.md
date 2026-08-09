@@ -44,10 +44,10 @@
 
 **Type**: SECTION
 
-| Division | Content |
-|---|---|
-| In-scope | [State what this project will do] |
-| Out-of-scope | [State what it will not do] |
+| Division     | Content                           |
+| ------------ | --------------------------------- |
+| In-scope     | [State what this project will do] |
+| Out-of-scope | [State what it will not do]       |
 
 ### 1.6 Constraints
 
@@ -65,9 +65,10 @@
 
 **Type**: SECTION
 
-| Term | Definition |
-|---|---|
+| Term                              | Definition   |
+| --------------------------------- | ------------ |
 | [A term specific to this project] | [Definition] |
+| [A second term]                   | [Definition] |
 
 ### 1.9 Notation
 
@@ -103,25 +104,28 @@ Draw the device the target software runs on with a thick border. Use no colour. 
 
 **Type**: SECTION
 
-| Device | Kind | Runs the target software | Supply | Can we change it |
-|---|---|---|---|---|
-| [device name] | [kind] | [yes / no] | [existing / new] | [yes / no] |
+| Device            | Kind   | Runs the target software | Supply           | Can we change it |
+| ----------------- | ------ | ------------------------ | ---------------- | ---------------- |
+| [device name]     | [kind] | [yes / no]               | [existing / new] | [yes / no]       |
+| [a second device] | [kind] | [yes / no]               | [existing / new] | [yes / no]       |
 
 ### 2.3 Routes
 
 **Type**: SECTION
 
-| from | to | What it carries | Method | Trustworthy as input |
-|---|---|---|---|---|
-| [origin] | [destination] | [what it carries] | [method] | [not trustworthy / not applicable (outbound only)] |
+| from          | to            | What it carries   | Method   | Trustworthy as input             |
+| ------------- | ------------- | ----------------- | -------- | -------------------------------- |
+| [origin]      | [destination] | [what it carries] | [method] | [not trustworthy]                |
+| [destination] | [origin]      | [what it carries] | [method] | [not applicable (outbound only)] |
 
 ### 2.4 Exclusions
 
 **Type**: SECTION
 
-| Not present | Reason |
-|---|---|
+| Not present                               | Reason             |
+| ----------------------------------------- | ------------------ |
 | [what the configuration does not include] | [why it is absent] |
+| [a second thing not present]              | [why it is absent] |
 
 ## Chapter 3. Use Cases
 
@@ -129,9 +133,10 @@ Draw the device the target software runs on with a thick border. Use no colour. 
 
 **Type**: SECTION
 
-| Actor | Actor kind | Corresponding device | Interest |
-|---|---|---|---|
-| [actor name] | [person / external system] | [device name / not applicable] | [what they want to obtain] |
+| Actor            | Actor kind      | Corresponding device | Interest                   |
+| ---------------- | --------------- | -------------------- | -------------------------- |
+| [actor name]     | person          | not applicable       | [what they want to obtain] |
+| [a second actor] | external system | [device name]        | [what it wants to obtain]  |
 
 ### 3.2 Use Cases
 
@@ -152,6 +157,30 @@ Draw the device the target software runs on with a thick border. Use no colour. 
 
 - 2a. [State the condition that departs from the main success scenario]
   - [State what the system does then]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `GL-001`
+  **Role**: `Satisfies`
+
+#### [A second use case]
+
+**Type**: USE_CASE
+**UID**: UC-002
+
+**STATEMENT**: [One sentence]
+
+**SCENARIO**:
+
+1. [step 1]
+2. [step 2]
+3. [step 3]
+
+**EXTENSIONS**:
+
+- 2a. [condition]
+  - [what the system does]
 
 **Relations**:
 
@@ -180,6 +209,23 @@ Draw the device the target software runs on with a thick border. Use no colour. 
   **ID**: `UC-001`
   **Role**: `Satisfies`
 
+#### [A second functional requirement]
+
+**Type**: FUNC_REQ
+**UID**: FR-002
+
+**STATEMENT**: [One EARS sentence]
+
+**ORIGIN**: [where it came from]
+
+**RATIONALE**: [why it is needed]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `UC-002`
+  **Role**: `Satisfies`
+
 ### 4.2 Non-Functional Requirements
 
 #### [Name one quality requirement]
@@ -197,13 +243,29 @@ Draw the device the target software runs on with a thick border. Use no colour. 
   **ID**: `GL-002`
   **Role**: `Satisfies`
 
+#### [A second non-functional requirement]
+
+**Type**: NON_FUNC_REQ
+**UID**: NFR-002
+
+**STATEMENT**: [One EARS sentence with a numeric criterion]
+
+**RATIONALE**: [what it bears on]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `GL-001`
+  **Role**: `Satisfies`
+
 ### 4.3 Reduction Candidates
 
 **Type**: SECTION
 
-| Target ID | Why it has no parent | What happens if it is dropped | User's decision |
-|---|---|---|---|
-| [UID / none] | [reason] | [one line] | [keep / drop] |
+| Target ID            | Why it has no parent | What happens if it is dropped | User's decision |
+| -------------------- | -------------------- | ----------------------------- | --------------- |
+| [UID / none]         | [reason]             | [one line]                    | [keep / drop]   |
+| [a second target ID] | [reason]             | [one line]                    | [keep / drop]   |
 
 ## Chapter 5. Design
 
@@ -261,12 +323,21 @@ graph RL
 
 **ADR-000 Comparison against the minimal configuration:**
 
-| Item | Content |
-|---|---|
-| Context | [State the smallest configuration that satisfies the requirements] |
-| Decision | [State what the adopted proposal adds to it] |
-| Status | [Proposed / Accepted / Superseded] |
-| Consequences | [State why each addition was made and what it costs] |
+| Item         | Content                                                            |
+| ------------ | ------------------------------------------------------------------ |
+| Context      | [State the smallest configuration that satisfies the requirements] |
+| Decision     | [State what the adopted proposal adds to it]                       |
+| Status       | [Proposed / Accepted / Superseded]                                 |
+| Consequences | [State why each addition was made and what it costs]               |
+
+**ADR-001 [A second decision]:**
+
+| Item         | Content                            |
+| ------------ | ---------------------------------- |
+| Context      | [background]                       |
+| Decision     | [what was decided]                 |
+| Status       | [Proposed / Accepted / Superseded] |
+| Consequences | [outcome and cost]                 |
 
 **Diagrams not drawn:** [Name the diagram kind and give a one-line reason. Write "none" if there are none]
 
@@ -287,6 +358,21 @@ graph RL
 
 - **Type**: `Parent`
   **ID**: `FR-001`
+  **Role**: `Satisfies`
+
+#### [A second software specification]
+
+**Type**: SW_SPEC
+**UID**: SWS-002
+
+**STATEMENT**: [One EARS sentence]
+
+**RATIONALE**: [what it makes concrete]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `FR-002`
   **Role**: `Satisfies`
 
 ### 6.2 Data Schema
@@ -312,12 +398,12 @@ graph RL
 
 **Type**: SECTION
 
-| Family | Test level | Policy | Tool / framework | Pass criterion |
-|---|---|---|---|---|
-| Use case tests | — (the family has none) | [policy] | [tool] | every `UC` passes |
-| Software specification tests | `Unit` | [policy] | [tool] | [pass rate] |
-| Software specification tests | `Integration` | [policy] | [tool] | [pass rate] |
-| Non-functional tests | — (the family has none) | [policy] | [tool] | every NFR target met |
+| Family                       | Test level              | Policy   | Tool / framework | Pass criterion       |
+| ---------------------------- | ----------------------- | -------- | ---------------- | -------------------- |
+| Use case tests               | — (the family has none) | [policy] | [tool]           | every `UC` passes    |
+| Software specification tests | `Unit`                  | [policy] | [tool]           | [pass rate]          |
+| Software specification tests | `Integration`           | [policy] | [tool]           | [pass rate]          |
+| Non-functional tests         | — (the family has none) | [policy] | [tool]           | every NFR target met |
 
 [Name the route from Chapter 2.3 that a verification crossing devices actually goes through]
 
@@ -325,14 +411,14 @@ graph RL
 
 **Type**: SECTION
 
-| Category | Identifier | What is checked | Verdict | Evidence |
-|---|---|---|---|---|
-| Naming | Naming | Does the name convey intent, and does it match the vocabulary of Chapter 1.8 | [PASS / FAIL] | [evidence] |
-| Dependency | Dependency Direction | Does the dependency direction follow the layers of Chapter 5.1 | [PASS / FAIL] | [evidence] |
-| Simplicity | KISS | Is the simplest working solution the one chosen | [PASS / FAIL] | [evidence] |
-| Responsibility | SRP | Does each class or unit hold a single responsibility | [PASS / FAIL] | [evidence] |
-| SOLID | DIP | Does the code depend on abstractions rather than concretions | [PASS / FAIL] | [evidence] |
-| Concurrency | Concurrency Safety | Can a deadlock, a race or a glitch occur | [PASS / FAIL] | [evidence] |
+| Category       | Identifier           | What is checked                                                              | Verdict       | Evidence   |
+| -------------- | -------------------- | ---------------------------------------------------------------------------- | ------------- | ---------- |
+| Naming         | Naming               | Does the name convey intent, and does it match the vocabulary of Chapter 1.8 | [PASS / FAIL] | [evidence] |
+| Dependency     | Dependency Direction | Does the dependency direction follow the layers of Chapter 5.1               | [PASS / FAIL] | [evidence] |
+| Simplicity     | KISS                 | Is the simplest working solution the one chosen                              | [PASS / FAIL] | [evidence] |
+| Responsibility | SRP                  | Does each class or unit hold a single responsibility                         | [PASS / FAIL] | [evidence] |
+| SOLID          | DIP                  | Does the code depend on abstractions rather than concretions                 | [PASS / FAIL] | [evidence] |
+| Concurrency    | Concurrency Safety   | Can a deadlock, a race or a glitch occur                                     | [PASS / FAIL] | [evidence] |
 
 [Add or remove principles according to the nature of the project]
 
@@ -359,6 +445,25 @@ graph RL
 - **Type**: `File`
   **Path**: `[location of the test code]`
 
+#### [A second test case]
+
+**Type**: USE_CASE_TEST
+**UID**: TC-002
+
+**GIVEN**: [precondition]
+
+**WHEN**: [trigger]
+
+**THEN**: [outcome]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `UC-002`
+  **Role**: `Verifies`
+- **Type**: `File`
+  **Path**: `[location of the test code]`
+
 ### 9.2 Test Results
 
 #### [PASS] [Name of the corresponding test case]
@@ -375,6 +480,20 @@ graph RL
   **ID**: `TC-001`
   **Role**: `ResultOf`
 
+#### [PASS] [A second test result]
+
+**Type**: TEST_RESULT
+**UID**: TR-002
+**RESULT**: PASS
+
+**EVIDENCE**: [retrievable location]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `TC-002`
+  **Role**: `ResultOf`
+
 ## Chapter 10. Software Specification Tests
 
 ### 10.1 Test Cases
@@ -382,7 +501,7 @@ graph RL
 #### [Name one thing to be verified]
 
 **Type**: SW_SPEC_TEST
-**UID**: TC-002
+**UID**: TC-003
 **TEST_LEVEL**: Unit
 
 **GIVEN**: [State the precondition as a complete sentence]
@@ -399,12 +518,32 @@ graph RL
 - **Type**: `File`
   **Path**: `[location of the test code]`
 
+#### [A second test case]
+
+**Type**: SW_SPEC_TEST
+**UID**: TC-004
+**TEST_LEVEL**: Integration
+
+**GIVEN**: [precondition]
+
+**WHEN**: [trigger]
+
+**THEN**: [outcome]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `SWS-002`
+  **Role**: `Verifies`
+- **Type**: `File`
+  **Path**: `[location of the test code]`
+
 ### 10.2 Test Results
 
 #### [PASS] [Name of the corresponding test case]
 
 **Type**: TEST_RESULT
-**UID**: TR-002
+**UID**: TR-003
 **RESULT**: PASS
 
 **EVIDENCE**: [Give a log location, run id or artefact path that can be retrieved later]
@@ -412,7 +551,21 @@ graph RL
 **Relations**:
 
 - **Type**: `Parent`
-  **ID**: `TC-002`
+  **ID**: `TC-003`
+  **Role**: `ResultOf`
+
+#### [PASS] [A second test result]
+
+**Type**: TEST_RESULT
+**UID**: TR-004
+**RESULT**: PASS
+
+**EVIDENCE**: [retrievable location]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `TC-004`
   **Role**: `ResultOf`
 
 ## Chapter 11. Non-Functional Tests
@@ -422,7 +575,7 @@ graph RL
 #### [Name one thing to be verified]
 
 **Type**: NON_FUNC_TEST
-**UID**: TC-003
+**UID**: TC-005
 
 **GIVEN**: [State the measurement method and the load condition as a complete sentence]
 
@@ -438,12 +591,31 @@ graph RL
 - **Type**: `File`
   **Path**: `[location of the test code]`
 
+#### [A second test case]
+
+**Type**: NON_FUNC_TEST
+**UID**: TC-006
+
+**GIVEN**: [measurement method and load condition]
+
+**WHEN**: [trigger]
+
+**THEN**: [outcome with the number]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `NFR-002`
+  **Role**: `Verifies`
+- **Type**: `File`
+  **Path**: `[location of the test code]`
+
 ### 11.2 Test Results
 
 #### [PASS] [Name of the corresponding test case]
 
 **Type**: TEST_RESULT
-**UID**: TR-003
+**UID**: TR-005
 **RESULT**: PASS
 
 **EVIDENCE**: [Give a log location, run id or artefact path that can be retrieved later]
@@ -451,7 +623,21 @@ graph RL
 **Relations**:
 
 - **Type**: `Parent`
-  **ID**: `TC-003`
+  **ID**: `TC-005`
+  **Role**: `ResultOf`
+
+#### [PASS] [A second test result]
+
+**Type**: TEST_RESULT
+**UID**: TR-006
+**RESULT**: PASS
+
+**EVIDENCE**: [retrievable location]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `TC-006`
   **Role**: `ResultOf`
 
 ## Appendix
@@ -472,6 +658,7 @@ graph RL
 
 **Type**: SECTION
 
-| Version | Date | Change |
-|---|---|---|
-| 0.1 | [YYYY-MM-DD] | [first issue] |
+| Version | Date         | Change         |
+| ------- | ------------ | -------------- |
+| 0.1     | [YYYY-MM-DD] | [first issue]  |
+| 0.2     | [YYYY-MM-DD] | [second issue] |

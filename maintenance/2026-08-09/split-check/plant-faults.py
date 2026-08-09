@@ -42,11 +42,21 @@ def drop_relations(text, uid):
     return text[:rel] + text[nxt + 1:]
 
 
+def drop_all(text, *uids):
+    for uid in uids:
+        text = drop_node(text, uid)
+    return text
+
+
+# TC and TR are a single running sequence across the three test families, so the
+# family a number belongs to is not guessable: TC-001/002 verify use cases,
+# TC-003/004 software specifications, TC-005/006 non-functional requirements.
 FAULTS = {
     "d17": lambda t: drop_relations(t, "FR-001"),
-    "d16a": lambda t: drop_node(drop_node(t, "TR-001"), "TC-001"),
-    "d16b": lambda t: drop_node(drop_node(t, "TR-002"), "TC-002"),
-    "d16c": lambda t: drop_node(drop_node(t, "TR-003"), "TC-003"),
+    "d16a": lambda t: drop_all(t, "TR-001", "TC-001"),
+    "d16b": lambda t: drop_all(t, "TR-003", "TC-003"),
+    "d16c": lambda t: drop_all(t, "TR-005", "TC-005"),
+    "d16d": lambda t: drop_all(t, "TR-003", "TC-003", "SWS-001"),
     "d19": lambda t: drop_node(t, "TR-001"),
     "d20": lambda t: t.replace("  **ID**: `SWS-001`\n  **Role**: `Verifies`",
                                "  **ID**: `FR-001`\n  **Role**: `Verifies`"),

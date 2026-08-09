@@ -23,6 +23,21 @@
   **ID**: `FR-001`
   **Role**: `Satisfies`
 
+#### [2 つ目のソフトウェア仕様]
+
+**Type**: SW_SPEC
+**UID**: SWS-002
+
+**STATEMENT**: [EARS 1 文で書く]
+
+**RATIONALE**: [具体化の理由]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `FR-002`
+  **Role**: `Satisfies`
+
 ### 6.2 Data Schema (データスキーマ)
 
 **Type**: SECTION

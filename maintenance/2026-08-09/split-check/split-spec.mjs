@@ -75,7 +75,13 @@ function addAnpsFields(text) {
 
 function write(dir, filename, title, uid, contentLines, grammar, anps) {
   const head = ["# " + title, "", "**Grammar**: " + grammar, "**UID**: " + uid, "**Version**: 0.1", ""];
-  let text = head.concat(contentLines).join("\n") + "\n";
+  // A chapter block runs up to the next "## ", so it carries the blank line that
+  // separated it from the chapter below. Left in place that becomes a trailing
+  // blank line, which a formatter strips - and the generated file would stop
+  // being a fixed point of the editor that opens it.
+  const body = [...contentLines];
+  while (body.length > 0 && body[body.length - 1].trim() === "") body.pop();
+  let text = head.concat(body).join("\n") + "\n";
   if (anps) text = addAnpsFields(text);
   writeFileSync(join(dir, filename), text, "utf8");
 }

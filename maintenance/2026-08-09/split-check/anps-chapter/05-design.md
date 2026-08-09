@@ -67,4 +67,13 @@ graph RL
 | Status       | [Proposed / Accepted / Superseded]   |
 | Consequences | [各々を増やした理由と代償を記入する] |
 
+**ADR-001 [2 つ目の設計判断]:**
+
+| 項目         | 内容                               |
+| ------------ | ---------------------------------- |
+| Context      | [背景]                             |
+| Decision     | [決めたこと]                       |
+| Status       | [Proposed / Accepted / Superseded] |
+| Consequences | [結果と代償]                       |
+
 **描かなかった図:** [図の種類と、描かなかった理由を 1 行で記入する。無ければ「該当なし」と記入する]
