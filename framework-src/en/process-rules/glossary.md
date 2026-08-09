@@ -33,34 +33,39 @@ Concepts defined by this framework that are not found in dictionaries.
 
 | Term | Definition |
 |------|------------|
-| STFB | Stable Top, Flexible Bottom. A specification chapter structure based on the Stable Dependencies Principle. Upper chapters are stable and abstract; lower chapters are variable and concrete |
+| STFB | Stable Top, Flexible Bottom. A specification chapter structure based on the Stable Dependencies Principle. **The axis is rate of change, not abstraction.** Upper chapters change rarely, lower ones often. Chapter 2 is concrete yet the most stable |
 | ANMS | AI-Native Minimal Spec. A specification kept in one file. **The notation is the same as ANPS, but StrictDoc is not run.** For projects that fit within one context window |
 | ANPS-part | AI-Native Plural Spec split by part. Three files (Requirements / Design / Test). StrictDoc is run |
 | ANPS-chapter | AI-Native Plural Spec split by chapter. Fourteen files. StrictDoc is run |
 | ANGS | **Abolished.** Making a GraphDB tier its own format only ever describes a unit of splitting, since the notation is the same. ANPS-chapter suffices |
 | device | The physical entity Chapter 2 deals with: PC, smartphone, server, vehicle, embedded hardware. **Carries no UID; referenced by name** |
 | route | The one-way path Chapter 2 deals with, between devices and between a person and a device. **One entry per direction** — the trust judgement changes with direction |
-| node | The unit of a specification that StrictDoc parses. Declared by a heading plus `**Type**:`. **Distinct from the `ND` prefix that v0.35 gave to devices, which is abolished** |
-| SW_SPEC / SWS | Software specification. A requirement (FR / NFR) made concrete as an implementable statement. Written as one EARS sentence |
+| node | The smallest unit of a specification. Declared by a heading plus `**Type**:`. **Always declared, whatever the format (MUST). Under ANPS, StrictDoc parses this unit.** **Distinct from the `ND` prefix that v0.35 gave to devices, which is abolished** |
+| plain prose | Body text not declared as a node: paragraphs, tables, diagrams. **Carries no UID and does not sit on the trace chain** |
+| reference material | The tables, diagrams and schemas of Chapter 6. Machine-readable, but carrying no link to a requirement. **Never made a node** |
+| statement | One sentence asserting a judgement about reference material. Held by the `STATEMENT` field of a `SW_SPEC`. **Never restates what the material already says** |
+| chain | The parent trace rooted at `GL`, formed by each child naming its parent (`GL` to `UC` to `FR` to `SWS` to `TC` to `TR`). **A node that falls off it is a reduction candidate** |
+| ID prefix | The leading token of a specification node's UID: `GL` (goal) / `UC` (use case) / `FR` (functional requirement) / `NFR` (non-functional requirement) / `ADR` (design decision) / `SWS` (software specification) / `TC` (test case) / `TR` (test result). **The prefix table in spec-template is the source of truth; add or remove there** |
+| SW_SPEC | Software specification. A requirement (FR / NFR) made concrete as an implementable statement. Written as one EARS sentence. **`SW_SPEC` is the node's `**Type**` value and `SWS` is the ID prefix (e.g. `SWS-001`); they are not interchangeable** |
 | domain model | The concepts and relations Chapter 5 deals with. Expressed as a class diagram, an ER diagram or a table |
 | data schema | The concrete structure Chapter 6 deals with, verifiable by machine. JSON Schema / DDL / type definitions |
 | component diagram | The diagram in Chapter 5.2 showing how the software is divided. **Distinct from the overview diagram of Chapter 2** |
-| reduction candidate | The list of nodes that fell off the chain (they do not reach `GL`). Kept in Chapter 4.3. **The user decides what to drop** |
-| mechanism-independence test | The procedure for judging abstraction. **If the sentence survives a change of mechanism, the abstraction is right** |
+| reduction candidate | The list of nodes that fell off the trace chain (they do not reach `GL-xxx`). Kept in Chapter 4.3. **An agent only compiles the list and must never delete a node (MUST NOT). The user decides what to drop** |
+| mechanism-independence test | The procedure for judging abstraction, **applied to requirements and use cases only.** If the sentence changes when the mechanism changes, it is too concrete. **A necessary condition only: passing it does not establish verifiability. Never applied to `SW_SPEC`** |
 | precision level | The degree of detail in a Cockburn use case description (Level 1 to 4). This framework defaults to Level 3 |
-| goal level | The granularity of a Cockburn use case (kite / sea / fish). This framework writes only `sea` |
+| goal level | The granularity of a Cockburn use case. The source defines five; this framework uses three: kite (spans several user goals) / sea (one goal completed in one sitting) / fish (a subfunction). **Only `sea` is written (MUST); kite and fish serve the granularity judgement alone** |
 | descriptive sentence | A sentence stating how something is. **Its subject and object must never be omitted (MUST NOT)** |
-| prescriptive sentence | A rule in the form "do X (MUST)". **Its subject is the reader and therefore obvious, so it may be omitted** |
+| prescriptive sentence | A rule commanding the reader to act (used in conventions and procedures). **Its subject is the reader and therefore obvious, so it may be omitted. A requirement stating system behaviour is a descriptive sentence and must keep its subject (MUST NOT omit)** |
 | given | A premise that cannot be changed at our discretion. Chapter 2 deals with these |
-| review | **Someone other than the author** reading for quality against the conventions and perspectives. Done before change becomes expensive. Output is findings with severity |
-| check | **The author or a machine** verifying that defined items are satisfied. Little room for judgement. Done immediately before releasing a deliverable |
-| audit | **Someone uninvolved in the work** confirming afterwards that records exist and that the rules were followed. **Used only in the strict process mode (MUST)** |
+| review | **A party other than the author** (human or agent) reading for quality against the conventions and perspectives. **Wide room for judgement.** Done before change becomes expensive. Output is findings with severity |
+| check | Any party matching a deliverable against **a predefined list of items.** **Little room for judgement; the result is pass or fail.** Done immediately before releasing a deliverable |
+| audit | **Someone uninvolved in the work** confirming afterwards that records exist and that the rules were followed. **Used only on projects that require auditing (MUST). A review or a check must never be called an audit (MUST NOT)** |
 | test-designer | The agent that writes acceptance criteria and test code. Owner of Chapter 9.1 / 10.1 / 11.1 |
 | tester | The agent that runs tests and records results. Owner of Chapter 9.2 / 10.2 / 11.2 |
 | main-agent | The only actor that exchanges with the user in both directions and launches subagents. It is the main Claude Code conversation itself and **carries no definition file, so it is absent from the roster (agent-list section 1)**. It holds the conversation history |
 | project-manager | The subagent that records progress state and consolidates and reports PM information. **It never exchanges with the user directly** (formerly `orchestrator`, retired because an orchestrator elsewhere doubles as the user's entry point) |
-| Common Block | Metadata common to all file_type. Identity proof of the file (identification, state, workflow, context, provenance). **Sits at the top level of the YAML frontmatter** |
-| Form Block | Structured fields specific to each file_type. Parsed by agents for decisions and actions. **Nested under a namespace key in the frontmatter, one per file** |
+| Common Block | Metadata common to all file_type. Identity proof of the file (identification, state, workflow, context, provenance). **Sits at the top level of the YAML frontmatter, except for a specification, which collides with the StrictDoc document header and moves it to a sibling `<filename>.meta.yaml`** |
+| Form Block | Structured fields specific to each file_type. Parsed by agents for decisions and actions. **Nested under a namespace key in the frontmatter (in `.meta.yaml` for a specification), one per file** |
 | Detail Block | The detailed description zone. The body of domain knowledge. Read by both humans and agents for understanding. **Outside the frontmatter, in the markdown body** |
 | OKF | Open Knowledge Format, a standard container format for knowledge documents. This framework follows v0.2 and uses `type`, `description`, `generated` and `sources` |
 | actor | The notation for an acting party: `{agent-name}`, `human:{id}` or `process:{id}`. **Introduced so that human approval and machine generation can be told apart mechanically** |
@@ -97,10 +102,10 @@ Clarifying distinctions between concepts that are similar but different.
 | Pair | Distinction |
 |------|-------------|
 | gr-sw-maker vs full-auto-dev | gr-sw-maker = tool name / repository name / npm package name. full-auto-dev = methodology name (a higher-level concept independent of the tool). They must never be interchanged. Use gr-sw-maker for tool-specific topics and full-auto-dev for methodology/process topics |
-| requirement vs change request | requirement = a condition the system must satisfy. change request = a user-initiated change request after specification approval. Both contain "request" but in English they are distinct words: requirement vs request |
+| requirement vs change request | requirement = a condition the system must satisfy. change request = a user-initiated change request after specification approval. **Both are written 要求 in Japanese, which is why they are separated here. In English keep the full phrase "change request" and never shorten it to "request"** |
 | specification vs template | specification = a project-specific deliverable (docs/spec/). template = a boilerplate provided by the framework (process-rules/spec-template.md) |
 | agent vs sub-agent | agent = one of the role definitions registered in agent-list §1. sub-agent = a child process spawned by Claude Code (which may include agents) |
-| project-manager vs organizer | project-manager = the project-manager agent defined in the process rules. organizer = a graph-traversal agent proposed in the ANGS paper. Currently the same role referred to by different names in different contexts |
+| project-manager vs organizer | project-manager = the project-manager agent defined in the process rules. organizer = a graph-traversal agent proposed in the paper on the abolished ANGS. **Not adopted by this framework and must never be used in a document (MUST NOT)** |
 | document_status vs {type}_status | Both are status. document_status = Common Block (document lifecycle: draft/in-review/approved/archived). {type}_status = Form Block (domain-specific workflow position) |
 | fault vs defect | fault = an incorrect condition latent in code (undiscovered). defect = a formal issue ticket recorded after discovery (file_type). A fault is discovered and filed as a defect |
 | failure vs incident | failure = a technical event where requirements are no longer satisfied (including during testing). incident = an operational event where a failure affects services in production. A failure during testing is not an incident |
@@ -108,10 +113,11 @@ Clarifying distinctions between concepts that are similar but different.
 | hazard vs risk | hazard = a danger source to life and property (IEC 61508). risk = an impact on project objectives (file_type: risk). hazard is specific to functional safety; risk is common to all projects |
 | actor vs the Chapter 3 actor | actor = the Common Block field recording who generated and who approved a document (`{agent-name}` / `human:{id}` / `process:{id}`). The Chapter 3 actor = a party that holds a goal. **They are different. Write "the Chapter 3 actor" when you mean the latter (MUST)** |
 | Use Case vs use case | Use Case = the name of a Clean Architecture layer (a layer of code). use case = the goal of a Chapter 3 actor. **They are different. Write "the Chapter 3 use case" or `UC-xxx` when you mean the latter (MUST)** |
-| device vs machine | device = the physical entity of Chapter 2. machine = as in machine-readable, machine-verifiable (processed by a computer rather than a person). **In Japanese the two are near-homographs (機器 / 機械); Chapter 2 must never write 機械 (MUST NOT)** |
+| device vs machine | device = the physical entity of Chapter 2. machine = as in machine-readable, machine-verifiable (processed by a computer rather than a person). **In Japanese the two are near-homographs (機器 / 機械). This rule binds Japanese text: in Chapter 2, never write 機械 to mean a device (MUST NOT); the machine-readable sense stays allowed** |
 | node vs ND | node = the unit of a specification that StrictDoc parses. `ND` = the prefix v0.35 gave to devices, **now abolished.** The same word named two different things |
 | route vs connection | route = the one-way path of Chapter 2, one entry per direction. connection = the general word for a resource handle. **Chapter 2 uses route** |
 | domain model vs data schema | domain model = the concepts and relations of Chapter 5. data schema = the machine-verifiable concrete structure of Chapter 6. Different layers. **"Data model" settles on neither, so it must never be used (MUST NOT)** |
+| given vs the `GIVEN` field | given = the unchangeable premise Chapter 2 deals with. `GIVEN` = the field of a test node in Chapters 9 to 11, a Gherkin precondition. **They are different. Always write the latter as the upper-case field name `GIVEN`** |
 | review vs check vs audit | review = someone else reads for quality. check = the author or a machine verifies items. audit = someone uninvolved confirms records and conduct afterwards. **audit is used only in the strict process mode** |
 
 ## 5. Code Unit Hierarchy (containment)

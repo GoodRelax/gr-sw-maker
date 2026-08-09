@@ -323,7 +323,7 @@ ANMS ──ファイルを部で割る──▶ ANPS-part ──部を章で割�
 
 ### Chapter 2. System Overview (システム概要)
 
-**対象ソフトが、どの機器の上で、何とつながって動くのかを示す。** PC・スマートフォン・サーバー・車両・ハードウェアなどの物理的な接続の概要である。
+**対象ソフトが、どの機器の上で、何とつながって動くのかを示す。** PC・スマートフォン・サーバー・車両・ハードウェアなどの機器と、その間の経路の概要である。
 
 > **本章はノードを持たない。機器にも経路にも UID を振らない（MUST NOT）。** 本章は概要であり、トレースの対象ではない。**後続の章は名前で参照する。**
 
@@ -369,8 +369,8 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    Operator["利用者"] -->|"換算したい値と単位を渡す"| Machine
-    Machine["利用者のPC<br/>対象ソフトが載る"]:::target -->|"換算結果を返す"| Operator
+    Operator["利用者"] -->|"換算したい値と単位を渡す"| UserPC
+    UserPC["利用者のPC<br/>対象ソフトが載る"]:::target -->|"換算結果を返す"| Operator
 
     classDef target fill:#FFFFFF,stroke:#000,stroke-width:4px
 ```
@@ -1278,7 +1278,7 @@ jq -f tools/spec-query/checks.jq out/json/json/index.json
 | D20 | 段をまたいだテスト（`SW_SPEC_TEST` が `FUNC_REQ` を直接指す等） |
 | D21 | 接頭辞の規約違反 |
 
-> **「0 件だった」は「検査が働いた」を意味しない。** 検出クエリを直したときは、**既知の欠陥を 1 件仕込んで、それを拾うことを確かめる（MUST）。**
+> **「0 件だった」は「検査が働いた」を意味しない。** 検出クエリを直したときは、**既知の違反を 1 件仕込んで、それを拾うことを確かめる（MUST）。**
 
 **ANMS では検査を走らせない**（StrictDoc を回さないため）。**記法は同じなので、ANPS へ移った時点で同じ検査がそのまま効く。**
 
@@ -1301,7 +1301,7 @@ jq -f tools/spec-query/checks.jq out/json/json/index.json
 
 | 判断 | 根拠 |
 |---|---|
-| STFB / 上剛下柔 (SDP適用) | 章の順序は Stable Dependencies Principle に従う。上位=安定・抽象、下位=可変・具体 |
+| STFB / 上剛下柔 (SDP適用) | 章の順序は Stable Dependencies Principle に従う。上位=変更頻度が低い、下位=変更頻度が高い |
 | **部を 3 つに分ける** | **書き手が変わる境界と一致する。** 第 1 部 srs-writer、第 2 部 architect、第 3 部 test-designer / tester。**ANPS-part はこの境界でファイルを割る** |
 | **記法を 1 つにする** | **ANMS / ANPS-part / ANPS-chapter で書き方が変われば、移行のたびに全文を書き直すことになる。** 分ける単位だけを変える |
 | **`ANGS` を廃止** | GraphDB を要する段を形式として立てても、**記法が同じである以上は分け方の話にしかならない。** 3 形式で足りる |
