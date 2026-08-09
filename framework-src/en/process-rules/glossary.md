@@ -22,7 +22,7 @@ Terms where one synonym was intentionally chosen from multiple alternatives. Non
 | hazard | hazard | A danger source where a failure could cause harm to life, property, or environment (IEC 61508). Used when the conditional process "Functional Safety" is enabled | ハザード | Unified to English term |
 | fault origin | fault origin | The phase where a fault was introduced. Three classifications: requirements fault / design fault / implementation fault (IEEE 1044). Used in root cause analysis of defect | — | A classification axis for identifying the origin of a fault in the causal chain |
 | HARA | HARA | Hazard Analysis and Risk Assessment (ISO 26262). An analysis method to identify hazard at the system level and derive safety goals. Required when Functional Safety is enabled | — | Top-down analysis. See [defect-taxonomy §7](defect-taxonomy.md) for details |
-| FMEA | FMEA | Failure Mode and Effects Analysis (IEC 60812). A method to comprehensively analyze fault modes and effects at the component level | — | Bottom-up analysis. Performed after Ch3 is finalized |
+| FMEA | FMEA | Failure Mode and Effects Analysis (IEC 60812). A method to comprehensively analyze fault modes and effects at the component level | — | Bottom-up analysis. Performed after Ch5 is finalized |
 | FTA | FTA | Fault Tree Analysis (IEC 61025). An analysis method that traces causes from a specific top event using AND/OR gates in reverse | — | Top-down analysis. Used for root cause analysis of high-risk hazard or critical incident |
 | interview-record | interview-record | A structured record of user interviews (file_type) | hearing-record | Linked to the selection of interview above |
 | disaster-recovery-plan | disaster-recovery-plan | Definition of recovery procedures based on RPO/RTO (file_type) | dr-plan | Follows the namespace abbreviation prohibition rule |
@@ -34,9 +34,29 @@ Concepts defined by this framework that are not found in dictionaries.
 | Term | Definition |
 |------|------------|
 | STFB | Stable Top, Flexible Bottom. A specification chapter structure based on the Stable Dependencies Principle. Upper chapters are stable and abstract; lower chapters are variable and concrete |
-| ANMS | AI-Native Minimal Spec. A specification format in a single Markdown file. For projects that fit within one context window |
-| ANPS | AI-Native Plural Spec. A specification format using multiple Markdown files + Common Block. For medium-scale projects |
-| ANGS | AI-Native Graph Spec. A specification format using GraphDB + Git. For large-scale projects. MD serves as views |
+| ANMS | AI-Native Minimal Spec. A specification kept in one file. **The notation is the same as ANPS, but StrictDoc is not run.** For projects that fit within one context window |
+| ANPS-part | AI-Native Plural Spec split by part. Three files (Requirements / Design / Test). StrictDoc is run |
+| ANPS-chapter | AI-Native Plural Spec split by chapter. Fourteen files. StrictDoc is run |
+| ANGS | **Abolished.** Making a GraphDB tier its own format only ever describes a unit of splitting, since the notation is the same. ANPS-chapter suffices |
+| device | The physical entity Chapter 2 deals with: PC, smartphone, server, vehicle, embedded hardware. **Carries no UID; referenced by name** |
+| route | The one-way path Chapter 2 deals with, between devices and between a person and a device. **One entry per direction** — the trust judgement changes with direction |
+| node | The unit of a specification that StrictDoc parses. Declared by a heading plus `**Type**:`. **Distinct from the `ND` prefix that v0.35 gave to devices, which is abolished** |
+| SW_SPEC / SWS | Software specification. A requirement (FR / NFR) made concrete as an implementable statement. Written as one EARS sentence |
+| domain model | The concepts and relations Chapter 5 deals with. Expressed as a class diagram, an ER diagram or a table |
+| data schema | The concrete structure Chapter 6 deals with, verifiable by machine. JSON Schema / DDL / type definitions |
+| component diagram | The diagram in Chapter 5.2 showing how the software is divided. **Distinct from the overview diagram of Chapter 2** |
+| reduction candidate | The list of nodes that fell off the chain (they do not reach `GL`). Kept in Chapter 4.3. **The user decides what to drop** |
+| mechanism-independence test | The procedure for judging abstraction. **If the sentence survives a change of mechanism, the abstraction is right** |
+| precision level | The degree of detail in a Cockburn use case description (Level 1 to 4). This framework defaults to Level 3 |
+| goal level | The granularity of a Cockburn use case (kite / sea / fish). This framework writes only `sea` |
+| descriptive sentence | A sentence stating how something is. **Its subject and object must never be omitted (MUST NOT)** |
+| prescriptive sentence | A rule in the form "do X (MUST)". **Its subject is the reader and therefore obvious, so it may be omitted** |
+| given | A premise that cannot be changed at our discretion. Chapter 2 deals with these |
+| review | **Someone other than the author** reading for quality against the conventions and perspectives. Done before change becomes expensive. Output is findings with severity |
+| check | **The author or a machine** verifying that defined items are satisfied. Little room for judgement. Done immediately before releasing a deliverable |
+| audit | **Someone uninvolved in the work** confirming afterwards that records exist and that the rules were followed. **Used only in the strict process mode (MUST)** |
+| test-designer | The agent that writes acceptance criteria and test code. Owner of Chapter 9.1 / 10.1 / 11.1 |
+| tester | The agent that runs tests and records results. Owner of Chapter 9.2 / 10.2 / 11.2 |
 | main-agent | The only actor that exchanges with the user in both directions and launches subagents. It is the main Claude Code conversation itself and **carries no definition file, so it is absent from the roster (agent-list section 1)**. It holds the conversation history |
 | project-manager | The subagent that records progress state and consolidates and reports PM information. **It never exchanges with the user directly** (formerly `orchestrator`, retired because an orchestrator elsewhere doubles as the user's entry point) |
 | Common Block | Metadata common to all file_type. Identity proof of the file (identification, state, workflow, context, provenance). **Sits at the top level of the YAML frontmatter** |
@@ -86,10 +106,17 @@ Clarifying distinctions between concepts that are similar but different.
 | failure vs incident | failure = a technical event where requirements are no longer satisfied (including during testing). incident = an operational event where a failure affects services in production. A failure during testing is not an incident |
 | defect vs incident | defect = a discovery record during testing/development (file_type: defect, owner: test-engineer). incident = an occurrence record in production (file_type: incident-report, owner: incident-reporter). They differ by phase |
 | hazard vs risk | hazard = a danger source to life and property (IEC 61508). risk = an impact on project objectives (file_type: risk). hazard is specific to functional safety; risk is common to all projects |
+| actor vs the Chapter 3 actor | actor = the Common Block field recording who generated and who approved a document (`{agent-name}` / `human:{id}` / `process:{id}`). The Chapter 3 actor = a party that holds a goal. **They are different. Write "the Chapter 3 actor" when you mean the latter (MUST)** |
+| Use Case vs use case | Use Case = the name of a Clean Architecture layer (a layer of code). use case = the goal of a Chapter 3 actor. **They are different. Write "the Chapter 3 use case" or `UC-xxx` when you mean the latter (MUST)** |
+| device vs machine | device = the physical entity of Chapter 2. machine = as in machine-readable, machine-verifiable (processed by a computer rather than a person). **In Japanese the two are near-homographs (機器 / 機械); Chapter 2 must never write 機械 (MUST NOT)** |
+| node vs ND | node = the unit of a specification that StrictDoc parses. `ND` = the prefix v0.35 gave to devices, **now abolished.** The same word named two different things |
+| route vs connection | route = the one-way path of Chapter 2, one entry per direction. connection = the general word for a resource handle. **Chapter 2 uses route** |
+| domain model vs data schema | domain model = the concepts and relations of Chapter 5. data schema = the machine-verifiable concrete structure of Chapter 6. Different layers. **"Data model" settles on neither, so it must never be used (MUST NOT)** |
+| review vs check vs audit | review = someone else reads for quality. check = the author or a machine verifies items. audit = someone uninvolved confirms records and conduct afterwards. **audit is used only in the strict process mode** |
 
 ## 5. Code Unit Hierarchy (containment)
 
-Purity is judged at the class/function level; physical separation is done at the unit/module/component level. The layer axis (Entity/UseCase/Adapter/Framework) is orthogonal to this containment and is defined in spec-template Ch3.1 and the CA perspective of review-standards.
+Purity is judged at the class/function level; physical separation is done at the unit/module/component level. The layer axis (Entity/UseCase/Adapter/Framework) is orthogonal to this containment and is defined in spec-template Ch5.1 and the CA perspective of review-standards.
 
 **The hierarchy carries no numbers.** Containment is expressed by the chain of "contained in" and "contains". Adjacent rows agreeing is the evidence that containment closes, so a row added without being wired up shows up inside the table. Numbers drift whenever a conditional row is added, and serve no self-check.
 

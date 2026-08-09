@@ -22,7 +22,7 @@
 | hazard | hazard | failure が人命・財産・環境に害を及ぼしうる危険源（IEC 61508）。条件付きプロセス「機能安全」が有効な場合に使用 | ハザード | 英単語で統一 |
 | fault origin | fault origin | fault が混入したフェーズ。requirements fault / design fault / implementation fault の3分類（IEEE 1044）。defect の root cause analysis で使用 | — | 因果連鎖における fault の発生源を特定するための分類軸 |
 | HARA | HARA | Hazard Analysis and Risk Assessment（ISO 26262）。システムレベルで hazard を特定し safety goal を導出する分析手法。機能安全が有効な場合に必須 | — | トップダウン分析。詳細は [defect-taxonomy §7](defect-taxonomy.md) |
-| FMEA | FMEA | Failure Mode and Effects Analysis（IEC 60812）。コンポーネントレベルで fault のモードと影響を網羅的に分析する手法 | — | ボトムアップ分析。Ch3 確定後に実施 |
+| FMEA | FMEA | Failure Mode and Effects Analysis（IEC 60812）。コンポーネントレベルで fault のモードと影響を網羅的に分析する手法 | — | ボトムアップ分析。Ch5 確定後に実施 |
 | FTA | FTA | Fault Tree Analysis（IEC 61025）。特定の top event から原因を AND/OR ゲートで逆探索する分析手法 | — | トップダウン分析。高リスク hazard または重大 incident の原因分析に使用 |
 | interview-record | インタビュー記録 | ユーザーインタビューの構造化記録（file_type） | hearing-record | 上記 interview の選定に連動 |
 | disaster-recovery-plan | 災害復旧計画 | RPO/RTO に基づく復旧手順の定義（file_type） | dr-plan | 名前空間の略称禁止ルールに従う |
@@ -34,9 +34,29 @@
 | 用語 | 定義 |
 |------|------|
 | STFB | Stable Top, Flexible Bottom（上剛下柔）。安定依存の原則に基づく仕様書の章構成。上位章は安定・抽象、下位章は可変・具体 |
-| ANMS | AI-Native Minimal Spec。単一 Markdown ファイルの仕様書形式。1コンテキストウィンドウに収まる規模向け |
-| ANPS | AI-Native Plural Spec。複数 Markdown ファイル + Common Block の仕様書形式。中規模向け |
-| ANGS | AI-Native Graph Spec。GraphDB + Git の仕様書形式。大規模向け。MD はビュー |
+| ANMS | AI-Native Minimal Spec。仕様書を 1 枚に収める形式。**記法は ANPS と同じだが StrictDoc を回さない。** 1 コンテキストウィンドウに収まる規模向け |
+| ANPS-part | AI-Native Plural Spec を部で割った形式。3 枚（Requirements / Design / Test）。StrictDoc を回す |
+| ANPS-chapter | AI-Native Plural Spec を章で割った形式。14 枚。StrictDoc を回す |
+| ANGS | **廃止した。** GraphDB を要する段を形式として立てても、記法が同じである以上は分ける単位の話にしかならない。ANPS-chapter で足りる |
+| 機器 | Chapter 2 が扱う物理的な実体。PC・スマートフォン・サーバー・車両・組込ハードウェア。**UID を振らず、名前で参照する** |
+| 経路 | Chapter 2 が扱う、機器の間および人と機器の間の一方向の道すじ。**向きごとに 1 件立てる** —— 「入力として信頼できるか」の判定が向きで変わるため |
+| ノード | StrictDoc が解析する仕様書の単位。見出し + `**Type**:` で宣言する。**v0.35 が機器に振っていた接頭辞 `ND` とは別物であり、`ND` は廃止した** |
+| SW_SPEC / SWS | ソフトウェア仕様。要求（FR / NFR）を実装可能な言明へ具体化したもの。EARS 1 文で書く |
+| ドメインモデル | Chapter 5 が扱う概念と関係。クラス図 / ER 図 / 表で表す |
+| データスキーマ | Chapter 6 が扱う、機械が検証できる具体構造。JSON Schema / DDL / 型定義 |
+| コンポーネント図 | Chapter 5.2 が扱う、ソフトウェアの分割を表す図。**Chapter 2 の概要図とは別物** |
+| 削減候補 | 鎖から外れた（`GL` に辿り着かない）ノードの一覧。Chapter 4.3 に置く。**外す判断はユーザーが行う** |
+| 手段独立テスト | 抽象度の判定手順。**実現手段を変えても文が変わらなければ抽象度は正しい** |
+| 精密度 | Cockburn のユースケース記述の詳しさの段階（Level 1〜4）。本フレームワークは Level 3 を既定とする |
+| 目標レベル | Cockburn のユースケースの粒度（kite / sea / fish）。本フレームワークは `sea` のみを書く |
+| 記述文 | 何がどうなっているかを述べる文。**主語と目的語を省略してはならない（MUST NOT）** |
+| 指示文 | 「〜する（MUST）」の形の規則文。**主語は読み手であり自明なので省略してよい** |
+| 与件 | こちらの都合では変えられない前提。Chapter 2 が扱う |
+| review（レビュー）| **作った本人ではない者**が、規約と観点に照らして中身の良し悪しを読むこと。変えるのが高くなる前に行う。出力は重大度つきの指摘 |
+| check（確認）| **本人または機械**が、定めた項目を満たすかを照合すること。判断の余地が小さい。成果物を出す直前に行う |
+| audit（監査）| **作業に関わっていない者**が、記録が残っているか規則どおり運用されたかを事後に確かめること。**厳密形式でのみ使う（MUST）** |
+| test-designer | 受入基準とテストコードを書くエージェント。Chapter 9.1 / 10.1 / 11.1 のオーナー |
+| tester | テストを実行し結果を記録するエージェント。Chapter 9.2 / 10.2 / 11.2 のオーナー |
 | main-agent | ユーザーと双方向にやりとりし、サブエージェントを起動する唯一の主体。Claude Code のメインの会話そのものであり、**定義ファイルを持たないため名簿（agent-list §1）に載らない**。会話履歴を保持する |
 | project-manager | 進行状態の記録と PM 情報の統合・報告を担うサブエージェント。**ユーザーとは直接やりとりしない**（旧名 `orchestrator`。世の中の orchestrator がユーザー入口を兼ねるため退役させた） |
 | Common Block | 全 file_type 共通のメタデータ。ファイルの身元証明（識別・状態・ワークフロー・コンテキスト・出自）。**YAML frontmatter のトップレベルに置く** |
@@ -86,10 +106,17 @@
 | failure vs incident | failure = 要求を満たさなくなった技術的事象（テスト中含む）。incident = failure が本番でサービスに影響した運用的事象。テスト中の failure は incident ではない |
 | defect vs incident | defect = テスト・開発中の発見記録（file_type: defect, owner: test-engineer）。incident = 本番での発生記録（file_type: incident-report, owner: incident-reporter）。フェーズが異なる |
 | hazard vs risk | hazard = 人命・財産への危険源（IEC 61508）。risk = プロジェクト目標への影響（file_type: risk）。hazard は機能安全固有、risk は全プロジェクト共通 |
+| actor vs Chapter 3 のアクター | actor = Common Block のフィールドで、その文書を誰が生成し誰が承認したかを記録する表記規約（`{agent-name}` / `human:{id}` / `process:{id}`）。Chapter 3 のアクター = 目標を持つ主体。**別物である。後者を指すときは「Chapter 3 のアクター」と書く（MUST）** |
+| Use Case vs ユースケース | Use Case = Clean Architecture の層の名前（コードの層）。ユースケース = Chapter 3 のアクターの目標。**別物である。後者を指すときは「Chapter 3 のユースケース」または `UC-xxx` と書く（MUST）** |
+| 機器 vs 機械 | 機器 = Chapter 2 の物理的な実体。機械 = 「機械可読」「機械が検証する」の機械（人ではなく計算機が処理すること）。**字面が近いが別語である。Chapter 2 で「機械」と書いてはならない（MUST NOT）** |
+| ノード vs ND | ノード = StrictDoc が解析する仕様書の単位。`ND` = v0.35 が機器に振っていた接頭辞で、**廃止した。** 同じ語が別のものを指していた |
+| 経路 vs 接続 | 経路 = Chapter 2 の一方向の道すじ。向きごとに 1 件立てる。接続 = コネクション・資源の一般語。**Chapter 2 では「経路」を使う** |
+| ドメインモデル vs データスキーマ | ドメインモデル = Chapter 5 の概念と関係。データスキーマ = Chapter 6 の機械が検証できる具体構造。層が違う。**「データモデル」はどちらを指すか決まらないので使ってはならない（MUST NOT）** |
+| review vs check vs audit | review = 他者が中身の良し悪しを読む。check = 本人または機械が項目を照合する。audit = 作業に関わっていない者が記録と運用を事後に確かめる。**audit は厳密形式でのみ使う** |
 
 ## 5. コード単位の階層（包含関係）
 
-純粋性の判定は原則「クラス/関数」単位、物理分離は「ユニット/モジュール/コンポーネント」単位で行う。レイヤー軸（Entity/UseCase/Adapter/Framework）はこの包含と直交し、spec-template Ch3.1・review-standards の CA に定義済み。
+純粋性の判定は原則「クラス/関数」単位、物理分離は「ユニット/モジュール/コンポーネント」単位で行う。レイヤー軸（Entity/UseCase/Adapter/Framework）はこの包含と直交し、spec-template Ch5.1・review-standards の CA に定義済み。
 
 **階層に番号を振らない。** 包含は「含まれる先」と「含むもの」の鎖で表す。隣接する行の値が一致することが包含の閉じている証拠であり、行を足したときの繋ぎ忘れが表の中で露見する。番号は条件付きの行が増えるたびにずれ、自己検査の役に立たない。
 
