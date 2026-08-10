@@ -41,11 +41,13 @@
 
 **記法は 1 つで、変わるのは分ける単位だけである。**
 
-| 仕様形式 | 分ける単位 | 枚数 | StrictDoc | 文法 | 使えるプロセス形式 |
-|---|---|:-:|:-:|:-:|---|
-| **ANMS**（AI-Native Minimal Spec） | 分けない | **1** | **使わない** | `spec-anms.sgra`（**配るが回さない**） | 簡易のみ |
-| **ANPS-part**（AI-Native Plural Spec, 部単位） | 部 | **4** | 使う | `spec.sgra` | 簡易 / 通常 / 厳密 |
-| **ANPS-chapter**（AI-Native Plural Spec, 章単位） | 章 | **15** | 使う | `spec.sgra` | 簡易 / 通常 / 厳密 |
+| 仕様形式 | 分ける単位 | 枚数 | StrictDoc | 文法 |
+|---|---|:-:|:-:|:-:|
+| **ANMS**（AI-Native Minimal Spec） | 分けない | **1** | **使わない** | `spec-anms.sgra`（**配るが回さない**） |
+| **ANPS-part**（AI-Native Plural Spec, 部単位） | 部 | **4** | 使う | `spec.sgra` |
+| **ANPS-chapter**（AI-Native Plural Spec, 章単位） | 章 | **15** | 使う | `spec.sgra` |
+
+**どの開発方式でどの形式を使うかは本書が定めない。** 対応は開発方式 対応表（プロセス規則 §3.1.1 の表 A）が持つ。
 
 **ANMS でも記法は同じである。** StrictDoc を回さないだけである。**回さないので export も検出クエリも使えない。**
 
@@ -108,7 +110,7 @@ ANMS ──ファイルを部で割る──▶ ANPS-part ──部を章で割�
 | # | 変換 | どの移行で要るか | 測った結果 |
 |:-:|---|---|---|
 | 1 | **切ったファイルごとに、H1 と `**Grammar**` / `**UID**` / `**Version**` を書き足す（MUST）** | ANPS-part / ANPS-chapter | 文書ヘッダの無いファイルは文法が適用されない |
-| 2 | **`**Grammar**` を `spec.sgra` に差し替え、`TEST_RESULT` に 4 欄を書き足す（MUST）** | ANMS → ANPS のとき | 足りない欄を export が名指しする。**`Hint` が文法の全欄を並べるので、1 回の編集で収束する** |
+| 2 | **`**Grammar**` を `spec.sgra` に差し替え、`TEST_RESULT` に 3 欄（`EXECUTED_ON` / `TESTED_VERSION` / `ENVIRONMENT`）を書き足す（MUST）。`SW_SPEC_TEST` の `TEST_LEVEL` も必須になる** | ANMS → ANPS のとき | 足りない欄を export が名指しする。**`Hint` が文法の全欄を並べるので、1 回の編集で収束する** |
 | 3 | **章の途中で切るときは、章見出しを両方の枚に持たせる（MUST）** | ANPS-chapter のテスト 6 枚 | **これを怠ると `heading level forward jumps are not allowed: L1 -> L3` で止まる。** 節見出しを 1 段上げてもよいが、そちらは全見出しが動く |
 | 4 | **付録を `A-appendix.md` として独立させる（MUST）** | ANPS-part / ANPS-chapter | 付録はどの章範囲にも属さない |
 
@@ -120,7 +122,7 @@ Hint: Node fields: [UID, TITLE, RESULT, EVIDENCE],
       grammar fields: [UID, TITLE, RESULT, EXECUTED_ON, TESTED_VERSION, ENVIRONMENT, EVIDENCE, REMARK].
 ```
 
-**足した 4 欄は `RESULT` と `EVIDENCE` の間に置く（MUST）** —— 欄の並びは文法の宣言順に従う（「記法の規則」5 番）。**`EVIDENCE` は段落のまま残す**（同 8 番）。
+**足した 3 欄は `RESULT` と `EVIDENCE` の間に置く（MUST）** —— 欄の並びは文法の宣言順に従う（「記法の規則」5 番）。**`EVIDENCE` は段落のまま残す**（同 8 番）。
 
 > **3 が最も見つけにくい。** ANPS-part（部で割る）は章の境目で切るので起きない。**章単位に割った瞬間、テストの 6 枚だけで起きる。** 部までしか試していないと、この失敗は最後まで表に出ない。
 
@@ -1339,12 +1341,12 @@ graph RL
 
 **`**Grammar**` に書く文法は仕様形式で決まる。**
 
-| 仕様形式 | 文法 | `TEST_RESULT` の 4 欄（`TEST_LEVEL` / `EXECUTED_ON` / `TESTED_VERSION` / `ENVIRONMENT`） |
+| 仕様形式 | 文法 | `TEST_RESULT` の 3 欄（`EXECUTED_ON` / `TESTED_VERSION` / `ENVIRONMENT`）と `SW_SPEC_TEST` の `TEST_LEVEL` |
 |---|---|---|
 | **ANMS** | `spec-anms.sgra` | **省いてよい**（`REQUIRED: False`）。骨格はこちらで書かれている |
 | **ANPS-part / ANPS-chapter** | `spec.sgra` | **必須** |
 
-> **ANMS から ANPS へ移るときは、`**Grammar**` の行を差し替えて 4 欄を足す。書き直しは要らない。** 足し忘れは export が名指しで教える —— `Node is missing a field that is required by grammar: EXECUTED_ON.`。**足すべき欄が機械から分かる。**
+> **ANMS から ANPS へ移るときは、`**Grammar**` の行を差し替えて 4 欄（`TEST_RESULT` に 3 欄、`SW_SPEC_TEST` に `TEST_LEVEL`）を足す。書き直しは要らない。** 足し忘れは export が名指しで教える —— `Node is missing a field that is required by grammar: EXECUTED_ON.`。**足すべき欄が機械から分かる。**
 
 > **`**Grammar**` / `**UID**` / `**Version**` と H1 の間に何かを挟んではならない（MUST NOT）。** 文書ヘッダを丸ごと失い、文法が適用されなくなる。**Common Block（YAML frontmatter）をファイル先頭に置けないのはこのためであり、同名の `.meta.yaml` へ外出しする。**
 
