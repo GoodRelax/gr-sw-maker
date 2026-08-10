@@ -1,0 +1,40 @@
+context-census - rule document lines per agent launch
+
+measured:  2026-08-10
+commit:    41a8a0b7ed944e340a4274b941dbcc65f50cb57b
+tree:      framework-src matches the commit
+language:  ja
+agents:    22
+
+full load    the whole of every rule document the agent cites, which is what it
+             reads today, because no means of reading one section exists
+cited only   only the sections its "rule sections to read" table names
+definition+  the agent definition itself plus its cited sections
+reduction    cited only, against full load
+
+agent                               definition  docs   full load  cited only  definition+  reduction
+----------------------------------------------------------------------------------------------------
+srs-writer                                 124     4       5,654         211          335      96.3%
+implementer                                116     4       5,620         364          480      93.5%
+test-engineer                              135     4       5,620         289          424      94.9%
+review-agent                               188     3       5,356         270          458      95.0%
+incident-reporter                          102     3       5,264         182          284      96.5%
+process-improver                           146     3       5,264          54          200      99.0%
+architect                                  142     3       5,142         362          504      93.0%
+change-manager                             112     3       5,108         247          359      95.2%
+license-checker                            102     3       5,108         155          257      97.0%
+project-manager                            146     3       5,108         386          532      92.4%
+risk-manager                               107     3       5,108         249          356      95.1%
+security-reviewer                          116     3       5,108         215          331      95.8%
+user-manual-writer                          96     3       5,051         104          200      97.9%
+progress-monitor                           124     2       4,844         125          249      97.4%
+runbook-writer                             100     2       4,844         286          386      94.1%
+technical-authority                        183     2       3,414         319          502      90.7%
+decree-writer                              127     2       3,261         721          848      77.9%
+feedback-classifier                        132     3       2,727         287          419      89.5%
+field-issue-analyst                        164     3       2,727         274          438      90.0%
+kotodama-kun                               143     3       2,661         184          327      93.1%
+field-test-engineer                        116     2       2,307         262          378      88.6%
+framework-translation-verifier             130     1       1,942         107          237      94.5%
+----------------------------------------------------------------------------------------------------
+total (22 agents, one launch each)       2,851     -      97,238       5,653        8,504      94.2%
