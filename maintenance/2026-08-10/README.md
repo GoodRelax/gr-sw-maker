@@ -1,6 +1,6 @@
 # 改善作業の現物
 
-生きているファイルは 5 つ。`History/` は検討記録であり、**書き換えない。**
+生きているファイルは 6 つ。`History/` は検討記録であり、**書き換えない。**
 
 | ファイル | 何か | 行数 | 適用先 |
 |---|---|---:|---|
@@ -8,7 +8,8 @@
 | `01-spec-template.md` | 仕様書テンプレート。そのまま `strictdoc export` が通る 1 枚 | 664 | `framework-src/ja/process-rules/spec-template.md` を置換 |
 | `01-spec-template-en.md` | 同上の英語版。ja と構造が完全に一致する | 664 | `framework-src/en/process-rules/spec-template.md` を置換 |
 | `02-spec-writing-rules.md` | 仕様書の解説書。章ごとの規則・EARS・Cockburn・記入例・検査 | 1,510 | `framework-src/ja/process-rules/spec-writing-rules.md` を新設 |
-| `03-work-order.md` | **適用作業書。何を・どこへ・どの順で入れるかの一覧。決定はここに集約してある** | 417 | —（作業が終われば `History/` へ移す） |
+| `03-work-order.md` | **適用作業書。何を・どこへ・どの順で入れるかの一覧。決定はここに集約してある** | 397 | —（作業が終われば `History/` へ移す） |
+| `04-glossary-state.md` | 用語集の適用状態。何を当てたか・非採用欄に置けない語・武装する語と前提・これから足す定義。**用語集に関することは本書が正である** | 183 | `framework-src/{lang}/process-rules/glossary.md` |
 
 ## 読む順
 
@@ -17,7 +18,7 @@
 ```mermaid
 flowchart LR
     WO["03_work-order<br/>何をするか"] -->|"方式を決める表を当てる"| MODE["00_mode-matrix<br/>開発方式"]
-    WO -->|"仕様書の骨格を差し替える"| TPL["01_spec-template<br/>仕様書テンプレート"]
+    WO -->|"仕様書テンプレートを差し替える"| TPL["01_spec-template<br/>仕様書テンプレート"]
     WO -->|"書き方の規則を新設する"| RULE["02_spec-writing-rules<br/>解説書"]
     MODE -->|"仕様形式を選ぶ"| TPL
     TPL -->|"書き方を引く"| RULE
