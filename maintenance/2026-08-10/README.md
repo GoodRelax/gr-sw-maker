@@ -1,19 +1,21 @@
 # 改善作業の現物
 
-生きているファイルは 6 つ。`History/` は検討記録であり、**書き換えない。**
+生きているファイルは 7 つ。`History/` は検討記録であり、**書き換えない。**
 
 | ファイル | 何か | 行数 | 適用先 |
 |---|---|---:|---|
-| `00-mode-matrix.md` | 開発方式 対応表。`簡易` / `標準` / `厳格` の 1 つを決めれば、仕様書・フェーズ・エージェント・プロセス・成果物・レビューがすべて決まる。**方式については本書が正である** | 361 | `framework-src/{lang}/process-rules/full-auto-dev-process-rules.md` §3.1.1 |
+| `00-mode-matrix.md` | 開発方式 対応表。方式を 1 つ決めれば、仕様書・作業・エージェント・成果物・レビューがすべて決まる。**§4・§5 の作業表が中核である** | 362 | `framework-src/{lang}/process-rules/full-auto-dev-process-rules.md` §3.1.1 |
 | `01-spec-template.md` | 仕様書テンプレート。そのまま `strictdoc export` が通る 1 枚 | 664 | `framework-src/ja/process-rules/spec-template.md` を置換 |
 | `01-spec-template-en.md` | 同上の英語版。ja と構造が完全に一致する | 664 | `framework-src/en/process-rules/spec-template.md` を置換 |
-| `02-spec-writing-rules.md` | 仕様書の解説書。章ごとの規則・EARS・Cockburn・記入例・検査 | 1,510 | `framework-src/ja/process-rules/spec-writing-rules.md` を新設 |
-| `03-work-order.md` | **適用作業書。何を・どこへ・どの順で入れるかの一覧。決定はここに集約してある** | 397 | —（作業が終われば `History/` へ移す） |
-| `04-glossary-state.md` | 用語集の適用状態。何を当てたか・非採用欄に置けない語・武装する語と前提・これから足す定義。**用語集に関することは本書が正である** | 183 | `framework-src/{lang}/process-rules/glossary.md` |
+| `02-spec-writing-rules.md` | 仕様書の解説書。章ごとの規則・EARS・Cockburn・記入例・検査 | 1510 | `framework-src/ja/process-rules/spec-writing-rules.md` を新設 |
+| `03-work-order.md` | **適用作業書。何を・どこへ・どの順で入れるか。§16 がエージェント連携の決定を持つ** | 755 | —（作業が終われば `History/` へ移す） |
+| `04-glossary-state.md` | 用語集の適用状態。**用語集に関することは本書が正である** | 112 | `framework-src/{lang}/process-rules/glossary.md` |
+| `05-open-questions.md` | **未決事項。決まっていないことだけを持つ。決まったら本書から消して決定先へ書く** | 345 | —（決着すれば消える） |
+| `06-agent-connection-report.md` | エージェント連携と計測の調査報告。**参照用の要約であり正本ではない**（決定は `03` §16、未決は `05`） | 296 | —（読み物） |
 
 ## 読む順
 
-**`03-work-order.md` から読む。** 何をするかが書いてある。`00` `01` `02` はその作業の対象であり、材料である。
+**`03-work-order.md` から読む。** 何をするかが書いてある。`00` `01` `02` はその作業の対象であり、材料である。**決まっていないことは `05-open-questions.md` にまとめてある。**
 
 ```mermaid
 flowchart LR
