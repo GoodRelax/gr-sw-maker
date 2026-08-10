@@ -2,13 +2,13 @@
 
 2026-07-26 〜 2026-08-10 の検討記録。**書き換えない。**
 
-現在も使うファイルはここに無い。`maintenance/` 直下に残してある。
+現在も使うファイルはここに無い。1 つ上の `maintenance/2026-08-10/` に 4 つある。索引は同フォルダの `README.md`。
 
 | 柱 | ファイル |
 |---|---|
-| 開発方式 対応表 | `maintenance/2026-08-10/03-mode-matrix.md` |
-| Spec テンプレート（骨格） | `maintenance/2026-08-09/03-spec-template-skeleton.md` / `-en.md` |
-| Spec 解説書（規則） | `maintenance/2026-08-09/04-spec-writing-rules.md` |
+| 開発方式 対応表 | `00-mode-matrix.md` |
+| Spec テンプレート（骨格） | `01-spec-template.md` / `01-spec-template-en.md` |
+| Spec 解説書（規則） | `02-spec-writing-rules.md` |
 
 ## 日付ごとの中身
 
@@ -23,4 +23,5 @@
 
 - 各文書の中にある `maintenance/2026-08-XX/...` というパス表記は移動前のものである。実体は本フォルダ配下にある
 - `2026-08-09/00-spec-template-v036.md` は凍結。記法を直し終えた時点の記録である
+- `maintenance/temporary/`（2026-07-26 のフレームワーク全体レビュー 14 ファイル・504K）は 2026-08-10 に削除した。git 追跡外だったため復元できない
 - `output/strictdoc/` と `__pycache__/` は `maintenance/.gitignore` の対象で、再実行すれば作り直せる
