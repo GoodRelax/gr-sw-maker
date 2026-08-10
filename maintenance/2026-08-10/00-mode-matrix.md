@@ -96,16 +96,18 @@ flowchart TD
 
 | 手順 | 作業 | 主担当 | 関連 | 出力 | 簡易 | 標準 | 厳格 | 備考 |
 |---|---|---|---|---|:-:|:-:|:-:|---|
-| `0a` | user-order.md を読み込む | project-manager | — | — | 実施 | 実施 | 実施 | |
-| `0b` | user-order.md をバリデーションする | srs-writer | project-manager | — | 実施 | 実施 | 実施 | 不足はインタビューで解消する。user-order 自体は直さない |
-| `0b2` | CLAUDE.md を提案する | project-manager | — | CLAUDE.md | 実施 | 実施 | 実施 | |
-| **新設** | **開発方式（簡易 / 標準 / 厳格）を決める** | project-manager | — | decision | 実施 | 実施 | 実施 | **表 0 で判定し CLAUDE.md「開発方式」節へ記録する。節も未新設** |
-| **新設** | **ステークホルダー登録簿を作る** | project-manager | — | stakeholder-register | 免除 | 条件付き | 実施 | ステークホルダーが複数いるとき（標準） |
-| **統合** | **条件付き 13 プロセスの要否を一括で評価する** | project-manager | — | decision | 実施 | 実施 | 実施 | **旧 `0c`〜`0n2` の 13 手順を 1 つにまとめる。** 判断基準はプロセス規則 §3.4 が持つ。**13 手順が決めるのは「どのプロセスと成果物を回すか」であり、判断の単位は 1 つでよい** |
-| `0o` | 評価結果を報告し確認を求める | project-manager | — | — | 実施 | 実施 | 実施 | |
-| `0p` | pipeline-state を初期化する | project-manager | — | pipeline-state | 実施 | 実施 | 実施 | |
+| `0a` | user-order.md を読み込む | **main-agent** | `**main-agent**` が直接読む（外注しない）<br/>**最大 0 階層** | — | 実施 | 実施 | 実施 | **前提を持たない体は「次を選ぶ」ができない**（`07` §1.5）。user-order は 3 問形式で小さく、以降のすべての判断の入力になる。**srs-writer も `1a` で読むが、それは解析のためであって代替にならない** |
+| `0b` | user-order.md をバリデーションする | srs-writer | `**main-agent**`--検証依頼--> `srs-writer`<br/>`srs-writer`--不足の一覧--> `**main-agent**`<br/>**最大 1 階層** | — | 実施 | 実施 | 実施 | 不足はインタビューで解消する。user-order 自体は直さない |
+| `0b2` | CLAUDE.md を提案する | architect | `**main-agent**`--起草依頼--> `architect`<br/>`architect`--案の場所--> `**main-agent**`<br/>**最大 1 階層** | CLAUDE.md | 実施 | 実施 | 実施 | **project-manager から移した。** 設計上の決めごとを並べた文書であり、設計の体が起草する |
+| **新設** | **開発方式（簡易 / 標準 / 厳格）を決める** | **main-agent** | `**main-agent**` が表 0 を引く（外注しない）<br/>**最大 0 階層** | decision | 実施 | 実施 | 実施 | **表 0 を引くだけで軽く、以降の分岐の入力になる。** CLAUDE.md「開発方式」節へ記録する。節も未新設 |
+| **新設** | **ステークホルダー登録簿を作る** | srs-writer | `**main-agent**`--作成依頼--> `srs-writer`<br/>`srs-writer`--登録簿の場所--> `**main-agent**`<br/>**最大 1 階層** | stakeholder-register | 免除 | 条件付き | 実施 | **project-manager から移した。** 要求側の成果物。ステークホルダーが複数いるとき（標準） |
+| **統合** | **条件付き 13 プロセスの要否を一括で評価する** | technical-authority | `**main-agent**`--評価依頼--> `technical-authority`<br/>`technical-authority`--可否の一覧--> `**main-agent**`<br/>**最大 1 階層** | decision | 実施 | 実施 | 実施 | **project-manager から移した。判定が本務である。** 旧 `0c`〜`0n2` の 13 手順を 1 つにまとめる。判断基準はプロセス規則 §3.4 が持つ |
+| `0o` | 評価結果を報告し確認を求める | **main-agent** | `**main-agent**`--報告文の起草依頼--> `project-manager`<br/>`project-manager`--報告文--> `**main-agent**`<br/>`**main-agent**`--報告し確認--> 利用者<br/>**最大 1 階層** | — | 実施 | 実施 | 実施 | **利用者と話せるのは `main-agent` だけ**（構造上の制約）。**文は下で起草させ、受け取って渡す** |
+| `0p` | pipeline-state を初期化する | project-manager | `**main-agent**`--初期化依頼--> `project-manager`<br/>`project-manager`--完了--> `**main-agent**`<br/>**最大 1 階層** | pipeline-state | 実施 | 実施 | 実施 | 記録が本務 |
 
 **Phase 0 の手順数が 19 → 8 になる。** 統合で 12 減り、新設で 1 増える（ステークホルダーは簡易で免除）。
+
+**project-manager の主担当が 5 → 2 になる。** 残るのは pipeline-state と報告文の起草だけで、**成果物づくりは全部よそへ出た。**
 
 ### 4.2 Phase 1 企画
 
@@ -152,8 +154,9 @@ flowchart TD
 | `3h` | WBS とガントチャートを作る | progress-monitor | project-manager | wbs | 免除 | 免除 | 実施 | 並列実装が要求する |
 | `3i` | リスク台帳を作る | risk-manager | — | risk-register | 免除 | 実施 | 実施 | |
 | `3j` | 安全分析（HARA / FMEA / FTA） | security-reviewer | architect | safety | 条件付き | 条件付き | 条件付き | 機能安全フラグ。Critical では必須 |
-| `3k` | 設計の品質レビュー（R2 / R4 / R5 / R7） | review-agent | architect | review | 実施 | 実施 | 実施 | |
-| `3l` | GATE-DESIGN を判定する | technical-authority | project-manager | — | 実施 | 実施 | 実施 | |
+| `3k` | 設計の品質レビュー（R2 / R4 / R5 / R7） | review-agent | `**main-agent**`--全観点まとめて依頼--> `review-agent`<br/>`review-agent`--指摘の場所と件数--> `**main-agent**`<br/>**最大 1 階層** | review | 実施 | 実施 | — | **1 体が全観点を見る** |
+| `3k` | 設計の品質レビュー（R2 / R4 / R5 / R7） | review-agent | `**main-agent**`--分野ごとに並べて依頼--> `review-agent` × 4<br/>`review-agent` × 4--各自の指摘の場所と件数--> `**main-agent**`<br/>**最大 1 階層** | review | — | — | 実施 | **分野別に並列**（設計原則 R2/R7・並行性 R4・性能 R5・状態遷移）。**再委託しない。統合は `3l`** |
+| `3l` | GATE-DESIGN を判定し、指摘を統合する | technical-authority | `**main-agent**`--統合とゲート判定を依頼--> `technical-authority`<br/>`technical-authority`--可否と統合済みの指摘--> `**main-agent**`<br/>**最大 1 階層** | — | 実施 | 実施 | 実施 | **厳格では分野別の重複をここで除く**（`07` §2.5.2） |
 
 ### 4.5 Phase 4 実装
 
@@ -222,12 +225,12 @@ flowchart TD
 
 | 手順 | 作業 | 主担当 | 関連 | 出力 | 簡易 | 標準 | 厳格 | 備考 |
 |---|---|---|---|---|:-:|:-:|:-:|---|
-| `Fa` | 当該フェーズの全 Out の用語・命名をチェックする | kotodama-kun | 全オーナー | — | 実施 | 実施 | 実施 | |
-| `Fb` | トークン消費とコストを追記する | progress-monitor | — | cost-log.json | 免除 | 実施 | 実施 | |
-| `Fc` | 文脈の圧縮が起きていたら session-handoff を残す | project-manager | — | session-handoff | 実施 | 実施 | 実施 | |
-| `Fd` | pipeline-state と executive-dashboard を更新し報告する | project-manager | — | pipeline-state ／ executive-dashboard | 実施 | 実施 | 実施 | 簡易は pipeline-state のみ |
-| `Fe` | ふりかえりと根本原因分析を行う | process-improver | project-manager | retrospective-report | 免除 | 実施 | 実施 | |
-| `Ff` | 承認済み改善策をガバナンスファイルへ適用する | decree-writer | process-improver | — | 免除 | 実施 | 実施 | `Fe` に従属 |
+| ~~`Fa`~~ | ~~当該フェーズの全 Out の用語・命名をチェックする~~ | — | — | — | — | — | — | **削除。体を起動しない。** `tools/kotodama-kun.mjs` が `Write` / `Edit` の前に走り、**書いた体にその場で差し戻る**（`07` §2.6） |
+| `Fb` | トークン消費とコストを追記する | progress-monitor | `**main-agent**`--計測依頼--> `progress-monitor`<br/>`progress-monitor`--完了--> `**main-agent**`<br/>**最大 1 階層** | cost-log.json | 免除 | 実施 | 実施 | **計測が本務** |
+| `Fc` | 文脈の圧縮が起きていたら session-handoff を残す | project-manager | `**main-agent**`--起草依頼--> `project-manager`<br/>`project-manager`--引継ぎ文の場所--> `**main-agent**`<br/>**最大 1 階層** | session-handoff | 実施 | 実施 | 実施 | 発火を判断するのは `main-agent`（自分の文脈の話）。**文は下で起草させる** |
+| `Fd` | pipeline-state と executive-dashboard を更新し、報告文を起草する | project-manager | `**main-agent**`--更新と起草を依頼--> `project-manager`<br/>`project-manager`--報告文--> `**main-agent**`<br/>`**main-agent**`--報告--> 利用者<br/>**最大 1 階層** | pipeline-state ／ executive-dashboard | 実施 | 実施 | 実施 | **統合が本務。** 簡易は pipeline-state のみ。**報告するのは `main-agent`** |
+| `Fe` | ふりかえりと根本原因分析を行う | process-improver | `**main-agent**`--ふりかえり依頼--> `process-improver`<br/>`process-improver`--報告の場所と改善案--> `**main-agent**`<br/>**最大 1 階層** | retrospective-report | 免除 | 実施 | 実施 | |
+| `Ff` | 承認済み改善策をガバナンスファイルへ適用する | decree-writer | `**main-agent**`--適用依頼--> `decree-writer`<br/>`decree-writer`--before/after diff--> `**main-agent**`<br/>**最大 1 階層** | — | 免除 | 実施 | 実施 | `Fe` に従属。**承認するのは利用者**（`main-agent` 経由） |
 
 ### 5.2 随時（条件で発火する）
 
