@@ -1,6 +1,6 @@
 # 仕様記述規則 v0.36 — ANMS / ANPS-part / ANPS-chapter
 
-**本書は `framework-src/{lang}/process-rules/spec-writing-rules.md` を置き換える候補として起こした。** 出どころは `00-spec-template-v036.md` であり、そこから骨格を抜いたものが本書である。**適用は `maintenance/2026-08-08/14-framework-update-plan.md` の手順 2 で行う。**
+**本書は仕様書の書き方を定める。** 骨格（`spec-template.md`）が形を持ち、本書が書き方を持つ。**どの開発方式でどの仕様形式を使うかは本書が定めない** —— 対応は開発方式 対応表（プロセス規則 §3.1.1 の表 A）が持つ。
 
 **記法は 1 つである。** ANMS・ANPS-part・ANPS-chapter で変わるのは分ける単位だけであり、書き方は変わらない。
 
@@ -15,9 +15,9 @@
 | **`spec-template.md`（骨格）** | **章・節の見出し、各ノード型のフォーム、プレースホルダ。** そのまま `strictdoc export` が通る 1 枚 | **コピーして埋める。書いている間ずっと手元に置く** |
 | **`spec-writing-rules.md`（本書）** | **章ごとの規則、EARS、Cockburn、抽象度の階段、通し例、検査の走らせ方、設計根拠** | **書き始める前に 1 度、レビュー時にもう 1 度。書いている間は落とせる** |
 
-> **章・節の見出しの正本は骨格である（MUST）。** 本書は節を番号で指し、見出しの文字列を持たない。**同じ見出しを 2 か所に置くと、片方だけが更新される。**
+> **章・節の見出しの正本は骨格である（MUST）。** 本書が書く題名は参照であって正本ではない。**骨格の見出しを変えたら本書も追随させる。** ずれは検査で止める（`check-mode-matrix.mjs` の「02 の題名が骨格と一致するか」）。
 
-> **骨格は空欄フォームの並びではない。** 親として書いた `UID` は同じ文書の中に実在しなければならず（実測。「記法の規則」12 番）、**空欄だけを並べた骨格は export できない。** そのため骨格は `GL-001` から `TR-003` までが閉じた最小の鎖になっている。**利用者はその鎖を書き換えて増やす。**
+> **骨格は空欄フォームの並びではない。** 親として書いた `UID` は同じ文書の中に実在しなければならず（実測。「記法の規則」12 番）、**空欄だけを並べた骨格は export できない。** そのため骨格は `GL-001` から `TR-006` までの 22 ノードが閉じた最小の鎖になっている。**利用者はその鎖を書き換えて増やす。**
 
 **分ける利点は総量が減ることではない**（読む側の合計は変わらない）。**読み手が違うことである。** 骨格を写すエージェントは規則の散文を毎回読み込む必要がなく、規則を引くエージェントは骨格の空欄を読み飛ばす必要がない。
 
@@ -141,7 +141,7 @@ Hint: Node fields: [UID, TITLE, RESULT, EVIDENCE],
 | **第 2 部 Design** | 5 | **Design** | 設計 | Mermaid + テーブル | やや安定 |
 | | 6 | **Software Specification** | ソフトウェア仕様 | ノード（EARS）+ 表・図・スキーマ | よく変わる |
 | | 7 | **Test Strategy** | テスト戦略 | テーブル | よく変わる |
-| | 8 | **Design Principles Compliance** | 設計原則 準拠確認 | テーブル | 可変（レビュー時に更新） |
+| | 8 | **Design Principles Compliance** | SW設計原則 準拠確認 | テーブル | 可変（レビュー時に更新） |
 | **第 3 部 Test** | 9 | **Use Case Tests** | ユースケーステスト | ノード（Given/When/Then） | 可変 |
 | | 10 | **Software Specification Tests** | ソフトウェア仕様テスト | ノード（Given/When/Then） | 可変 |
 | | 11 | **Non-Functional Tests** | 非機能テスト | ノード（Given/When/Then） | 最も可変 |
@@ -233,9 +233,11 @@ Hint: Node fields: [UID, TITLE, RESULT, EVIDENCE],
 | `NON_FUNC_REQ` | `UID` / `STATEMENT` | `ORIGIN` / `RATIONALE` | `GOAL` | `Satisfies` |
 | `SW_SPEC` | `UID` / `STATEMENT` | `RATIONALE` | `FUNC_REQ` / `NON_FUNC_REQ` | `Satisfies` |
 | `USE_CASE_TEST` | `UID` / `GIVEN` / `WHEN` / `THEN` | — | `USE_CASE` ＋ `File` | `Verifies` |
-| `SW_SPEC_TEST` | `UID` / `TEST_LEVEL` / `GIVEN` / `WHEN` / `THEN` | — | `SW_SPEC` ＋ `File` | `Verifies` |
+| `SW_SPEC_TEST` | `UID` / `TEST_LEVEL` (※) / `GIVEN` / `WHEN` / `THEN` | — | `SW_SPEC` ＋ `File` | `Verifies` |
 | `NON_FUNC_TEST` | `UID` / `GIVEN` / `WHEN` / `THEN` | — | `NON_FUNC_REQ` ＋ `File` | `Verifies` |
-| `TEST_RESULT` | `UID` / `RESULT` / `EXECUTED_ON` / `TESTED_VERSION` / `ENVIRONMENT` / `EVIDENCE` | `REMARK` | テスト 3 型のいずれか | `ResultOf` |
+| `TEST_RESULT` | `UID` / `RESULT` / `EXECUTED_ON` (※) / `TESTED_VERSION` (※) / `ENVIRONMENT` (※) / `EVIDENCE` | `REMARK` | テスト 3 型のいずれか | `ResultOf` |
+
+**(※) は ANPS でのみ必須である。** ANMS（`spec-anms.sgra`）では `REQUIRED: False` であり、省いてよい。骨格は ANMS で書かれているため、この 4 欄を持たない。
 
 **`TITLE` は見出しから来る。`.md` に `**TITLE**:` と書いてはならない（MUST NOT）。**
 
