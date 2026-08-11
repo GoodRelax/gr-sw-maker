@@ -1,105 +1,298 @@
-# ANMS v0.34 — AI-Native Minimal Spec Template
+# [プロジェクト名] 仕様書
 
-## 仕様書の設計原則: STFB (Stable Top, Flexible Bottom) — 上剛下柔
+**Grammar**: spec-anms.sgra
+**UID**: DOC-SPEC
+**Version**: 0.1
 
-Robert C. Martin の安定依存の原則 (Stable Dependencies Principle) に着想を得た章構成。上位の章は剛（安定し変更頻度が低い）、下位の章は柔（具体的で変更頻度が高い）。上位章が変わると下位章の見直しが必要になるが、下位章の変更は上位章に影響しない。
+## Chapter 1. Foundation (基本事項)
 
+### 1.1 Background (背景)
+
+**Type**: SECTION
+
+[なぜこのソフトウェアが必要か、ドメインの現状を記入する]
+
+### 1.2 Challenges (課題)
+
+**Type**: SECTION
+
+[現状の具体的な問題点を記入する]
+
+### 1.3 Goals (目標)
+
+#### [達成すべき状態を 1 つ、機能の目標として記入する]
+
+**Type**: GOAL
+**UID**: GL-001
+
+**STATEMENT**: [誰が、何をできる状態になるかを 1 文で記入する]
+
+#### [達成すべき状態を 1 つ、品質の目標として記入する]
+
+**Type**: GOAL
+**UID**: GL-002
+
+**STATEMENT**: [速さ・安全・可用性のいずれかについて、達成すべき状態を 1 文で記入する]
+
+### 1.4 Approach (解決方針)
+
+**Type**: SECTION
+
+[技術スタックとアーキテクチャ方針を記入する]
+
+### 1.5 Scope (範囲)
+
+**Type**: SECTION
+
+| 区分         | 内容                                 |
+| ------------ | ------------------------------------ |
+| In-scope     | [本プロジェクトでやることを記入する] |
+| Out-of-scope | [やらないことを記入する]             |
+
+### 1.6 Constraints (制約事項)
+
+**Type**: SECTION
+
+[技術・法規・倫理・特許等、絶対に破れない制約を記入する]
+
+### 1.7 Limitations (制限事項)
+
+**Type**: SECTION
+
+[要求を完全には満たさないが許容可能な既知の妥協点を記入する]
+
+### 1.8 Glossary (用語集)
+
+**Type**: SECTION
+
+| 用語                     | 定義   |
+| ------------------------ | ------ |
+| [プロジェクト固有の用語] | [定義] |
+| [2 つ目の用語]           | [定義] |
+
+### 1.9 Notation (表記規約)
+
+**Type**: SECTION
+
+本書は RFC 2119 / RFC 8174 に従う。SHALL / MUST は必須、SHOULD は推奨、MAY は任意を表す。規範語として扱うのは大文字で書かれた場合に限る。
+
+**例外:** EARS 構文中の小文字 `shall` は、本書では大文字の SHALL と同じ拘束力を持つものとする。
+
+**文体:** 記述文では主語と他動詞の目的語を省略しない。指示文（「〜する（MUST）」の形）はこの限りでない。
+
+**図:** 大きな図は `_assets/fig-<name>.md` へ出して本文から参照する。判定の閾値を変更した場合はここに記す。
+
+**EARS 構文パターン（日英併記）:**
+
+| パターン | 英語構文 | 日本語の形 | 用途 |
+|---|---|---|---|
+| Ubiquitous | The [System] shall [Response]. | [System] は、[Response] すること。 | 常に成り立つ要求 |
+| Event-driven | **When** [Trigger], the [System] shall [Response]. | [Trigger] したとき、[System] は、[Response] すること。 | イベント起点の要求 |
+| State-driven | **While** [In State], the [System] shall [Response]. | [In State] の間、[System] は、[Response] すること。 | 状態依存の要求 |
+| Unwanted Behavior | **If** [Trigger], then the [System] shall [Response]. | もし [Trigger] ならば、[System] は、[Response] すること。 | 異常系・例外処理 |
+| Optional Feature | **Where** [Feature is included], the [System] shall [Response]. | [Feature] がある場合、[System] は、[Response] すること。 | オプション機能・条件付き機能 |
+| Complex | **While** [In State], **when** [Trigger], the [System] shall [Response]. | [In State] の間、[Trigger] したとき、[System] は、[Response] すること。 | 複合条件の要求。**状態が先、契機が後**（原論文の節順に従う） |
+
+**条件は主語より先に書く（MUST）。これが EARS の要点である。**
+
+**要求は必ず「〜すること。」で終える（MUST）。** 事実の記述は「〜する。」、推奨は「〜が望ましい。」で区別する。
+
+> **`Where` は、製品にその機能が入っているかどうかで分ける。実行時に切り替わるものは State-driven である（MUST）。**
+
+**`[System]` の定義。** EARS の `[System]` は、**Chapter 2.2 で「対象ソフトが載る」と記した機器の上で動くソフトウェアを指す。Chapter 2 を書かずに Chapter 4 を書いてはならない（MUST NOT）。**
+
+## Chapter 2. System Overview (システム概要)
+
+### 2.1 Overview Diagram (概要図)
+
+**Type**: SECTION
+
+**構成の概要:**
+
+```mermaid
+flowchart LR
+    Actor["[アクター名]"] -->|"[何が流れるか]"| Device
+    Device["[対象ソフトが載る機器]"]:::target -->|"[何が流れるか]"| Actor
+
+    classDef target fill:#FFFFFF,stroke:#000,stroke-width:4px
 ```
-  Chapter 1  Foundation       ← 剛: 最も安定 / 最も抽象的
-  Chapter 2  Requirements
-  Chapter 3  Architecture
-  Chapter 4  Specification    ← 柔: 最も可変 / 最も具体的
-```
 
-本テンプレートは三段階仕様体系（ANMS / ANPS / ANGS）の第1段階（ANMS）として設計されている。1コンテキストウィンドウに収まる規模では単一ファイルとして使用する。収まらない場合はANPS（AI-Native Plural Spec）としてチャプター単位でファイルを分割する:
+対象ソフトが載る機器を太枠で示す。色は使わない。線のラベルには何が流れるかを書く。
 
-- **spec-foundation**（Ch1-2: Foundation・Requirements）— オーナー: srs-writer
-- **spec-architecture**（Ch3-6: Architecture・Specification・Test Strategy・Design Principles）— オーナー: architect
+### 2.2 Devices (機器)
 
-ANPSでは各ファイルにCommon Block + Form Blockを付与する（文書管理規則に従う）。STFB構造はファイルが分かれても維持される。
+**Type**: SECTION
 
-**人間が主導する3つの責務:**
+| 機器           | 種別   | 対象ソフトが載るか | 供給元        | こちらで変えられるか        |
+| -------------- | ------ | ------------------ | ------------- | --------------------------- |
+| [機器名]       | [種別] | [載る / 載らない]  | [既存 / 新規] | [変えられる / 変えられない] |
+| [2 つ目の機器] | [種別] | [載る / 載らない]  | [既存 / 新規] | [変えられる / 変えられない] |
 
-全自動開発においても、以下の3つは人間が主導する（プロセス規則 §1.1 参照）:
+### 2.3 Routes (経路)
 
-1. **コンセプトの提示**（Ch1 Foundation の入力）— 何を作りたいか、なぜ必要か
-2. **重要な意思決定**（Ch3 Architecture Decisions の判断）— 技術選定、アーキテクチャ方針
-3. **受入テスト**（Ch4 Specification の Result 判定）— 完成物がビジネス要求を満たすか
+**Type**: SECTION
 
----
+| from   | to     | 運ぶもの   | 方式   | 入力として信頼できるか |
+| ------ | ------ | ---------- | ------ | ---------------------- |
+| [起点] | [終点] | [運ぶもの] | [方式] | [信頼できない]         |
+| [終点] | [起点] | [運ぶもの] | [方式] | [該当なし（送信のみ）] |
 
-## Chapter Structure
+### 2.4 Exclusions (持たないもの)
 
-| #   | English                          | 日本語              | 主な記法                            | 安定度                   |
-| --- | -------------------------------- | ------------------- | ----------------------------------- | ------------------------ |
-| 1   | **Foundation**                   | 基本事項            | 自然言語 + テーブル                 | 最も安定                 |
-| 2   | **Requirements**                 | 要求                | EARS + 数式 + テーブル + 図         | 安定                     |
-| 3   | **Architecture**                 | アーキテクチャ      | Mermaid + テーブル                  | やや安定                 |
-| 4   | **Specification**                | 仕様                | Gherkin + テーブル + コードブロック | よく変わる               |
-| 5   | **Test Strategy**                | テスト戦略          | テーブル                            | よく変わる               |
-| 6   | **Design Principles Compliance** | SW設計原則 準拠確認 | テーブル                            | 可変（レビュー時に更新） |
-| A   | **Appendix**                     | 付録                | 自由形式                            | —                        |
+**Type**: SECTION
 
----
+| 持たないもの           | 理由             |
+| ---------------------- | ---------------- |
+| [構成に含まれないもの] | [なぜ持たないか] |
+| [2 つ目の持たないもの] | [なぜ持たないか] |
 
-## Section Structure
+## Chapter 3. Use Cases (ユースケース)
 
-### Chapter 1. Foundation (基本事項)
+### 3.1 Actors (アクター)
 
-プロジェクトの「北極星」。すべての後続章の前提となる。最も安定し、最も変わりにくい層。
+**Type**: SECTION
 
-| Section | English     | 日本語   | 記述内容                                   |
-| ------- | ----------- | -------- | ------------------------------------------ |
-| 1.1     | Background  | 背景     | なぜこのSWが必要か。ドメインの現状         |
-| 1.2     | Challenges  | 課題     | 現状の具体的な問題点                       |
-| 1.3     | Goals       | 目標     | 成功の定義。達成すべき状態                 |
-| 1.4     | Approach    | 解決方針 | 技術スタック、アーキテクチャ方針           |
-| 1.5     | Scope       | 範囲     | 本プロジェクトでやること (In-scope) とやらないこと (Out-of-scope) |
-| 1.6     | Constraints | 制約事項 | プロジェクトが絶対に破れない制約（技術・法規・倫理・特許等） |
-| 1.7     | Limitations | 制限事項 | 要求を完全には満たさないが許容可能な既知の妥協点 |
-| 1.8     | Glossary    | 用語集   | プロジェクト固有の用語定義。AIと人間で用語の解釈を揃える |
-| 1.9     | Notation    | 表記規約 | RFC 2119/8174 準拠。主要キーワード例: SHALL/MUST=必須, SHOULD=推奨, MAY=任意。EARS の `shall` は SHALL と同義 |
+| アクター           | アクター種別 | 対応する機器 | 関心           |
+| ------------------ | ------------ | ------------ | -------------- |
+| [アクター名]       | 人           | 該当なし     | [何を得たいか] |
+| [2 つ目のアクター] | 外部システム | [機器名]     | [何を得たいか] |
 
-### Chapter 2. Requirements (要求)
+### 3.2 Use Cases (ユースケース)
 
-システムが満たすべき要求。EARS構文・数式・テーブル・図など、要求に適した形式で記述する。
+#### [アクターの目標を動詞句で記入する]
 
-| Section | English                     | 日本語     | 記述内容                           |
-| ------- | --------------------------- | ---------- | ---------------------------------- |
-| 2.1     | Functional Requirements     | 機能要求   | システムが提供する機能の要求       |
-| 2.2     | Non-Functional Requirements | 非機能要求 | 性能、セキュリティ、可用性等の要求 |
+**Type**: USE_CASE
+**UID**: UC-001
 
-EARS構文パターン:
+**STATEMENT**: [アクターが何を示し、システムが何を返すかを 1 文で記入する]
 
-| パターン          | 構文                                                                          | 用途                         |
-| ----------------- | ----------------------------------------------------------------------------- | ---------------------------- |
-| Ubiquitous        | The [System] shall [Response].                                                | 常に成り立つ要求             |
-| Event-driven      | **When** [Trigger], the [System] shall [Response].                            | イベント起点の要求           |
-| State-driven      | **While** [In State], the [System] shall [Response].                          | 状態依存の要求               |
-| Unwanted Behavior | **If** [Trigger], then the [System] shall [Response].                         | 異常系・例外処理             |
-| Optional Feature  | **Where** [Feature is included], the [System] shall [Response].               | オプション機能・条件付き機能 |
-| Complex           | **When** [Trigger], **while** [In State], the [System] shall [Response].      | 複合条件の要求               |
+**SCENARIO**:
 
-※ EARS 構文中の `shall` は Chapter 1.9 Notation に定義する `SHALL` と同義。
+1. [アクターがすることを 1 文で記入する]
+2. [システムがすることを 1 文で記入する]
+3. [システムがすることを 1 文で記入する]
 
-### Chapter 3. Architecture (アーキテクチャ)
+**EXTENSIONS**:
 
-SWの構造と設計判断。Chapter 2 の要求を実現するための技術的な構造を定義する。
+- 2a. [主成功シナリオから外れる条件を記入する]
+  - [そのときシステムがすることを記入する]
 
-| Section | English              | 日本語               | 適用場面 | 記述内容                                                                 |
-| ------- | -------------------- | -------------------- | -------- | ------------------------------------------------------------------------ |
-| 3.1     | Architecture Concept | アーキテクチャ方式   | 常に     | 採用するアーキテクチャの種類（CA, Hexagonal, Layered等）と凡例の定義     |
-| 3.2     | Components           | コンポーネント       | 常に     | 部品と責務の分割。コンポーネント図（3.1の凡例で色分け）。AI/LLM連携がある場合はプロンプトテンプレートの配置（`src/prompts/` 等）・入出力スキーマ・テスト方針・ハルシネーション対策も定義する |
-| 3.3     | File Structure       | ファイル構成         | 常に     | ディレクトリ構成。コンポーネントとフォルダの対応。**各コンポーネントの公開面の宣言**（R2.19） |
-| 3.4     | Domain Model         | ドメインモデル       | 常に。**ただし図は種類ごとに条件が異なる** | 構造・関係・状態の定義。クラス図（3.1の凡例で色分け、**構造を持つ型が複数ある場合**）、ER図（**永続ストアを持つ場合**）、状態遷移図（**持続する状態を持つ場合**） |
-| 3.5     | Behavior             | 振る舞い             | 常に。**ただし図は種類ごとに条件が異なる** | 処理フロー・相互作用。シーケンス図（**複数コンポーネントの相互作用がある場合**）、アクティビティ図（**分岐・並行が多い場合**） |
-| 3.6     | Decisions            | 設計判断             | 常に     | ADR（Architecture Decision Records）。判断理由・代替案・決定者。記録形式は Michael Nygard の ADR フォーマット（Status / Context / Decision / Consequences）を推奨。**ADR-000「最小構成との比較」を必ず含める**（要求を満たす最小の構成、採用案が増やした要素、各々を増やした理由。R2.18）。**キャッシュを用いる場合はキャッシュ方針の ADR を含める**（R2.20） |
+**Relations**:
 
-**適用場面に当てはまらない図は描かない（MUST NOT）。** 省略した図は Ch3.6 に「該当なし」と理由を 1 行で記録する（MUST）。**描かない判断も設計判断であり、記録がなければ「検討したうえで不要と判断した」のか「忘れた」のかを後から区別できない。**
+- **Type**: `Parent`
+  **ID**: `GL-001`
+  **Role**: `Satisfies`
 
-コンポーネント図・クラス図にはアーキテクチャレイヤーに基づく色分けを必須とする。**色分けが表すべきものは依存の向きであり、層の数ではない。** デフォルトはClean Architectureの4層（下記凡例）を使用する。層の数が4でない場合、および他のアーキテクチャを採用する場合は、そのアーキテクチャに応じた凡例を3.1に定義すること。
+#### [2 つ目のユースケース]
 
-**デフォルト凡例: Clean Architecture レイヤー (コンポーネント図・クラス図 共通):**
+**Type**: USE_CASE
+**UID**: UC-002
+
+**STATEMENT**: [1 文で書く]
+
+**SCENARIO**:
+
+1. [手順 1]
+2. [手順 2]
+3. [手順 3]
+
+**EXTENSIONS**:
+
+- 2a. [条件]
+  - [処置]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `GL-001`
+  **Role**: `Satisfies`
+
+## Chapter 4. Requirements (要求)
+
+### 4.1 Functional Requirements (機能要求)
+
+#### [システムの振る舞いを 1 つ、名前として記入する]
+
+**Type**: FUNC_REQ
+**UID**: FR-001
+
+**STATEMENT**: [EARS 1 文で記入する。条件を主語より先に置き、「〜すること。」で終える]
+
+**ORIGIN**: [どの手順または拡張から来たかを記入する]
+
+**RATIONALE**: [なぜこの要求が要るのかを記入する]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `UC-001`
+  **Role**: `Satisfies`
+
+#### [2 つ目の機能要求]
+
+**Type**: FUNC_REQ
+**UID**: FR-002
+
+**STATEMENT**: [EARS 1 文で書く]
+
+**ORIGIN**: [出どころ]
+
+**RATIONALE**: [理由]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `UC-002`
+  **Role**: `Satisfies`
+
+### 4.2 Non-Functional Requirements (非機能要求)
+
+#### [品質の要求を 1 つ、名前として記入する]
+
+**Type**: NON_FUNC_REQ
+**UID**: NFR-001
+
+**STATEMENT**: [測定可能な数値基準を含む EARS 1 文で記入する]
+
+**RATIONALE**: [どの経路・どの機器に効くのかを名前で記入する]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `GL-002`
+  **Role**: `Satisfies`
+
+#### [2 つ目の非機能要求]
+
+**Type**: NON_FUNC_REQ
+**UID**: NFR-002
+
+**STATEMENT**: [数値基準を含む EARS 1 文で書く]
+
+**RATIONALE**: [効く対象]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `GL-001`
+  **Role**: `Satisfies`
+
+### 4.3 Reduction Candidates (削減候補)
+
+**Type**: SECTION
+
+| 対象ID           | 紐づけ先が無い理由 | 外すと何が起きるか | ユーザーの判断 |
+| ---------------- | ------------------ | ------------------ | -------------- |
+| [UID / 候補なし] | [理由]             | [1 行で記入する]   | [残す / 外す]  |
+| [2 つ目の対象ID] | [理由]             | [1 行で書く]       | [残す / 外す]  |
+
+## Chapter 5. Design (設計)
+
+### 5.1 Architecture Concept (アーキテクチャ方式)
+
+**Type**: SECTION
+
+**層の凡例:**
 
 ```mermaid
 graph RL
@@ -117,181 +310,359 @@ graph RL
     classDef framework fill:#87CEEB,stroke:#333,color:#000
 ```
 
-| CAレイヤー | 役割                         | 色       | Hex       |
-| ---------- | ---------------------------- | -------- | --------- |
-| Entity     | ドメインデータ・コアロジック | 橙       | `#FF8C00` |
-| Use Case   | ビジネスロジック調整         | ゴールド | `#FFD700` |
-| Adapter    | 外部IF適合                   | 緑       | `#90EE90` |
-| Framework  | UI・デバイス・外部サービス   | 青       | `#87CEEB` |
+[採用するアーキテクチャを記入する。Clean Architecture 以外を採る場合は凡例をここで差し替える]
 
-### Chapter 4. Specification (仕様)
+### 5.2 Components (コンポーネント)
 
-具体的で、よく変わる層。AIがコードに直接変換できるレベルの定義。
+**Type**: SECTION
 
-4.1 は Scenarios (Gherkin) を固定配置し、4.2以降はプロジェクトの性質に応じて取捨選択する。
+[部品と責務の分割をコンポーネント図で記入する。各コンポーネントが Chapter 2.2 のどの機器に載るかを書く]
 
-#### 4.1 Scenarios (シナリオ)
+### 5.3 File Structure (ファイル構成)
 
-Gherkin形式による UAT (User Acceptance Testing) の受入基準。Chapter 2 の要求を検証可能なシナリオとして具体化する。各シナリオの直下にテスト結果を記録する。トレーサビリティ確保のため、各シナリオの Scenario 行に対応する要求IDを `(traces: FR-xxx)` 形式で付記する。
+**Type**: SECTION
 
-Result ステータス定義（非該当を削除して使用する）:
+[ディレクトリ構成と、コンポーネントとフォルダの対応を記入する。各コンポーネントの公開面を宣言する]
 
-| ステータス    | 意味                                   |
-| ------------- | -------------------------------------- |
-| PASS          | 受入基準を満たす                       |
-| CONDITIONAL   | 基本OKだが条件付き。Remarkに改善点記載 |
-| FAIL          | 受入基準を満たさない。修正必須         |
-| SKIP          | 未テスト・非該当。Remarkに理由記載     |
+### 5.4 Domain Model (ドメインモデル)
 
-Gherkinテンプレート:
+**Type**: SECTION
 
-````
-```gherkin
-Feature: [機能名]
+[概念と関係を記入する。構造を持つ型が複数あるならクラス図、永続ストアを持つなら ER 図を描く]
 
-  Background:
-    Given [全シナリオ共通の前提条件]
+### 5.5 Behavior (振る舞い)
 
-  Rule: [ビジネスルール名]
+**Type**: SECTION
 
-    Scenario: SC-001 [シナリオ名] (traces: FR-xxx)
-      Given [前提条件]
-      And [追加の前提条件]
-      When [操作・イベント]
-      Then [期待結果]
-      And [追加の期待結果]
-      But [起きてはならないこと]
+[処理フローと相互作用を記入する。持続する状態を持つなら状態遷移図、複数コンポーネントの相互作用があるならシーケンス図を描く]
+
+### 5.6 Decisions (設計判断)
+
+**Type**: SECTION
+
+**ADR-000 最小構成との比較:**
+
+| 項目         | 内容                                 |
+| ------------ | ------------------------------------ |
+| Context      | [要求を満たす最小の構成を記入する]   |
+| Decision     | [採用案が増やした要素を記入する]     |
+| Status       | [Proposed / Accepted / Superseded]   |
+| Consequences | [各々を増やした理由と代償を記入する] |
+
+**ADR-001 [2 つ目の設計判断]:**
+
+| 項目         | 内容                               |
+| ------------ | ---------------------------------- |
+| Context      | [背景]                             |
+| Decision     | [決めたこと]                       |
+| Status       | [Proposed / Accepted / Superseded] |
+| Consequences | [結果と代償]                       |
+
+**描かなかった図:** [図の種類と、描かなかった理由を 1 行で記入する。無ければ「該当なし」と記入する]
+
+## Chapter 6. Software Specification (ソフトウェア仕様)
+
+### 6.1 Software Specifications (ソフトウェア仕様)
+
+#### [実装可能な言明を 1 つ、名前として記入する]
+
+**Type**: SW_SPEC
+**UID**: SWS-001
+
+**STATEMENT**: [EARS 1 文で記入する。符号・状態遷移・境界値などの手段を書く]
+
+**RATIONALE**: [親の要求を、どの経路・どの条件で具体化したものかを記入する]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `FR-001`
+  **Role**: `Satisfies`
+
+#### [2 つ目のソフトウェア仕様]
+
+**Type**: SW_SPEC
+**UID**: SWS-002
+
+**STATEMENT**: [EARS 1 文で書く]
+
+**RATIONALE**: [具体化の理由]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `FR-002`
+  **Role**: `Satisfies`
+
+### 6.2 Data Schema (データスキーマ)
+
+**Type**: SECTION
+
+**[スキーマの名前]:**
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "[名前]",
+  "type": "object",
+  "required": [],
+  "properties": {},
+  "additionalProperties": false
+}
 ```
 
-**Result:** PASS  CONDITIONAL  FAIL  SKIP
-**Remark:**
+[永続ストアを持たない場合は「持たない」と記入し、Chapter 2.4 と揃える]
 
----
+## Chapter 7. Test Strategy (テスト戦略)
 
-```gherkin
-Scenario: SC-002 [シナリオ名] (traces: FR-xxx)
-  Given [前提条件]
-  When [操作・イベント]
-  Then [期待結果]
-```
+**Type**: SECTION
 
-**Result:** PASS  CONDITIONAL  FAIL  SKIP
-**Remark:**
-````
+| 系統                   | テストレベル            | 方針   | ツール/フレームワーク | 合格基準                 |
+| ---------------------- | ----------------------- | ------ | --------------------- | ------------------------ |
+| ユースケーステスト     | —（系統として持たない） | [方針] | [ツール]              | 全 `UC` PASS             |
+| ソフトウェア仕様テスト | `Unit`                  | [方針] | [ツール]              | [合格率]                 |
+| ソフトウェア仕様テスト | `Integration`           | [方針] | [ツール]              | [合格率]                 |
+| 非機能テスト           | —（系統として持たない） | [方針] | [ツール]              | NFR 数値目標をすべて達成 |
 
-#### 4.2以降のセクション候補
+[機器をまたぐ検証は、どの経路（Chapter 2.3）を実際に通すかを名前で記入する]
 
-プロジェクトに応じて取捨選択する:
+## Chapter 8. Use Case Tests (ユースケーステスト)
 
-| Section候補 | English          | 日本語         | 適用場面                       |
-| ----------- | ---------------- | -------------- | ------------------------------ |
-| 4.x         | UI Elements Map  | UI要素マップ   | UIを持つアプリ                 |
-| 4.x         | Configuration    | 設定定義       | 設定オブジェクトを持つアプリ   |
-| 4.x         | API Definition   | API定義        | APIを提供・利用するアプリ      |
-| 4.x         | Data Schema      | データスキーマ | DB を使用するアプリ            |
-| 4.x         | State Management | 状態管理       | 複雑な状態遷移を持つアプリ     |
-| 4.x         | Algorithm        | アルゴリズム   | 数理・暗号等の演算ロジック     |
-| 4.x         | Error Handling   | エラー処理     | エラー体系の定義が必要なアプリ |
+### 8.1 Test Cases (テストケース)
 
-### Chapter 5. Test Strategy (テスト戦略)
+#### [確かめることを 1 つ、名前として記入する]
 
-テストレベル別の方針。個別テストケースの詳細はAIに委任し、ここでは「何をどのレベルでテストするか」を定義する。
+**Type**: USE_CASE_TEST
+**UID**: TC-001
 
-テストマトリクス（テンプレート例。プロジェクトに応じて行を追加・削除する）:
+**GIVEN**: [前提を完全な文で記入する]
 
-| テストレベル | 対象                 | 方針                               | ツール/フレームワーク | 合格基準         |
-| ------------ | -------------------- | ---------------------------------- | --------------------- | ---------------- |
-| 単体テスト   | 全ビジネスロジック   | AIが自動生成。カバレッジ目標: [X]% | [例: Vitest]          | 合格率 [X]% 以上 |
-| 結合テスト   | [結合ポイント列挙]   | [方針]                             | [例: Vitest]          | 合格率 100%      |
-| 性能テスト   | [対象API/処理]       | Chapter 2 NFR の数値目標に基づく   | [例: k6]              | [目標値]         |
-| E2Eテスト    | [主要ユーザーフロー] | Chapter 4.1 Gherkin シナリオに対応 | [例: Playwright]      | 全シナリオPASS   |
+**WHEN**: [きっかけを完全な文で記入する]
 
-### Chapter 6. Design Principles Compliance (SW設計原則 準拠確認)
+**THEN**: [観測できる結果を完全な文で記入する]
 
-アーキテクチャおよび実装がSW設計原則に準拠しているかを確認する。Chapter 1-5 の「定義・設計・検証」とはメタレベルが異なる、品質保証の層。
+**Relations**:
 
-プロジェクトの性質に応じて確認する原則を追加・削除してよい。
+- **Type**: `Parent`
+  **ID**: `UC-001`
+  **Role**: `Verifies`
+- **Type**: `File`
+  **Path**: `[テストコードの位置]`
 
-| カテゴリ | 識別名               | 正式名称                              | 確認観点                                                                   |
-| -------- | -------------------- | ------------------------------------- | -------------------------------------------------------------------------- |
-| 命名     | Naming               | —                                     | 意図が伝わる命名か。ドメイン語彙（Chapter 1.8）と一致するか                |
-| 依存関係 | Dependency Direction | —                                     | 依存方向が Chapter 3.1 のアーキレイヤーに従っているか                       |
-| 依存関係 | SDP                  | Stable Dependencies Principle         | 依存先が自分より安定（変更頻度が低い）コンポーネントか（R2.16）             |
-| 簡潔性   | KISS                 | Keep It Simple, Stupid                | 動作する最も単純な解決を選んでいるか                                       |
-| 簡潔性   | YAGNI                | You Aren't Gonna Need It             | 今必要でない機能を作っていないか。オーバーエンジニアリングしていないか     |
-| 簡潔性   | Minimal Comparison   | —                                     | Ch3.6 の ADR-000 で最小構成と比較し、増分の理由を示しているか（R2.18）     |
-| 簡潔性   | DRY                  | Don't Repeat Yourself                 | コード・ロジック・定義に重複がないか                                       |
-| 責務分離 | SoC                  | Separation of Concerns                | 関心ごとが適切に分離されているか                                           |
-| 責務分離 | SRP                  | Single Responsibility Principle       | 各クラス・ユニットが単一の責務を持つか                                     |
-| 責務分離 | SLAP                 | Single Level of Abstraction Principle | 関数内の抽象度レベルが統一されているか                                     |
-| SOLID    | OCP                  | Open-Closed Principle                 | 拡張に開き修正に閉じているか                                               |
-| SOLID    | LSP                  | Liskov Substitution Principle         | 親クラスを子クラスに差し替えても正しく動作するか                           |
-| SOLID    | ISP                  | Interface Segregation Principle       | インターフェースが適切に分割されているか                                   |
-| SOLID    | DIP                  | Dependency Inversion Principle        | 具象ではなく抽象に依存しているか                                           |
-| 結合     | LoD                  | Law of Demeter                        | オブジェクトの内部構造を掘り下げてアクセスしていないか（直接の協調者のみ利用） |
-| 結合     | CQS                  | Command-Query Separation              | コマンドとクエリが分離されているか                                         |
-| 可読性   | POLA                 | Principle of Least Astonishment       | 読み手が予想する通りに動作するか                                           |
-| 可読性   | PIE                  | Program Intently and Expressively     | 意図が明確に伝わるコードか                                                 |
-| テスト   | Testability          | —                                     | 単体テストがしやすいか。Mock・スタブを容易に差し込める設計か               |
-| 純粋性   | Pure / Semi-pure-a / Semi-pure-b / Non-pure | —              | 各関数を pure / semi-pure-a / semi-pure-b / non-pure に分類できるか。副作用と外部読み取りを計算ロジックの外へ寄せているか（functional core / imperative shell）|
-| 構造     | Collect-Process Separation | 収集後処理                       | 処理の途中で新たな外部読取を行わないか。全件収集が不可能な場合、一貫性の単位（チャンク/スナップショット/トランザクション）を明示し、結果がタイミング依存にならないか |
-| 状態遷移 | State Transition     | —                                     | 状態遷移の条件取得と遷移実行が分離されているか                             |
-| 並行性   | Concurrency Safety   | —                                     | デッドロック・競合状態・グリッチが発生しないか                             |
-| エラー   | Error Propagation    | —                                     | エラーが握りつぶされず、適切に伝播・処理されているか                       |
-| 資源管理 | Resource Lifecycle   | —                                     | リソース（接続・ファイル・メモリ）の取得と解放が対になっているか（R3.5）   |
-| 不変性   | Immutability         | —                                     | 変更不要な値が不変（immutable）になっているか                               |
-| 資源効率 | Resource Efficiency  | —                                     | CPU負荷・メモリ使用量・ストレージ摩耗等が許容範囲内か                      |
+#### [2 つ目のテストケース]
 
-### Appendix (付録)
+**Type**: USE_CASE_TEST
+**UID**: TC-002
 
-| Section | English    | 日本語       | 記述内容                       |
-| ------- | ---------- | ------------ | ------------------------------ |
-| A.1     | References | 参考文献     | 標準規格、外部資料へのリンク   |
-| A.2     | Licenses   | ライセンス   | 依存ライブラリのライセンス情報 |
-| A.3     | Changelog  | 変更履歴     | 本文書のバージョン履歴         |
-| A.x     | (その他)   | (その他)     | プロジェクト固有の補足資料     |
+**GIVEN**: [前提]
 
----
+**WHEN**: [きっかけ]
 
-> 以下の「Design Rationale」と「References」は本テンプレート自体の設計根拠と参考文献である。プロジェクト仕様書を作成する際は削除してよい。
+**THEN**: [結果]
 
-## Design Rationale (本構成の設計根拠)
+**Relations**:
 
-| 判断                                    | 根拠                                                                                         |
-| --------------------------------------- | -------------------------------------------------------------------------------------------- |
-| STFB / 上剛下柔 (SDP適用)               | 章の順序はStable Dependencies Principleに従う。上位=安定・抽象、下位=可変・具体              |
-| SRS/SWS統合 → 1文書化                   | AIのコンテキストウィンドウに全情報を入れるため。参照が分断されるとAIの幻覚（hallucination）を誘発しやすい |
-| EARS 5パターン + Complex                | When/While/If/Where + Ubiquitous + 複合パターン。全パターンを網羅                            |
-| EARS + 数式のハイブリッド               | EARSだけでは数理仕様を表現できない。ドメインに応じて使い分け                                 |
-| Mermaid レイヤー色分け必須              | Mermaidはレイアウト制御が弱い。色分けがないと責務の境界が視覚的に判別不能                     |
-| CAをデフォルト凡例とし差し替え可        | CA以外(Hexagonal, Layered等)を採用する場合は3.1で独自凡例を定義する                           |
-| デフォルト色はgrsmd_gen2_specに準拠     | Entity(橙#FF8C00), UseCase(ゴールド#FFD700), Adapter(緑#90EE90), Framework(青#87CEEB)        |
-| Architecture Conceptを3.1に新設         | 色分けの起点はアーキコンセプトの選定。選定→設計→色分け可視化の順序を構造化                    |
-| File StructureをCh3.3に独立             | フォルダ構成変更=アーキテクチャ変更。コンポーネントとフォルダの対応を明示する重要セクション  |
-| ADRをArchitecture章内に配置             | 設計と根拠をセットで読める。Appendixに追いやると参照が切れる                                 |
-| GherkinをCh4.1に固定配置                | GherkinはUATの受入基準=仕様の具体化。EARSより不安定→SDPにより下位章に配置                    |
-| Gherkin全キーワード網羅                 | Feature, Background, Rule, Scenario, Given/And/When/Then/And/But。テンプレートで全構文を提示 |
-| シナリオ直下にResult/Remark             | シナリオと結果が隣接。AIが埋めやすく人間がレビューしやすい                                   |
-| シナリオに要求IDトレース付記            | `(traces: FR-xxx)` 形式で要求IDを紐付け、トレーサビリティを確保する                          |
-| Result 4択 PASS/CONDITIONAL/FAIL/SKIP  | 条件付き合格を明示。非該当を削除する運用。スペース区切りでデリミタ競合を回避                  |
-| Specification章はセクション候補制       | 全SW開発に適用するため。分野ごとに取捨選択                                                   |
-| Test StrategyをCh5に独立                | テストケース詳細はAIに委任。ここでは方針とマトリクスのみ定義                                 |
-| Design Principles ComplianceをCh6に独立 | Ch1-5の「定義・設計・検証」とはメタレベルが異なる品質保証の層                                |
-| Ch6原則をカテゴリ別に網羅               | Naming→依存→簡潔性→責務分離→SOLID→結合→可読性。命名と依存方向を最優先に配置。正式名称列を併記し、略称だけでは伝わらない原則の意図を補足する |
-| SDPをCh6に追加                          | STFBの根幹原則であり、コードレベルでも依存先の安定度を検証すべき。Dependency Directionとは観点が異なる（方向 vs 安定度） |
-| Limitations追加                         | Scope(やらない)とConstraints(破れない)の間にある「妥協点」を明示                             |
-| Glossary追加                            | AIとの語彙同期。grsmd_gen2_specで有効性を実証済み                                            |
-| NotationをCh1.9に配置                   | 文書全体に適用される表記規約はFoundation層に属する。RFC 2119/8174準拠。EARSのshallとの関係を明示 |
+- **Type**: `Parent`
+  **ID**: `UC-002`
+  **Role**: `Verifies`
+- **Type**: `File`
+  **Path**: `[テストコードの位置]`
 
----
+### 8.2 Test Results (テスト結果)
 
-## References
+#### [PASS] [対応するテストケースの名前]
 
-1. Martin, R.C. "[The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)" — Stable Dependencies Principle (SDP), Stable Abstractions Principle (SAP)
-2. Mavin, A., et al. "[EARS: Easy Approach to Requirements Syntax](https://ieeexplore.ieee.org/document/5328509)" — IEEE, 2009
-3. Cucumber. "[Gherkin Reference](https://cucumber.io/docs/gherkin/reference/)"
-4. Starke, G. "[arc42 Architecture Template](https://arc42.org/)"
-5. ISO/IEC/IEEE. "[29148:2018 — Requirements Engineering](https://www.iso.org/standard/72089.html)"
-6. Bradner, S. "[RFC 2119 — Key words for use in RFCs to Indicate Requirement Levels](https://datatracker.ietf.org/doc/html/rfc2119)" — IETF, 1997
-7. Leiba, B. "[RFC 8174 — Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words](https://datatracker.ietf.org/doc/html/rfc8174)" — IETF, 2017
-8. Nygard, M. "[Documenting Architecture Decisions](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)" — ADR format reference
+**Type**: TEST_RESULT
+**UID**: TR-001
+**RESULT**: PASS
+
+**EVIDENCE**: [後から取り出せるログの位置・実行 ID・成果物のパスを記入する]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `TC-001`
+  **Role**: `ResultOf`
+
+#### [PASS] [2 つ目のテスト結果]
+
+**Type**: TEST_RESULT
+**UID**: TR-002
+**RESULT**: PASS
+
+**EVIDENCE**: [取り出せる位置]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `TC-002`
+  **Role**: `ResultOf`
+
+## Chapter 9. Software Specification Tests (ソフトウェア仕様テスト)
+
+### 9.1 Test Cases (テストケース)
+
+#### [確かめることを 1 つ、名前として記入する]
+
+**Type**: SW_SPEC_TEST
+**UID**: TC-003
+**TEST_LEVEL**: Unit
+
+**GIVEN**: [前提を完全な文で記入する]
+
+**WHEN**: [きっかけを完全な文で記入する]
+
+**THEN**: [観測できる結果を完全な文で記入する]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `SWS-001`
+  **Role**: `Verifies`
+- **Type**: `File`
+  **Path**: `[テストコードの位置]`
+
+#### [2 つ目のテストケース]
+
+**Type**: SW_SPEC_TEST
+**UID**: TC-004
+**TEST_LEVEL**: Integration
+
+**GIVEN**: [前提]
+
+**WHEN**: [きっかけ]
+
+**THEN**: [結果]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `SWS-002`
+  **Role**: `Verifies`
+- **Type**: `File`
+  **Path**: `[テストコードの位置]`
+
+### 9.2 Test Results (テスト結果)
+
+#### [PASS] [対応するテストケースの名前]
+
+**Type**: TEST_RESULT
+**UID**: TR-003
+**RESULT**: PASS
+
+**EVIDENCE**: [後から取り出せるログの位置・実行 ID・成果物のパスを記入する]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `TC-003`
+  **Role**: `ResultOf`
+
+#### [PASS] [2 つ目のテスト結果]
+
+**Type**: TEST_RESULT
+**UID**: TR-004
+**RESULT**: PASS
+
+**EVIDENCE**: [取り出せる位置]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `TC-004`
+  **Role**: `ResultOf`
+
+## Chapter 10. Non-Functional Tests (非機能テスト)
+
+### 10.1 Test Cases (テストケース)
+
+#### [確かめることを 1 つ、名前として記入する]
+
+**Type**: NON_FUNC_TEST
+**UID**: TC-005
+
+**GIVEN**: [測り方と負荷の条件を完全な文で記入する]
+
+**WHEN**: [きっかけを完全な文で記入する]
+
+**THEN**: [親の NON_FUNC_REQ と一致する数値を含む結果を完全な文で記入する]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `NFR-001`
+  **Role**: `Verifies`
+- **Type**: `File`
+  **Path**: `[テストコードの位置]`
+
+#### [2 つ目のテストケース]
+
+**Type**: NON_FUNC_TEST
+**UID**: TC-006
+
+**GIVEN**: [測り方と負荷の条件]
+
+**WHEN**: [きっかけ]
+
+**THEN**: [数値を含む結果]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `NFR-002`
+  **Role**: `Verifies`
+- **Type**: `File`
+  **Path**: `[テストコードの位置]`
+
+### 10.2 Test Results (テスト結果)
+
+#### [PASS] [対応するテストケースの名前]
+
+**Type**: TEST_RESULT
+**UID**: TR-005
+**RESULT**: PASS
+
+**EVIDENCE**: [後から取り出せるログの位置・実行 ID・成果物のパスを記入する]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `TC-005`
+  **Role**: `ResultOf`
+
+#### [PASS] [2 つ目のテスト結果]
+
+**Type**: TEST_RESULT
+**UID**: TR-006
+**RESULT**: PASS
+
+**EVIDENCE**: [取り出せる位置]
+
+**Relations**:
+
+- **Type**: `Parent`
+  **ID**: `TC-006`
+  **Role**: `ResultOf`
+
+## Appendix (付録)
+
+### A.1 References (参考文献)
+
+**Type**: SECTION
+
+[標準規格・外部資料へのリンクを記入する]
+
+### A.2 Licenses (ライセンス)
+
+**Type**: SECTION
+
+[依存ライブラリのライセンス情報を記入する]
+
+### A.3 Changelog (変更履歴)
+
+**Type**: SECTION
+
+| 版  | 日付         | 変更内容     |
+| --- | ------------ | ------------ |
+| 0.1 | [YYYY-MM-DD] | [初版]       |
+| 0.2 | [YYYY-MM-DD] | [2 つ目の版] |

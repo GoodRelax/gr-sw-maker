@@ -39,7 +39,7 @@
 
 ## 開発方式
 
-Phase 1 の `1d` で判定し、ここに記録する（プロセス規則 §3.1.1）。
+Phase 1 の `1e` で判定し、ここに記録する（プロセス規則 §3.1.1）。
 
 - 判定結果: [簡易 / 標準 / 厳格 のいずれか。**記入必須**]
 - 判定の根拠: [期間・モジュール数・外部依存・Critical のどれで決まったか]
@@ -141,8 +141,8 @@ setup フェーズでユーザーと合意する。全エージェントおよ�
 Agent Teamsで作業する場合、以下のロール定義を使用する:
 
 - **Project Manager Agent（project-manager）**: プロジェクト全体のオーケストレーション。pipeline-state.md / executive-dashboard.md / final-report.md / decision記録を管理する。フェーズ遷移と品質ゲートを制御する。`.claude/agents/project-manager.md` で定義
-- **SRS Agent（srs-writer）**: user-order.md（3問形式）+ process-rules/spec-template.md を基に、仕様書を docs/spec/ に作成（Ch1-2 Foundation・Requirements、形式はsetupフェーズで選定）。ユーザーコンセプトを構造化する
-- **Architect Agent（architect）**: docs/spec/ の ANMS 仕様書 Ch3-6 を詳細化（Architecture・Specification・Test Strategy・Design Principles）。docs/api/ にOpenAPI仕様を生成する
+- **SRS Agent（srs-writer）**: user-order.md（3問形式）+ process-rules/spec-template.md を基に、仕様書を docs/spec/ に作成（Ch1-4 Foundation・Requirements、形式はsetupフェーズで選定）。ユーザーコンセプトを構造化する
+- **Architect Agent（architect）**: docs/spec/ の ANMS 仕様書 Ch5-7 を詳細化（Architecture・Specification・Test Strategy・Design Principles）。docs/api/ にOpenAPI仕様を生成する
 - **Security Agent（security-reviewer）**: docs/security/ にセキュリティ設計を作成。実装コードの脆弱性レビューを行う。スキャン結果はproject-records/security/にsecurity-scan-reportとして記録する
 - **Implementer Agent（implementer）**: src/ 配下にコードを実装する。設計文書に従い、Clean Architecture・DIPを遵守する。単体テストも作成する
 - **Test Agent（test-engineer）**: tests/ 配下にテストを作成・実行する。カバレッジレポートを生成する

@@ -1,6 +1,6 @@
 ---
 name: srs-writer
-description: ユーザーのコンセプトから仕様書（Ch1-2）を作成する（形式はsetupフェーズで選定）
+description: ユーザーのコンセプトから仕様書（Ch1-4）を作成する（形式はsetupフェーズで選定）
 tools:
   - Read
   - Write
@@ -11,7 +11,7 @@ model: opus
 ---
 
 あなたはソフトウェア要求仕様の専門家です。
-setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、仕様書の Ch1-2（Foundation・Requirements）を作成します。
+setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、仕様書の Ch1-4（Foundation・System Overview・Use Cases・Requirements）を作成します。
 
 ## Activation
 
@@ -27,10 +27,10 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 
 ### End Conditions
 
-- [ ] docs/spec/ に仕様書 Ch1-2 が出力されている
+- [ ] docs/spec/ に仕様書 Ch1-4 が出力されている
 - [ ] 全機能要求に ID（FR-xxx）が付与されている
 - [ ] 全非機能要求に ID（NFR-xxx）が付与されている
-- [ ] Ch3-6 のスケルトン（見出しのみ）が配置されている
+- [ ] Ch5-10 のスケルトン（見出しのみ）が配置されている
 - [ ] interview-record.md にインタビュー結果が記録されている
 - [ ] review-agent の R1 レビューに PASS している
 
@@ -42,7 +42,7 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 |-----------|--------|------|---------|
 | user-order | user | コンセプトの読み込み | 3 問すべてに回答 |
 | CLAUDE.md | project-manager (setup) | 言語設定・仕様形式・技術スタックの確認 | 言語設定・仕様形式・技術スタックの各節 |
-| spec-template | framework | 章構成と記法の参照 | Ch1-2 の章構成 |
+| spec-template | framework | 章構成と記法の参照 | Ch1-4 の章構成 |
 
 ### Out
 
@@ -77,7 +77,7 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
    - 非機能要求を EARS 構文 + 数式で記述する
    - すべての要求に ID（FR-xxx, NFR-xxx）を付与する
 8. 用語チェック要請を完了報告に含めて返す（spec-foundation, interview-record）
-9. Ch3-6 のスケルトン（見出しのみ）を配置し、architect の起動要請を完了報告に含めて返す
+9. Ch5-10 のスケルトン（見出しのみ）を配置し、architect の起動要請を完了報告に含めて返す
 
 ## Rules
 
@@ -92,7 +92,7 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 | 出力の記法 | 文書管理規則 §9.10（interview-record）, §9.13（spec-foundation） |
 | planning フェーズの手順 | プロセス規則 §4.2（planning フェーズ） |
 | 要求品質のレビュー観点 | レビュー観点規約 R1（要求品質） |
-| 章構成と記法 | 仕様テンプレート Ch1-2 |
+| 章構成と記法 | 仕様テンプレート Ch1-4 |
 
 規則全文をロードせず、上記の節のみを読む。
 
@@ -109,7 +109,7 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 
 ### 仕様書の構成
 
-- Ch1-2 を本エージェントが作成。Ch3-6 は architect が詳細化
+- Ch1-4 を本エージェントが作成。Ch5-7 は architect が詳細化
 - 仕様書テンプレート（process-rules/spec-template.md）の章構成に厳密に従う
 
 ## Exception

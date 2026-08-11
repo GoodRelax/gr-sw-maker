@@ -30,8 +30,8 @@ model: opus
 
 | フェーズ | 完了条件 |
 |---------|---------|
-| planning | - [ ] 仕様書 Ch1-2 に対する review が出力されている |
-| design | - [ ] 仕様書 Ch3-6・設計文書に対する review が出力されている |
+| planning | - [ ] 仕様書 Ch1-4 に対する review が出力されている |
+| design | - [ ] 仕様書 Ch5-7・設計文書に対する review が出力されている |
 | implementation | - [ ] 実装コードに対する review が出力されている |
 | testing | - [ ] テストコードに対する review が出力されている |
 | delivery | - [ ] 全成果物に対する最終 review が出力されている |
@@ -44,8 +44,8 @@ model: opus
 
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
-| spec-foundation | srs-writer | R1 レビュー対象 | Ch1-2, 全 FR/NFR に ID |
-| spec-architecture | architect | R2/R4/R5/R7 レビュー対象 | Ch3-6, Ch4 の全 Gherkin に traces |
+| spec-foundation | srs-writer | R1 レビュー対象 | Ch1-4, 全 FR/NFR に ID |
+| spec-architecture | architect | R2/R4/R5/R7 レビュー対象 | Ch5-7, Ch4 の全 Gherkin に traces |
 | （src/） | implementer | R2/R3/R4/R5/R7 レビュー対象 | 全関数に `@purity` タグ |
 | （tests/） | test-engineer | R6 レビュー対象 | テストの実行結果 |
 | test-plan | test-engineer | R6 テスト計画の妥当性レビュー | テスト観点と対象 FR |
@@ -107,7 +107,7 @@ review:
 <!-- FIELD: review -->
 review:
   id: review-012
-  target: docs/spec/my-app-spec.md Ch3-6
+  target: docs/spec/my-app-spec.md Ch5-7
   dimensions: R2,R4,R5,R7
   result: fail
   critical_count: 0
@@ -135,7 +135,7 @@ review:
 
 | 対象 | 適用するレビュー観点 |
 |------|-------------------|
-| 仕様書 Ch1-2 | R1: 要求品質（R1a構造品質 + R1b表現品質） |
+| 仕様書 Ch1-4 | R1: 要求品質（R1a構造品質 + R1b表現品質） |
 | 仕様書 Ch3-4・設計文書 | R2: 設計原則, R4: 並行性・状態遷移（設計レベル）, R5: パフォーマンス（設計レベル）, R7: 純粋性・構造（設計レベル） |
 | 実装コード | R2: 設計原則, R3: コーディング品質, R4: 並行性・状態遷移（実装レベル）, R5: パフォーマンス（実装レベル）, R7: 純粋性・構造（実装レベル） |
 | テストコード | R6: テスト品質 |
@@ -159,7 +159,7 @@ review:
 
 | 指摘観点 | 戻り先 |
 |---------|--------|
-| R1 | 仕様書 Ch1-2 修正（planning フェーズ相当） |
+| R1 | 仕様書 Ch1-4 修正（planning フェーズ相当） |
 | R2/R4/R5/R7（設計レベル） | 仕様書 Ch3-4 修正（design フェーズ相当） |
 | R3/R5/R7（実装レベル） | コード修正（implementation フェーズ相当） |
 | R6 | テスト修正（testing フェーズ相当） |
@@ -170,7 +170,7 @@ review:
 
 | タイミング | 対象 | 観点 |
 |-----------|------|------|
-| planning フェーズ完了後 | 仕様書 Ch1-2 | R1 |
+| planning フェーズ完了後 | 仕様書 Ch1-4 | R1 |
 | design フェーズ完了後 | 仕様書 Ch3-4・設計 | R2, R4, R5, R7（設計レベル） |
 | 各モジュール実装完了後 | 実装コード | R2, R3, R4, R5, R7（実装レベル） |
 | testing フェーズ完了後 | テストコード | R6 |

@@ -5,7 +5,7 @@
 
 ---
 
-## R1: 要求品質レビュー観点（仕様書 Ch1-2 対象）
+## R1: 要求品質レビュー観点（仕様書 Ch1-4 対象）
 
 ### R1a: 要求構造品質
 
@@ -52,7 +52,7 @@
 
 ---
 
-## R2: SW設計原則レビュー観点（仕様書 Ch3-4・コード対象）
+## R2: SW設計原則レビュー観点（仕様書 Ch5-6・コード対象）
 
 ### Naming（命名）— 名は体を表す（MUST・最重要）
 
@@ -333,7 +333,7 @@
 
 ---
 
-## R7: 純粋性・構造レビュー観点（仕様書 Ch3-4・コード対象）
+## R7: 純粋性・構造レビュー観点（仕様書 Ch5-6・コード対象）
 
 関数・クラスを純粋性の軸で分類し、非純粋な作用を計算ロジックから分離することで、テスト容易性と推論可能性を確保する。用語の定義は[用語集](glossary.md)に従う。
 
@@ -509,3 +509,43 @@ review-agent が修正後の再レビューを実施する際:
 | R7.8 | 構造 | SHOULD | クラスに可変状態と純粋計算を混在させず、純粋ロジックは純粋関数か値オブジェクトへ抽出 | — | — |
 | R7.9 | 構造 | SHOULD | 純粋性でユニットを分割（純粋な core と 非純粋な shell を別ファイルに） | — | — |
 | R7.10 | 純粋性 | SHOULD | 計算ロジック側の失敗を戻り値型（Result / Either / Option）で表現。同等の機構を持たない言語ではドメイン例外で代替してよい | — | — |
+
+---
+
+## 設計原則の索引
+
+**SW設計原則の準拠確認は本節が持つ。** 仕様書テンプレートの Chapter として持っていたものを、2026-08-11 に本書へ移した（10 章構成への移行に伴う）。
+
+**確認するのは R2 と R7 のレビューである。** プロジェクトの性質に応じて原則を追加・削除してよい。
+
+**設計原則カタログ:**
+
+| カテゴリ | 識別名               | 正式名称                              | 確認観点                                                                   |
+| -------- | -------------------- | ------------------------------------- | -------------------------------------------------------------------------- |
+| 命名     | Naming               | —                                     | 意図が伝わる命名か。ドメイン語彙（Chapter 1.8）と一致するか                |
+| 依存関係 | Dependency Direction | —                                     | 依存方向が Chapter 5.1 のアーキレイヤーに従っているか                       |
+| 依存関係 | SDP                  | Stable Dependencies Principle         | 依存先が自分より安定（変更頻度が低い）コンポーネントか（R2.16）             |
+| 簡潔性   | KISS                 | Keep It Simple, Stupid                | 動作する最も単純な解決を選んでいるか                                       |
+| 簡潔性   | YAGNI                | You Aren't Gonna Need It             | 今必要でない機能を作っていないか。オーバーエンジニアリングしていないか     |
+| 簡潔性   | Minimal Comparison   | —                                     | Ch5.6 の ADR-000 で最小構成と比較し、増分の理由を示しているか（R2.18）     |
+| 簡潔性   | DRY                  | Don't Repeat Yourself                 | コード・ロジック・定義に重複がないか                                       |
+| 責務分離 | SoC                  | Separation of Concerns                | 関心ごとが適切に分離されているか                                           |
+| 責務分離 | SRP                  | Single Responsibility Principle       | 各クラス・ユニットが単一の責務を持つか                                     |
+| 責務分離 | SLAP                 | Single Level of Abstraction Principle | 関数内の抽象度レベルが統一されているか                                     |
+| SOLID    | OCP                  | Open-Closed Principle                 | 拡張に開き修正に閉じているか                                               |
+| SOLID    | LSP                  | Liskov Substitution Principle         | 親クラスを子クラスに差し替えても正しく動作するか                           |
+| SOLID    | ISP                  | Interface Segregation Principle       | インターフェースが適切に分割されているか                                   |
+| SOLID    | DIP                  | Dependency Inversion Principle        | 具象ではなく抽象に依存しているか                                           |
+| 結合     | LoD                  | Law of Demeter                        | オブジェクトの内部構造を掘り下げてアクセスしていないか（直接の協調者のみ利用） |
+| 結合     | CQS                  | Command-Query Separation              | コマンドとクエリが分離されているか                                         |
+| 可読性   | POLA                 | Principle of Least Astonishment       | 読み手が予想する通りに動作するか                                           |
+| 可読性   | PIE                  | Program Intently and Expressively     | 意図が明確に伝わるコードか                                                 |
+| テスト   | Testability          | —                                     | 単体テストがしやすいか。Mock・スタブを容易に差し込める設計か               |
+| 純粋性   | Pure / Semi-pure-a / Semi-pure-b / Non-pure | —              | 各関数を pure / semi-pure-a / semi-pure-b / non-pure に分類できるか。副作用と外部読み取りを計算ロジックの外へ寄せているか（functional core / imperative shell）|
+| 構造     | Collect-Process Separation | 収集後処理                       | 処理の途中で新たな外部読取を行わないか。全件収集が不可能な場合、一貫性の単位（チャンク/スナップショット/トランザクション）を明示し、結果がタイミング依存にならないか |
+| 状態遷移 | State Transition     | —                                     | 状態遷移の条件取得と遷移実行が分離されているか                             |
+| 並行性   | Concurrency Safety   | —                                     | デッドロック・競合状態・グリッチが発生しないか                             |
+| エラー   | Error Propagation    | —                                     | エラーが握りつぶされず、適切に伝播・処理されているか                       |
+| 資源管理 | Resource Lifecycle   | —                                     | リソース（接続・ファイル・メモリ）の取得と解放が対になっているか（R3.5）   |
+| 不変性   | Immutability         | —                                     | 変更不要な値が不変（immutable）になっているか                               |
+| 資源効率 | Resource Efficiency  | —                                     | CPU負荷・メモリ使用量・ストレージ摩耗等が許容範囲内か                      |

@@ -82,6 +82,25 @@
 
 **図:** 大きな図は `_assets/fig-<name>.md` へ出して本文から参照する。判定の閾値を変更した場合はここに記す。
 
+**EARS 構文パターン（日英併記）:**
+
+| パターン | 英語構文 | 日本語の形 | 用途 |
+|---|---|---|---|
+| Ubiquitous | The [System] shall [Response]. | [System] は、[Response] すること。 | 常に成り立つ要求 |
+| Event-driven | **When** [Trigger], the [System] shall [Response]. | [Trigger] したとき、[System] は、[Response] すること。 | イベント起点の要求 |
+| State-driven | **While** [In State], the [System] shall [Response]. | [In State] の間、[System] は、[Response] すること。 | 状態依存の要求 |
+| Unwanted Behavior | **If** [Trigger], then the [System] shall [Response]. | もし [Trigger] ならば、[System] は、[Response] すること。 | 異常系・例外処理 |
+| Optional Feature | **Where** [Feature is included], the [System] shall [Response]. | [Feature] がある場合、[System] は、[Response] すること。 | オプション機能・条件付き機能 |
+| Complex | **While** [In State], **when** [Trigger], the [System] shall [Response]. | [In State] の間、[Trigger] したとき、[System] は、[Response] すること。 | 複合条件の要求。**状態が先、契機が後**（原論文の節順に従う） |
+
+**条件は主語より先に書く（MUST）。これが EARS の要点である。**
+
+**要求は必ず「〜すること。」で終える（MUST）。** 事実の記述は「〜する。」、推奨は「〜が望ましい。」で区別する。
+
+> **`Where` は、製品にその機能が入っているかどうかで分ける。実行時に切り替わるものは State-driven である（MUST）。**
+
+**`[System]` の定義。** EARS の `[System]` は、**Chapter 2.2 で「対象ソフトが載る」と記した機器の上で動くソフトウェアを指す。Chapter 2 を書かずに Chapter 4 を書いてはならない（MUST NOT）。**
+
 ## Chapter 2. System Overview (システム概要)
 
 ### 2.1 Overview Diagram (概要図)
@@ -407,24 +426,9 @@ graph RL
 
 [機器をまたぐ検証は、どの経路（Chapter 2.3）を実際に通すかを名前で記入する]
 
-## Chapter 8. Design Principles Compliance (SW設計原則 準拠確認)
+## Chapter 8. Use Case Tests (ユースケーステスト)
 
-**Type**: SECTION
-
-| カテゴリ | 識別名               | 確認観点                                           | 判定          | 根拠   |
-| -------- | -------------------- | -------------------------------------------------- | ------------- | ------ |
-| 命名     | Naming               | 意図が伝わる命名か。Chapter 1.8 の語彙と一致するか | [PASS / FAIL] | [根拠] |
-| 依存関係 | Dependency Direction | 依存方向が Chapter 5.1 の層に従っているか          | [PASS / FAIL] | [根拠] |
-| 簡潔性   | KISS                 | 動作する最も単純な解決を選んでいるか               | [PASS / FAIL] | [根拠] |
-| 責務分離 | SRP                  | 各クラス・ユニットが単一の責務を持つか             | [PASS / FAIL] | [根拠] |
-| SOLID    | DIP                  | 具象ではなく抽象に依存しているか                   | [PASS / FAIL] | [根拠] |
-| 並行性   | Concurrency Safety   | デッドロック・競合状態・グリッチが発生しないか     | [PASS / FAIL] | [根拠] |
-
-[確認する原則はプロジェクトの性質に応じて追加・削除する]
-
-## Chapter 9. Use Case Tests (ユースケーステスト)
-
-### 9.1 Test Cases (テストケース)
+### 8.1 Test Cases (テストケース)
 
 #### [確かめることを 1 つ、名前として記入する]
 
@@ -464,7 +468,7 @@ graph RL
 - **Type**: `File`
   **Path**: `[テストコードの位置]`
 
-### 9.2 Test Results (テスト結果)
+### 8.2 Test Results (テスト結果)
 
 #### [PASS] [対応するテストケースの名前]
 
@@ -494,9 +498,9 @@ graph RL
   **ID**: `TC-002`
   **Role**: `ResultOf`
 
-## Chapter 10. Software Specification Tests (ソフトウェア仕様テスト)
+## Chapter 9. Software Specification Tests (ソフトウェア仕様テスト)
 
-### 10.1 Test Cases (テストケース)
+### 9.1 Test Cases (テストケース)
 
 #### [確かめることを 1 つ、名前として記入する]
 
@@ -538,7 +542,7 @@ graph RL
 - **Type**: `File`
   **Path**: `[テストコードの位置]`
 
-### 10.2 Test Results (テスト結果)
+### 9.2 Test Results (テスト結果)
 
 #### [PASS] [対応するテストケースの名前]
 
@@ -568,9 +572,9 @@ graph RL
   **ID**: `TC-004`
   **Role**: `ResultOf`
 
-## Chapter 11. Non-Functional Tests (非機能テスト)
+## Chapter 10. Non-Functional Tests (非機能テスト)
 
-### 11.1 Test Cases (テストケース)
+### 10.1 Test Cases (テストケース)
 
 #### [確かめることを 1 つ、名前として記入する]
 
@@ -610,7 +614,7 @@ graph RL
 - **Type**: `File`
   **Path**: `[テストコードの位置]`
 
-### 11.2 Test Results (テスト結果)
+### 10.2 Test Results (テスト結果)
 
 #### [PASS] [対応するテストケースの名前]
 

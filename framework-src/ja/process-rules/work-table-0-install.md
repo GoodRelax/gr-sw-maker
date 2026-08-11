@@ -19,7 +19,7 @@
 | フェーズ | 作業 | 依頼元 | 担当者 | モデル | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|---|
 | `0a`<br />インストール<br />**新設** | gr-sw-maker を取得し、<br />主言語を選ぶ | **利用者** | **利用者** | — | — | — | — | 主言語は `setup.js` の引数になる。<br />翻訳言語は空でよい。 |
-| `0b`<br />インストール<br />**新設** | `node setup.js {lang}` を実行し、<br />規則・エージェント・命令・道具を配置する | **利用者** | `setup.js` | — | `framework-src/{lang}/`<br />`framework-src/tools/` | process-rules<br />agents<br />commands<br />CLAUDE.md<br />user-order | 配置したファイルの一覧 | **道具の配布経路はまだ無い**<br />（`03-work-order.md` §9.1）。<br />現在の `setup.js` は `tools/` を配らない。 |
+| `0b`<br />インストール<br />**新設** | `node setup.js {lang}` を実行し、<br />規則・エージェント・命令を配置する | **利用者** | `setup.js` | — | `framework-src/{lang}/` | process-rules<br />agents<br />commands<br />CLAUDE.md<br />user-order | 配置したファイルの一覧 | **道具の配布経路はまだ無い**<br />（`03-work-order.md` §9.1）。<br />現在の `setup.js` は `tools/` を配らない。 |
 | `0c`<br />インストール<br />**新設** | `.claude/settings.json` を生成し、<br />既存の設定に併合する | **利用者** | `setup.js` | — | 既存の `.claude/settings.json` | settings.json | 併合の結果 | **丸ごと置き換えてはならない（MUST NOT）。**<br />利用者の権限設定と MCP 設定が消える。<br />配線するのはフック・statusLine・`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH: 1` である。 |
 | `0d`<br />インストール<br />**新設** | 配置物を数え、<br />不足を洗い出す | **利用者** | **利用者** | — | `0b` の一覧<br />settings.json | — | 不足の一覧 | **そろっていなくても以降は黙って進む。**<br />フックも statusLine も、届いていなければ何も言わずに沈黙する。<br />**「0 件」と「動いていない」を区別できるのはここだけである。** |
 | `0e`<br />インストール<br />**新設** | `user-order.md` の 3 問に答えを書く | **利用者** | **利用者** | — | user-order のひな形 | user-order | — | `1a` の入力になる。<br />**`CLAUDE.md` の中身は `1c` で埋める。ここでは触らない。** |

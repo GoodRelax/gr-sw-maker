@@ -42,7 +42,7 @@ Select your language from the menu. For other languages, see [Language Selection
 
 ### 3. Choose an AI platform (skip for Claude Code)
 
-If using an AI other than Claude Code, have your AI read the [Porting Guide](framework-src/en/process-rules/porting-guide.md) and auto-convert.
+If using an AI other than Claude Code, have your AI read the [Porting Guide](framework-src/ja/process-rules/porting-guide.md) and auto-convert.
 
 > See [Switching AI Platform](#switching-ai-platform) for details.
 
@@ -154,7 +154,7 @@ Default target is **Claude Code**, but the framework is portable to other AI cod
 
 ### Switching AI Platform
 
-Have your AI read [`framework-src/en/process-rules/porting-guide.md`](framework-src/en/process-rules/porting-guide.md) and auto-convert.
+Have your AI read [`framework-src/ja/process-rules/porting-guide.md`](framework-src/ja/process-rules/porting-guide.md) and auto-convert.
 
 Measured over the 40 Markdown files (~11,300 lines) that ship for one language:
 
@@ -217,7 +217,7 @@ If you are contributing to the gr-sw-maker framework itself (not using it for a 
 - **The directory says who runs it.** `maintenance-tools/` guards this repository and never reaches a user project: `check-parity`, `check-roster`, `check-links`, `check-tagnames`, `check-terms` and `check-setup` run in CI, and `split-work-table`, `context-census` and `jsonl2md` are run by hand. `tools/` is what `create.js` ships — `gate-guard`, `otel-sink`, `session-meter`, `start-otel-sink.bat` and `spec-query/`. See [the tool catalog](maintenance-tools/README.md) for what each one does.
 - **`maintenance/` and `maintenance-tools/` are different things.** `maintenance/` holds the working records of an improvement round, including the source work table the process rules are generated from. `maintenance-tools/` holds scripts. They sit next to each other in a directory listing; only the second one is executable.
 - **Enable the hook once per clone:** `git config core.hooksPath maintenance-tools/hooks`. It rejects a commit that changes one language tree without the other.
-- See the [Framework Development Guide](framework-src/en/process-rules/framework-development.md) for detailed conventions and for running the checks locally.
+- See the [Framework Development Guide](framework-src/ja/process-rules/framework-development.md) for detailed conventions and for running the checks locally.
 
 ---
 
@@ -225,17 +225,17 @@ If you are contributing to the gr-sw-maker framework itself (not using it for a 
 
 | Document                                                                       | Contents                                                           |
 | ------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
-| [Process Rules](framework-src/en/process-rules/full-auto-dev-process-rules.md)               | Phase definitions, quality gates, conditional processes            |
-| [Document Rules](framework-src/en/process-rules/full-auto-dev-document-rules.md)             | Naming, block structure, versioning                                |
-| [Agent List](framework-src/en/process-rules/agent-list.md)                                   | All agents, ownership, data flow                                   |
-| [Review Standards](framework-src/en/process-rules/review-standards.md)                       | R1-R7 review perspectives and checklists                           |
-| [Prompt Structure](framework-src/en/process-rules/prompt-structure.md)                       | S0-S6 agent definition convention                                  |
-| [Spec Template](framework-src/en/process-rules/spec-template.md)                             | ANMS specification template (STFB structure)                       |
-| [Glossary](framework-src/en/process-rules/glossary.md)                                       | Term definitions and rationale                                     |
-| [Defect Taxonomy](framework-src/en/process-rules/defect-taxonomy.md)                         | error / fault / failure / defect / incident causal chain           |
-| [Field Issue Handling Rules](framework-src/en/process-rules/field-issue-handling-rules.md)    | Field testing feedback management (conditional)                    |
-| [Porting Guide](framework-src/en/process-rules/porting-guide.md)                             | Conversion specs for other AI platforms                            |
-| [Framework Development Guide](framework-src/en/process-rules/framework-development.md)        | Repository conventions, the checks, npm publish                    |
+| [Process Rules](framework-src/ja/process-rules/full-auto-dev-process-rules.md)               | Phase definitions, quality gates, conditional processes            |
+| [Document Rules](framework-src/ja/process-rules/full-auto-dev-document-rules.md)             | Naming, block structure, versioning                                |
+| [Agent List](framework-src/ja/process-rules/agent-list.md)                                   | All agents, ownership, data flow                                   |
+| [Review Standards](framework-src/ja/process-rules/review-standards.md)                       | R1-R7 review perspectives and checklists                           |
+| [Prompt Structure](framework-src/ja/process-rules/prompt-structure.md)                       | S0-S6 agent definition convention                                  |
+| [Spec Template](framework-src/ja/process-rules/spec-template.md)                             | ANMS specification template (STFB structure)                       |
+| [Glossary](framework-src/ja/process-rules/glossary.md)                                       | Term definitions and rationale                                     |
+| [Defect Taxonomy](framework-src/ja/process-rules/defect-taxonomy.md)                         | error / fault / failure / defect / incident causal chain           |
+| [Field Issue Handling Rules](framework-src/ja/process-rules/field-issue-handling-rules.md)    | Field testing feedback management (conditional)                    |
+| [Porting Guide](framework-src/ja/process-rules/porting-guide.md)                             | Conversion specs for other AI platforms                            |
+| [Framework Development Guide](framework-src/ja/process-rules/framework-development.md)        | Repository conventions, the checks, npm publish                    |
 | [Essays](essays/)                                                              | Design rationale for the ANMS / ANPS / ANGS three-tier spec system |
 
 ---
