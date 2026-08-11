@@ -155,7 +155,7 @@ When writing a section number into an agent's "rule sections to read", confirm t
 | `agent-list.md` | The frontmatter of every agent definition, `full-auto-dev-document-rules.md` §7 / §11 |
 | `full-auto-dev-document-rules.md` §7 | Ownership in `agent-list.md` §2, the Out of each agent |
 | `review-standards.md` | review-agent's applicable-perspectives table, `full-auto-dev-process-rules.md` §9.2 |
-| `prompt-structure.md` | All 22 agent definitions |
+| `prompt-structure.md` | All 24 agent definitions |
 | Adding or removing an agent | Perform all six steps of "Procedure for Adding New Agents" in `agent-list.md` §5 |
 
 ### 5.5 A Proposal That Adds Must Carry the Smallest Alternative (MUST)

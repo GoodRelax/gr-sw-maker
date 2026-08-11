@@ -349,49 +349,48 @@ flowchart TD
 | **推奨**     | 中規模以上（目安：開発期間1ヶ月超、または独立モジュール3つ以上）で実施する |
 | **条件付き** | 3.4節に定める判断基準に該当する場合のみ実施する                            |
 
-### 3.1.1 スケールダウン基準
+### 3.1.1 開発方式の判定
 
-プロジェクト規模が小さい場合、一部の必須・推奨プロセスを免除できる。project-manager は setup フェーズで規模を評価し、免除対象を CLAUDE.md の「スケールダウン設定」セクションに記録する。
+開発方式を 1 つ決めれば、仕様書・作業・担当者・成果物・レビューがすべて決まる。**Phase 1 の `1d` で判定し、`CLAUDE.md`「開発方式」節に記録する（MUST）。**
 
-**規模区分:**
+**判定基準:**
 
-| 区分 | 基準 | 例 |
-|------|------|-----|
-| **Micro** | 単一セッション内で完了（1時間未満）。単一モジュール、外部依存なし | サイコロアプリ、電卓、簡易CLIツール |
-| **Small** | 1日以内で完了。少数モジュール、外部依存は最小限 | シンプルなWebアプリ、ユーティリティライブラリ |
-| **Standard** | 1日超。複数モジュールまたは外部依存あり | APIサービス、DB連携デスクトップアプリ |
-| **Large** | 1週間超。複数チーム相当の並列実装、外部システム連携あり | 業務システム、マイクロサービス群 |
-| **Critical** | 規模を問わず、安全性・金銭・個人情報のいずれかに直結する | 医療機器連携、決済システム、認証基盤 |
+| | 簡易 | 標準 | 厳格 | 備考 |
+|---|---|---|---|---|
+| 期間 | 1 日以内で完了 | 1 日超 | 1 週間超 | 見積もりでよい |
+| モジュール | 少数 | 複数 | 複数チーム相当の並列実装 | |
+| 外部依存 | 最小限 | あり | 外部システム連携あり | |
+| Critical | 該当なし | 該当なし | 有効なら期間・規模によらず厳格 | failure が人身・金銭・個人情報のいずれかに直結する場合 |
+| 例 | サイコロアプリ、電卓、簡易 CLI、ユーティリティライブラリ | API サービス、DB 連携デスクトップアプリ | 業務システム、マイクロサービス群、決済・医療機器連携・認証基盤 | |
 
-> **Critical は規模区分ではなく性質区分である。** Micro 相当の規模でも、failure が人身・金銭・個人情報に直結するなら Critical として扱う。判定はプロジェクト規模ではなく影響の性質で行う。
+> **Critical は他の行を上書きする。** 1 日で作る決済処理も厳格である。**方式は 3 つだけであり、他の区分名を使ってはならない（MUST NOT）。**
 
 **免除マトリクス:**
 
-| プロセス / 成果物 | Micro | Small | Standard | Large | Critical |
-|-------------------|:-----:|:-----:|:--------:|:-----:|:--------:|
-| WBS / ガントチャート | 免除 | 免除 | 必須 | 必須 | 必須 |
-| 進捗レポート（progress/） | 免除 | 免除 | 必須 | 必須 | 必須 |
-| コストログ（cost-log.json） | 免除 | 任意 | 必須 | 必須 | 必須 |
-| pipeline-state | **必須** | **必須** | 必須 | 必須 | 必須 |
-| executive-dashboard.md | 免除 | 任意 | 必須 | 必須 | 必須 |
-| stakeholder-register.md | 免除 | 免除 | 必須（複数ステークホルダー時） | 必須 | 必須 |
-| 性能テスト（k6等） | 免除（NFRなし時） | 任意 | 必須 | 必須 | 必須 |
-| 可観測性設計 | 免除 | 任意 | 必須 | 必須 | 必須 |
-| deployment-design | 免除（配布のみ） | 任意 | 必須 | 必須 | 必須 |
-| R3 コードレビュー（個別レポート） | 最終レビューに統合 | 必須 | 必須 | 必須 | 必須 |
-| R6 テストレビュー（個別レポート） | 最終レビューに統合 | 必須 | 必須 | 必須 | 必須 |
-| 機能安全分析（HARA/FMEA/FTA） | 免除 | 免除 | 条件付き | 条件付き | **必須** |
-| 脅威モデリング（STRIDE） | 条件付き | 条件付き | 必須 | 必須 | 必須 |
+| プロセス / 成果物 | 簡易 | 標準 | 厳格 |
+|-------------------|:----:|:----:|:----:|
+| WBS / ガントチャート | 免除 | 免除 | 必須 |
+| 進捗レポート（progress/） | 免除 | 必須 | 必須 |
+| コストログ（cost-log.json） | 免除 | 必須 | 必須 |
+| pipeline-state | **必須** | **必須** | **必須** |
+| executive-dashboard.md | 免除 | 必須 | 必須 |
+| stakeholder-register.md | 免除 | 条件付き（複数ステークホルダー時） | 必須 |
+| 性能テスト（k6 等） | 条件付き（数値目標を持つ NFR がある時） | 必須 | 必須 |
+| 可観測性設計 | 免除 | 必須 | 必須 |
+| deployment-design | 条件付き（配布以外のデプロイ先がある時） | 必須 | 必須 |
+| 実装レビュー（個別レポート） | 最終レビューに統合 | 必須 | 必須 |
+| テストレビュー（個別レポート） | 最終レビューに統合 | 必須 | 必須 |
+| 機能安全分析（HARA/FMEA/FTA） | 条件付き | 条件付き | 条件付き（Critical では必須） |
+| 脅威モデリング（STRIDE） | 条件付き | 必須 | 必須 |
 
-> **pipeline-state は規模によらず必須である。** これはセッション中断からの再開に必要な唯一の状態記録であり、免除すると再開手段そのものが失われる（§4.0）。
+> **pipeline-state は方式によらず必須である。** これはセッション中断からの再開に要る唯一の状態記録であり、失うと走行そのものが復旧できない。
 
 **ルール:**
-- **§9.4 に現れるすべてのゲートは規模にかかわらず絶対に免除しない。** レビューは統合してよい（例: Micro では R1-R7 を網羅する単一の最終レビュー）が、スキップは禁止。免除できるのは記録の形式と粒度であって、判定そのものではない
-- defect/CR 記録、リスク管理、トレーサビリティ、変更管理は全規模で必須 — ただし Micro 区分では記録形式を簡略化してよい（session-transcript 内にサマリーテーブルとしてインライン記録）
-- 免除事項は setup フェーズで CLAUDE.md に必ず記録する。記録なき免除は規則違反とする
+- **§9.4 に現れるすべてのゲートは方式にかかわらず絶対に免除しない。** 免除するのは作業であってゲートではない
+- defect/CR 記録、リスク管理、トレーサビリティ、変更管理は全方式で必須である
+- **免除した成果物は、免除の記録をもって当該ゲートを充足したものとみなす（§9.4.1）。記録なき免除は規約違反として扱う**
 
 ---
-
 ### 3.2 必須プロセス（全プロジェクト共通）
 
 #### 3.2.1 変更管理（Change Management）
@@ -2099,9 +2098,9 @@ review-agentが適用する7つの観点。**詳細なチェックリストは `
 | GATE-INTERVIEW | planning → dependency-selection | interview-record が存在し、未解決の質問が残っていない | interview-record |
 | GATE-DEPENDENCY | dependency-selection → design | 外部依存の選定にユーザー承認がある、Adapter 層が DIP に適合 | decision, tech-decision |
 | GATE-DESIGN | design → implementation | R2/R4/R5/R7 PASS、threat-model が存在し `unmitigated_critical_count` = 0、deployment-design が存在（§3.1.1 で免除した場合は免除の記録をもって充足とする） | review, threat-model, tech-decision |
-| GATE-IMPL | implementation → testing | R2/R3/R4/R5/R7 PASS、SCA/SAST の Critical/High = 0、license-report に非互換ライセンスなし | review, security-scan-report, license-report |
-| GATE-TEST | testing → delivery | R6 PASS、カバレッジ目標達成、性能 NFR 充足、traceability の全 FR にテスト対応がある | review, performance-report, traceability |
-| GATE-DELIVERY | delivery → operation | R1-R7 最終 PASS、受入テスト合格、runbook と user-manual が存在 | review, final-report |
+| GATE-IMPL | implementation → testing | R2/R3/R4/R5/R7 PASS、SCA/SAST の Critical/High = 0（SAST が条件不成立なら記録をもって充足）、license-report に非互換ライセンスなし | review, security-scan-report, license-report |
+| GATE-TEST | testing → delivery | R6 PASS、カバレッジ目標達成、性能 NFR 充足（性能テストが条件不成立なら記録をもって充足）、traceability の全 FR にテスト対応がある | review, performance-report, traceability |
+| GATE-DELIVERY | delivery → operation | R1-R7 最終 PASS、受入テスト合格、user-manual が存在し、runbook は条件不成立なら記録をもって充足 | review, final-report |
 | GATE-EOL | operation → 終了 | 後継システムへの移行完了、またはユーザーが EOL を承認、データ移行と保管期間の合意がある | decision |
 
 **GATE-EOL の完了条件:** operation フェーズは無期限に続く。終了は自動的には訪れないため、以下のいずれかを満たした時点で明示的に終了させる。

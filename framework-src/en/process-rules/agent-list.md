@@ -51,6 +51,8 @@
 | 20 | feedback-classifier | Classify feedback against spec as defect / CR / question, create tickets | sonnet | testing (conditional: field testing enabled) |
 | 21 | field-issue-analyst | Root cause analysis (defect), solution planning (defect / CR), impact/side-effect/alternative analysis | opus | testing (conditional: field testing enabled) |
 | 22 | technical-authority | Arbitrates technical decisions, guarantees consistency across spec/design/implementation/test, rules on quality gates | opus | planning onward (at gates) |
+| 23 | test-designer | Designs acceptance criteria and test cases and writes them into the test chapters | opus | planning, design, testing, delivery |
+| 24 | tester | Runs tests and records the results in the test result sections | sonnet | testing |
 
 ---
 

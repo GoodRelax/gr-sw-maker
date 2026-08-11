@@ -51,6 +51,8 @@
 | 20 | feedback-classifier | フィードバックを仕様書と照合し defect / CR / 質問に分類、チケット起票 | sonnet | testing（条件付き: 実機テスト有効時） |
 | 21 | field-issue-analyst | 原因分析（defect）、対策立案（defect / CR）、影響範囲・副作用・代替案比較 | opus | testing（条件付き: 実機テスト有効時） |
 | 22 | technical-authority | 技術判断の裁定、仕様・設計・実装・テストの整合保証、品質ゲート判定 | opus | planning 以降（ゲート時） |
+| 23 | test-designer | テストの受入基準とテストケースを設計し、仕様書のテストの章に書く | opus | planning・design・testing・delivery |
+| 24 | tester | テストを実行し、結果を仕様書のテスト結果の節に記録する | sonnet | testing |
 
 ---
 

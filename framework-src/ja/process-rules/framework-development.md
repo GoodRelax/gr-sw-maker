@@ -155,7 +155,7 @@ git config core.hooksPath tools/hooks
 | `agent-list.md` | 全エージェント定義の frontmatter、`full-auto-dev-document-rules.md` §7 / §11 |
 | `full-auto-dev-document-rules.md` §7 | `agent-list.md` §2 のオーナーシップ、各エージェントの Out |
 | `review-standards.md` | `review-agent` の適用観点表、`full-auto-dev-process-rules.md` §9.2 |
-| `prompt-structure.md` | 全 22 体のエージェント定義 |
+| `prompt-structure.md` | 全 24 のエージェント定義 |
 | エージェントの新設・削除 | `agent-list.md` §5 の「新規エージェント追加手順」に従い 6 手順すべてを実施する |
 
 ### 5.5 追加する提案には最小構成を併記する（MUST）

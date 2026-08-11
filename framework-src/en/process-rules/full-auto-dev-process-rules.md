@@ -349,49 +349,48 @@ This chapter references ISO/IEC 12207, CMMI, and PMBOK to organize the processes
 | **Recommended** | Applied to medium-scale and above (guideline: development period exceeding 1 month, or 3 or more independent modules) |
 | **Conditional** | Applied only when meeting the criteria defined in Section 3.4 |
 
-### 3.1.1 Scale-Down Criteria
+### 3.1.1 Development Mode Selection
 
-When the project scale is small, certain Mandatory and Recommended processes may be exempted. The project-manager evaluates scale during the setup phase and records exemptions in the CLAUDE.md "Scale-Down Settings" section.
+Choosing one development mode determines the specification, the work, the owners, the deliverables and the reviews. **Judge it at `1d` in Phase 1 and record it in the "Development Mode" section of `CLAUDE.md` (MUST).**
 
-**Scale Tiers:**
+**Selection criteria:**
 
-| Tier | Criteria | Examples |
-|------|----------|---------|
-| **Micro** | Completes within a single session (< 1 hour). Single module, no external dependencies | Dice app, calculator, simple CLI tool |
-| **Small** | Completes within 1 day. Few modules, minimal external dependencies | Simple web app, utility library |
-| **Standard** | Exceeds 1 day. Multiple modules or external dependencies | API service, desktop app with DB |
-| **Large** | Exceeds 1 week. Parallel implementation at multi-team scale, integration with external systems | Enterprise systems, microservice fleets |
-| **Critical** | Any size, where failure bears directly on safety, money or personal data | Medical device integration, payment systems, identity platforms |
+| | Simple | Standard | Strict | Notes |
+|---|---|---|---|---|
+| Duration | completes within one day | more than one day | more than one week | an estimate is enough |
+| Modules | few | several | parallel implementation across team-equivalents | |
+| External dependencies | minimal | present | integrates with external systems | |
+| Critical | not applicable | not applicable | strict regardless of duration or size | when a failure leads directly to injury, money or personal data |
+| Examples | dice app, calculator, small CLI, utility library | API service, desktop app with a database | business system, microservice fleet, payments, medical device integration, authentication platform | |
 
-> **Critical is a tier of nature, not of size.** A project the size of a Micro one is still Critical if a failure reaches people, money or personal data. The determination is made on the nature of the impact, not on project scale.
+> **Critical overrides every other row.** Payment handling built in a day is still strict. **There are exactly three modes; no other classification name may be used (MUST NOT).**
 
-**Exemption Matrix:**
+**Exemption matrix:**
 
-| Process / Artifact | Micro | Small | Standard | Large | Critical |
-|--------------------|:-----:|:-----:|:--------:|:-----:|:--------:|
-| WBS / Gantt chart | Exempt | Exempt | Required | Required | Required |
-| Progress reports (progress/) | Exempt | Exempt | Required | Required | Required |
-| Cost log (cost-log.json) | Exempt | Optional | Required | Required | Required |
-| pipeline-state | **Required** | **Required** | Required | Required | Required |
-| executive-dashboard.md | Exempt | Optional | Required | Required | Required |
-| stakeholder-register.md | Exempt | Exempt | Required (if multi-stakeholder) | Required | Required |
-| Performance testing (k6 etc.) | Exempt (if no NFR) | Optional | Required | Required | Required |
-| Observability design | Exempt | Optional | Required | Required | Required |
-| deployment-design | Exempt (distribution only) | Optional | Required | Required | Required |
-| R3 Code review (separate report) | Merged into final review | Required | Required | Required | Required |
-| R6 Test review (separate report) | Merged into final review | Required | Required | Required | Required |
-| Functional safety analysis (HARA/FMEA/FTA) | Exempt | Exempt | Conditional | Conditional | **Required** |
-| Threat modeling (STRIDE) | Conditional | Conditional | Required | Required | Required |
+| Process / deliverable | Simple | Standard | Strict |
+|-----------------------|:------:|:--------:|:------:|
+| WBS / Gantt chart | exempt | exempt | required |
+| Progress report (progress/) | exempt | required | required |
+| Cost log (cost-log.json) | exempt | required | required |
+| pipeline-state | **required** | **required** | **required** |
+| executive-dashboard.md | exempt | required | required |
+| stakeholder-register.md | exempt | conditional (multiple stakeholders) | required |
+| Performance test (k6 etc.) | conditional (an NFR carries a numeric target) | required | required |
+| Observability design | exempt | required | required |
+| deployment-design | conditional (a deployment target beyond distribution) | required | required |
+| Implementation review (separate report) | merged into the final review | required | required |
+| Test review (separate report) | merged into the final review | required | required |
+| Functional safety analysis (HARA/FMEA/FTA) | conditional | conditional | conditional (required when Critical) |
+| Threat modelling (STRIDE) | conditional | required | required |
 
-> **pipeline-state is required regardless of scale.** It is the only state record that makes resuming an interrupted session possible; exempting it removes the means of resumption itself (§4.0).
+> **pipeline-state is required in every mode.** It is the only state record that allows a run to resume after an interruption; losing it makes the run itself unrecoverable.
 
 **Rules:**
-- **Every gate listed in §9.4 is NEVER exempt, regardless of scale.** Reviews may be merged (e.g., Micro: a single final review covering R1-R7) but never skipped. What may be relaxed is the form and granularity of the record, never the decision itself
-- defect/CR recording, risk management, traceability, and change management remain Mandatory at all scales — but the recording format may be simplified for Micro tier (inline in session-transcript with a summary table)
-- Exemptions MUST be recorded in CLAUDE.md during setup. Unrecorded exemptions are violations
+- **No gate listed in §9.4 is ever exempt, in any mode.** What is exempt is work, not gates
+- defect/CR records, risk management, traceability and change management are required in every mode
+- **A deliverable that is exempt satisfies its gate by the record of the exemption (§9.4.1). An exemption without a record is a violation**
 
 ---
-
 ### 3.2 Mandatory Processes (Common to All Projects)
 
 #### 3.2.1 Change Management
@@ -2098,10 +2097,10 @@ Define KPIs to track for each phase. progress-monitor reflects these KPIs in the
 | GATE-PLANNING | planning → dependency-selection | R1 PASS; user approval of Ch1-2 | review, tech-decision |
 | GATE-INTERVIEW | planning → dependency-selection | interview-record exists with no unresolved questions | interview-record |
 | GATE-DEPENDENCY | dependency-selection → design | User approval of the dependency selection; Adapter layer conforms to DIP | decision, tech-decision |
-| GATE-DESIGN | design → implementation | R2/R4/R5/R7 PASS; threat-model exists with `unmitigated_critical_count` = 0; deployment-design exists (when exempted under §3.1.1, the record of the exemption satisfies this) | review, threat-model, tech-decision |
-| GATE-IMPL | implementation → testing | R2/R3/R4/R5/R7 PASS; SCA/SAST Critical/High = 0; no incompatible license in license-report | review, security-scan-report, license-report |
+| GATE-DESIGN | design → implementation | R2/R4/R5/R7 PASS; threat-model exists with `unmitigated_critical_count` = 0; threat-model and deployment-design are satisfied by the record when exempt or not triggered (when exempted under §3.1.1, the record of the exemption satisfies this) | review, threat-model, tech-decision |
+| GATE-IMPL | implementation → testing | R2/R3/R4/R5/R7 PASS; SCA/SAST Critical/High = 0 (SAST satisfied by the record when not triggered); no incompatible license in license-report | review, security-scan-report, license-report |
 | GATE-TEST | testing → delivery | R6 PASS; coverage target met; performance NFRs satisfied; every FR in traceability has a test | review, performance-report, traceability |
-| GATE-DELIVERY | delivery → operation | Final R1-R7 PASS; acceptance testing passed; runbook and user-manual exist | review, final-report |
+| GATE-DELIVERY | delivery → operation | Final R1-R7 PASS; acceptance testing passed; user-manual exists; runbook is satisfied by the record when not triggered | review, final-report |
 | GATE-EOL | operation → end | Migration to a successor system is complete, or the user has approved EOL, with data migration and retention agreed | decision |
 
 **Completion conditions for GATE-EOL:** the operation phase runs indefinitely. It does not end on its own, so it is ended explicitly once either of the following holds.

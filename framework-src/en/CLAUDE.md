@@ -37,6 +37,17 @@
 - Primary language files have no suffix. Translation versions only get `-{lang}.md` suffix
 - Field names and namespaces are fixed in English. Field values, Detail Blocks, and agent prompts are written in the primary language
 
+## Development Mode
+
+Judged at `1d` in Phase 1 and recorded here (process rules §3.1.1).
+
+- Selected mode: [one of Simple / Standard / Strict. **Must be filled in**]
+- Basis: [which row decided it: duration, module count, external dependencies or Critical]
+- Critical: [enabled / disabled. If enabled, strict regardless of duration or size]
+- Exempted deliverables: [list what the exemption matrix exempts. **An exemption without a record is a violation**]
+
+**There are exactly three modes: Simple, Standard and Strict. No other classification name may be used (MUST NOT).**
+
 ## Specification Format Selection
 
 Select specification format based on project scale:
