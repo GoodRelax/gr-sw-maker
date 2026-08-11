@@ -341,7 +341,7 @@
 
 | 新 | 旧 | 手順 |
 |---|---|---|
-| **削除** | **`Fa`** | 用語・命名のチェック。**体を起動せず `tools/kotodama-kun.mjs` にする**（`07` §2.6） |
+| **削除** | **`Fa`** | 用語・命名のチェック。**体を起動せず `tools/kotodama-kun.mjs` にする**（`07` §4.6） |
 | `Fa` | `Fb` | トークン消費とコストを追記する |
 | `Fb` | `Fc` | 文脈の圧縮が起きていたら session-handoff を残す |
 | `Fc` | `Fd` | pipeline-state と executive-dashboard を更新し、報告文を起草する |
@@ -524,7 +524,7 @@
 | 道具 | 状態 |
 |---|---|
 | `gate-guard.mjs` ／ `session-meter.mjs` ／ `otel-sink.mjs` ／ `spec-query/` | **既存。移すだけ** |
-| **`kotodama-kun.mjs`** | **新設。** `agents/kotodama-kun.md` を廃止して道具にする（`07` §2.6）。**照合の実装は `check-terms.mjs` と共有し、二重に持たない** |
+| **`kotodama-kun.mjs`** | **新設。** `agents/kotodama-kun.md` を廃止して道具にする（`07` §4.6）。**照合の実装は `check-terms.mjs` と共有し、二重に持たない** |
 
 ### 9.5 新設する道具（フレームワーク保守側）
 

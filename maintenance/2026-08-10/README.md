@@ -13,8 +13,8 @@
 | `03-work-order.md` | **適用作業書。何を・どこへ・どの順で入れるか。** 決めた理由は持たない | 585 | —（作業が終われば `History/` へ移す） |
 | `04-glossary-state.md` | **用語集の適用状態。** 用語集に関することは本書が正である | 112 | `framework-src/{lang}/process-rules/glossary.md` |
 | `05-open-questions.md` | **未決事項だけ。** 決まったら本書から消して決定先へ書く | 388 | —（決着すれば消える） |
-| `06-agent-connection-report.md` | **エージェント連携の根拠。** 実測値と公式の引用。**規則は持たない** | 281 | —（読み物） |
-| `07-agent-orchestration-rules.md` | **エージェント連携規則。結論だけ。** §1 が道具に依存しない考え方、§2 が Claude Code 固有の手段、§3 が注記 | 282 | `framework-src/{lang}/process-rules/agent-orchestration-rules.md` を新設 |
+| `06-agent-connection-report.md` | **エージェント連携の根拠。** 実測値と公式の引用。**規則は持たない**（各行がどの規則を支えるかは §1.3 の 3 列目） | 285 | —（読み物） |
+| `07-agent-orchestration-rules.md` | **エージェント連携規則。結論だけ。** §1 背景 / §2 目的 / §3 対応方針（道具に依存しない考え方）/ §4 具体的運用（Claude Code 固有の手段）/ §5 注記。**道具が変わったら §4 だけを差し替える** | 457 | `framework-src/{lang}/process-rules/agent-orchestration-rules.md` を新設 |
 
 ## 境界
 
