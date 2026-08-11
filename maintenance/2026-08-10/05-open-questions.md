@@ -20,7 +20,7 @@
 > | A1 | `1i` を 2 つに割るか | `00-mode-matrix.md` §4.3 |
 > | A2 | `4c` 単体テストを割るか | `00-mode-matrix.md` §4.6 の `5c` |
 > | B2 | 手順数（簡易 / 標準 / 厳格） | `00-mode-matrix.md` §4 |
-> | C12 | 厳格のレビュー分野の割り方 | `00-mode-matrix.md` §9.1 |
+> | C12 | 厳格のレビュー分野の割り方 | `00-mode-matrix.md` §10.1 |
 > | H1〜H3 | 手順記号の正規化の範囲 | `03-work-order.md` §6.3〜§6.5 |
 
 ---
@@ -63,7 +63,7 @@
 |---|---|
 | 完了時に **agent ID** が呼び出し元へ渡る | "When a subagent completes, Claude receives its agent ID" |
 | 再開すると**全履歴を保ったまま続きから動く** | "Resumed subagents retain their full conversation history, including all previous tool calls, results, and reasoning. The subagent picks up exactly where it stopped rather than starting fresh" |
-| `SendMessage` を送ると**完了済みの体が自動で再開する。新しい `Agent` 呼び出しは要らない** | "A completed subagent that receives a `SendMessage` auto-resumes in the background without a new `Agent` invocation" |
+| `SendMessage` を送ると**完了済みのエージェントが自動で再開する。新しい `Agent` 呼び出しは要らない** | "A completed subagent that receives a `SendMessage` auto-resumes in the background without a new `Agent` invocation" |
 | **例外: `Explore` と `Plan` は one-shot。agent ID を返さず再開できない** | "The built-in Explore and Plan agents are one-shot and return no agent ID, so they can't be resumed" |
 
 **これが C3（レビューの往復）の答えである。ゼロから起動し直す必要はない。**
@@ -72,13 +72,13 @@
 
 | 何 | 実測 |
 |---|---|
-| `tools` に `Agent` を持つ体 | **0 / 22** |
-| `tools` に `SendMessage` を持つ体 | **0 / 22** |
+| `tools` に `Agent` を持つエージェント | **0 / 22** |
+| `tools` に `SendMessage` を持つエージェント | **0 / 22** |
 | 現在の `tools` の内訳 | Read 22 / Grep 22 / Glob 22 / Write 21 / Edit 17 / Bash 11 |
 
 **したがって現状は次のとおりである。**
 
-- **エージェントは互いを呼べない。** 「`tools` から `Agent` を省くと、その体は Agent ツールでサブエージェントを一切スポーンできない」
+- **エージェントは互いを呼べない。** 「`tools` から `Agent` を省くと、そのエージェントは Agent ツールでサブエージェントを一切スポーンできない」
 - **エージェント間メッセージは成立しない。** 兄弟名簿は「`tools` に `SendMessage` を含むときだけ」出る
 - `commands/full-auto-dev.md` の「◯◯ を起動し」**28 か所はすべて主セッションが実行している。** エージェントが別のエージェントを起動している箇所は 1 つも無い
 - **呼び出しの深さは 1。** 既定上限 3 に対して余裕がある
@@ -89,7 +89,7 @@
 |:-:|---|---|
 | C1 | **サブエージェント方式のままにするか、チームを使うか** | チームは実験的で既定無効。トークンが大幅に増える。**「For sequential tasks, same-file edits, or work with many dependencies, a single session or subagents are more effective」** —— 本パイプラインは逐次でファイル共有が多い |
 | C2 | **レビューの往復を `SendMessage` の再開で回すか** | 再開なら文脈が残る。ただし**再開はスロットを新たに取り、同時実行上限の検査を通らない**（"resumes can push the running count past it"） |
-| C3 | **review-agent に `SendMessage` を持たせるか** | 持たせないと再開の宛先になれない。持たせるとレビュアーが他の体へ話しかけられるようになる |
+| C3 | **review-agent に `SendMessage` を持たせるか** | 持たせないと再開の宛先になれない。持たせるとレビュアーが他のエージェントへ話しかけられるようになる |
 | C4 | **レビュアーを read-only にするか** | 「自分で直して終わる」なら Edit が要る。「指摘して回答を待つ」なら Read だけでよい。**現在 review-agent の `tools` に Edit は無い** |
 | C5 | **`Explore` / `Plan` を使わない規約を置くか** | 再開できないため、往復するレビューには使えない |
 
@@ -101,29 +101,29 @@
 
 | 概念 | 公式にあるか |
 |---|---|
-| **体の寿命 / タイムアウト** | **無い。** 体は時間で死なない。完了後も再開できる |
+| **エージェントの寿命 / タイムアウト** | **無い。** エージェントは時間で死なない。完了後も再開できる |
 | **キャッシュの寿命（TTL）** | **ある。サブエージェントは 5 分、主会話はサブスクリプションで 1 時間。** 読むたびに無料で更新される（スライディング）。**寿命は要求の開始時点から計り、応答の生成時間が寿命を食う** |
-| **同時実行の上限** | **ある。既定 20 体。** 超えると `Concurrent subagent limit reached` で失敗し、**「エラーは再試行するなと伝える」。** `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS` で変更。セッション全体の総数に上限は無い |
+| **同時実行の上限** | **ある。既定 20 エージェント。** 超えると `Concurrent subagent limit reached` で失敗し、**「エラーは再試行するなと伝える」。** `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS` で変更。セッション全体の総数に上限は無い |
 | **完了通知** | **ある。** teammate が終わると自動で lead に通知する。API エラーで終わった場合もエラー文つきで通知される |
 | **ACK / NACK 相当** | **チームの構造化メッセージにある。** `shutdown_request` に対し teammate は**承認するか、理由を付けて拒否できる**。`plan_approval_response` も同型 |
 | **配送の保証** | メールボックスは JSON ファイル。**壊れたエントリは検証で除去され、正しいメッセージは配送される** |
 
-> **エージェント間メッセージの安全性は仕様で守られている。** 「A teammate can't approve a permission prompt or supply consent on your behalf, and a teammate that was denied an action can't relay it to another teammate to bypass the check.」**拒否された操作を別の体に回して回避することはできない。**
+> **エージェント間メッセージの安全性は仕様で守られている。** 「A teammate can't approve a permission prompt or supply consent on your behalf, and a teammate that was denied an action can't relay it to another teammate to bypass the check.」**拒否された操作を別のエージェントに回して回避することはできない。**
 
 **残る検証項目:**
 
 | # | 論点 | なぜ要るか |
 |:-:|---|---|
-| C6 | **`ENABLE_PROMPT_CACHING_1H=1` はサブエージェントにも効くか** | **前提は実測で確定した**（下記）。**環境変数を入れた場合が未検証。** 効けば `07` §2.4 の保温という選択肢自体が不要になる |
-| C7 | **背景起動でキャッシュが残るのは再現するか** | 現在の根拠は 1 組の観測。**`07` §2.1 の規約 1（背景で起動する）はこれに依存している** |
+| C6 | **`ENABLE_PROMPT_CACHING_1H=1` はサブエージェントにも効くか** | **前提は実測で確定した**（下記）。**環境変数を入れた場合が未検証。** 効けば `07` §4.4 の保温という選択肢自体が不要になる |
+| C7 | **背景起動でキャッシュが残るのは再現するか** | 現在の根拠は 1 組の観測。**`07` §4.1 の規約 1（背景で起動する）はこれに依存している** |
 | C9 | **fork を使うか** | fork は主セッションの system prompt・tools・履歴をそのまま継ぐため、**初回要求が主セッションのキャッシュを読む。** 通常のサブエージェントは必ず冷えた状態から始まる。レビューのように主セッションの文脈をほぼそのまま要る作業には向く可能性がある。**未検討** |
 | C10 | **worktree 並列の冷え** | キャッシュはマシン ＋ 作業ディレクトリで分かれる。**worktree ごとに必ず冷える。** `CLAUDE.md`「ブランチ戦略」の並列実装がこの費用を織り込んでいるか未確認 |
 | C11 | **agent ID をどこに残すか** | `pipeline-state.md`（中断からの再開に必要な状態記録）／レビュー報告（指摘と同じ場所）／`subagentStatusLine` に書かせる。**3 案目が成立すれば手で記録しなくてよいが、`tasks[].id` が宛先と同一かは未確認**（F6） |
 | **C13** | **`kotodama-kun.mjs` が見る用語集の範囲** | `check-terms.mjs` はフレームワーク自身の用語集を見る。**成果物に効かせるにはプロジェクト用語集も見る必要がある。** 実装時に決める |
 
-> **C12（厳格のレビュー分野の割り方）は 2026-08-11 に決着した。** 「1 観点 = 1 体、R をまたがない」を採る。**採る理由・費用・偏りの扱いは `00-mode-matrix.md` §9 が持つ。本書に残さない。**
+> **C12（厳格のレビュー分野の割り方）は 2026-08-11 に決着した。** 「1 観点 = 1 エージェント、R をまたがない」を採る。**採る理由・費用・偏りの扱いは `00-mode-matrix.md` §10 が持つ。本書に残さない。**
 
-> **C8（体の文脈量の実測）は解決した。** 実測でサブエージェント 1 体の文脈は 30k〜88k、**下限は 27k〜35k**（8 体）であった。**`07` §2.4 の分岐点も実測で約 20 分に確定した**（机上の「12.5 往復・約 50 分」は 1 回目の再開費用を過小評価していた）。この項目は不要になった。
+> **C8（エージェントの文脈量の実測）は解決した。** 実測でサブエージェント 1 エージェントの文脈は 30k〜88k、**下限は 27k〜35k**（8 エージェント）であった。**`07` §4.4 の分岐点も実測で約 20 分に確定した**（机上の「12.5 往復・約 50 分」は 1 回目の再開費用を過小評価していた）。この項目は不要になった。
 
 **C6 の前提は実測で確定した（2026-08-10、既定設定・背景起動）。**
 
@@ -150,7 +150,7 @@ API は `usage.cache_creation` に内訳を返す。
 | | 5m で書いた量 | 1h で書いた量 |
 |---|---:|---:|
 | 主セッション（634 要求） | **0** | **4,975,897** |
-| サブエージェント 8 体（98 要求） | **1,260,483** | **0** |
+| サブエージェント 8 エージェント（98 要求） | **1,260,483** | **0** |
 
 **例外は 1 件も無い。** 主セッションは全量が 1 時間、サブエージェントは全量が 5 分である。公式の記述と一致する。
 
@@ -161,7 +161,7 @@ API は `usage.cache_creation` に内訳を返す。
 | 1 | **`.claude/settings.local.json` に `env` ブロックで `ENABLE_PROMPT_CACHING_1H: "1"` を置く。** 同ファイルは `.gitignore` の対象であり、**試験がリポジトリに漏れない** |
 | 2 | **`.claude/settings.json` に置いてはならない（MUST NOT）。** 同ファイルは git 追跡下にあり、gr-sw-maker の利用者全員に配られる。**枠組みとして採るかは試験とは別の判断である** |
 | 3 | Claude Code を再起動する（環境変数は起動時に読まれる） |
-| 4 | **サブエージェントを 1 体起動する。** ファイルを読ませる必要も、時間を空ける必要も無い |
+| 4 | **サブエージェントを 1 エージェント起動する。** ファイルを読ませる必要も、時間を空ける必要も無い |
 | 5 | `~/.claude/projects/{proj}/{session}/subagents/agent-*.jsonl` の `message.usage.cache_creation` を読む。**`ephemeral_1h_input_tokens` に数字が入れば効いている。`ephemeral_5m_input_tokens` 側なら効いていない** |
 
 > **公式は「効くかどうか」を明記していない。** Agent SDK の解説は「**To request a 1-hour TTL on cache writes, set the `ENABLE_PROMPT_CACHING_1H` environment variable**」とだけ書き、主会話に限る旨も、サブエージェントに及ぶ旨も書いていない。**推測で決めず、上の手順で測る。**
@@ -178,7 +178,7 @@ API は `usage.cache_creation` に内訳を返す。
 | 上限に達したとき | **`Agent` ツールを取り上げる。** 「a subagent at the limit does its delegated work itself and returns one summary」。**例外にならず、黙って自分でやる** |
 | 変え方 | `settings.json` の `env` に `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`。**`1` で入れ子を切る** |
 | 版による違い | v2.1.172〜216 は **5 層固定**、v2.1.217〜218 は **1**、v2.1.219 から **3** |
-| 個別に止める | その体の `tools` から `Agent` を省くか `disallowedTools` に入れる |
+| 個別に止める | そのエージェントの `tools` から `Agent` を省くか `disallowedTools` に入れる |
 | チーム | **入れ子にできない。lead だけがチームを管理する** |
 
 ### D-1 本プロジェクトへの含意
@@ -268,25 +268,25 @@ API は `usage.cache_creation` に内訳を返す。
 | 項目 | 中身 |
 |---|---|
 | **`id`** | **タスク ID。`SendMessage` の宛先に使う agent ID と同一かは未確認**（F6） |
-| `name` / `type` / `description` / `label` | 体の名前・型・説明 |
+| `name` / `type` / `description` / `label` | エージェントの名前・型・説明 |
 | **`status`** | 走行中 / 完了 / 失敗 |
 | `startTime` / `cwd` | 開始時刻・作業ディレクトリ |
 | `model` | 解決済みのモデル ID |
 | `effort` | 推論の強さ（v2.1.214 以降。セッション既定を継ぐ場合は欠落） |
 | **`contextWindowSize`** | **そのモデルのコンテキスト窓（トークン）** |
-| **`tokenCount`** | **その体が使っているトークン数** |
+| **`tokenCount`** | **そのエージェントが使っているトークン数** |
 | `tokenSamples` | 標本 |
 
 > **公式が明言している。** 「`contextWindowSize` is that model's context window in tokens, computed the same way as the main status line's `context_window.context_window_size`, **so you can render a per-row percentage from `tokenCount`**」
 >
-> **`tokenCount / contextWindowSize` で体ごとのコンテキスト使用率が出る。** `contextWindowSize` と `tokenCount` は **v2.1.205 以降**。モデルが未解決の行では欠落する。
+> **`tokenCount / contextWindowSize` でエージェントごとのコンテキスト使用率が出る。** `contextWindowSize` と `tokenCount` は **v2.1.205 以降**。モデルが未解決の行では欠落する。
 
 **したがってコンテキストについては環境変数が要らない。** `OTEL_LOG_TOOL_DETAILS` が要るのは OpenTelemetry のトークン内訳だけである。
 
 | 欲しいもの | 経路 | 環境変数 |
 |---|---|---|
-| **体ごとのコンテキスト使用率** | **`subagentStatusLine`** | **不要** |
-| 体ごとのトークン・コスト | OpenTelemetry `agent.name` | **`OTEL_LOG_TOOL_DETAILS=1` が要る** |
+| **エージェントごとのコンテキスト使用率** | **`subagentStatusLine`** | **不要** |
+| エージェントごとのトークン・コスト | OpenTelemetry `agent.name` | **`OTEL_LOG_TOOL_DETAILS=1` が要る** |
 | 主セッションのコンテキスト使用率 | `statusLine` | 不要 |
 
 **出力の作法:** 上書きしたい行ごとに `{"id": "<task id>", "content": "<row body>"}` を 1 行ずつ stdout へ書く。**`id` を出さなければ既定の表示のまま。** 記録が目的なら、既定表示を保ったままファイルへ書けばよい。
@@ -301,7 +301,7 @@ API は `usage.cache_creation` に内訳を返す。
 >
 > `agent.name` は **`OTEL_LOG_TOOL_DETAILS` で gate されている。**
 
-**本プロジェクトの 22 体はすべて user-defined である。** したがって `OTEL_LOG_TOOL_DETAILS=1` を設定しないと、**22 体すべてが `"custom"` の 1 つのバケツに潰れる。**
+**本プロジェクトの 22 エージェントはすべて user-defined である。** したがって `OTEL_LOG_TOOL_DETAILS=1` を設定しないと、**22 エージェントすべてが `"custom"` の 1 つのバケツに潰れる。**
 
 `query_source`（`main` / `subagent` / `auxiliary`）は gate されないので、**主セッションとサブエージェントの区別だけなら環境変数なしでも取れる。**
 
@@ -328,8 +328,8 @@ API は `usage.cache_creation` に内訳を返す。
 | F3 | **statusLine と sink の起動を段 0 の前提条件にするか** | どちらも動いていなければ黙って何も記録されない。現在 `project-management/progress/` は空である |
 | F4 | `sink_heartbeat_at` の鮮度検査を入れるか | **「0 件」と「受け口が死んでいた」を区別するため** |
 | F5 | **statusLine が動かない環境をどう扱うか** | 公式ドキュメントは statusLine が動かない環境を明示していない。**本リポジトリのプロセス規則は「CLI でしか動かない」と書いている。どちらが正しいか実機で確かめる。`subagentStatusLine` も同じ gate に従う** |
-| F6 | **`subagentStatusLine` の `tasks[].id` が `SendMessage` の宛先の agent ID と同一か** | **同一なら、agent ID の記録が自動化できる**（`07` §2.1 の規約 2・3）。**load-bearing なので推測せず実機で確かめる** |
-| F7 | **`subagentStatusLine` を計測の経路に採るか** | 採るなら `tools/subagent-meter.mjs` を新設し、`tasks` を `session-state.json` へ書く。**体ごとのコンテキスト使用率は他に取る道が無い** |
+| F6 | **`subagentStatusLine` の `tasks[].id` が `SendMessage` の宛先の agent ID と同一か** | **同一なら、agent ID の記録が自動化できる**（`07` §4.1 の規約 2・3）。**load-bearing なので推測せず実機で確かめる** |
+| F7 | **`subagentStatusLine` を計測の経路に採るか** | 採るなら `tools/subagent-meter.mjs` を新設し、`tasks` を `session-state.json` へ書く。**エージェントごとのコンテキスト使用率は他に取る道が無い** |
 
 ---
 

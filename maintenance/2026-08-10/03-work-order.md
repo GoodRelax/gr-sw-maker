@@ -24,7 +24,7 @@
 | 10 | フェーズの採番 | **`Phase 0 インストール` を新設し 1 つずらす。`Step` は使わない**（§6） |
 | 11 | エージェント連携 | **規則を `07-agent-orchestration-rules.md` として新設する**（§16） |
 | 12 | 道具の置き場 | **`framework-src/tools/`（配る）と `maintenance-tools/`（配らない）に割る**（§9） |
-| 13 | kotodama-kun | **体を廃止し `tools/kotodama-kun.mjs` にする。名前は残す**（§9・§16） |
+| 13 | kotodama-kun | **エージェントを廃止し `tools/kotodama-kun.mjs` にする。名前は残す**（§9・§16） |
 
 ---
 
@@ -192,7 +192,7 @@
 
 | 新 | 内容 | 旧 |
 |:-:|---|---|
-| **`Phase 0`** | **インストール**（`setup.js`。道具・体・規則・設定の配置） | **無かった**（§9） |
+| **`Phase 0`** | **インストール**（`setup.js`。道具・エージェント・規則・設定の配置） | **無かった**（§9） |
 | `Phase 1` | 初期設定 | Phase 0 |
 | `Phase 2` | 企画 | Phase 1 |
 | `Phase 3` | 外部依存選定 | Phase 2 |
@@ -341,7 +341,7 @@
 
 | 新 | 旧 | 手順 |
 |---|---|---|
-| **削除** | **`Fa`** | 用語・命名のチェック。**体を起動せず `tools/kotodama-kun.mjs` にする**（`07` §4.6） |
+| **削除** | **`Fa`** | 用語・命名のチェック。**エージェントを起動せず `tools/kotodama-kun.mjs` にする**（`07` §4.6） |
 | `Fa` | `Fb` | トークン消費とコストを追記する |
 | `Fb` | `Fc` | 文脈の圧縮が起きていたら session-handoff を残す |
 | `Fc` | `Fd` | pipeline-state と executive-dashboard を更新し、報告文を起草する |
@@ -359,7 +359,7 @@
 
 **ただし出自は消さない。** `commands/full-auto-dev.md` に本体がまだ無い行を区別する必要があるためである。**記号の下に `<br />` で並べて残す**（例: `` `1d` ``<br />`**新設**`）。
 
-`00-mode-matrix.md` §10 の検査 6 は、**手順セルに `新設` / `統合` / `分割` を含む行を実在検査の対象外とし、件数を出力する**と読み替える。現在 14 件（新設 7・統合 1・分割 6 —— `Phase 0` の 5 手順を除く）。**新設の内訳は `1d` `1e` `4f` `5g` `7b` `Fg` `Fh`。**
+`00-mode-matrix.md` §11 の検査 8 は、**手順セルに `新設` / `統合` / `分割` を含む行を実在検査の対象外とし、件数を出力する**と読み替える。現在 14 件（新設 7・統合 1・分割 6 —— `Phase 0` の 5 手順を除く）。**新設の内訳は `1d` `1e` `4f` `5g` `7b` `Fg` `Fh`。**
 
 ### 6.6 一括置換をかけてはならない
 
@@ -531,7 +531,7 @@
 | 道具 | 段 | 役割 |
 |---|:-:|---|
 | `maintenance-tools/context-census.mjs` | 0 | 効果測定の分母。97,238 / 5,653 / 8,504 / 94.2% を出す |
-| `maintenance-tools/check-mode-matrix.mjs` | 1 | 対応表の検査（`00-mode-matrix.md` §13） |
+| `maintenance-tools/check-mode-matrix.mjs` | 1 | 対応表の検査（`00-mode-matrix.md` §11） |
 | `maintenance-tools/build-agents.mjs` | 2 | 引用節をエージェント定義へ展開し、`.claude/agents/README.md` を生成 |
 | `maintenance-tools/rule-section.mjs` | 2 | 非常口。展開外の節を引く。**使用は表の誤りの信号** |
 | `maintenance-tools/check-ownership-citations.mjs` | 4 | 引用の不足を落とす |
@@ -636,7 +636,7 @@
 
 ### 13.5 補助エージェント
 
-**`00-mode-matrix.md` §4・§5 の `関連` 列が持つ。** 作業表への統合で、プロセス単位の補助表は作業単位の列になった。**本書に再掲しない。**
+**`00-mode-matrix.md` §4・§5 の `依頼元` と `担い手` の列が持つ。** 作業表への統合で、プロセス単位の補助表は作業単位の列になった。**本書に再掲しない。**
 
 ---
 
@@ -686,6 +686,6 @@
 | 2 | 運用規則の一覧に上を足す | `framework-src/{lang}/CLAUDE.md` |
 | 3 | **`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH: 1` を配布する設定に入れる** | `.claude/settings.json`（Phase 0 で生成。§9） |
 | 4 | **`agents/kotodama-kun.md` を廃止する**（道具化。§9） | `framework-src/{lang}/agents/` |
-| 5 | 名簿と名簿検査を **22 → 21 体**へ直す | `agent-list.md` ／ `maintenance-tools/check-roster.mjs` |
-| 6 | **project-manager の description を直す** | 「ユーザーへの報告を行う」→「報告文を起草し `main-agent` へ渡す」。**体は親にしか返せない** |
+| 5 | 名簿と名簿検査を **22 → 21 エージェント**へ直す | `agent-list.md` ／ `maintenance-tools/check-roster.mjs` |
+| 6 | **project-manager の description を直す** | 「ユーザーへの報告を行う」→「報告文を起草し `main-agent` へ渡す」。**エージェントは親にしか返せない** |
 | 7 | 役割の移動を反映する | `agents/architect.md` `srs-writer.md` `technical-authority.md`（Phase 1 の担当変更。`00-mode-matrix.md` §4.1） |
