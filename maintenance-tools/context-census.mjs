@@ -3,7 +3,7 @@
 // puts into context, and how many it would put there if it read only the
 // sections its own table names.
 //
-// Usage: node tools/context-census.mjs [--lang ja] [--out PATH]
+// Usage: node maintenance-tools/context-census.mjs [--lang ja] [--out PATH]
 //
 // Every agent definition ends with a table of the rule sections it should read.
 // Nothing today can read a section on its own, so an agent that needs one reads

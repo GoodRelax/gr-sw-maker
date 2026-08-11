@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // check-parity - every language tree must have the same files with the same shape.
 //
-// Usage: node tools/check-parity.mjs [reference-language]   (default: ja)
+// Usage: node maintenance-tools/check-parity.mjs [reference-language]   (default: ja)
 //
 // What it compares, and why only these:
 //   file set     a document that exists in one language and not another is an

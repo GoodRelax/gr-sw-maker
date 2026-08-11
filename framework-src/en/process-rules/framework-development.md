@@ -127,11 +127,11 @@ Because the same path means the reverse thing, one `.gitignore` cannot serve bot
 
 **Never create a commit that changes only one language.** Split apart, the next person cannot tell which side is authoritative and which is merely not yet updated, and the drift becomes permanent.
 
-`tools/check-parity.mjs` checks structural agreement, and the pre-commit hook rejects a one-sided commit.
+`maintenance-tools/check-parity.mjs` checks structural agreement, and the pre-commit hook rejects a one-sided commit.
 Enable the hook once per clone.
 
 ```bash
-git config core.hooksPath tools/hooks
+git config core.hooksPath maintenance-tools/hooks
 ```
 
 The hook rejects a commit that stages only one language, then runs `check-parity`. **A rewording that preserves structure is invisible to the parity check**, so the staged-pair test is the substantive one.
@@ -140,13 +140,13 @@ The hook rejects a commit that stages only one language, then runs `check-parity
 
 When revising the document management rules, **confirm that every tag name appearing in the §4.2 examples exists in the §9 Fields tables.** A tag name that exists only in an example will be treated as authoritative by an agent, producing output nobody can read.
 
-`tools/check-tagnames.mjs` performs this cross-check.
+`maintenance-tools/check-tagnames.mjs` performs this cross-check.
 
 ### 5.3 Confirm That Referenced Sections Exist
 
 When writing a section number into an agent's "rule sections to read", confirm that the section exists. Pointing at a section that does not exist sends the agent to read the entire rule document instead.
 
-`tools/check-links.mjs` verifies both Markdown links and section citations. **A section number that exists under a different title** is beyond it; check that by eye.
+`maintenance-tools/check-links.mjs` verifies both Markdown links and section citations. **A section number that exists under a different title** is beyond it; check that by eye.
 
 ### 5.4 Scope of a Revision
 
@@ -203,12 +203,12 @@ All of these run with no dependencies. CI (`.github/workflows/framework-check.ym
 | Command | What it checks |
 |---|---|
 | `node --check <file>` | Syntax of every `*.js` / `*.mjs` |
-| `node tools/check-parity.mjs` | Language tree agreement: line, heading, table row, code fence and link target counts |
-| `node tools/check-roster.mjs` | Roster against the definitions, frontmatter `name` / `model`, review perspective wiring |
-| `node tools/check-links.mjs` | Dead links and section citations |
-| `node tools/check-tagnames.mjs` | Form Block tag names against the §9 Fields tables |
-| `node tools/check-terms.mjs` | That no term rejected by glossary section 1 has crept into the prose |
-| `node tools/check-setup.mjs` | What `setup.js` deploys, idempotency, language switching, `.bak` protection |
+| `node maintenance-tools/check-parity.mjs` | Language tree agreement: line, heading, table row, code fence and link target counts |
+| `node maintenance-tools/check-roster.mjs` | Roster against the definitions, frontmatter `name` / `model`, review perspective wiring |
+| `node maintenance-tools/check-links.mjs` | Dead links and section citations |
+| `node maintenance-tools/check-tagnames.mjs` | Form Block tag names against the §9 Fields tables |
+| `node maintenance-tools/check-terms.mjs` | That no term rejected by glossary section 1 has crept into the prose |
+| `node maintenance-tools/check-setup.mjs` | What `setup.js` deploys, idempotency, language switching, `.bak` protection |
 
 `check-setup.mjs` copies `setup.js` and `framework-src/` into a temporary directory before running, so **it never touches the `CLAUDE.md` or `user-order.md` you are working on.**
 

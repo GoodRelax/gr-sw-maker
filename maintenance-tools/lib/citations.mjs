@@ -74,7 +74,7 @@ export function citationReader(lang) {
   const source = CITATION_SOURCES[lang];
   if (!source) {
     throw new Error(
-      `citations: language "${lang}" has no citation labels registered in tools/lib/citations.mjs`
+      `citations: language "${lang}" has no citation labels registered in maintenance-tools/lib/citations.mjs`
     );
   }
 

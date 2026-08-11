@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // check-links - every reference must resolve to something that exists.
 //
-// Usage: node tools/check-links.mjs
+// Usage: node maintenance-tools/check-links.mjs
 //
 // Two kinds of reference are checked:
 //   1. relative Markdown links, which break silently when files move
@@ -125,7 +125,7 @@ for (const lang of languages()) {
 
   if (!labels) {
     problems.push(
-      `${lang}: no citation labels registered in tools/check-links.mjs; ` +
+      `${lang}: no citation labels registered in maintenance-tools/check-links.mjs; ` +
         `section numbers were checked against every rule document instead`
     );
   }

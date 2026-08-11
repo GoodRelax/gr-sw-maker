@@ -24,14 +24,17 @@ const FRAMEWORK_ONLY = [
   // Framework CI: it checks framework-src parity and the agent roster, neither
   // of which a user project is responsible for.
   ".github",
+  // The checks that guard this repository, plus the generators and meters that
+  // only its maintainers run. Nothing here is wired into a user project.
+  "maintenance-tools",
 ];
 
-// tools/ cannot be removed wholesale: gate-guard, otel-sink and session-meter
-// run inside a user project, while the rest exist only to check this
-// repository. An allowlist means a framework tool added later stays behind by
-// default, which is the safe direction: a check script leaking into a user
-// project is harmless noise, but a missing runtime script leaves settings.json
-// pointing at a file that does not exist.
+// tools/ holds what a user project actually runs, so it cannot be removed
+// wholesale. The allowlist stays even though maintenance-tools/ now takes the
+// framework-only scripts: it is the safe direction if a tool is added here
+// later. A check script leaking into a user project is harmless noise, but a
+// missing runtime script leaves settings.json pointing at a file that does not
+// exist.
 //
 // otel-sink ships but is not wired up by settings.json: it is the primary cost
 // measurement path (Process Rules 3.2.7) and the rules name it, so the file has

@@ -28,27 +28,27 @@ jobs:
 
       # Language tree parity and structural parity: same files, same shape.
       - name: parity
-        run: node tools/check-parity.mjs
+        run: node maintenance-tools/check-parity.mjs
 
       # Agent roster, and the review perspective wiring that a grep for the old
       # R1-R6 range cannot see.
       - name: roster
-        run: node tools/check-roster.mjs
+        run: node maintenance-tools/check-roster.mjs
 
       # Dead links, and section citations that point at nothing.
       - name: links
-        run: node tools/check-links.mjs
+        run: node maintenance-tools/check-links.mjs
 
       # Form Block tag names that no Fields table defines.
       - name: tagnames
-        run: node tools/check-tagnames.mjs
+        run: node maintenance-tools/check-tagnames.mjs
 
       # Terms the glossary rejected, which reached four phases of the trial
       # before anything looked for them.
       - name: terms
-        run: node tools/check-terms.mjs
+        run: node maintenance-tools/check-terms.mjs
 
       # Deploy fidelity, idempotency, language switching, and the .bak that
       # protects an edited user-order.md.
       - name: setup
-        run: node tools/check-setup.mjs
+        run: node maintenance-tools/check-setup.mjs

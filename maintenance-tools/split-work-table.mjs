@@ -3,7 +3,7 @@
 // The matrix is the only source. These outputs are generated, never hand-edited:
 // editing them by hand is exactly the double management the split is meant to avoid.
 //
-// Usage: node tools/split-work-table.mjs [--check]
+// Usage: node maintenance-tools/split-work-table.mjs [--check]
 //   --check  regenerate into memory and fail if any shipped file differs
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
@@ -14,7 +14,7 @@ const DEST = join("framework-src", "ja", "process-rules");
 const BANNER = [
   "<!-- GENERATED FILE. Do not edit by hand. -->",
   "<!-- Source: maintenance/2026-08-10/00-mode-matrix.md -->",
-  "<!-- Regenerate: node tools/split-work-table.mjs -->",
+  "<!-- Regenerate: node maintenance-tools/split-work-table.mjs -->",
   "",
 ];
 

@@ -2,7 +2,7 @@
 // check-setup - setup.js must deploy every original, stay idempotent, survive a
 // language switch, and never destroy an edited user-order.md.
 //
-// Usage: node tools/check-setup.mjs
+// Usage: node maintenance-tools/check-setup.mjs
 //
 // The run happens in a throwaway copy holding only setup.js and framework-src/,
 // which is everything setup.js reads. Running it in place would overwrite the
@@ -131,9 +131,14 @@ try {
 
 /* -- What a generated project ends up with -------------------------------- */
 // .claude/settings.json is shipped, and it names the scripts Claude Code runs
-// inside a user project. create.js keeps only an allowlist of tools/, so a hook
-// pointing at a framework-only script would leave every generated project with
+// inside a user project. create.js keeps only an allowlist of tools/ and drops
+// maintenance-tools/ whole, so a hook pointing at either a non-allowlisted tool
+// or anything under maintenance-tools/ would leave every generated project with
 // a hook whose target does not exist. Nothing at runtime would say so.
+//
+// Both directory names are matched, and which one matched decides the message:
+// "tools/" alone would also match the tail of "maintenance-tools/" and report a
+// missing tools/<name> that was never meant to be there.
 const settingsPath = join(ROOT, ".claude", "settings.json");
 const createPath = join(ROOT, "create-gr-sw-maker", "bin", "create.js");
 if (existsSync(settingsPath) && existsSync(createPath)) {
@@ -143,7 +148,13 @@ if (existsSync(settingsPath) && existsSync(createPath)) {
   } else {
     const shipped = new Set([...allowlist[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]));
     const settings = readFileSync(settingsPath, "utf8");
-    for (const [, name] of settings.matchAll(/tools\/([A-Za-z0-9._-]+)/g)) {
+    for (const [, dir, name] of settings.matchAll(/(maintenance-tools|tools)\/([A-Za-z0-9._-]+)/g)) {
+      if (dir === "maintenance-tools") {
+        problems.push(
+          `.claude/settings.json runs maintenance-tools/${name}, which create.js removes from a generated project`
+        );
+        continue;
+      }
       if (!shipped.has(name)) {
         problems.push(`.claude/settings.json runs tools/${name}, which create.js does not ship`);
       }

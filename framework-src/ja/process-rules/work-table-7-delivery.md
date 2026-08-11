@@ -1,6 +1,6 @@
 <!-- GENERATED FILE. Do not edit by hand. -->
 <!-- Source: maintenance/2026-08-10/00-mode-matrix.md -->
-<!-- Regenerate: node tools/split-work-table.mjs -->
+<!-- Regenerate: node maintenance-tools/split-work-table.mjs -->
 
 # 作業表 —— Phase 7 納品
 

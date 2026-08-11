@@ -2,7 +2,7 @@
 // check-tagnames - every Form Block field name that a document mentions must be
 // defined in the Fields tables of the document rules.
 //
-// Usage: node tools/check-tagnames.mjs
+// Usage: node maintenance-tools/check-tagnames.mjs
 //
 // Section 4.2 of the document rules teaches placement by example, and the agent
 // definitions quote field names when they describe their own Out. A name that

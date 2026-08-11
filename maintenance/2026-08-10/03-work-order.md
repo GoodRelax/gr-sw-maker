@@ -500,12 +500,16 @@
 
 **軸は言語ではなく「配るか否か」である。** 道具は ASCII 固定なので `{lang}` では割れない。
 
-| 置き場 | 誰が走らせるか | 配るか |
-|---|---|:-:|
-| **`framework-src/tools/`**（新設） | **利用者のプロジェクト** | **配る** |
-| **`maintenance-tools/`**（`tools/` を改名） | フレームワークの CI・保守 | 配らない |
+**2026-08-11 に実施した。** 配る側の置き場は当初 `framework-src/tools/` を予定していたが、利用者の判断で **`tools/` 据え置き**に決まった。
 
-**`framework-src/` は既に「正本＝利用者に届くもの」を意味する。** 道具にもその意味をそのまま広げる。**新しい概念を増やさない。**
+| 置き場 | 誰が走らせるか | 配るか | ファイル数 |
+|---|---|:-:|:-:|
+| **`tools/`**（据え置き） | **利用者のプロジェクト** | **配る** | 7 |
+| **`maintenance-tools/`**（`tools/` から分離） | フレームワークの CI・保守 | 配らない | 12 |
+
+**`framework-src/tools/` を採らなかった技術的な理由がある。** `maintenance-tools/lib/framework.mjs` の `languages()` は `framework-src/` 直下の**ディレクトリを全て言語コードとして返す。** そこに `tools/` を作れば `tools` が言語として扱われ、`check-parity` `check-roster` `check-tagnames` `check-terms` の 4 本が一斉に壊れる。この配置を採るなら `languages()` の修正が前提になる。
+
+**据え置きの利点は `.claude/settings.json` を書き替えずに済むことである。** 配線先の `gate-guard.mjs` と `session-meter.mjs` が動かないため、利用者プロジェクト側の配置も変わらない。
 
 > **`maintenance/`（作業記録）と `maintenance-tools/`（フレームワークを保守する道具）は別物である。** 隣に並ぶので、リポジトリの `README` に区別を 1 行書く。
 
@@ -558,9 +562,9 @@
 
 | 何 | 通常 | 停止中 |
 |---|---|---|
-| `tools/hooks/pre-commit` のペア判定 | 片言語だけのコミットを拒む | **無効化する**（削除せず、理由を添えてコメントアウト） |
-| `tools/check-parity.mjs` の pre-commit 呼び出し | 構造の一致を確かめる | **無効化する**（同上） |
-| `node tools/check-parity.mjs` の手動実行 | — | **止めない。** いつでも現状を測れる状態を保つ |
+| `maintenance-tools/hooks/pre-commit` のペア判定 | 片言語だけのコミットを拒む | **無効化する**（削除せず、理由を添えてコメントアウト） |
+| `maintenance-tools/check-parity.mjs` の pre-commit 呼び出し | 構造の一致を確かめる | **無効化する**（同上） |
+| `node maintenance-tools/check-parity.mjs` の手動実行 | — | **止めない。** いつでも現状を測れる状態を保つ |
 
 **再開の条件:** 利用者の指示。**それまでに ja 側で溜まった差分は、再開時に en へ一括で当てる。**
 

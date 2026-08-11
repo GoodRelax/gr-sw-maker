@@ -2,7 +2,7 @@
 // check-roster - the agent list must describe the agents that actually exist,
 // and every review perspective that is defined must be required somewhere.
 //
-// Usage: node tools/check-roster.mjs
+// Usage: node maintenance-tools/check-roster.mjs
 //
 // An agent's identity comes from the `name:` field in its frontmatter, not from
 // its filename, so a rename that touches only one of the two produces an agent

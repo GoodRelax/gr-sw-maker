@@ -211,8 +211,9 @@ gr-sw-maker フレームワーク自体のメンテナンスを行う場合、�
 - **clone 後は `node setup.js ja`（または `en`）を実行する。** 実行するまで `CLAUDE.md` もエージェント定義も存在しない。
 - **`README.md` / `README-ja.md`** は GitHub の表示に必要なため直接 tracked しており、`setup.js` では生成しない。
 - **`essays/research/*.md`** は単一言語の調査レポート — `setup.js` の生成物ではなく、通常通り tracked。
-- **`tools/` には性質の違う 2 種類のスクリプトがある。** `check-parity` / `check-roster` / `check-links` / `check-tagnames` / `check-terms` / `check-setup` / `jsonl2md` は本リポジトリを守る検査で CI が実行する。`gate-guard` と `otel-sink` と `session-meter` はユーザープロジェクト内で動くもので、`create.js` が配布するのはこの 3 本だけ。
-- **clone ごとに 1 度フックを有効化する:** `git config core.hooksPath tools/hooks`。片方の言語だけを変更したコミットを拒否する。
+- **どちらが走らせるかをディレクトリ名が表す。** `maintenance-tools/` は本リポジトリを守るもので、ユーザープロジェクトへは配られない。`check-parity` / `check-roster` / `check-links` / `check-tagnames` / `check-terms` / `check-setup` の 6 本を CI が実行し、`split-work-table` / `context-census` / `jsonl2md` は手で走らせる。`tools/` は `create.js` が配布するもので、`gate-guard` / `otel-sink` / `session-meter` / `start-otel-sink.bat` / `spec-query/` の 5 つである。各々の中身は[道具の目録](maintenance-tools/README.md)にある。
+- **`maintenance/` と `maintenance-tools/` は別物である。** `maintenance/` は改善作業の記録で、プロセス規則の生成元になる作業表の正本もここに在る。`maintenance-tools/` はスクリプトである。一覧では隣り合うが、実行できるのは後者だけである。
+- **clone ごとに 1 度フックを有効化する:** `git config core.hooksPath maintenance-tools/hooks`。片方の言語だけを変更したコミットを拒否する。
 - 詳細な規約と検査の手元実行は[フレームワーク開発ガイド](framework-src/ja/process-rules/framework-development.md)を参照。
 
 ---

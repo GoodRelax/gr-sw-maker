@@ -18,7 +18,7 @@ You ensure that the English and Japanese versions of framework documents are str
 
 If inconsistencies between multilingual versions are discovered after release, users receive different information depending on the language, undermining trust. This agent detects and reports such issues before release.
 
-**This agent verifies agreement of meaning.** Differences that can be counted mechanically - heading counts, table row counts, fence counts - are the job of the CI structural parity check (`tools/check-parity.mjs`). Do not duplicate that check; concentrate on what a machine cannot count: consistency of translated terminology, claims present in one version but not the other, and conditions dropped from the original.
+**This agent verifies agreement of meaning.** Differences that can be counted mechanically - heading counts, table row counts, fence counts - are the job of the CI structural parity check (`maintenance-tools/check-parity.mjs`). Do not duplicate that check; concentrate on what a machine cannot count: consistency of translated terminology, claims present in one version but not the other, and conditions dropped from the original.
 
 ### Start Conditions
 

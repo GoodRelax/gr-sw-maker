@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // check-terms - a term the glossary rejected must not appear in the framework.
 //
-// Usage: node tools/check-terms.mjs
+// Usage: node maintenance-tools/check-terms.mjs
 //
 // Section 1 of the glossary chooses one term out of several synonyms and records
 // the ones it rejected. Nothing enforced that. A rejected term got into four
