@@ -17,9 +17,9 @@
 | フェーズ | 作業 | 依頼元 | 担当者 | モデル | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|---|
 | `7a`<br />納品 | 全成果物を R1〜R7 に照らし、<br />指摘を挙げる | main-agent | review-agent | opus | 対象: 全文<br />全成果物 | review | 指摘の場所と件数<br />Critical / High の有無 | **[簡易・標準]** 1 エージェントが 7 観点をまとめて見る。<br />**簡易はここで R1〜R7 を網羅する**<br />（表 E-1）。 |
-| `7a`<br />納品 | 全成果物を担当する 1 観点に照らし、<br />指摘を挙げる | main-agent | `review-agent` × 7<br />R1〜R7 を 1 エージェントずつ | opus | 対象: 全文<br />全成果物 | review | 各自の指摘の場所と件数 | **[厳格]** 1 観点 = 1 エージェント。R をまたがない。<br />**7 観点が 4 分野に収まらない問題が消える。**<br />**再委託しない。統合は `7l` が行う**<br />（`07` §4.5.2）。<br />エージェントの下限は 27k〜35k なので、下限だけで 7 倍になる。**これが厳格の値段である。** |
+| `7a`<br />納品 | 全成果物を担当する 1 観点に照らし、<br />指摘を挙げる | main-agent | `review-agent` × 7<br />R1〜R7 を 1 エージェントずつ | opus | 対象: 全文<br />全成果物 | review | 各自の指摘の場所と件数 | **[厳格]** 1 観点 = 1 エージェント。R をまたがない。<br />**7 観点が 4 分野に収まらない問題が消える。**<br />**再委託しない。統合は `7l` が行う**<br />（`agent-orchestration-rules.md` §4.5.2）。<br />エージェントの下限は 27k〜35k なので、下限だけで 7 倍になる。**これが厳格の値段である。** |
 | `7b`<br />納品<br />**新設** | 全ゲートの結果を集め、<br />リリース判定チェックリストを埋める | main-agent | project-manager | opus | 全ゲートの判定結果<br />`7a` の review | release-checklist | チェックリストの場所<br />未充足の項目 | 複数バージョンを並行保守するとき<br />（標準）。 |
-| `7b`<br />納品<br />**新設** | チェックリストに照らし、<br />リリースの可否を出す | main-agent | technical-authority | opus | release-checklist | tech-decision | 可否と理由 | **[直列]** **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
+| `7b`<br />納品<br />**新設** | チェックリストに照らし、<br />リリースの可否を出す | main-agent | technical-authority | opus | release-checklist | tech-decision | 可否と理由 | **[直列]** **兄弟で並べて起動する**<br />（`agent-orchestration-rules.md` §4.5.1）。 |
 | `7c`<br />納品 | デプロイ設計に従い、<br />コンテナをビルドする | main-agent | implementer | opus | `4i` の deployment-design<br />`5a` の src | container-image | 成果物の場所<br />タグ | 配布以外のデプロイ先がある場合。<br />`7c`〜`7f` は同じ条件に従う。 |
 | `7d`<br />納品 | ビルドしたコンテナをデプロイする | main-agent | implementer | opus | `7c` の container-image | — | デプロイ先<br />結果 | 同上。 |
 | `7e`<br />納品 | 監視が動いているか確かめ、<br />欠けている計装を洗い出す | main-agent | implementer | opus | `4h` の observability-design | — | 確認結果<br />欠けている計装 | 同上。 |
@@ -27,7 +27,7 @@
 | `7g`<br />納品 | 全ゲートの結果と waiver をまとめ、<br />最終レポートを書く | main-agent | project-manager | opus | 全ゲートの判定結果<br />waiver の記録 | final-report | レポートの場所 | 統合が本務である。<br />waiver は条件 3 によりここへ転記する<br />（プロセス規則 §9.1.1）。 |
 | `7h`<br />納品 | 概要と UC を利用者の操作手順に翻訳し、<br />ユーザーマニュアルを書く | main-agent | user-manual-writer | sonnet | 対象: 概要と UC<br />根拠: ソフトウェア仕様 | user-manual | マニュアルの場所<br />未記載の機能 | **§3 のとおり ソフトウェア仕様を根拠として読む。**<br />要求だけでは操作手順を書けない。 |
 | `7i`<br />納品 | 運用と復旧の手順を書き、<br />引継ぎ資料をそろえる | main-agent | runbook-writer | sonnet | 対象: 概要と設計<br />根拠: NFR | runbook | runbook の場所 | 運用・保守フラグ。<br />**トレーニング・知識移転もここに乗る。** |
-| `7i`<br />納品 | マニュアルと運用手順書を突き合わせ、<br />重複と食い違いを洗い出す | main-agent | user-manual-writer | sonnet | `7h` の user-manual<br />`7i` の runbook | — | 重複と食い違いの一覧 | **[直列]** **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
+| `7i`<br />納品 | マニュアルと運用手順書を突き合わせ、<br />重複と食い違いを洗い出す | main-agent | user-manual-writer | sonnet | `7h` の user-manual<br />`7i` の runbook | — | 重複と食い違いの一覧 | **[直列]** **兄弟で並べて起動する**<br />（`agent-orchestration-rules.md` §4.5.1）。 |
 | `7j`<br />納品 | 受入基準を利用者が実行できる手順に落とす | main-agent | test-designer | opus | 対象: テスト<br />根拠: 概要と UC | test-plan | 手順書の場所 | **受入基準を書く側なので test-designer である。** |
 | `7k`<br />納品<br />**新設** | 手順書に従って受入テストを実行し、<br />合否を返す | **main-agent** | **利用者** | — | `7j` の test-plan<br />`7h` の user-manual | — | 合否<br />合わなかった項目 | **受入テストの判定者は利用者である**<br />（プロセス規則 §9.4「受入テスト合格 = ユーザー承認」）。<br />確かめる観点はプロセス規則 §4.7.5 が持つ。 |
 | `7k`<br />納品<br />**新設** | 受入テストの結果を final-report に追記する | main-agent | project-manager | opus | 利用者が返した合否<br />合わなかった項目 | final-report | 記録の場所<br />合否 | **[直列]** `7g` が書いた final-report に追記する。<br />合わなかった項目は `Fg` で defect に起票する。 |

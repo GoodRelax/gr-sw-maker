@@ -23,5 +23,5 @@
 | `8c`<br />運用・保守 | SLA 監視が動いているか確かめ、<br />違反を数える | main-agent | progress-monitor | sonnet | `4h` の observability-design | progress | 確認結果<br />SLA 違反の件数 | `4h` の可観測性設計が定めた閾値と突き合わせる。 |
 | `8d`<br />運用・保守 | 復旧手順の訓練を計画する | main-agent | runbook-writer | sonnet | `7i` の runbook<br />`7f` のロールバック手順 | disaster-recovery-plan | 計画の場所<br />実施時期 | <br />**`disaster-recovery-plan` のオーナーは名簿では architect である。**<br />運用の文書を設計の体が持つのは不自然であり、名簿側の見直しが要る（未決）。 |
 | `8e`<br />運用・保守 | incident の経緯と影響を報告書に書く | main-agent | incident-reporter | sonnet | incident の記録 | incident-report | 報告書の場所<br />影響範囲 |  |
-| `8e`<br />運用・保守 | 根本原因を分析し、<br />改善案を出す | main-agent | process-improver | sonnet | `8e` の incident-report | retrospective-report | 原因と改善案 | **[直列]** **兄弟で並べて起動する**<br />（`07` §4.5.1）。<br />改善案の適用は `Fe` が行う。 |
+| `8e`<br />運用・保守 | 根本原因を分析し、<br />改善案を出す | main-agent | process-improver | sonnet | `8e` の incident-report | retrospective-report | 原因と改善案 | **[直列]** **兄弟で並べて起動する**<br />（`agent-orchestration-rules.md` §4.5.1）。<br />改善案の適用は `Fe` が行う。 |
 | `8f`<br />運用・保守 | 終了の条件に照らし、<br />GATE-EOL の可否を出す | main-agent | technical-authority | opus | `8e` の incident-report<br />`7g` の final-report | tech-decision | 可否と理由 | 終了する場合。<br />合格条件はプロセス規則 §9.4.1 が持つ。 |
