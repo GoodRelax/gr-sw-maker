@@ -45,7 +45,7 @@ model: opus
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
 | spec-foundation | srs-writer | R1 レビュー対象 | Ch1-4, 全 FR/NFR に ID |
-| spec-architecture | architect | R2/R4/R5/R7 レビュー対象 | Ch5-7, Ch4 の全 Gherkin に traces |
+| spec-architecture | architect | R2/R4/R5/R7 レビュー対象 | Ch5-7, Ch6 の全 SWS に Parent（FR / NFR） |
 | （src/） | implementer | R2/R3/R4/R5/R7 レビュー対象 | 全関数に `@purity` タグ |
 | （tests/） | test-engineer | R6 レビュー対象 | テストの実行結果 |
 | test-plan | test-engineer | R6 テスト計画の妥当性レビュー | テスト観点と対象 FR |
@@ -125,7 +125,7 @@ review:
 |:-:|:------:|---------|:----:|------|
 | 1 | High | Ch3.3 の Adapter 層にビジネスロジックが混入（R2.16） | 未対応 | — |
 | 2 | High | Ch3.4 の在庫更新が Check-Then-Act で非原子（R4.2） | 未対応 | — |
-| 3 | Medium | Ch4 の Gherkin 3 件に traces がない（R1.1） | 未対応 | — |
+| 3 | Medium | Ch6 の SWS 3 件に Parent がない（R1.1） | 未対応 | — |
 
 - `dimensions` は適用した観点 ID をカンマ区切りで列挙する
 - `critical_count` と `high_count` は下流でゲート判定に機械参照される

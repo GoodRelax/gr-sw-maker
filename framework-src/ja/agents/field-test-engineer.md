@@ -37,8 +37,8 @@ model: sonnet
 
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
-| spec-foundation | srs-writer | テスト対象の要求仕様 | Ch2 の全 FR/NFR に ID |
-| spec-architecture | architect | テスト対象の設計仕様 | Ch4 の全 Gherkin に traces |
+| spec-foundation | srs-writer | テスト対象の要求仕様 | Ch4 の全 FR/NFR に ID |
+| spec-architecture | architect | テスト対象の設計仕様 | Ch6 の全 SWS に Parent（FR / NFR） |
 | （src/, tests/） | implementer, test-engineer | テスト対象の最新 SW | 実機に配置可能なビルド成果物 |
 | （自動テスト結果） | test-engineer | 修正後の自動テスト結果の確認 | 全テストの合否 |
 

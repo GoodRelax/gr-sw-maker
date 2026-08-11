@@ -21,7 +21,7 @@ model: sonnet
 
 ### Start Conditions
 
-- [ ] 仕様書 Ch1-2 がユーザーに承認されている
+- [ ] 仕様書 Ch1-4 がユーザーに承認されている
 - [ ] ユーザーからの変更要求が発生している
 
 ### End Conditions
@@ -36,8 +36,8 @@ model: sonnet
 
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
-| spec-foundation | srs-writer | 変更影響の分析対象 | 承認済みの Ch1-2, 全 FR/NFR に ID |
-| spec-architecture | architect | 変更影響の分析対象 | Ch3-4, Ch4 の全 Gherkin に traces |
+| spec-foundation | srs-writer | 変更影響の分析対象 | 承認済みの Ch1-4, 全 FR/NFR に ID |
+| spec-architecture | architect | 変更影響の分析対象 | Ch5-6, Ch6 の全 SWS に Parent（FR / NFR） |
 | （src/, tests/） | implementer, test-engineer | 変更影響の分析対象 | 変更対象を特定できるディレクトリ構成 |
 | CLAUDE.md | project-manager (setup) | プロジェクト設定の確認 | 品質目標・重要判断の基準の各節 |
 | field-issue（type=cr） | feedback-classifier | 実機テスト由来のスコープ変更の受付 | issue_id, type = cr, 変更内容 |

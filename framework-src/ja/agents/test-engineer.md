@@ -40,8 +40,8 @@ model: sonnet
 
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
-| spec-foundation | srs-writer | Ch2 の要求（FR/NFR）を確認 | Ch2 の全 FR/NFR に ID |
-| spec-architecture | architect | Ch4 Gherkin シナリオ、Ch5 テスト戦略を確認 | Ch4 の全 Gherkin に traces, Ch5 |
+| spec-foundation | srs-writer | Ch2 の要求（FR/NFR）を確認 | Ch4 の全 FR/NFR に ID |
+| spec-architecture | architect | Ch6 ソフトウェア仕様、Ch7 テスト戦略を確認 | Ch6 の全 SWS に Parent（FR / NFR）, Ch7 |
 | openapi.yaml | architect | API エンドポイントの整合性検証 | 全エンドポイントの paths |
 | （src/） | implementer | テスト対象コード | テスト対象のソース一式 |
 | （tests/） | implementer | 単体テスト（拡張・追加する） | 既存の単体テスト |

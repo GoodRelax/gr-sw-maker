@@ -54,8 +54,8 @@ Fault は混入したフェーズによって3つに分類される。Defect の
 
 | Fault Origin | 修正対象 | 影響範囲 |
 |-------------|---------|---------|
-| Requirements Fault | 仕様書 Ch1-2（spec-foundation） | 設計・実装・テスト全てに波及。最もコストが高い |
-| Design Fault | 仕様書 Ch3-4（spec-architecture） | 実装・テストに波及 |
+| Requirements Fault | 仕様書 Ch1-4（spec-foundation） | 設計・実装・テスト全てに波及。最もコストが高い |
+| Design Fault | 仕様書 Ch5-6（spec-architecture） | 実装・テストに波及 |
 | Implementation Fault | ソースコード（src/） | テストに波及。最もコストが低い |
 
 ### 3.3 Systematic Fault vs Random Hardware Fault（IEC 61508）
@@ -223,8 +223,8 @@ Defect の Detail Block に根本原因を記載する際、因果連鎖の用�
 
 | Fault Origin | 修正すべき成果物 | review-agent の観点 |
 |-------------|-----------------|-------------------|
-| Requirements Fault | spec-foundation（Ch1-2）→ 以降の全成果物に波及 | R1（要求品質） |
-| Design Fault | spec-architecture（Ch3-4）→ 実装・テストに波及 | R2（設計原則） |
+| Requirements Fault | spec-foundation（Ch1-4）→ 以降の全成果物に波及 | R1（要求品質） |
+| Design Fault | spec-architecture（Ch5-6）→ 実装・テストに波及 | R2（設計原則） |
 | Implementation Fault | src/（ソースコード）→ テストに波及 | R3（コーディング品質） |
 
 ---
@@ -292,7 +292,7 @@ flowchart TD
 
 **目的:** システムが引き起こしうる全 hazard を特定し、各 hazard に safety goal を割り当てる。
 
-**入力:** spec-foundation（Ch1-2: 機能要求・非機能要求）、interview-record（ドメイン知識）
+**入力:** spec-foundation（Ch1-4: 機能要求・非機能要求）、interview-record（ドメイン知識）
 
 **出力:** Hazard 一覧、Safety Goal 一覧、ASIL/SIL 割当、Safety Requirement（spec-foundation Ch2 NFR に追加）
 

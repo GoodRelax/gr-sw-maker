@@ -72,12 +72,19 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 5. モック/サンプル/PoCを作成し、ユーザーにフィードバックを求める（該当する場合）
 6. Chapter 1 (Foundation) を作成する
    - Background, Challenges, Goals, Approach, Scope, Constraints, Limitations, Glossary, Notation
-7. Chapter 2 (Requirements) を作成する
-   - 機能要求を EARS 構文で記述する（6パターン）
-   - 非機能要求を EARS 構文 + 数式で記述する
-   - すべての要求に ID（FR-xxx, NFR-xxx）を付与する
-8. 用語チェック要請を完了報告に含めて返す（spec-foundation, interview-record）
-9. Ch5-10 のスケルトン（見出しのみ）を配置し、architect の起動要請を完了報告に含めて返す
+   - 目標に ID（GL-xxx）を付与する
+7. Chapter 2 (System Overview) を作成する
+   - 概要図、機器、経路、持たないもの
+   - **どの機器に対象ソフトが載るかを明記する。** EARS の `[System]` はこれで決まる
+8. Chapter 3 (Use Cases) を作成する
+   - アクターとユースケースを書き、ID（UC-xxx）を付与する
+   - 各ユースケースの `Parent` に `GL-xxx` を張る（`Role: Satisfies`）
+9. Chapter 4 (Requirements) を作成する
+   - 機能要求を EARS 構文で記述する（6パターン。構文形は仕様テンプレート Ch1.9 が持つ）
+   - 非機能要求を EARS 構文 + 数式で記述する。**測定可能な数値基準を含める**
+   - すべての要求に ID（FR-xxx, NFR-xxx）を付与し、`Parent` に `UC-xxx` または `GL-xxx` を張る
+10. 用語チェック要請を完了報告に含めて返す（spec-foundation, interview-record）
+11. Ch5-10 のスケルトン（見出しのみ）を配置し、architect の起動要請を完了報告に含めて返す
 
 ## Rules
 

@@ -13,7 +13,7 @@
 | 実施先 | `gr-sw-maker-trial2`（本リポジトリと同じ階層に置く別プロジェクト） |
 | 開発方式 | **簡易** |
 | 仕様形式 | **ANMS**（単一 Markdown。実ファイル名 `01-10-spec.md`） |
-| 到達点 | **Phase 2 企画の完了**（`2k` GATE-PLANNING の判定まで） |
+| 到達点 | **Phase 7 納品の完了**（実装・テスト・納品まで走らせる） |
 | 題材 | CLI の単位換算ツール（長さ・重さ・温度、Node.js、外部サービス・DB なし） |
 | 主言語 | ja のみ（en は削除する） |
 
@@ -142,6 +142,7 @@ node setup.js
 | **1** | **`1e` / `1d` を揃える** | `full-auto-dev-process-rules.md` `framework-src/ja/CLAUDE.md` | 1 | **済** |
 | **3** | **`00-mode-matrix.md` の 7 件を直して再生成** | `0b` の入力と作業・`2f` の自己参照・未決注記・手順数 88×3・表 M の「全 10 手順」 | 5・6・8・14 | **済** |
 | **2** | **仕様書テンプレートを 10 章化して配布** | `01` → `spec-template.md`。＋ 設計原則カタログの移設・EARS 表・章担当の付け替え | 2・3・15 | **済** |
+| **11** | **納品まで走らせるための修正**（2026-08-11 に到達点を Phase 7 へ拡大したことによる） | 下記 §6.2 | 15 | **大半が済** |
 | **5** | **`02` を 10 章化して配布** | 19 件のうち PoC を止める 8 件を先に | 4 | 未着手 |
 | **6** | **`07` を整理して配布** | 保守記録の節を落とし、`06` 参照 24 件を取り込む | 10・11 | 未着手 |
 | **7** | **`test-designer` と `tester` に引用表を足す** | 2 ファイル | 9 | 未着手 |
@@ -164,6 +165,28 @@ node setup.js
 | `glossary.md` の 3 行を 8〜10 章へ | 存在しない Chapter 9〜11 を指していた |
 | 章の担当範囲を付け替え | `Ch1-2`/`Ch3-6` は**旧 6 章構成の切れ目**。10 章版では **srs-writer が Ch1-4、architect が Ch5-7、test-designer/tester が Ch8-10** になる。`srs-writer.md` `architect.md` `review-agent.md` `CLAUDE.md` `review-standards.md` の R1/R2/R7 見出しを揃えた |
 
+### 6.2 段 11 —— 納品まで走らせるための修正（2026-08-11）
+
+到達点を Phase 7 へ広げたことで、Phase 3 以降にしか効かないとして先送りしていた論点が停止要因に変わった。**シミュレーション 2 本が走行を止めるものを 15 件挙げ、うち 13 件を当てた。**
+
+| 何 | なぜ止まっていたか | 状態 |
+|---|---|---|
+| **入口の自己否定** | `development-mode.md:490` が「簡易は納品ゲートを通過できない」と書いていた。**`/full-auto-dev` が最初に読む文書である。** 前提（§9.4.1 に逃げ道が 1 つしかない）は既に事実でなく、4 ゲートすべてが逃げ道を持つ | **済** |
+| **`4m` の停止連鎖** | review-agent の必須要素「Ch4 の全 Gherkin に traces」が 10 章版で到達不能 → 差し戻し → review が生まれない → `gate-guard` が `src/` `tests/` `infra/` を**恒久的に拒否** → Phase 5 が 1 バイトも書けない。同じ必須要素を 6 体が持っていた | **済**（`Ch6 の全 SWS に Parent（FR / NFR）` へ） |
+| **architect が Phase 2 の成果物を壊す** | Procedure が `Ch3 Architecture` `Ch4 Specification` を書く指示のまま。10 章版では srs-writer が書いた Use Cases と Requirements である | **済**（Ch5/Ch6/Ch7 へ。手順番号も 0〜13 に詰めた） |
+| **偽の High で GATE-DESIGN が落ちる** | `review-standards.md` の R2.16・R2.18・R2.19・R2.20・R3.5・R4.3・R5.1 が存在しない章を指し、MUST=High と裁定される。**16 行** | **済** |
+| **implementer が設計を読まない** | 「Ch3 と Ch4 を読み込む」＝ Use Cases と Requirements。Ch5 Design と Ch6 Software Specification を 1 行も読まなかった | **済** |
+| **`Fk` が要求の欠陥を設計へ差し戻す** | 戻し先の裁定表が `Ch3-4` のまま。規則と technical-authority の両方 | **済** |
+| **`final-report` が gate-guard を素通り** | 書き先が 3 か所で食い違い、`project-management/` 経由だと `ALWAYS_ALLOWED` で GATE-TEST の守りが無効化される | **済**（ルート直下へ統一） |
+| **`srs-writer` に Ch2・Ch3 を書く手順が無い** | Procedure が `Chapter 1` と `Chapter 2 (Requirements)` の 2 つだけ。**10 章版の担当は Ch1-4 なのに、System Overview と Use Cases の手順が存在しなかった** | **済**（4 章ぶんに分割） |
+| **`test-designer` / `tester` が規則を全文ロードする** | 24 体中この 2 体だけ引用表を持たず、Phase 6 の全 8 手順の主担当だった | **済**（`context-census` が FAIL → PASS。24 体・削減率 93.9%） |
+| **システムテストの合格基準を書く場所が無い** | Ch7 Test Strategy の表に `System` 行が無い。文法は `System` を許している | **済** |
+| **`spec` file_type が未定義** | 11 手順が定義の無い file_type へ書く | **表は追加済。§9 の Form Block 節は未** |
+| **`tech-decisions/` `governance/` が無い** | 全ゲート判定の記録先。`project-records/` が 16 で、計画の 18 と合っていなかった | **済** |
+| **受入テストの実行手順が無い** | GATE-DELIVERY が「受入テスト合格」を要求するが、`7j` は手順書を作るだけで実行も記録も判定者も無い | **未。§8.3 参照** |
+
+**所有権の決定（利用者判断）:** `spec-test` のオーナーを test-designer に確定し、`traceability` / `test-plan` を test-designer、`defect` / `performance-report` を tester へ移す。名簿 §2 への反映は未着手。
+
 ---
 
 ## 7. 決めたこと
@@ -172,7 +195,7 @@ node setup.js
 |:-:|---|---|
 | 1 | 仕様書の実ファイル名 | **`01-10-spec.md`**。`02` の席番号規則（ファイル番号は最初の章の番号、範囲を名前に含める）が 10 章構成から導く |
 | 2 | `framework-src/en/` | **丸ごと削除する。** 変更量が多く既存分は再使用できない |
-| 3 | PoC の到達点 | **Phase 2 企画まで** |
+| 3 | PoC の到達点 | **Phase 7 納品まで**（2026-08-11 に Phase 2 から拡大） |
 | 4 | 道具の置き場 | `tools/`（配る 7）と `maintenance-tools/`（配らない 12）。**実施済み**（`History/2026-08-11/00-tools-placement-record.md`） |
 | 5 | エージェントへの規則の渡し方 | **統括文書を正本とし、エージェントには自分のプロンプトへ展開した節だけを渡す。** 走る 5 体の引用は 100% 解決済みで、機構は動いている |
 | 6 | `build-agents.mjs`（展開の生成器） | **PoC 後に作る。** PoC で走るのは 9 体で、手で当てる方が速い |
@@ -199,7 +222,9 @@ node setup.js
 
 | 件 | 論点 |
 |---|---|
-| **`Ch1-2` / `Ch3-6` が 12 ファイルに残る** | 段 2 で走るエージェント（srs-writer・architect・review-agent）と `CLAUDE.md` は揃えたが、残りは Phase 3 以降にしか効かない。**最多は `full-auto-dev-process-rules.md` の 44 件** |
+| **受入テストの実行行を作業表へ新設する（最優先）** | GATE-DELIVERY の「受入テスト合格」を生む手順が無い。**`7j` の後に 2 行（利用者が実行して合否を返す／project-manager が final-report に追記）を挿し、`7k`→`7l`、`7l`→`7m` へ繰り下げる。** 手順数 96 → 97。連動先は **14 箇所**（うち `commands/full-auto-dev.md:20` と `full-auto-dev-process-rules.md:370` は生成物ではないので手で当てる）。`7k` `7l` を引く外部参照は 0 件と実測済みで、繰り下げは安全 |
+| **`spec` / `spec-test` の §9 Form Block 節** | file_type 表には追加したが、Fields と Detail Block Guidance の節が未作成。§11 の「各 file_type には唯一の owner が存在する」に、`spec` は章ごとにオーナーが変わる例外である旨の但し書きが要る |
+| **名簿 §2 に test-designer / tester の節を新設** | 所有権は決まった（`spec-test` は test-designer、`traceability` / `test-plan` も test-designer、`defect` / `performance-report` は tester）。反映が未着手 |
 | **`spec-foundation` / `spec-architecture` の切れ目** | 正本 `00-mode-matrix.md` 自身が「旧 6 章構成の切れ目であり、`02` の部境界と切り方が違う」と認めたうえで**名簿側の判断として保留**している。10 章構成に合わせて割り直すかを決める必要がある |
 | **Gherkin の所在** | `review-agent.md:48` が「`Ch4` の全 Gherkin」と書くが、**10 章版テンプレートに Gherkin は 1 件も無い**（旧 6 章版の Ch4 Specification が持っていた）。どの章が持つかを決める |
 | `kotodama-kun` | 道具化の決定と実体が矛盾。名簿はエージェント前提、配布済み作業表は道具前提。モデルも `sonnet` と `haiku` で食い違う |

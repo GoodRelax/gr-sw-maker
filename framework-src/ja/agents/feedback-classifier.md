@@ -36,7 +36,7 @@ model: sonnet
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
 | field-issue（reported） | field-test-engineer | 分類対象のフィードバック | issue_id, status = reported, 現象と再現手順 |
-| spec-foundation | srs-writer | 仕様照合（Ch1-2: 要求定義） | Ch2 の全 FR/NFR に ID |
+| spec-foundation | srs-writer | 仕様照合（Ch1-2: 要求定義） | Ch4 の全 FR/NFR に ID |
 | spec-architecture | architect | 仕様照合（Ch3-6: 設計仕様） | Ch3-4 |
 
 ### Out

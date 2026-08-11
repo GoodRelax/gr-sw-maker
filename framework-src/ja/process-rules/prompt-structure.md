@@ -173,7 +173,7 @@ model: opus | sonnet | haiku | inherit
 
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
-| spec-foundation | srs-writer | 要求との整合判定 | Ch1 全体, Ch2 の全 FR/NFR に ID |
+| spec-foundation | srs-writer | 要求との整合判定 | Ch1 全体, Ch4 の全 FR/NFR に ID |
 | review | review-agent | ゲート判定の入力 | result, 各指摘に severity |
 
 #### Out（出力）

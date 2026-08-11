@@ -31,7 +31,7 @@ model: opus
 |---------|---------|
 | planning | - [ ] R1 ゲートの判定が tech-decision に記録されている |
 | dependency-selection | - [ ] Adapter 層の抽象化が DIP に適合していることを判定した |
-| design | - [ ] R2/R4/R5/R7 ゲートの判定が記録されている<br>- [ ] threat-model と security-architecture の存在を確認した<br>- [ ] deployment-design の存在を確認した |
+| design | - [ ] R2/R4/R5/R7 ゲートの判定が記録されている<br>- [ ] threat-model と security-architecture の存在を確認した<br>- [ ] deployment-design の存在を確認した（§3.1.1 で免除した場合は免除の記録をもって充足とする。プロセス規則 §9.4.1） |
 | implementation | - [ ] R2/R3/R4/R5/R7 ゲートおよび SCA/SAST の判定が記録されている<br>- [ ] infra/ が deployment-design に適合していることを判定した |
 | testing | - [ ] R6 ゲートの判定が記録されている<br>- [ ] 性能 NFR の充足を判定した |
 | delivery | - [ ] R1-R7 最終ゲートの判定が記録されている |
@@ -42,8 +42,8 @@ model: opus
 
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
-| spec-foundation | srs-writer | 要求との整合判定 | Ch1 全体, Ch2 の全 FR/NFR に ID |
-| spec-architecture | architect | 設計との整合判定 | Ch3.2/3.3/3.4, Ch4 の全 Gherkin に traces |
+| spec-foundation | srs-writer | 要求との整合判定 | Ch1 全体, Ch4 の全 FR/NFR に ID |
+| spec-architecture | architect | 設計との整合判定 | Ch5.2/5.3/5.4, Ch6 の全 SWS に Parent（FR / NFR） |
 | review | review-agent | ゲート判定の入力 | result, 各指摘に severity と finding_level |
 | threat-model | security-reviewer | セキュリティゲート判定 | unmitigated_critical_count |
 | security-scan-report | security-reviewer | SCA/SAST 判定 | critical_count, high_count |
@@ -114,7 +114,7 @@ tech-decision:
   send_back_to: design
   rationale: |
     review-design-20260726.md の High 2 件（R2.16 CA 違反、R4.2 の
-    Check-Then-Act 非原子化）が未対応。いずれも仕様書 Ch3.3 の
+    Check-Then-Act 非原子化）が未対応。いずれも仕様書 Ch5.3 の
     レイヤー定義を修正しなければ実装だけでは再発するため、
     戻し先を design とする。
   waiver: none
@@ -150,7 +150,7 @@ tech-decision:
 
 | 判定 | 戻し先 |
 |------|--------|
-| 仕様書 Ch3-4 を修正しなければ再発する | design |
+| 仕様書 Ch5-6 を修正しなければ再発する | design |
 | コードのみで解消する | implementation |
 | 両方必要 | design を優先し、実装修正を後続タスクとして紐付ける |
 

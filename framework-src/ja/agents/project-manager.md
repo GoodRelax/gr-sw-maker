@@ -40,8 +40,8 @@ model: opus
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
 | user-order | user | プロジェクト開始の入力 | 3 問すべてに回答 |
-| spec-foundation | srs-writer | 仕様書承認判断 | Ch1-2, document_status |
-| spec-architecture | architect | 設計承認判断 | Ch3-6, document_status |
+| spec-foundation | srs-writer | 仕様書承認判断 | Ch1-4, document_status |
+| spec-architecture | architect | 設計承認判断 | Ch5-7, document_status |
 | review | review-agent | ユーザー報告用の品質状況の把握 | result, 各指摘に severity |
 | tech-decision | technical-authority | 技術ゲートの判定結果の受領 | verdict, FAIL の場合は send_back_to |
 | progress | progress-monitor | 進捗状況の把握 | 対象期間と進捗率 |
@@ -113,7 +113,7 @@ model: opus
 | 遷移 | PM 条件 | 技術条件の出所 |
 |------|--------|--------------|
 | setup → planning | CLAUDE.md 確定、条件付きプロセス評価完了 | （技術ゲートなし） |
-| planning → dependency-selection | 仕様書 Ch1-2 のユーザー承認。条件付きプロセス該当なしの場合は design へスキップ | tech-decision（R1） |
+| planning → dependency-selection | 仕様書 Ch1-4 のユーザー承認。条件付きプロセス該当なしの場合は design へスキップ | tech-decision（R1） |
 | dependency-selection → design | 外部依存選定のユーザー承認、予算内であること | tech-decision（DIP 適合） |
 | design → implementation | WBS 更新済み、スケジュール逸脱なし | tech-decision（R2/R4/R5/R7, threat-model） |
 | implementation → testing | WBS 更新済み、コスト予算内 | tech-decision（R2/R3/R4/R5/R7, SCA/SAST） |

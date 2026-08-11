@@ -741,8 +741,8 @@ full-auto-dev コマンドの setup フェーズで、リードエージェン�
 3. 特許調査 → 該当する場合はWBSの design フェーズ開始前に特許調査タスクを追加する。`project-records/legal/patent-clearance.md` に記録する
 4. 技術動向調査 → 該当する場合は各フェーズ開始時に技術動向確認ステップをWBSに追加する。`docs/tech-watch.md` を作成する
 5. アクセシビリティ → 該当する場合は仕様書 Ch2 のNFRにWCAG 2.1 AA準拠要求を追加し、review-agentのR1チェック項目に含める
-6. HW連携 → 該当する場合はCLAUDE.mdに追記し、planning フェーズのインタビューにHW要求を含める。dependency-selection フェーズで外部依存の評価・選定を実施し、design フェーズで `docs/hardware/hw-requirement-spec.md` のCh3-6を完成させ、SW Spec Ch3 にAdapter層設計を追加する。testing フェーズにHW-SW結合テストを追加する
-7. AI/LLM連携 → 該当する場合はCLAUDE.mdに追記し、planning フェーズのインタビューにAI要求（能力・コスト・レイテンシ）を含める。dependency-selection フェーズで外部依存の評価・選定を実施し、design フェーズで `docs/ai/ai-requirement-spec.md` のCh3-6を完成させ、SW Spec Ch3 にAI Adapter層設計を追加する
+6. HW連携 → 該当する場合はCLAUDE.mdに追記し、planning フェーズのインタビューにHW要求を含める。dependency-selection フェーズで外部依存の評価・選定を実施し、design フェーズで `docs/hardware/hw-requirement-spec.md` のCh3-6を完成させ、SW Spec Ch5 にAdapter層設計を追加する。testing フェーズにHW-SW結合テストを追加する
+7. AI/LLM連携 → 該当する場合はCLAUDE.mdに追記し、planning フェーズのインタビューにAI要求（能力・コスト・レイテンシ）を含める。dependency-selection フェーズで外部依存の評価・選定を実施し、design フェーズで `docs/ai/ai-requirement-spec.md` のCh3-6を完成させ、SW Spec Ch5 にAI Adapter層設計を追加する
 8. フレームワーク要求定義 → 該当する場合はCLAUDE.mdに追記し、dependency-selection フェーズで外部依存の評価・選定を実施し、design フェーズで `docs/framework/framework-requirement-spec.md` のCh3-6を完成させる。標準I/Fのフレームワークは `project-records/decisions/` に選定理由を記録するのみで十分
 9. HW生産工程管理 → HW連携が有効かつ量産を行う場合に追加。サプライチェーン管理・受入検査をWBSに含める
 10. 製品i18n/l10n → 該当する場合は仕様書 Ch2 のNFRにi18n要求を追加し、design フェーズでメッセージカタログ設計を含める
@@ -963,13 +963,13 @@ claude "インタビュー結果に基づき、外部依存の評価・選定を
 
 仕様書承認後に外部依存の変更が必要になった場合（モデルの廃止、HWの製造中止、ライセンス変更等）、change-managerエージェント経由でCRを発行し、本フェーズに戻って再選定を実施する。impact_level=highとしてユーザー承認を必須とする。
 
-### 4.4 design フェーズ: 設計 — 仕様書 Ch3-6 詳細化・セキュリティ・WBS
+### 4.4 design フェーズ: 設計 — 仕様書 Ch5-7 詳細化・セキュリティ・WBS
 
-仕様書 Ch1-2 が承認されたら、設計フェーズを自動開始する。
+仕様書 Ch1-4 が承認されたら、設計フェーズを自動開始する。
 
-**重要サブフェーズ: レイヤー仕訳（Ch3作成の前提作業）**
+**重要サブフェーズ: レイヤー仕訳（Ch5作成の前提作業）**
 
-Ch3 Architecture を詳細化する前に、planning フェーズのインタビュー結果（特に「ドメイン境界識別」）を入力として、プロジェクトの全コンポーネントをレイヤーに明示的に分類する。**この作業が満たすべき要求は 2 つであり、層の数はそのいずれでもない。** (1) 依存の向きが一方向であること。(2) その向かう先が、プロジェクト固有で最も変わりにくいもの（中心）であること。**層の数は設計判断であり、4 は既定の語彙であって要求ではない。** 下記の 4 層（Entity / Use Case / Adapter / Framework）を既定として用い、これで表せない場合は採用した層の定義と依存の向きを Ch3.1 に記述する。この仕訳結果が Ch3 のコンポーネント図・依存関係図の基礎となる。
+Ch5 Design を詳細化する前に、planning フェーズのインタビュー結果（特に「ドメイン境界識別」）を入力として、プロジェクトの全コンポーネントをレイヤーに明示的に分類する。**この作業が満たすべき要求は 2 つであり、層の数はそのいずれでもない。** (1) 依存の向きが一方向であること。(2) その向かう先が、プロジェクト固有で最も変わりにくいもの（中心）であること。**層の数は設計判断であり、4 は既定の語彙であって要求ではない。** 下記の 4 層（Entity / Use Case / Adapter / Framework）を既定として用い、これで表せない場合は採用した層の定義と依存の向きを Ch5.1 に記述する。この仕訳結果が Ch5.2 のコンポーネント図・依存関係図の基礎となる。
 
 仕訳の判断基準:
 - **Entity（ドメイン）**: このプロジェクト固有のコアロジック・ビジネスルール。外部に依存しない
@@ -980,19 +980,19 @@ Ch3 Architecture を詳細化する前に、planning フェーズのインタビ
 注意: 同じ概念（例: ベクトル制御理論）がプロジェクトによって Entity にも Framework にもなりうる。「このプロジェクトの目的にとって、この概念は本質か手段か？」を判断基準とする。
 
 ```bash
-claude "仕様書 Ch1-2 が承認されました。以下を並列で実行してください:
-1. docs/spec/ の仕様書 Ch3 (Architecture) を詳細化する（レイヤー仕訳を先行して実施し、コンポーネントの4層分類を Ch3 冒頭に明記すること）
-2. docs/spec/ の仕様書 Ch4 (Specification) を Gherkin で詳細化する
-3. docs/spec/ の仕様書 Ch5 (Test Strategy) を定義する
-4. docs/spec/ の仕様書 Ch6 (Design Principles Compliance) を設定する
+claude "仕様書 Ch1-4 が承認されました。以下を並列で実行してください:
+1. docs/spec/ の仕様書 Ch5 (Design) を詳細化する（レイヤー仕訳を先行して実施し、コンポーネントの4層分類を Ch5.1 に明記すること）
+2. docs/spec/ の仕様書 Ch6 (Software Specification) を EARS で詳細化する（各 SWS の Parent に FR または NFR を張る）
+3. docs/spec/ の仕様書 Ch7 (Test Strategy) を定義する
+4. 設計原則の準拠確認は review-standards.md「設計原則の索引」が持つ（仕様書の章としては持たない）
 5. docs/api/openapi.yaml にOpenAPI 3.0仕様を生成する
 6. security-reviewer を起動し、`docs/security/threat-model.md`（STRIDE による脅威モデリング）と `docs/security/security-architecture.md` を作成させる。**セキュリティ要求が仕様書 Ch2 に未記載であっても実施する**（未記載であること自体が Critical 指摘となる）
 7. docs/observability/observability-design.md に可観測性設計を作成する
 8. project-management/progress/wbs.md にWBSとガントチャートを作成する
 9. risk-managerでリスク台帳を作成する
 10. [HW連携が有効な場合] docs/hardware/hw-requirement-spec.md を作成し、SW Spec Ch3 にHW Adapter層設計を含める
-11. [AI/LLM連携が有効な場合] docs/ai/ai-requirement-spec.md を作成し、SW Spec Ch3 にAI Adapter層設計を含める。プロンプトテンプレート・入出力スキーマ・コスト制約を定義する
-12. [フレームワーク要求定義が有効な場合] docs/framework/framework-requirement-spec.md を作成し、SW Spec Ch3 にAdapter層設計を含める
+11. [AI/LLM連携が有効な場合] docs/ai/ai-requirement-spec.md を作成し、SW Spec Ch5 にAI Adapter層設計を含める。プロンプトテンプレート・入出力スキーマ・コスト制約を定義する
+12. [フレームワーク要求定義が有効な場合] docs/framework/framework-requirement-spec.md を作成し、SW Spec Ch5 にAdapter層設計を含める
 13. [機能安全が有効な場合] 以下を順次実施する（詳細は defect-taxonomy.md §7 参照）:
     a. HARA を実施し、hazard 一覧・safety goal・ASIL/SIL 割当を project-records/safety/hara-*.md に記録する（Ch3 詳細化の**前**に実施）
     b. safety requirement を spec-foundation Ch2 の NFR に追加する
@@ -1122,7 +1122,7 @@ feature/dashboard-module ブランチで作業し、完了後 develop へのPR�
 claude "すべてのモジュール実装が完了しました。以下を実行してください:
 1. 結合テストを作成・実行する
 2. システムテスト（APIレベル、E2Eレベル）を可能な範囲で作成・実行する
-3. 性能テスト: 仕様書 Ch2 のNFR数値目標（レスポンスタイム・同時接続数等）に基づきk6シナリオを実行する
+3. 性能テスト: 仕様書 Ch4.2 のNFR数値目標（レスポンスタイム・同時接続数等）に基づきk6シナリオを実行する
 3a. [HW連携が有効な場合] HW-SW結合テスト: hw-requirement-spec.md の Ch3 I/F定義に基づき実機テストを実施する。テストツールの設定・調達状況を確認する
 3b. [AI/LLM連携が有効な場合] AI結合テスト: ai-requirement-spec.md の Ch3 I/F定義に基づきAdapter層の結合テストを実施する。モデルの応答精度・レイテンシ・コストが要求を満たすか検証する
 3c. [フレームワーク要求定義が有効な場合] フレームワーク結合テスト: framework-requirement-spec.md の Ch3 I/F定義に基づきAdapter層の結合テストを実施する
@@ -1144,7 +1144,7 @@ import http from "k6/http";
 import { check, sleep } from "k6";
 
 export const options = {
-  // 仕様書 Ch2 NFR-002: 同時接続100ユーザーでレスポンス200ms以内
+  // 仕様書 Ch4.2 NFR-002: 同時接続100ユーザーでレスポンス200ms以内
   stages: [
     { duration: "30s", target: 50 },
     { duration: "1m", target: 100 },
@@ -1279,8 +1279,8 @@ PM Agentが異常を検知した場合、リードエージェントは自動的
 ```bash
 claude "テストが完了しました。review-agentで全成果物の最終レビュー（R1〜R7全観点）を実施してください。
 FAILした場合は、指摘の観点に応じて該当フェーズへ戻り修正してください:
-- R1指摘 → 仕様書 Ch1-2 修正（planning フェーズ相当）
-- R2/R4/R5/R7設計指摘 → 仕様書 Ch3-4 修正（design フェーズ相当）
+- R1指摘 → 仕様書 Ch1-4 修正（planning フェーズ相当）
+- R2/R4/R5/R7設計指摘 → 仕様書 Ch5-6 修正（design フェーズ相当）
 - R3/R5/R7実装指摘 → コード修正（implementation フェーズ相当）
 - R6テスト指摘 → テスト修正（testing フェーズ相当）
 すべてPASSしたらデプロイメントを開始してください。"
@@ -1317,7 +1317,7 @@ claude "デプロイ後の可観測性を確認してください:
 ```bash
 claude "以下の最終工程を実行してください:
 1. license-checkerで最終ライセンス確認を実施する
-2. project-management/progress/final-report.md に以下を含む最終報告書を作成する:
+2. ルート直下の final-report.md に以下を含む最終報告書を作成する:
    - プロジェクト概要・実装した機能一覧
    - テスト結果サマリー（カバレッジ、合格率）
    - 性能テスト結果（NFR達成状況）
@@ -1650,7 +1650,7 @@ setup フェーズでユーザーと合意する。全エージェントおよ�
 | 単体テスト合格率 | [例: 95%] 以上 | 全ビジネスロジック |
 | 結合テスト合格率 | [例: 100%] | APIエンドポイント |
 | コードカバレッジ | [例: 80%] 以上 | カバレッジツール |
-| E2Eテスト | 主要ユーザーフロー PASS | Ch4 Gherkin シナリオに対応 |
+| E2Eテスト | 主要ユーザーフロー PASS | Ch8 ユースケーステストに対応 |
 | 性能テスト | NFR数値目標をすべて達成 | [例: k6] |
 | セキュリティ脆弱性 | Critical: 0, High: 0 | SAST/SCA スキャン結果 |
 | レビュー指摘 | Critical: 0, High: 0 | review-agent の出力 |
@@ -1664,7 +1664,7 @@ setup フェーズでユーザーと合意する。全エージェントおよ�
 ## APIドキュメント
 
 - OpenAPI 3.0形式で docs/api/ に出力する
-- architect エージェントが仕様書 Ch3 詳細化と同時に生成する
+- architect エージェントが仕様書 Ch5-6 詳細化と同時に生成する
 - 実装完了後 test-engineer がエンドポイントとの整合性を検証する
 
 ## 可観測性要求
@@ -1679,8 +1679,8 @@ setup フェーズでユーザーと合意する。全エージェントおよ�
 Agent Teamsで作業する場合、以下のロール定義を使用する:
 
 - **Project Manager Agent（project-manager）**: プロジェクト全体のオーケストレーション。pipeline-state.md / executive-dashboard.md / final-report.md / decision記録を管理する。フェーズ遷移と品質ゲートを制御する。`.claude/agents/project-manager.md` で定義
-- **SRS Agent（srs-writer）**: user-order.md（3問形式）+ process-rules/spec-template.md を基に、仕様書を docs/spec/ に作成（Ch1-2 Foundation・Requirements、形式はsetupフェーズで選定）。ユーザーコンセプトを構造化する
-- **Architect Agent（architect）**: docs/spec/ の ANMS 仕様書 Ch3-6 を詳細化（Architecture・Specification・Test Strategy・Design Principles）。docs/api/ にOpenAPI仕様を生成する
+- **SRS Agent（srs-writer）**: user-order.md（3問形式）+ process-rules/spec-template.md を基に、仕様書を docs/spec/ に作成（Ch1-4 Foundation・System Overview・Use Cases・Requirements、形式はsetupフェーズで選定）。ユーザーコンセプトを構造化する
+- **Architect Agent（architect）**: docs/spec/ の ANMS 仕様書 Ch5-7 を詳細化（Design・Software Specification・Test Strategy）。docs/api/ にOpenAPI仕様を生成する
 - **Security Agent（security-reviewer）**: docs/security/ にセキュリティ設計を作成。実装コードの脆弱性レビューを行う。スキャン結果はproject-records/security/にsecurity-scan-reportとして記録する
 - **Implementer Agent（implementer）**: src/ 配下にコードを実装する。設計文書に従い、Clean Architecture・DIPを遵守する。単体テストも作成する
 - **Test Agent（test-engineer）**: tests/ 配下にテストを作成・実行する。カバレッジレポートを生成する
@@ -1997,7 +1997,7 @@ flowchart TD
 
 | 判定 | 戻し先 |
 |------|--------|
-| 仕様書 Ch3-4 を修正しなければ再発する | design |
+| 仕様書 Ch5-6 を修正しなければ再発する | design |
 | コードのみで解消する | implementation |
 | 両方必要 | design を優先し、実装修正を後続タスクとして紐付ける |
 
@@ -2056,7 +2056,7 @@ review-agentが適用する7つの観点。**詳細なチェックリストは `
 | planning | 仕様書承認 | ユーザー承認済み | ユーザー確認記録 |
 | dependency-selection | 候補評価完了率 | 全外部依存に対し候補一覧・評価完了 | requirement-spec |
 | dependency-selection | 選定承認率 | ユーザー承認済み | decision 記録 |
-| design | Ch3-6 完成率 | 4章すべて完成 | 仕様書 Ch3-6 |
+| design | Ch5-7 完成率 | 3章すべて完成 | 仕様書 Ch5-7 |
 | design | R2/R4/R5/R7 PASS率 | CLAUDE.md 品質目標に準拠 | review-agent レポート |
 | design | WBS 作成完了 | クリティカルパス特定済み | wbs.md |
 | design | リスク台帳作成完了 | 全リスク評価済み | risk-register.md |
@@ -2082,7 +2082,7 @@ review-agentが適用する7つの観点。**詳細なチェックリストは `
 
 | ゲート ID | 遷移 | 条件 | 判定に用いる成果物 |
 |-----------|------|------|-------------------|
-| GATE-PLANNING | planning → dependency-selection | R1 PASS、Ch1-2 のユーザー承認 | review, tech-decision |
+| GATE-PLANNING | planning → dependency-selection | R1 PASS、Ch1-4 のユーザー承認 | review, tech-decision |
 | GATE-INTERVIEW | planning → dependency-selection | interview-record が存在し、未解決の質問が残っていない | interview-record |
 | GATE-DEPENDENCY | dependency-selection → design | 外部依存の選定にユーザー承認がある、Adapter 層が DIP に適合 | decision, tech-decision |
 | GATE-DESIGN | design → implementation | R2/R4/R5/R7 PASS、threat-model が存在し `unmitigated_critical_count` = 0、deployment-design が存在（§3.1.1 で免除した場合は免除の記録をもって充足とする） | review, threat-model, tech-decision |

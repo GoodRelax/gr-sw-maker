@@ -27,12 +27,11 @@ docs/spec/ の仕様書 Ch5-7 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 
 ### End Conditions
 
-- [ ] 仕様書 Ch3（Architecture）が完成している
-- [ ] 仕様書 Ch4（Specification）が Gherkin で詳細化されている
-- [ ] 仕様書 Ch5（Test Strategy）が定義されている
-- [ ] 仕様書 Ch6（Design Principles Compliance）が設定されている
-- [ ] docs/api/openapi.yaml が生成されている
-- [ ] docs/observability/observability-design.md が作成されている
+- [ ] 仕様書 Ch5（Design）が完成している
+- [ ] 仕様書 Ch6（Software Specification）に SWS ノードが書かれ、各 SWS が Parent に FR または NFR を持つ
+- [ ] 仕様書 Ch7（Test Strategy）が定義されている
+- [ ] docs/api/openapi.yaml が生成されている（API を持つ場合。持たないときは免除を CLAUDE.md「開発方式」に記録する）
+- [ ] docs/observability/observability-design.md が作成されている（開発方式が `標準` / `厳格` の場合。`簡易` では免除し、免除を CLAUDE.md「開発方式」に記録する）
 - [ ] review-agent の R2/R4/R5/R7 レビューに PASS している
 
 ## Ownership
@@ -72,23 +71,22 @@ docs/spec/ の仕様書 Ch5-7 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
 2. 仕様書 Ch1-4 と interview-record.md を読み込む
 3. レイヤー仕訳を実施する（Entity / Use Case / Adapter / Framework の4層分類）
-4. Ch3 Architecture を詳細化する。**3.2-3.5 に現れる名前は R2.1 の品詞に従う**（Entity は名詞、Use Case は動詞句、Adapter は役割+方式、**イベントは過去形**、単位が固定の量は名前に単位）
+4. Ch5 Design を詳細化する。**5.2-5.5 に現れる名前は R2.1 の品詞に従う**（Entity は名詞、Use Case は動詞句、Adapter は役割+方式、**イベントは過去形**、単位が固定の量は名前に単位）
    - 3.1 Architecture Concept: アーキテクチャ方式と凡例の定義
    - 3.2 Components: コンポーネント図（レイヤー色分け必須）
    - 3.3 File Structure: ディレクトリ構成。**各コンポーネントの公開面を宣言する**（R2.19）
    - 3.4 Domain Model: クラス図（レイヤー色分け必須）、ER図、状態遷移図
    - 3.5 Behavior: シーケンス図、アクティビティ図
    - 3.6 Decisions: ADR（Architecture Decision Records）。**キャッシュを用いる場合はキャッシュ方針の ADR を含める**（R2.20）
-5. Ch4 Specification を Gherkin で詳細化する（各シナリオに `traces: FR-xxx` を付記）
-6. Ch5 Test Strategy を定義する（テストマトリクス）
-7. Ch6 Design Principles Compliance を設定する
-8. **最小構成と比較する。** 要求を満たす最小の構成を 1 つ書き出し、採用案がそれに対して増やした要素と、各々を増やした理由を Ch3.6 の ADR-000「最小構成との比較」に記録する（R2.18。**比較を書けない増分は採用しない**）
-9. docs/api/openapi.yaml に OpenAPI 3.0 仕様を生成する
-10. docs/observability/observability-design.md に可観測性設計を作成する
-11. 条件付きプロセスが有効な場合、該当する requirement-spec を作成する
-12. 用語チェック要請を完了報告に含めて返す（spec-architecture, observability-design, 各 requirement-spec）
-13. 要求IDから設計要素へのトレーサビリティを確保する
-14. **改訂の場合、従属記述の追随を確認する。** 文書管理規則 §6.1 の 4 種類について確認し、結果を change_log に記録する（**本試行では design だけで 7 件の未追随が発生した**）
+5. Ch6 Software Specification を詳細化する（各 SWS の `STATEMENT` を EARS 1 文で書き、`Relations` の `Parent` に `FR-xxx` または `NFR-xxx`、`Role` に `Satisfies` を書く）
+6. Ch7 Test Strategy を定義する（テストマトリクス）
+7. **最小構成と比較する。** 要求を満たす最小の構成を 1 つ書き出し、採用案がそれに対して増やした要素と、各々を増やした理由を Ch5.6 の ADR-000「最小構成との比較」に記録する（R2.18。**比較を書けない増分は採用しない**）
+8. docs/api/openapi.yaml に OpenAPI 3.0 仕様を生成する（API を持つ場合）
+9. docs/observability/observability-design.md に可観測性設計を作成する（開発方式が `標準` / `厳格` の場合）
+10. 条件付きプロセスが有効な場合、該当する requirement-spec を作成する
+11. 用語チェック要請を完了報告に含めて返す（spec-architecture, observability-design, 各 requirement-spec）
+12. 要求IDから設計要素へのトレーサビリティを確保する
+13. **改訂の場合、従属記述の追随を確認する。** 文書管理規則 §6.1 の 4 種類について確認し、結果を change_log に記録する（**本試行では design だけで 7 件の未追随が発生した**）
 
 ## Rules
 
@@ -111,7 +109,7 @@ docs/spec/ の仕様書 Ch5-7 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 
 - コンポーネント図・クラス図はアーキテクチャレイヤーに基づく色分けを必須とする
 - デフォルト凡例: Clean Architecture 4層（Entity=#FF8C00, UseCase=#FFD700, Adapter=#90EE90, Framework=#87CEEB）
-- 他のアーキテクチャを採用する場合は 3.1 に独自凡例を定義する
+- 他のアーキテクチャを採用する場合は 5.1 に独自凡例を定義する
 
 ### OpenAPI 仕様の出力規則
 
@@ -128,7 +126,7 @@ docs/spec/ の仕様書 Ch5-7 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 
 ### ID 付与規則
 
-- すべての設計要素に ID を付与し、Ch2 の要求 ID にトレース可能にする
+- すべての設計要素に ID を付与し、Ch4 の要求 ID にトレース可能にする
 
 ## Exception
 
@@ -138,4 +136,4 @@ docs/spec/ の仕様書 Ch5-7 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 | Ch1-4 の要求が曖昧で設計に落とせない | 設計を進めない。project-manager に Ch1-4 の要求精緻化を要請 |
 | 技術スタックの選定が未確定 | 推測で選ばない。project-manager にユーザー判断を求める |
 | 条件付きプロセスの外部依存が未選定 | 該当する requirement-spec の作成を保留し、project-manager に dependency-selection の実施を要請 |
-| OpenAPI の設計が Ch2 の要求と矛盾する | 矛盾を明示して project-manager に報告。Ch2 修正か設計変更かの判断を求める |
+| OpenAPI の設計が Ch4 の要求と矛盾する | 矛盾を明示して project-manager に報告。Ch4 修正か設計変更かの判断を求める |

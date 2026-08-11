@@ -426,7 +426,7 @@ srs-writerがCh1-2を作成、architectがCh3-6を詳細化。
 | 情報 | 候補 | 判断 | 理由 |
 |------|------|------|------|
 | 仕様形式（ANMS/ANPS） | Form? Detail? | **Form Block** (`spec-foundation:spec_format`) | エージェントが読取方法を判断 |
-| 完成済みチャプター（Ch1-2内） | Form? Detail? | **Form Block** (`spec-foundation:completed_chapters`) | architectが引継ぎ可能か判断。document_status とは別概念（文書全体 vs チャプター単位） |
+| 完成済みチャプター（Ch1-4内） | Form? Detail? | **Form Block** (`spec-foundation:completed_chapters`) | architectが引継ぎ可能か判断。document_status とは別概念（文書全体 vs チャプター単位） |
 | 完成済みチャプター | Form? Detail? | **Form Block** (`spec-architecture:completed_chapters`) | architectが作業開始位置を判断 |
 | 機能要求数 / 非機能要求数 | Form? Detail? | **Form Block** (`spec-foundation:fr_count`, `spec-foundation:nfr_count`) | traceabilityカバレッジ算出の母数 |
 | Ch1-6の本文全体 | Form? Detail? | **Detail Block** | ANMS/ANPSフォーマットに従う仕様本体 |
@@ -737,8 +737,10 @@ change_log は**本文末尾の表**として書く。frontmatter には置か�
 | traceability | `traceability:` | 要求-テスト間トレース | `project-records/traceability/` | Yes | Standard |
 | license-report | `license-report:` | ライセンス互換性レポート | `project-records/licenses/` | Yes | Standard |
 | performance-report | `performance-report:` | 性能テスト結果レポート | `project-records/performance/` | No | Standard |
-| spec-foundation | `spec-foundation:` | 仕様書 Ch1-2（Foundation・Requirements） | `docs/spec/` | Yes | Core |
-| spec-architecture | `spec-architecture:` | 仕様書 Ch3-6（Architecture・Specification・Test Strategy・Design Principles） | `docs/spec/` | Yes | Core |
+| spec | `spec:` | 仕様書 Ch1-10（ANMS の単一ファイル。**章ごとにオーナーが変わる唯一の file_type**） | `docs/spec/` | Yes | Core |
+| spec-test | `spec-test:` | 仕様書 Ch8-10（Use Case Tests・Software Specification Tests・Non-Functional Tests） | `docs/spec/` | Yes | Core |
+| spec-foundation | `spec-foundation:` | 仕様書 Ch1-4（Foundation・System Overview・Use Cases・Requirements） | `docs/spec/` | Yes | Core |
+| spec-architecture | `spec-architecture:` | 仕様書 Ch5-7（Design・Software Specification・Test Strategy） | `docs/spec/` | Yes | Core |
 | threat-model | `threat-model:` | 脅威モデル | `docs/security/` | Yes | Standard |
 | security-architecture | `security-architecture:` | セキュリティ設計 | `docs/security/` | Yes | Standard |
 | observability-design | `observability-design:` | 可観測性設計 | `docs/observability/` | Yes | Standard |
@@ -776,7 +778,7 @@ external-dependency-spec（抽象テンプレート）
 |:--:|------|------|
 | 1 | 目的 | この外部依存が何を実現するか |
 | 2 | 要求 | SWが求める能力・性能 |
-| 3 | I/F定義 | SW側のAdapter層の境界。ここがSW Spec Ch3と対応する |
+| 3 | I/F定義 | SW側のAdapter層の境界。ここがSW Spec Ch5と対応する |
 | 4 | 制約 | 外部依存がSWに課す制限 |
 | 5 | 差し替え戦略 | 代替手段と移行影響。DIPによる抽象化の根拠 |
 | 6 | その他 | 調達・コスト・リビジョン管理等 |
@@ -880,7 +882,7 @@ external-dependency-spec（抽象テンプレート）
 | `license-report:` | license-report Form Block | `license-report.compatible_count: 12` |
 | `performance-report:` | performance-report Form Block | `performance-report.nfr_pass_rate: 100%` |
 | `spec-foundation:` | spec-foundation Form Block | `spec-foundation.fr_count: 15` |
-| `spec-architecture:` | spec-architecture Form Block | `spec-architecture.completed_chapters: 3,4` |
+| `spec-architecture:` | spec-architecture Form Block | `spec-architecture.completed_chapters: 5,6` |
 | `threat-model:` | threat-model Form Block | `threat-model.threat_count: 8` |
 | `security-architecture:` | security-architecture Form Block | `security-architecture.owasp_coverage: 10/10` |
 | `observability-design:` | observability-design Form Block | `observability-design.log_format: structured-json` |
@@ -1252,7 +1254,7 @@ WBSテーブル（タスクID、タスク名、担当エージェント、依存
 | spec-foundation:spec_format | enum | Yes | 仕様書形式 | ANMS / ANPS（ANGS は研究段階であり値域に含めない） |
 | spec-foundation:fr_count | int | Yes | 機能要求の総数 | — |
 | spec-foundation:nfr_count | int | Yes | 非機能要求の総数 | — |
-| spec-foundation:completed_chapters | string | Yes | 完了済みチャプター（カンマ区切り） | 1 / 2 |
+| spec-foundation:completed_chapters | string | Yes | 完了済みチャプター（カンマ区切り） | 1 / 2 / 3 / 4 |
 | spec-foundation:approved_chapters | string | No | **ユーザー承認済み**チャプター（カンマ区切り） | 1 / 2。未承認なら省略。`completed_chapters` は書き手の完了、本フィールドは承認であり別概念 |
 
 ### Detail Block Guidance
@@ -1267,7 +1269,7 @@ WBSテーブル（タスクID、タスク名、担当エージェント、依存
 
 | フィールド | 型 | 必須 | 説明 | 値域・制約 |
 |-----------|------|------|------|-----------|
-| spec-architecture:completed_chapters | string | Yes | 完了済みチャプター（カンマ区切り） | 3 / 4 / 5 / 6 |
+| spec-architecture:completed_chapters | string | Yes | 完了済みチャプター（カンマ区切り） | 5 / 6 / 7 |
 | spec-architecture:component_count | int | Yes | アーキテクチャコンポーネント数 | — |
 | spec-architecture:api_endpoint_count | int | No | OpenAPI定義済みエンドポイント数 | — |
 | spec-architecture:migration_count | int | No | データモデルマイグレーション数 | — |

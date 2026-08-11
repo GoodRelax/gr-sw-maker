@@ -694,7 +694,7 @@ flowchart TD
 
 **ゲートは方式によらず免除しない。免除するのは作業であってゲートではない。**
 
-> ゲートが要求する成果物を方式が免除する組み合わせがある（`GATE-DELIVERY` の runbook、`GATE-IMPL` の SAST、`GATE-DESIGN` の threat-model）。プロセス規則 §9.4.1 は deployment-design にしか「免除の記録をもって充足とする」を持たない。**全ゲートに同じ逃げ道を付けるまで、簡易は納品ゲートを通過できない。**
+> ゲートが要求する成果物を方式が免除する組み合わせがある（`GATE-DELIVERY` の runbook、`GATE-IMPL` の SAST、`GATE-DESIGN` の threat-model）。**逃げ道は既にある。** プロセス規則 §3.1.1 が「免除した成果物は、免除の記録をもって当該ゲートを充足したものとみなす」を全ゲートに与え、§9.4.1 のゲート条件表が `GATE-IMPL` の SAST・`GATE-TEST` の性能テスト・`GATE-DELIVERY` の runbook に同じ但し書きを個別に持つ。**簡易は納品ゲートを通過できる。規約違反になるのは記録なき免除だけである。**
 
 ---
 
