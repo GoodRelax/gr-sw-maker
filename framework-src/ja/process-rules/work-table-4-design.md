@@ -32,7 +32,7 @@
 | `4l`<br />設計 | 危害を洗い出し、<br />安全分析（HARA / FMEA / FTA）を行う | main-agent | security-reviewer | opus | 対象: 全文<br />`4g` の threat-model | safety | 分析結果の場所 | 機能安全フラグ。<br />Critical では必須である。 |
 | `4m`<br />設計 | 設計を R2・R4・R5・R7 に照らし、<br />指摘を挙げる | main-agent | review-agent | opus | 対象: 設計<br />根拠: 要求 | review | 指摘の場所と件数<br />Critical / High の有無 | **[簡易・標準]** 1 エージェントが 4 観点をまとめて見る。<br />指摘への回答は分類を付けて 1 通で送る<br />（`07` §4.3）。 |
 | `4m`<br />設計 | 設計を担当する 1 観点に照らし、<br />指摘を挙げる | main-agent | `review-agent` × 4<br />R2 / R4 / R5 / R7 を 1 エージェントずつ | opus | 対象: 設計<br />根拠: 要求 | review | 各自の指摘の場所と件数 | **[厳格]** 1 観点 = 1 エージェント。R をまたがない。<br />**再委託しない。統合は `4n` が行う**<br />（`07` §4.5.2）。<br />4 エージェントとも同じ根拠を読む。 |
-| `4n`<br />設計 | 指摘を統合し、<br />合格条件に照らして GATE-DESIGN の可否を出す | main-agent | technical-authority | opus | `4m` の review<br />`4b` の decision | tech-decision | 可否と理由<br />統合済みの指摘 | **厳格では観点別の重複をここで除く**<br />（`07` §4.5.2）。<br />統合に新しいエージェントも新しい階層も要らない。 |
+| `4n`<br />設計 | 指摘を統合し、<br />合格条件に照らして GATE-DESIGN の可否を出す | main-agent | technical-authority | opus | `4m` の review<br />`4b` の確認結果 | tech-decision | 可否と理由<br />統合済みの指摘 | **厳格では観点別の重複をここで除く**<br />（`07` §4.5.2）。<br />統合に新しいエージェントも新しい階層も要らない。 |
 
 **旧 `3d`（設計原則 準拠確認の章を設定する）は削除した。** Chapter 8 の削除に伴う。**読み替えは `03-work-order.md` §6.4 が持つ。**
 

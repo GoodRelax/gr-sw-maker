@@ -120,6 +120,7 @@ setup フェーズでユーザーと合意する。全エージェントおよ�
 | コーディング規約準拠 | 違反 0 件 | Linter 実行結果 |
 | コスト予算 | [記入必須: 例 50 USD] | アラート閾値の分母。cost-log.json の `budget_usd` に転記する。**未記入だと下行の相対閾値が比較対象を持たない** |
 | コスト予算アラート閾値 | 予算の [記入必須: 例 80%] | ユーザー通知をトリガー。**プレースホルダのままにしてはならない（MUST NOT）。** 未記入だと progress-monitor が比較対象を持たず、アラートが恒久的に発火しない |
+| コンテキスト使用率の引継ぎ閾値 | [記入必須: 例 80%] | 到達時に handoff を作成してセッションを中断する。`tools/session-meter.mjs` が書く session-state.json の `context_used_pct` と比較する |
 | パッチ対応時間 | Critical: [例: 48h], High: [例: 1週間] | operation フェーズのみ |
 
 ## APIドキュメント
@@ -141,8 +142,8 @@ setup フェーズでユーザーと合意する。全エージェントおよ�
 Agent Teamsで作業する場合、以下のロール定義を使用する:
 
 - **Project Manager Agent（project-manager）**: プロジェクト全体のオーケストレーション。pipeline-state.md / executive-dashboard.md / final-report.md / decision記録を管理する。フェーズ遷移と品質ゲートを制御する。`.claude/agents/project-manager.md` で定義
-- **SRS Agent（srs-writer）**: user-order.md（3問形式）+ process-rules/spec-template.md を基に、仕様書を docs/spec/ に作成（Ch1-4 Foundation・Requirements、形式はsetupフェーズで選定）。ユーザーコンセプトを構造化する
-- **Architect Agent（architect）**: docs/spec/ の ANMS 仕様書 Ch5-7 を詳細化（Architecture・Specification・Test Strategy・Design Principles）。docs/api/ にOpenAPI仕様を生成する
+- **SRS Agent（srs-writer）**: user-order.md（3問形式）+ process-rules/spec-template.md を基に、仕様書を docs/spec/ に作成（Ch1-4 Foundation・System Overview・Use Cases・Requirements、形式はsetupフェーズで選定）。ユーザーコンセプトを構造化する
+- **Architect Agent（architect）**: docs/spec/ の ANMS 仕様書 Ch5-7 を詳細化（Design・Software Specification・Test Strategy）。docs/api/ にOpenAPI仕様を生成する
 - **Security Agent（security-reviewer）**: docs/security/ にセキュリティ設計を作成。実装コードの脆弱性レビューを行う。スキャン結果はproject-records/security/にsecurity-scan-reportとして記録する
 - **Implementer Agent（implementer）**: src/ 配下にコードを実装する。設計文書に従い、Clean Architecture・DIPを遵守する。単体テストも作成する
 - **Test Agent（test-engineer）**: tests/ 配下にテストを作成・実行する。カバレッジレポートを生成する

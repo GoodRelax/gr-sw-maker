@@ -181,9 +181,13 @@ node setup.js
 | **`srs-writer` に Ch2・Ch3 を書く手順が無い** | Procedure が `Chapter 1` と `Chapter 2 (Requirements)` の 2 つだけ。**10 章版の担当は Ch1-4 なのに、System Overview と Use Cases の手順が存在しなかった** | **済**（4 章ぶんに分割） |
 | **`test-designer` / `tester` が規則を全文ロードする** | 24 体中この 2 体だけ引用表を持たず、Phase 6 の全 8 手順の主担当だった | **済**（`context-census` が FAIL → PASS。24 体・削減率 93.9%） |
 | **システムテストの合格基準を書く場所が無い** | Ch7 Test Strategy の表に `System` 行が無い。文法は `System` を許している | **済** |
-| **`spec` file_type が未定義** | 11 手順が定義の無い file_type へ書く | **表は追加済。§9 の Form Block 節は未** |
+| **`spec` file_type が未定義** | 11 手順が定義の無い file_type へ書く | **済**（§7 の表・§9.39/§9.40 の Form Block 節・§11 のオーナー表） |
 | **`tech-decisions/` `governance/` が無い** | 全ゲート判定の記録先。`project-records/` が 16 で、計画の 18 と合っていなかった | **済** |
-| **受入テストの実行手順が無い** | GATE-DELIVERY が「受入テスト合格」を要求するが、`7j` は手順書を作るだけで実行も記録も判定者も無い | **未。§8.3 参照** |
+| **受入テストの実行手順が無い** | GATE-DELIVERY が「受入テスト合格」を要求するが、`7j` は手順書を作るだけで実行も記録も判定者も無い | **済**（`7k` を新設し `7k`→`7l`、`7l`→`7m` へ繰り下げ。手順数 96 → 97） |
+| **`4n` の入力が存在しない成果物を指す** | `4b` は出力が `—` で decision を生まない。technical-authority が差し戻す | **済**（`4b` の確認結果へ） |
+| **GATE-DEPENDENCY の判定経路が無い** | Phase 3 をスキップすると判定する `3g` が走らないが、§9.4.1 に免除条項が無かった | **済** |
+| **`1d` が示す欄が CLAUDE.md に無い** | 引継ぎ閾値。`Fb` が比較する値を持たない | **済** |
+| **名簿に test-designer / tester の所有が無い** | Phase 6 の主担当 2 体が非所有の file_type へ書き続ける | **済**（利用者の決定に従い §2 に節を新設） |
 
 **所有権の決定（利用者判断）:** `spec-test` のオーナーを test-designer に確定し、`traceability` / `test-plan` を test-designer、`defect` / `performance-report` を tester へ移す。名簿 §2 への反映は未着手。
 
@@ -222,9 +226,8 @@ node setup.js
 
 | 件 | 論点 |
 |---|---|
-| **受入テストの実行行を作業表へ新設する（最優先）** | GATE-DELIVERY の「受入テスト合格」を生む手順が無い。**`7j` の後に 2 行（利用者が実行して合否を返す／project-manager が final-report に追記）を挿し、`7k`→`7l`、`7l`→`7m` へ繰り下げる。** 手順数 96 → 97。連動先は **14 箇所**（うち `commands/full-auto-dev.md:20` と `full-auto-dev-process-rules.md:370` は生成物ではないので手で当てる）。`7k` `7l` を引く外部参照は 0 件と実測済みで、繰り下げは安全 |
-| **`spec` / `spec-test` の §9 Form Block 節** | file_type 表には追加したが、Fields と Detail Block Guidance の節が未作成。§11 の「各 file_type には唯一の owner が存在する」に、`spec` は章ごとにオーナーが変わる例外である旨の但し書きが要る |
-| **名簿 §2 に test-designer / tester の節を新設** | 所有権は決まった（`spec-test` は test-designer、`traceability` / `test-plan` も test-designer、`defect` / `performance-report` は tester）。反映が未着手 |
+| **`02-spec-writing-rules.md` の配布（段 5）** | 1510 行を 10 章化してから配る。**配布前に直すべきは 19 件**（Ch8 削除節・章番号 41 行・重複 7 箇所・`01-11-spec.md` → `01-10-spec.md`・未作成の道具への MUST 参照ほか）。`development-mode.md` が「MUST の本文は `02` が持つ」と 12 箇所で引いており、**仕様書のファイル名を決める規則が配布物に無い状態が続いている** |
+| **`07-agent-orchestration-rules.md` の配布（段 6）** | 604 行から保守記録の節（§5.1「本版で変えたこと」・§5.2「節番号の読み替え」）を落とし、**`06` への参照 24 件を本文へ数値ごと取り込む**。`commands/full-auto-dev.md:53` が既に配布名 `process-rules/agent-orchestration-rules.md` で引いており、この 1 本が解決すれば入口の切れたポインタが消える |
 | **`spec-foundation` / `spec-architecture` の切れ目** | 正本 `00-mode-matrix.md` 自身が「旧 6 章構成の切れ目であり、`02` の部境界と切り方が違う」と認めたうえで**名簿側の判断として保留**している。10 章構成に合わせて割り直すかを決める必要がある |
 | **Gherkin の所在** | `review-agent.md:48` が「`Ch4` の全 Gherkin」と書くが、**10 章版テンプレートに Gherkin は 1 件も無い**（旧 6 章版の Ch4 Specification が持っていた）。どの章が持つかを決める |
 | `kotodama-kun` | 道具化の決定と実体が矛盾。名簿はエージェント前提、配布済み作業表は道具前提。モデルも `sonnet` と `haiku` で食い違う |

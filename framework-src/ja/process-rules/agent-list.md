@@ -79,7 +79,7 @@
 | interview-record | project-management/ | 単 | planning |
 | spec-foundation | docs/spec/ | 単 | planning |
 | spec | docs/spec/ | 単 | planning 以降 |
-| spec-test | docs/spec/ | 単 | testing |
+| spec-test | docs/spec/ | 単 | testing（オーナー: test-designer） |
 
 > srs-writer は user-order のバリデーションのみを担当し、user-order 自体は修正しない。初期作成はユーザーが行う。バリデーションで発見された不足はインタビューで解消し、spec-foundation に反映する。
 
@@ -122,10 +122,10 @@
 
 | file_type | ディレクトリ | 単/連 | 主要フェーズ |
 |-----------|------------|:-----:|------------|
-| test-plan | project-management/ | 単 | design |
-| defect | project-records/defects/ | 連 | testing |
-| traceability | project-records/traceability/ | 単 | implementation 以降 |
-| performance-report | project-records/performance/ | 連 | testing |
+| test-plan | project-management/ | 単 | delivery（オーナー: test-designer） |
+| defect | project-records/defects/ | 連 | testing（オーナー: tester） |
+| traceability | project-records/traceability/ | 単 | planning 以降（オーナー: test-designer） |
+| performance-report | project-records/performance/ | 連 | testing（オーナー: tester） |
 
 > test-engineer は上記 file_type に加え、test-progress.json と defect-curve.json（project-management/progress/）を生成する。これらは JSON 時系列データであり file_type（Common Block 管理対象）ではないが、progress-monitor が消費する。
 
@@ -255,6 +255,25 @@
 | tech-decision | project-records/tech-decisions/ | 連 | planning 以降 |
 
 > technical-authority は成果物を作成せず、裁定と記録のみを行う。decision（project-manager 所有）とは管轄が異なる。技術的整合とゲート可否は tech-decision、コスト・スケジュール・リスクを理由とする判断は decision に記録する。
+
+### test-designer
+
+| file_type | 場所 | 何を書くか |
+|---|---|---|
+| `spec-test` | `docs/spec/` | 仕様書 Ch8-10 のケース節（8.1 / 9.1 / 10.1）。**ANMS では `spec` の同じ節を書く** |
+| `traceability` | `project-records/traceability/` | 要求からテストへの対応 |
+| `test-plan` | `project-management/` | 受入基準を利用者が実行できる手順に落としたもの（`7j`） |
+
+> **受入基準を書く側であって、走らせる側ではない。** 結果を書くのは tester である。
+
+### tester
+
+| file_type | 場所 | 何を書くか |
+|---|---|---|
+| `defect` | `project-records/defects/` | 実行して観測した failure から起票する |
+| `performance-report` | `project-records/performance/` | 数値目標との差 |
+
+> **仕様書 Ch8-10 の結果節（8.2 / 9.2 / 10.2）も書く。** ただし `spec` の file_type オーナーは srs-writer であり、tester は節の書き手である（Common Block と Form Block には触れない）。
 
 ---
 

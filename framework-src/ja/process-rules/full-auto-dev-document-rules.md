@@ -1740,6 +1740,47 @@ owner は architect である。`infra/` の実装は implementer が行い、�
 
 ---
 
+## 9.39 spec（名前空間: spec:）
+
+### Fields
+
+| フィールド | 型 | 必須 | 説明 | 値域・制約 |
+|-----------|------|------|------|-----------|
+| spec:spec_format | enum | Yes | 仕様形式 | ANMS のみ。ANPS では spec-foundation / spec-architecture / spec-test に割れる |
+| spec:completed_chapters | string | Yes | 完了済みチャプター（カンマ区切り） | 1 〜 10 |
+| spec:approved_chapters | string | No | **ユーザー承認済み**チャプター（カンマ区切り） | 1 〜 10。未承認なら省略 |
+| spec:fr_count | int | Yes | 機能要求の総数 | — |
+| spec:nfr_count | int | Yes | 非機能要求の総数 | — |
+| spec:sws_count | int | Yes | ソフトウェア仕様の総数 | — |
+| spec:tc_count | int | Yes | テストケースの総数（Ch8 + Ch9 + Ch10） | — |
+
+### Detail Block Guidance
+
+仕様書 Chapter 1〜10 と Appendix の全体を 1 ファイルに記載する。spec-template.md の構成に従う。
+
+**本 file_type だけは章ごとにオーナーが変わる（唯一の例外）。** Ch1-4 を srs-writer、Ch5-7 を architect、Ch8-10 のケース節を test-designer、結果節を tester が書く。**Common Block と Form Block を触れるのは srs-writer だけである**（agent-list §2）。
+
+---
+
+## 9.40 spec-test（名前空間: spec-test:）
+
+### Fields
+
+| フィールド | 型 | 必須 | 説明 | 値域・制約 |
+|-----------|------|------|------|-----------|
+| spec-test:completed_chapters | string | Yes | 完了済みチャプター（カンマ区切り） | 8 / 9 / 10 |
+| spec-test:tc_count | int | Yes | テストケースの総数 | — |
+| spec-test:tr_count | int | Yes | テスト結果の総数 | — |
+| spec-test:pass_rate | number | No | 合格率（%） | 0〜100。未実行なら省略 |
+
+### Detail Block Guidance
+
+仕様書 Ch8（Use Case Tests）・Ch9（Software Specification Tests）・Ch10（Non-Functional Tests）を記載する。ANPS で第 3 部として割れたときにだけ現れる。ANMS では spec に含まれる。
+
+ケースの節（8.1 / 9.1 / 10.1）は test-designer、結果の節（8.2 / 9.2 / 10.2）は tester が書く。
+
+---
+
 # 10. バージョニングルール
 
 バージョニングは変更時点の文書**ステータス**によって決定される。
@@ -1784,8 +1825,11 @@ archived   → 変更しない（参照専用）
 | risk-manager | risk-register | リスク台帳の完全制御 |
 | srs-writer | user-order | バリデーションと補完。ユーザーが初期記入 |
 | srs-writer | interview-record | インタビュー記録の完全制御 |
-| srs-writer | spec-foundation | 仕様書 Ch1-2 の Common + Form + Detail |
-| architect | spec-architecture | 仕様書 Ch3-6 の Common + Form + Detail |
+| srs-writer | spec | 仕様書全体の Common + Form。Ch1-4 の Detail（**`spec` だけは章ごとにオーナーが変わる唯一の例外**） |
+| srs-writer | spec-foundation | 仕様書 Ch1-4 の Common + Form + Detail（ANPS のみ） |
+| architect | spec-architecture | 仕様書 Ch5-7 の Common + Form + Detail（ANPS のみ） |
+| test-designer | spec-test | 仕様書 Ch8-10 のケース節（8.1 / 9.1 / 10.1）。ANMS では `spec` の同節 |
+| tester | — | 仕様書 Ch8-10 の結果節（8.2 / 9.2 / 10.2）。file_type のオーナーではなく節の書き手である |
 | architect | observability-design | 可観測性設計の完全制御 |
 | architect | hw-requirement-spec | HW要求仕様の完全制御（条件付きプロセス） |
 | architect | ai-requirement-spec | AI/LLM要求仕様の完全制御（条件付きプロセス） |
