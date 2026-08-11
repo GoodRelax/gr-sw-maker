@@ -45,6 +45,9 @@ const USER_TOOLS = new Set([
   "gate-guard.mjs",
   "otel-sink.mjs",
   "session-meter.mjs",
+  // Records step, owner, start/end and elapsed time for every Task the run
+  // spawns. Fa and Fc read it instead of paying an agent launch per step.
+  "progress-log.mjs",
   // The launcher /full-auto-dev runs at Phase 0 to bring the receiver up. It is
   // Windows only; elsewhere the same phase starts otel-sink.mjs directly.
   "start-otel-sink.bat",

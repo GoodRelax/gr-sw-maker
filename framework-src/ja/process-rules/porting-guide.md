@@ -77,7 +77,8 @@
 | `tools/gate-guard.mjs`（`PreToolUse` フック） | ゲート未通過での `src/` `tests/` `infra/` 等への書込みを機械的に拒否する | 人間またはエージェントによる手動確認 |
 | `tools/otel-sink.mjs`（OpenTelemetry の受け口） | コストとトークンを `session-state.json` に記録する。**主経路**。Windows では `tools/start-otel-sink.bat` が起動用のラッパである | コスト追跡を手動記録に切り替える |
 | `tools/session-meter.mjs`（`statusLine`） | 補助経路。CLI でのみ動き、コンテキスト使用率を記録する | 省略してよい |
-| `.claude/settings.json` | 上記 2 つの登録先 | 不要 |
+| `tools/progress-log.mjs`（`Task` の `PreToolUse` / `PostToolUse` フック） | 手順記号・担当者・開始/終了・所要時間を `progress-log.json` へ追記する。`Fa` と `Fc` が読む | 手順ごとの記録を諦めるか、フェーズ境界で手作業で残す |
+| `.claude/settings.json` | 上記の登録先 | 不要 |
 
 **省略した場合、コスト予算アラートとゲート強制は働かない。** その旨をプロジェクトの CLAUDE.md 相当ファイルに明記し、代替手段を決めること。
 

@@ -212,7 +212,7 @@ git config core.hooksPath maintenance-tools/hooks
 
 `check-setup.mjs` は一時ディレクトリに `setup.js` と `framework-src/` を複製してから実行するため、**作業中の `CLAUDE.md` や `user-order.md` を壊さない。**
 
-`tools/gate-guard.mjs`・`tools/otel-sink.mjs`・`tools/session-meter.mjs` は検査ではなく実行時の機構であり、ここには含まない（移植ガイド「Claude Code 固有の機構」を参照）。
+`tools/gate-guard.mjs`・`tools/otel-sink.mjs`・`tools/session-meter.mjs`・`tools/progress-log.mjs` は検査ではなく実行時の機構であり、ここには含まない（移植ガイド「Claude Code 固有の機構」を参照）。
 
 ## 7. npm publish 手順
 

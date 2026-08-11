@@ -32,26 +32,25 @@
 | 3 | architect | 仕様書 Ch3-6 詳細化、OpenAPI・可観測性・外部依存要求の設計 | opus | design |
 | 4 | security-reviewer | 脅威モデリング、セキュリティ設計、脆弱性スキャン | opus | design, implementation |
 | 5 | implementer | ソースコード実装、単体テスト作成 | opus | implementation |
-| 6 | test-engineer | テスト計画・実行、カバレッジ計測、性能テスト | sonnet | testing |
-| 7 | review-agent | R1-R7 観点での品質レビュー、重大度付き指摘の起票 | opus | 全フェーズ（ゲート時） |
-| 8 | progress-monitor | WBS管理、進捗追跡、品質メトリクス監視、異常検知 | sonnet | design 以降 |
-| 9 | change-manager | ユーザー起点の変更要求の受付・影響分析・記録 | sonnet | planning 以降（仕様承認後） |
-| 10 | risk-manager | リスク特定・評価・監視、リスク台帳管理 | sonnet | planning 以降 |
-| 11 | license-checker | OSS ライセンス互換性確認、帰属表示管理 | haiku | implementation, delivery |
-| 12 | kotodama-kun | 用語・命名の整合性チェック（フレームワーク用語集 + プロジェクト用語集） | sonnet | 全フェーズ（Out 生成時） |
-| 13 | user-manual-writer | ユーザーマニュアルの作成 | sonnet | delivery |
-| 14 | runbook-writer | 運用手順書（Runbook）の作成 | sonnet | delivery |
-| 15 | incident-reporter | incident 報告書の作成 | sonnet | operation |
-| 16 | process-improver | ふりかえり・根本原因分析・プロセス改善策の提案 | sonnet | 全フェーズ（フェーズ完了時） |
+| 6 | review-agent | R1-R7 観点での品質レビュー、重大度付き指摘の起票 | opus | 全フェーズ（ゲート時） |
+| 7 | progress-monitor | WBS管理、進捗追跡、品質メトリクス監視、異常検知 | sonnet | design 以降 |
+| 8 | change-manager | ユーザー起点の変更要求の受付・影響分析・記録 | sonnet | planning 以降（仕様承認後） |
+| 9 | risk-manager | リスク特定・評価・監視、リスク台帳管理 | sonnet | planning 以降 |
+| 10 | license-checker | OSS ライセンス互換性確認、帰属表示管理 | haiku | implementation, delivery |
+| 11 | kotodama-kun | 用語・命名の整合性チェック（フレームワーク用語集 + プロジェクト用語集） | sonnet | 全フェーズ（Out 生成時） |
+| 12 | user-manual-writer | ユーザーマニュアルの作成 | sonnet | delivery |
+| 13 | runbook-writer | 運用手順書（Runbook）の作成 | sonnet | delivery |
+| 14 | incident-reporter | incident 報告書の作成 | sonnet | operation |
+| 15 | process-improver | ふりかえり・根本原因分析・プロセス改善策の提案 | sonnet | 全フェーズ（フェーズ完了時） |
 
 > **model 割当の根拠:** kotodama-kun は和製英語の判定と文書横断の同義語検出を行う。いずれも意味理解を要し、かつ全エージェントの Out 生成時に呼ばれるため呼出頻度が最も高い。誤検出と見逃しの双方がフレームワーク全体に波及するため sonnet を割り当てる。
-| 17 | decree-writer | 承認済み改善策のガバナンスファイルへの安全な適用 | sonnet | 全フェーズ（フェーズ完了時） |
-| 18 | field-test-engineer | ユーザーとの実機テスト、フィードバック記録、修正後の実機検証 | sonnet | testing（条件付き: 実機テスト有効時） |
-| 19 | feedback-classifier | フィードバックを仕様書と照合し defect / CR / 質問に分類、チケット起票 | sonnet | testing（条件付き: 実機テスト有効時） |
-| 20 | field-issue-analyst | 原因分析（defect）、対策立案（defect / CR）、影響範囲・副作用・代替案比較 | opus | testing（条件付き: 実機テスト有効時） |
-| 21 | technical-authority | 技術判断の裁定、仕様・設計・実装・テストの整合保証、品質ゲート判定 | opus | planning 以降（ゲート時） |
-| 22 | test-designer | テストの受入基準とテストケースを設計し、仕様書のテストの章に書く | opus | planning・design・testing・delivery |
-| 23 | tester | テストを実行し、結果を仕様書のテスト結果の節に記録する | sonnet | testing |
+| 16 | decree-writer | 承認済み改善策のガバナンスファイルへの安全な適用 | sonnet | 全フェーズ（フェーズ完了時） |
+| 17 | field-test-engineer | ユーザーとの実機テスト、フィードバック記録、修正後の実機検証 | sonnet | testing（条件付き: 実機テスト有効時） |
+| 18 | feedback-classifier | フィードバックを仕様書と照合し defect / CR / 質問に分類、チケット起票 | sonnet | testing（条件付き: 実機テスト有効時） |
+| 19 | field-issue-analyst | 原因分析（defect）、対策立案（defect / CR）、影響範囲・副作用・代替案比較 | opus | testing（条件付き: 実機テスト有効時） |
+| 20 | technical-authority | 技術判断の裁定、仕様・設計・実装・テストの整合保証、品質ゲート判定 | opus | planning 以降（ゲート時） |
+| 21 | test-designer | テストの受入基準とテストケースを設計し、仕様書のテストの章に書く | opus | planning・design・testing・delivery |
+| 22 | tester | テストを実行し、結果を仕様書のテスト結果の節に記録する | sonnet | testing |
 
 ---
 
@@ -97,7 +96,7 @@
 >
 > **ANPS では 3 つに割れる。** `spec-foundation` が第 1 部（目的・概要・UC・要求）、`spec-architecture` が第 2 部（設計・SW仕様・テスト戦略）、`spec-test` が第 3 部（UC テスト・SW仕様テスト・非機能テスト）である。
 
-> architect は上記 file_type に加え、openapi.yaml（docs/api/）を生成・管理する。openapi.yaml は外部ツール規定形式（文書管理規則 §13）であり file_type ではないが、implementer と test-engineer が消費する。
+> architect は上記 file_type に加え、openapi.yaml（docs/api/）を生成・管理する。openapi.yaml は外部ツール規定形式（文書管理規則 §13）であり file_type ではないが、implementer と test-designer が消費する。
 
 ### security-reviewer
 
@@ -116,16 +115,6 @@
 | （IaC コード） | infra/ | — | implementation |
 
 > implementer はコード（src/, tests/）を生成するが、これらは Common Block 管理対象外。トレーサビリティは traceability-matrix で管理する。
-
-### test-engineer
-
-**所有する file_type は無い。**
-
-> **本エージェントは作業表のどの行にも現れず、いずれの開発方式でも起動しない。** 旧版は `test-plan` / `defect` / `traceability` / `performance-report` の 4 型を所有していたが、利用者の決定により `test-plan` と `traceability` を test-designer へ、`defect` と `performance-report` を tester へ移した（2026-08-12 に文書管理規則 §11 へ反映）。**現行の所有は下記 test-designer / tester の節が持つ。ここに再掲しない。**
->
-> `test-progress.json` と `defect-curve.json`（project-management/progress/）は progress-monitor が `6j` で更新する。JSON 時系列データであり file_type（Common Block 管理対象）ではない。
->
-> **名簿から外すかどうかは PoC 後に決める**（目標件数 21 / 23 / 24 の決着と併せて判断する）。
 
 ### review-agent
 
@@ -280,7 +269,8 @@ flowchart TD
     Arch["architect"]
     Sec["security-reviewer"]
     Impl["implementer"]
-    Test["test-engineer"]
+    TD["test-designer"]
+    TR["tester"]
     Rev["review-agent"]
     PM["progress-monitor"]
     CM["change-manager"]
@@ -298,14 +288,16 @@ flowchart TD
     Arch -->|"spec-architecture"| Sec
     Sec -->|"threat-model<br/>security-architecture"| Impl
     Sec -->|"security-scan-report"| Rev
-    Impl -->|"src/ tests/"| Test
-    Impl -->|"src/"| Rev
-    Test -->|"defect"| Impl
-    Test -->|"test-plan<br/>performance-report<br/>traceability"| Rev
+    Impl -->|"src_と_tests"| TD
+    Impl -->|"src"| Rev
+    TD -->|"spec-test_の_TC"| TR
+    TR -->|"defect"| Impl
+    TD -->|"test-plan<br/>traceability"| Rev
+    TR -->|"performance-report"| Rev
     Rev -->|"review"| Orch
     Rev -->|"review"| TA
     Sec -->|"threat-model<br/>security-scan-report"| TA
-    Test -->|"traceability"| TA
+    TD -->|"traceability"| TA
     TA -->|"tech-decision"| Orch
     TA -->|"tech-decision"| Impl
     PM -->|"progress<br/>wbs"| Orch
@@ -350,7 +342,7 @@ flowchart LR
     FTE -->|"field-issue"| FC["feedback-classifier"]
     FC -->|"field-issue"| FIA["field-issue-analyst"]
     FIA -->|"field-issue"| Orch["project-manager"]
-    Orch -->|"field-issue"| Existing["既存エージェント群<br/>srs-writer architect<br/>review-agent implementer<br/>test-engineer"]
+    Orch -->|"field-issue"| Existing["既存エージェント群<br/>srs-writer architect<br/>review-agent implementer<br/>test-designer tester"]
     Existing -->|"自動テスト結果"| FTE
 
     style FTE fill:#E8DAEF,stroke:#333,color:#000
@@ -390,7 +382,8 @@ flowchart LR
     Arch["architect"] -.-> Koto
     Sec["security-reviewer"] -.-> Koto
     Impl["implementer"] -.-> Koto
-    Test["test-engineer"] -.-> Koto
+    TD["test-designer"] -.-> Koto
+    TR["tester"] -.-> Koto
     PM["progress-monitor"] -.-> Koto
     RM["risk-manager"] -.-> Koto
     IR["incident-reporter"] -.-> Koto
@@ -451,7 +444,7 @@ kotodama-kun を**使用しない**エージェント:
 | planning | project-manager, srs-writer, kotodama-kun, review-agent, technical-authority, process-improver, decree-writer | R1 PASS → 仕様書承認 |
 | dependency-selection | project-manager, architect, kotodama-kun, license-checker, technical-authority | ユーザー選定承認 |
 | design | project-manager, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5/R7 PASS |
-| implementation | project-manager, implementer, test-engineer(単体), security-reviewer(SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5/R7 PASS, SCA クリア |
+| implementation | project-manager, implementer(単体テストも), test-designer(観点出し), security-reviewer(SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5/R7 PASS, SCA クリア |
 | testing | project-manager, test-engineer, kotodama-kun, review-agent, technical-authority, progress-monitor, process-improver, decree-writer, field-test-engineer(条件付き), feedback-classifier(条件付き), field-issue-analyst(条件付き) | R6 PASS, 全テスト PASS |
 | delivery | project-manager, kotodama-kun, review-agent, technical-authority, license-checker, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R7 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
 | operation | project-manager, security-reviewer(パッチ), progress-monitor, incident-reporter, process-improver, decree-writer | SLA 達成 |
@@ -464,7 +457,7 @@ kotodama-kun を**使用しない**エージェント:
 |---|---:|
 | Common Block 管理対象の file_type（文書管理規則 §7） | 38 |
 | うち条件付き（該当プロセス有効時のみ） | field-issue, hw-requirement-spec, ai-requirement-spec, framework-requirement-spec |
-| file_type ではない生成物 | openapi.yaml, src/, tests/, infra/, cost-log.json, test-progress.json, defect-curve.json |
+| file_type ではない生成物 | openapi.yaml, src/, tests/, infra/, cost-log.json, progress-log.json, test-progress.json, defect-curve.json |
 
 件数の正は文書管理規則 §7 のテーブルであり、本節はその要約である。齟齬があれば §7 を正とする。
 

@@ -141,7 +141,8 @@ flowchart TB
             Arch_Agent["architect"]
             Sec_Agent["security-reviewer"]
             Impl_Agent["implementer"]
-            Test_Agent["test-engineer"]
+            TD_Agent["test-designer"]
+            TR_Agent["tester"]
             Review_Agent["review-agent"]
         end
         subgraph ProcessMgmt["プロセス管理（4）"]
@@ -1496,7 +1497,8 @@ project_root/
       architect.md                ... 仕様書詳細化（Ch3-6）エージェント
       security-reviewer.md        ... セキュリティ設計エージェント
       implementer.md              ... 実装エージェント（src/ + 単体テスト）
-      test-engineer.md            ... テストエンジニアエージェント
+      test-designer.md            ... テスト設計エージェント
+      tester.md                   ... テスト実行エージェント
       review-agent.md             ... レビューエージェント（SW工学原則・並行性・性能）
       progress-monitor.md         ... 進捗管理エージェント
       change-manager.md           ... 変更管理エージェント
@@ -1663,7 +1665,7 @@ setup フェーズでユーザーと合意する。全エージェントおよ�
 
 - OpenAPI 3.0形式で docs/api/ に出力する
 - architect エージェントが仕様書 Ch5-6 詳細化と同時に生成する
-- 実装完了後 test-engineer がエンドポイントとの整合性を検証する
+- 実装完了後 test-designer が結合テストのケースを起こし、tester が実行してエンドポイントとの整合性を検証する
 
 ## 可観測性要求
 
@@ -2632,7 +2634,7 @@ sequenceDiagram
     participant Arch as architect
     participant Sec as security-reviewer
     participant Impl as implementer
-    participant Test as test-engineer
+    participant Test as tester
     participant Review as review-agent
     participant PM as progress-monitor
     participant RM as risk-manager
@@ -2844,7 +2846,8 @@ PM Agent はこのスキーマに従って `project-management/progress/progress
 | `architect`                       | 仕様書 Ch3-6 詳細化・OpenAPI仕様・マイグレーション設計                | opus   | コア         |
 | `security-reviewer`               | セキュリティ設計・脆弱性レビュー・SCA                                 | opus   | コア         |
 | `implementer`                     | ソースコード実装、単体テスト作成                                      | opus   | コア         |
-| `test-engineer`                   | テスト作成・実行・性能テスト・カバレッジ計測                          | sonnet | コア         |
+| `test-designer`                   | テストの受入基準とケースの設計（仕様書 Ch8-10 のケース節）             | opus   | コア         |
+| `tester`                          | テストの実行と結果の記録・性能テスト                                  | sonnet | コア         |
 | `review-agent`                    | SW工学原則・並行性・パフォーマンス観点のレビュー（R1〜R7）            | opus   | コア         |
 | `progress-monitor`                | 進捗管理・WBS・品質メトリクス・コスト追跡・エージェント監視           | sonnet | コア         |
 | `change-manager`                  | 変更要求の受付・影響分析・記録                                        | sonnet | プロセス管理 |

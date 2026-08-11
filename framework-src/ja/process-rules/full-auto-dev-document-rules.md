@@ -172,6 +172,7 @@ process-rules/ 配下の全ファイル（本文書を含む）に適用する�
 | セッション引継ぎ | `session-handoff-001-20260314-102530.md` | 標準フォーマット |
 | 進捗レポート | `progress-001-20260314-150000.md` | 標準フォーマット |
 | コストログ | `cost-log.json` | 時系列JSON。Common Block対象外。owner: progress-monitor、consumed_by: project-manager |
+| 進捗ログ | `progress-log.json` | 時系列JSON。Common Block対象外。**`tools/progress-log.mjs` がフックで追記する**（手順記号・担当者・開始/終了・所要時間）。consumed_by: progress-monitor（`Fa`）, project-manager（`Fc`） |
 | テスト推移 | `test-progress.json` | 時系列JSON。Common Block対象外。owner: progress-monitor（`6j`）、consumed_by: project-manager |
 | defect curve | `defect-curve.json` | 時系列JSON。Common Block対象外。owner: progress-monitor（`6j`）、consumed_by: project-manager |
 | WBS | `wbs.md` | シングルトン |
@@ -1939,7 +1940,7 @@ CLAUDE.md に以下を設定する（setup フェーズで AI が提案）:
 ## 13.2 Common Block が不要な条件（いずれかを満たす場合）
 
 1. **外部ツール規定形式** — ファイル構造がフレームワーク外のツールに規定されている（`.claude/agents/*.md`, `.claude/commands/*.md`, `openapi.yaml`, `Dockerfile`, `*.tf`, `.github/workflows/*.yml`）
-2. **JSON時系列データ** — プログラムがチャート描画等で消費する（`cost-log.json`, `test-progress.json`, `defect-curve.json`）
+2. **JSON時系列データ** — プログラムがチャート描画等で消費する（`cost-log.json`, `progress-log.json`, `test-progress.json`, `defect-curve.json`）
 3. **ソースコード・テストコード** — 言語・フレームワーク規約に従う（`src/`, `tests/`）
 4. **プロジェクト設定** — ユーザーが直接管理するテンプレート（`CLAUDE.md`）
 

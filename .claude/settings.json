@@ -9,6 +9,26 @@
             "command": "node \"$CLAUDE_PROJECT_DIR/tools/gate-guard.mjs\""
           }
         ]
+      },
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/tools/progress-log.mjs\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/tools/progress-log.mjs\""
+          }
+        ]
       }
     ]
   },

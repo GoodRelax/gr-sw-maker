@@ -125,7 +125,7 @@ ELEMENTS:
     TYPE: String
     REQUIRED: True
   - TITLE: TEST_LEVEL
-    TYPE: SingleChoice(Unit, Integration, System)
+    TYPE: SingleChoice(Integration, System)
     REQUIRED: True
   - TITLE: GIVEN
     TYPE: String

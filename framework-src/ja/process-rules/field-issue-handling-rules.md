@@ -31,7 +31,7 @@ field-issue は実機テストフェーズ専用の正式記録であり、既�
 
 | 発見フェーズ | 発見者 | file_type | owner |
 |---|---|---|---|
-| 自動テスト（testing） | test-engineer | defect | test-engineer |
+| 自動テスト（testing） | tester | defect | tester |
 | 仕様承認後のユーザー変更要求 | ユーザー | change-request | change-manager |
 | 実機テスト（testing, 条件付き） | field-test-engineer | field-issue | field-test-engineer |
 
@@ -79,7 +79,7 @@ flowchart TD
     SREV["review-agent<br/>仕様書レビュー<br/>R2 R4 R5"]
     IMP["implementer<br/>コード修正"]
     CREV["review-agent<br/>コードレビュー<br/>R2 R3 R4 R5"]
-    TE["test-engineer<br/>自動テスト実行"]
+    TE["tester<br/>自動テスト実行"]
     FTE2["field-test-engineer<br/>実機検証"]
     DONE["verified"]
 
@@ -277,7 +277,7 @@ field-issue は `verified` だけで終わるわけではない。**3 つの終�
 
 | 項目 | 内容 |
 |---|---|
-| 担当 | test-engineer |
+| 担当 | tester |
 | 実施内容 | 自動テストを実行し全テスト PASS を確認する |
 | ゲート条件 | 全テスト PASS |
 | 出力 | テスト実行結果 |
@@ -327,7 +327,7 @@ progress-monitor が defect curve を集計する際、以下のルールに従�
 
 | ソース | found_cumulative への加算条件 | fixed_cumulative への加算条件 |
 |---|---|---|
-| defect（test-engineer 所有） | `defect:defect_status` が `open` に遷移した時点 | `defect:defect_status` が `closed` に遷移した時点 |
+| defect（tester 所有） | `defect:defect_status` が `open` に遷移した時点 | `defect:defect_status` が `closed` に遷移した時点 |
 | field-issue（type: defect） | `field-issue:status` が `classified` に遷移した時点 | `field-issue:status` が `verified` に遷移した時点 |
 
 ### 9.2 CR 集計への統合
