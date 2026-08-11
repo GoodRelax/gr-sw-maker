@@ -29,7 +29,7 @@
 | `担当者` | やる側。エージェント・`利用者`・道具のいずれか。**1 行 1 担当者。複数なら行を分ける** |
 | `モデル` | **その担当者を動かすモデル。** 正本は `agents/*.md` の `model:` であり、**本列は写しである**（検査 18f が一致を強制する）。方式で落とす場合だけ `opus<br />簡易は sonnet` の形で併記する |
 | `入力` | 読むもの。**仕様書を読む行は `対象:` と `根拠:` に割る**（§3.1） |
-| `出力` | **書くファイル。** `agent-list.md` §2 の file_type で書く |
+| `出力` | **書くファイル。** `agent-list.md` §2 の file_type で書く。**仕様書は部の単位で書き分ける —— 第 1 部 `spec-foundation`（Ch1-4）／第 2 部 `spec-architecture`（Ch5-7）／第 3 部 `spec-test`（Ch8-10）。ANMS（簡易）では 3 型とも単一の `spec` へ畳まれる**（名簿 §2・文書管理規則 §9.39）。**`spec` を作業表に書いてはならない（MUST NOT）** —— 畳んだ後の名前であり、どの部を書くのかが表から消える |
 | `依頼元へ返す` | **依頼元に返す値。** 場所・合否・次の一手だけである（`agent-orchestration-rules.md` §3.6） |
 | `備考` | 上のどれにも入らないこと。**1 文ごとに改行する** |
 
@@ -310,8 +310,8 @@ flowchart TD
 | `2b`<br />企画 | 設問を利用者に問い、<br />回答を持ち帰る | **main-agent** | **利用者** | — | 設問一覧 | — | 回答 | **[直列]**  |
 | `2c`<br />企画 | 回答を interview-record に記録し、<br />未解決の質問を数える | main-agent | srs-writer | opus | 回答 | interview-record | 記録の場所<br />未解決の質問数 | `2j` が未解決の質問数を見る。 |
 | `2d`<br />企画 | 確かめたい要求を選び、<br />モック / サンプル / PoC を作る | main-agent | srs-writer | opus | interview-record | src | 試作の場所<br />確かめた要求 | 要求を確かめるための試作である。<br />製品の実装ではない。 |
-| `2e`<br />企画<br />**新設** | 目的とシステム概要とユースケースを書き、<br />`GL` と `UC` に ID を付ける | main-agent | srs-writer | opus | user-order<br />interview-record<br />仕様書テンプレート | spec-foundation<br />**traceability** | 仕様書の場所<br />付けた `GL` と `UC` の UID 範囲 | **鎖の根はここで生まれる。**<br />`spec-writing-rules.md`「親をたどると必ず `GL` に着く（MUST）」。<br />**`spec-writing-rules.md`「Chapter 2 を書かずに Chapter 4 を書いてはならない（MUST NOT）」により、`2f` より前に置く。** |
-| `2f`<br />企画 | 要求を仕様書の要求の章に書き、<br />ID を付ける | main-agent | srs-writer | opus | user-order<br />interview-record<br />仕様書テンプレート | spec-foundation<br />**traceability** | 仕様書の場所<br />付けた ID の範囲 | 鎖の根は `GL` であって要求ではない（`spec-writing-rules.md` §ID と採番）。<br />**したがって本手順の前に `2e` が要る。**<br />**`traceability` のオーナーは test-engineer である**（名簿 §2）。<br />複数の体が追記する性質なので、名簿側で共同所有を定義するまで暫定である。 |
+| `2e`<br />企画<br />**新設** | 目的とシステム概要とユースケースを書き、<br />`GL` と `UC` に ID を付ける | main-agent | srs-writer | opus | user-order<br />interview-record<br />仕様書テンプレート | spec-foundation<br />**traceability** | 仕様書の場所<br />付けた `GL` と `UC` の UID 範囲 | **鎖の根はここで生まれる。**<br />`spec-writing-rules.md`「親をたどると必ず `GL` に着く（MUST）」。<br />**`spec-writing-rules.md`「Chapter 2 を書かずに Chapter 4 を書いてはならない（MUST NOT）」により、`2f` より前に置く。**<br />**`traceability` のオーナーは test-designer である。本行は srs-writer が書くので移管に当たる**（名簿 §2）。 |
+| `2f`<br />企画 | 要求を仕様書の要求の章に書き、<br />ID を付ける | main-agent | srs-writer | opus | user-order<br />interview-record<br />仕様書テンプレート | spec-foundation<br />**traceability** | 仕様書の場所<br />付けた ID の範囲 | 鎖の根は `GL` であって要求ではない（`spec-writing-rules.md` §ID と採番）。<br />**したがって本手順の前に `2e` が要る。**<br />**`traceability` のオーナーは test-designer である**（名簿 §2）。**本行は srs-writer が書くので移管に当たる。**<br />複数の体が追記する性質なので、名簿側で共同所有を定義するまで暫定である。 |
 | `2f`<br />企画 | 付けた ID をテストから引けるか確かめる | main-agent | test-designer | opus | `2f` の ID 範囲 | — | 可否と理由 | **[直列]** ID はテストの紐づけ先になる。<br />**兄弟で並べて起動する。srs-writer が test-designer を呼んではならない**<br />（`agent-orchestration-rules.md` §4.5.1）。 |
 | `2g`<br />企画 | 以降の章の枠を仕様書テンプレートから写す | main-agent | srs-writer | opus | 仕様書テンプレート | spec-foundation | 完了 | 章の枠だけを置く。<br />中身は Phase 4 以降が埋める。 |
 | `2h`<br />企画 | 仕様書の概要をまとめ、<br />利用者へ渡す報告文を書く | main-agent | srs-writer | opus | spec-foundation | — | 報告文 | **旧版は srs-writer をこの手順の主担当としていた。**<br />作業の実体が利用者への報告なので、`main-agent` の行へ移した。 |
@@ -344,8 +344,8 @@ flowchart TD
 | `4a`<br />設計 | 要求を満たすアーキテクチャを検討し、<br />設計の章に書いてレイヤーを仕訳ける | main-agent | architect | opus | 対象: 全文 | spec-architecture | 仕様書の場所<br />書いたレイヤー仕訳 | **設計はトレースの鎖に載らない**（`spec-writing-rules.md`「5.1〜5.6 は持たない」）。<br />`5.6` の `ADR` だけが UID を持ち、それも鎖の外である。<br />**親を張ってはならない（MUST NOT）。** |
 | `4b`<br />設計 | アーキテクチャ案の要点をまとめる | main-agent | architect | opus | `4a` の spec-architecture | — | 案の要点 | **文は下で起草させる。** |
 | `4b`<br />設計 | 案を利用者に示し、<br />確認するかどうかを尋ねる | **main-agent** | **利用者** | — | 案の要点 | — | 確認する / しない | **[直列]** **旧版は architect をこの手順の主担当としていた。**<br />作業の実体が利用者への問いなので、`main-agent` の行へ移した。<br />**尋ねずに進んではならない。** |
-| `4c`<br />設計 | 設計を実装できる粒度まで具体化し、<br />ソフトウェア仕様の章に書く | main-agent | architect | opus | 対象: 全文 | spec<br />**traceability** | 仕様書の場所 | **`SWS` の親は `FR` または `NFR` である**（`spec-writing-rules.md` の型ごとの欄、Role は `Satisfies`）。<br />設計の章を親にしてはならない（MUST NOT）。<br />**ユーザーマニュアルの根拠になる**（§3.3）。 |
-| `4d`<br />設計 | 何をどの層で確かめるかを決め、<br />テスト戦略の章に書く | main-agent | architect | opus | 対象: 全文 | spec | 戦略の場所 |  |
+| `4c`<br />設計 | 設計を実装できる粒度まで具体化し、<br />ソフトウェア仕様の章に書く | main-agent | architect | opus | 対象: 全文 | spec-architecture<br />**traceability** | 仕様書の場所 | **`SWS` の親は `FR` または `NFR` である**（`spec-writing-rules.md` の型ごとの欄、Role は `Satisfies`）。<br />設計の章を親にしてはならない（MUST NOT）。<br />**ユーザーマニュアルの根拠になる**（§3.3）。<br />**`traceability` のオーナーは test-designer である。本行は architect が書くので移管に当たる**（名簿 §2）。 |
+| `4d`<br />設計 | 何をどの層で確かめるかを決め、<br />テスト戦略の章に書く | main-agent | architect | opus | 対象: 全文 | spec-architecture | 戦略の場所 |  |
 | `4d`<br />設計 | テスト戦略が実行できるか確かめる | main-agent | test-designer | opus | 対象: テスト<br />根拠: `4d` の戦略 | — | 可否と理由 | **[直列]** **兄弟で並べて起動する**<br />（`agent-orchestration-rules.md` §4.5.1）。<br />戦略を書くのは architect、確かめるのは test-designer である。 |
 | `4e`<br />設計 | ソフトウェア仕様から OpenAPI を生成する | main-agent | architect | opus | 対象: 全文 | openapi | openapi の場所 | API を持つ場合。 |
 | `4f`<br />設計<br />**新設** | API のバージョニング戦略と非推奨通知ポリシーを決め、<br />ADR に書く | main-agent | architect | opus | `4e` の openapi | spec-architecture | `ADR` の UID | 第三者に公開する API を持つ場合。<br />**`4e` は生成するだけで、戦略を持たない。** |
@@ -371,7 +371,7 @@ flowchart TD
 | `5a`<br />実装 | worktree とブランチを担当者ごとに割り当てる | main-agent | project-manager | opus | `4j` の wbs | — | 割当表 | **[厳格]** 割当が本務である。<br />**project-manager が implementer を呼んではならない**<br />（`agent-orchestration-rules.md` §3.7・§4.5.1）。 |
 | `5a`<br />実装 | 割り当てられたブランチで、<br />仕様どおりに動くコードを書く | main-agent | `implementer` × N<br />worktree 1 つにつき 1 エージェント | opus | 対象: 全文<br />割当表 | src | 各自の実装の場所 | **[厳格]** Git worktree で並列実装する。<br />**worktree ごとにキャッシュが冷える**（`agent-orchestration-rules.md` §4.4）。N エージェントぶんの下限を毎回払う。 |
 | `5b`<br />実装 | 可観測性設計に従い、<br />構造化ログ・メトリクス・トレーシングを組み込む | main-agent | implementer | opus | `4h` の observability-design | src | 組み込みの完了 | 適用範囲は CLAUDE.md「可観測性要求」が持つ。 |
-| `5c`<br />実装 | 全ビジネスロジックを覆う単体テストを書いて走らせる | main-agent | implementer | opus | 対象: 全文<br />`5a` の src | src<br />spec | 合格率<br />カバレッジ | **作成と実行を同じエージェントが行う唯一のテストである。**<br />**`6a`〜`6d` と揃えない理由:** 単体テストは実装と一体で書かれ、実装したエージェントが走らせるのが自然だからである。<br />揃えると同じコードを 2 エージェントが読むことになり、下限を二重に払う。 |
+| `5c`<br />実装 | 全ビジネスロジックを覆う単体テストを書いて走らせる | main-agent | implementer | opus | 対象: 全文<br />`5a` の src | src<br />spec-test | 合格率<br />カバレッジ | **作成と実行を同じエージェントが行う唯一のテストである。**<br />**`6a`〜`6d` と揃えない理由:** 単体テストは実装と一体で書かれ、実装したエージェントが走らせるのが自然だからである。<br />揃えると同じコードを 2 エージェントが読むことになり、下限を二重に払う。<br />**単体テストを Ch9 のどの節に置くかは未決である。** `6a`〜`6d` も Ch9 を書くため、節の切れ目を決めるまで衝突しうる。**推測で割り当てない。**<br />**`spec-test` のオーナーは test-designer である。本行は implementer が書くので移管に当たる**（名簿 §2）。 |
 | `5c`<br />実装 | 単体テストで確かめるべき観点を洗い出して渡す | main-agent | test-designer | opus | 対象: テスト | — | 観点の一覧 | **[直列]** **兄弟で並べて起動する**<br />（`agent-orchestration-rules.md` §4.5.1）。 |
 | `5d`<br />実装 | デプロイ設計に従い、<br />IaC コードを書く | main-agent | implementer | opus | `4i` の deployment-design | src | 実装の場所 | 配布以外のデプロイ先がある場合。 |
 | `5e`<br />実装 | 実装を R2・R3・R4・R5・R7 に照らし、<br />指摘を挙げる | main-agent | review-agent | opus | 対象: 全文<br />`5a` の src | review | 指摘の場所と件数<br />Critical / High の有無 | **[簡易・標準]** 1 エージェントが 5 観点をまとめて見る。<br />**レビュアーは直さない**<br />（`agent-orchestration-rules.md` §4.7 の規約 3）。 |
@@ -388,15 +388,15 @@ flowchart TD
 
 | フェーズ | 作業 | 依頼元 | 担当者 | モデル | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|---|
-| `6a`<br />テスト<br />**分割** | 結合テストの受入基準を決め、<br />テストコードを書く | main-agent | test-designer | opus | 対象: テスト<br />根拠: 対象ノードの祖先 | spec<br />**traceability** | ケースの章の場所<br />付けた `TC` の UID 範囲 | **旧 `5a` の前半である。**<br />**`traceability` のオーナーは test-engineer である**（名簿 §2）。<br />複数の体が追記する性質なので、名簿側で共同所有を定義するまで暫定である。 |
+| `6a`<br />テスト<br />**分割** | 結合テストの受入基準を決め、<br />テストコードを書く | main-agent | test-designer | opus | 対象: テスト<br />根拠: 対象ノードの祖先 | spec-test<br />**traceability** | ケースの章の場所<br />付けた `TC` の UID 範囲 | **旧 `5a` の前半である。**<br />**`traceability` のオーナーは test-designer であり、本行の担当者と一致する**（名簿 §2）。 |
 | `6a`<br />テスト<br />**分割** | 設計の意図を渡す | main-agent | architect | opus | `4a` の spec-architecture | — | 意図の要点 | **[直列]** **兄弟で並べて起動する**<br />（`agent-orchestration-rules.md` §4.5.1）。 |
-| `6b`<br />テスト<br />**分割** | 結合テストを走らせ、<br />結果を記録する | main-agent | tester | sonnet | 対象: 自分が書く結果の節<br />根拠: 対象ノードの祖先 | spec | 合格率<br />失敗した `TC` の UID | **旧 `5a` の後半である。**<br />**書いたエージェントと走らせるエージェントを分ける。** 期待を書いた者が結果も書くと、食い違いを見落とす。<br />defect は発見したエージェントが起票する<br />（`Fg`）。 |
-| `6c`<br />テスト<br />**分割** | システムテストの受入基準を決め、<br />テストコードを書く | main-agent | test-designer | opus | 対象: テスト<br />根拠: 対象ノードの祖先 | spec | ケースの章の場所<br />付けた `TC` の UID 範囲 | **旧 `5b` の前半である。** |
-| `6d`<br />テスト<br />**分割** | システムテストを走らせ、<br />結果を記録する | main-agent | tester | sonnet | 対象: 自分が書く結果の節<br />根拠: 対象ノードの祖先 | spec | 合格率<br />失敗した `TC` の UID | **旧 `5b` の後半である。** |
-| `6e`<br />テスト<br />**新設** | ユースケーステストの受入基準を決め、<br />テストコードを書く | main-agent | test-designer | opus | 対象: テスト<br />根拠: 対象ノードの祖先 | spec<br />**traceability** | ケースの章の場所<br />付けた `TC` の UID 範囲 | **仕様書のテストは 3 系統（`UC` / `SWS` / `NFR`）である。**<br />`UC` 系統のケースを作る行が無かった。 |
-| `6f`<br />テスト<br />**新設** | ユースケーステストを走らせ、<br />結果を記録する | main-agent | tester | sonnet | 対象: 自分が書く結果の節<br />根拠: 対象ノードの祖先 | spec | 合格率<br />失敗した `TC` の UID | **[直列]** `6e` の後に走る。<br />`UC` 系統の実行者が居なかった。 |
-| `6g`<br />テスト<br />**新設** | 非機能テストの受入基準を決め、<br />テストコードを書く | main-agent | test-designer | opus | 対象: テスト<br />根拠: 数値目標を持つ NFR | spec<br />**traceability** | ケースの章の場所<br />付けた `TC` の UID 範囲 | **`6h` は実行だけで、ケースを作る行が無かった。**<br />数値目標を持つ NFR がある場合。 |
-| `6h`<br />テスト | 性能テストを走らせ、<br />NFR の数値目標との差を出す | main-agent | tester | sonnet | 対象: 自分が書く結果の節<br />根拠: 数値目標を持つ NFR | performance-report<br />spec | 達成 / 未達の別<br />未達の項目 | 数値目標を持つ NFR がある場合。 |
+| `6b`<br />テスト<br />**分割** | 結合テストを走らせ、<br />結果を記録する | main-agent | tester | sonnet | 対象: 自分が書く結果の節<br />根拠: 対象ノードの祖先 | spec-test | 合格率<br />失敗した `TC` の UID | **旧 `5a` の後半である。**<br />**書いたエージェントと走らせるエージェントを分ける。** 期待を書いた者が結果も書くと、食い違いを見落とす。<br />defect は発見したエージェントが起票する<br />（`Fg`）。<br />**`spec-test` のオーナーは test-designer であり、tester は結果節（8.2 / 9.2 / 10.2）の書き手である**（文書管理規則 §9.40・§11）。 |
+| `6c`<br />テスト<br />**分割** | システムテストの受入基準を決め、<br />テストコードを書く | main-agent | test-designer | opus | 対象: テスト<br />根拠: 対象ノードの祖先 | spec-test | ケースの章の場所<br />付けた `TC` の UID 範囲 | **旧 `5b` の前半である。** |
+| `6d`<br />テスト<br />**分割** | システムテストを走らせ、<br />結果を記録する | main-agent | tester | sonnet | 対象: 自分が書く結果の節<br />根拠: 対象ノードの祖先 | spec-test | 合格率<br />失敗した `TC` の UID | **旧 `5b` の後半である。**<br />**`spec-test` のオーナーは test-designer であり、tester は結果節の書き手である**（文書管理規則 §9.40・§11）。 |
+| `6e`<br />テスト<br />**新設** | ユースケーステストの受入基準を決め、<br />テストコードを書く | main-agent | test-designer | opus | 対象: テスト<br />根拠: 対象ノードの祖先 | spec-test<br />**traceability** | ケースの章の場所<br />付けた `TC` の UID 範囲 | **仕様書のテストは 3 系統（`UC` / `SWS` / `NFR`）である。**<br />`UC` 系統のケースを作る行が無かった。 |
+| `6f`<br />テスト<br />**新設** | ユースケーステストを走らせ、<br />結果を記録する | main-agent | tester | sonnet | 対象: 自分が書く結果の節<br />根拠: 対象ノードの祖先 | spec-test | 合格率<br />失敗した `TC` の UID | **[直列]** `6e` の後に走る。<br />`UC` 系統の実行者が居なかった。<br />**`spec-test` のオーナーは test-designer であり、tester は結果節の書き手である**（文書管理規則 §9.40・§11）。 |
+| `6g`<br />テスト<br />**新設** | 非機能テストの受入基準を決め、<br />テストコードを書く | main-agent | test-designer | opus | 対象: テスト<br />根拠: 数値目標を持つ NFR | spec-test<br />**traceability** | ケースの章の場所<br />付けた `TC` の UID 範囲 | **`6h` は実行だけで、ケースを作る行が無かった。**<br />数値目標を持つ NFR がある場合。 |
+| `6h`<br />テスト | 性能テストを走らせ、<br />NFR の数値目標との差を出す | main-agent | tester | sonnet | 対象: 自分が書く結果の節<br />根拠: 数値目標を持つ NFR | performance-report<br />spec-test | 達成 / 未達の別<br />未達の項目 | 数値目標を持つ NFR がある場合。<br />**`performance-report` のオーナーは tester であり、本行の担当者と一致する**（名簿 §2）。 |
 | `6i`<br />テスト | 実機でテストを行い、<br />フィードバックを記録する | main-agent | field-test-engineer | sonnet | `6b` `6d` の結果<br />利用者の操作 | field-issue | 記録の場所<br />挙がった件数 | 実機テストフラグ。<br />**利用者と実機でやり取りする部分は `main-agent` を通す。** |
 | `6i`<br />テスト | フィードバックを仕様書に照らし、<br />defect / CR / 質問に分類する | main-agent | feedback-classifier | sonnet | 対象: 全文<br />`6i` の field-issue | field-issue | 分類の内訳 | **[直列]** **兄弟で並べて起動する。field-test-engineer が呼んではならない**<br />（`agent-orchestration-rules.md` §4.5.1）。 |
 | `6i`<br />テスト | 原因を分析し、<br />対策を立てる | main-agent | field-issue-analyst | opus | `6i` の field-issue と分類 | field-issue | 原因と対策案<br />影響範囲 | **[直列]** 同上。 |
@@ -689,7 +689,7 @@ flowchart TD
 | エージェント | **無条件 11 エージェント** —— srs-writer<br />architect<br />technical-authority<br />project-manager<br />review-agent<br />implementer<br />security-reviewer<br />license-checker<br />test-designer<br />tester<br />user-manual-writer |
 | 条件付きで増えるエージェント | **8 エージェント** —— runbook-writer<br />field-test-engineer<br />feedback-classifier<br />field-issue-analyst<br />incident-reporter<br />progress-monitor<br />process-improver<br />change-manager<br />**全部有効なら 19 エージェント。** |
 | 簡易では決して起動しないエージェント | **2 エージェント** —— risk-manager（`4k` 免除）<br />decree-writer（`Fe` 免除）<br />**19 ＋ 2 = 21。名簿は現在 24 件あり、一致しない。**<br />差は `test-engineer`（作業表で 1 度も使わない）と ``（どの行にも現れない）、および `test-designer` / `tester`（簡易では条件付き・免除の行にしか現れない）である。 |
-| 成果物 | user-order<br />CLAUDE.md<br />**tech-decision**<br />pipeline-state<br />interview-record<br />src<br />spec-foundation<br />spec-architecture<br />spec<br />traceability<br />test-plan<br />review<br />security-scan-report<br />license-report<br />final-report<br />user-manual<br />handoff<br />**17 件（表 M の `実施` から機械で導出した）。** |
+| 成果物 | user-order<br />CLAUDE.md<br />**tech-decision**<br />pipeline-state<br />interview-record<br />src<br />spec-foundation<br />spec-architecture<br />spec-test<br />traceability<br />test-plan<br />review<br />security-scan-report<br />license-report<br />final-report<br />user-manual<br />handoff<br />**17 件（表 M の `実施` から機械で導出した）。**<br />**ANMS なので 3 型は単一の `spec` へ畳まれ、現物のファイルは 1 枚である。** |
 | レビュー報告 | 1 本（`7a` で R1〜R7 網羅）。<br />合格線 Critical 0 / High 0。 |
 | ゲート | 全 8 ゲートを判定する。 |
 
@@ -812,7 +812,7 @@ flowchart TD
 >
 > | 出力 | 使う手順 | 名簿の状況 |
 > |---|---|---|
-> | `spec` | `4c` `4d` `5c` `6a`〜`6h` | **`spec-foundation` = Ch1-2 / `spec-architecture` = Ch3-6 は旧 6 章構成の切れ目であり、`spec-writing-rules.md` の部境界（Ch1-4 / Ch5-7 / Ch8-10）と切り方が違う。** ソフトウェア仕様・テスト戦略・テスト 3 系統に当たる型が無い |
+> | `spec` | — | **解消した**（2026-08-12）。`4c` `4d` を `spec-architecture`、`5c` `6a`〜`6h` を `spec-test` へ振り替え、部の境界（Ch1-4 / Ch5-7 / Ch8-10）に揃えた。**ANMS で 3 型が `spec` 1 枚へ畳まれる規則は §「作業表の列」が持つ** |
 > | `safety` | `4l` | 無い |
 > | `release-checklist` | `7b` | 無い |
 > | `stakeholder-register` ほか | — | 実在する。問題ではない |

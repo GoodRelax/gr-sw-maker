@@ -172,8 +172,8 @@ process-rules/ 配下の全ファイル（本文書を含む）に適用する�
 | セッション引継ぎ | `session-handoff-001-20260314-102530.md` | 標準フォーマット |
 | 進捗レポート | `progress-001-20260314-150000.md` | 標準フォーマット |
 | コストログ | `cost-log.json` | 時系列JSON。Common Block対象外。owner: progress-monitor、consumed_by: project-manager |
-| テスト推移 | `test-progress.json` | 時系列JSON。Common Block対象外。owner: test-engineer、consumed_by: progress-monitor |
-| defect curve | `defect-curve.json` | 時系列JSON。Common Block対象外。owner: test-engineer、consumed_by: progress-monitor |
+| テスト推移 | `test-progress.json` | 時系列JSON。Common Block対象外。owner: progress-monitor（`6j`）、consumed_by: project-manager |
+| defect curve | `defect-curve.json` | 時系列JSON。Common Block対象外。owner: progress-monitor（`6j`）、consumed_by: project-manager |
 | WBS | `wbs.md` | シングルトン |
 | テスト計画 | `test-plan.md` | シングルトン |
 | インタビュー記録 | `interview-record.md` | シングルトン。planning フェーズで作成 |
@@ -435,7 +435,7 @@ srs-writerがCh1-2を作成、architectがCh3-6を詳細化。
 
 ### 実例6: performance-report-NNN-*.md（性能テストレポート）
 
-test-engineerがk6実行後に作成。NFR目標との比較結果。
+tester が性能テスト（`6h`）の実行後に作成。NFR目標との比較結果。
 
 | 情報 | 候補 | 判断 | 理由 |
 |------|------|------|------|
@@ -823,7 +823,7 @@ external-dependency-spec（抽象テンプレート）
 | progress | `phase-design`（以降更新） | project-manager, ユーザー | progress-monitor |
 | interview-record | `phase-planning` | architect, project-manager | srs-writer |
 | wbs | `phase-design` | progress-monitor, project-manager | progress-monitor |
-| test-plan | `phase-design` | test-engineer, review-agent | test-engineer |
+| test-plan | `phase-design` | 利用者（`7k` の受入テスト実行）, review-agent | test-designer |
 | review | フェーズゲート（例: `phase-planning`） | project-manager, 対象エージェント | review-agent |
 | decision | 判断を要したエージェント | 全エージェント | project-manager |
 | tech-decision | ゲート判定・技術裁定の要求時 | メインエージェント, project-manager, 全実装系エージェント | technical-authority |
@@ -831,17 +831,17 @@ external-dependency-spec（抽象テンプレート）
 | deployment-design | `phase-design` | implementer, runbook-writer, technical-authority | architect |
 | risk-register | `phase-planning`（以降更新） | project-manager, technical-authority | risk-manager |
 | risk | `phase-planning` | risk-manager, project-manager | risk-manager |
-| defect | `test-engineer` | 修正担当エージェント | test-engineer |
+| defect | `tester` | 修正担当エージェント | tester |
 | change-request | `user`（ユーザー起点の変更要求のみ） | change-manager, project-manager | change-manager |
-| traceability | `phase-implementation` | review-agent | test-engineer |
+| traceability | `phase-implementation` | review-agent | test-designer |
 | license-report | `phase-implementation` | project-manager, security-reviewer | license-checker |
-| performance-report | `phase-testing` | review-agent, project-manager | test-engineer |
+| performance-report | `phase-testing` | review-agent, project-manager | tester |
 | spec-foundation | `phase-planning` | architect, review-agent | srs-writer |
 | spec-architecture | `phase-design` | 実装エージェント, review-agent | architect |
 | threat-model | `phase-design` | architect, 実装エージェント | security-reviewer |
 | security-architecture | `phase-design` | architect, 実装エージェント | security-reviewer |
 | observability-design | `phase-design` | 実装エージェント | architect |
-| hw-requirement-spec | `phase-design` | architect（Adapter層設計）, test-engineer（結合テスト計画） | architect |
+| hw-requirement-spec | `phase-design` | architect（Adapter層設計）, test-designer（結合テスト計画） | architect |
 | ai-requirement-spec | `phase-design` | architect（Adapter層設計）, 実装エージェント | architect |
 | framework-requirement-spec | `phase-design` | architect（Adapter層設計）, 実装エージェント | architect |
 | executive-dashboard | `phase-setup` | ユーザー, project-manager | project-manager |
@@ -1227,7 +1227,7 @@ WBSテーブル（タスクID、タスク名、担当エージェント、依存
 
 ## 9.12 test-plan（名前空間: test-plan:）
 
-> **仕様書 Ch5 との責務境界:** Ch5「テスト戦略」は**何をどこまで検証するか**（テストレベル・カバレッジ方針・受入基準）を定める設計判断であり、architect が所有する。`test-plan` は**それをいつ誰がどの順で実行するか**（工程・担当・スケジュール・環境）を定める実行計画であり、test-engineer が所有する。同じ内容を両方に書かない。Ch5 が変われば test-plan を更新し、逆はしない。
+> **仕様書 Ch5 との責務境界:** Ch5「テスト戦略」は**何をどこまで検証するか**（テストレベル・カバレッジ方針・受入基準）を定める設計判断であり、architect が所有する。`test-plan` は**それをいつ誰がどの順で実行するか**（工程・担当・スケジュール・環境）を定める実行計画であり、test-designer が所有する。同じ内容を両方に書かない。Ch5 が変われば test-plan を更新し、逆はしない。
 
 ### Fields
 
@@ -1839,10 +1839,10 @@ archived   → 変更しない（参照専用）
 | progress-monitor | wbs | WBS・ガントチャートの完全制御 |
 | risk-manager | risk | リスクエントリの完全制御 |
 | change-manager | change-request | 変更要求文書の完全制御 |
-| test-engineer | test-plan | テスト計画の完全制御 |
-| test-engineer | defect | defect 票の完全制御 |
-| test-engineer | traceability | トレーサビリティマトリクスの完全制御 |
-| test-engineer | performance-report | 性能テストレポートの完全制御 |
+| test-designer | test-plan | テスト計画の完全制御 |
+| tester | defect | defect 票の完全制御 |
+| test-designer | traceability | トレーサビリティマトリクスの完全制御 |
+| tester | performance-report | 性能テストレポートの完全制御 |
 | security-reviewer | threat-model | 脅威モデルの完全制御 |
 | security-reviewer | security-architecture | セキュリティ設計の完全制御 |
 | security-reviewer | security-scan-report | セキュリティスキャン結果の完全制御（SAST/SCA/DAST/手動） |

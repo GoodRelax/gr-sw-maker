@@ -38,8 +38,11 @@ model: sonnet
 
 ### Out
 
-- 仕様書のテスト結果の節の `TR` ノード
+- `spec-test`（仕様書 Ch8-10 の結果節 8.2 / 9.2 / 10.2 の `TR` ノード。**ANMS では `spec` の同じ節**）
 - `defect`（失敗があった場合）
+- `performance-report`（`6h` の性能テストを走らせた場合）
+
+> **`spec-test` の file_type オーナーは test-designer である。** tester は結果節の書き手であり、Common Block と Form Block には触れない（名簿 §2・文書管理規則 §11）。
 
 ### Work
 
@@ -68,7 +71,7 @@ model: sonnet
 
 | 判断内容 | 参照先 |
 |---------|--------|
-| 出力の記法 | 文書管理規則 §9.7（defect） |
+| 出力の記法 | 文書管理規則 §9.7（defect）, §9.26（performance-report）, §9.40（spec-test） |
 | testing フェーズの手順 | プロセス規則 §4.6（testing フェーズ） |
 | テスト結果の節の記法 | 仕様テンプレート Ch8-10 |
 | defect の用語と因果連鎖 | defect 分類 §2（因果連鎖モデル） |

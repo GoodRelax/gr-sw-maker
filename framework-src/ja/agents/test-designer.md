@@ -39,9 +39,11 @@ model: opus
 
 ### Out
 
-- 仕様書のテストの章の `TC` ノード
+- `spec-test`（仕様書 Ch8-10 のケース節 8.1 / 9.1 / 10.1 の `TC` ノード。**ANMS では `spec` の同じ節**）
 - `traceability`
 - `test-plan`（受入テスト手順書）
+
+> **`spec-test` / `traceability` / `test-plan` のオーナーは本エージェントである**（名簿 §2・文書管理規則 §11）。ただし `spec-test` の結果節（8.2 / 9.2 / 10.2）は tester が書く。
 
 ### Work
 
@@ -70,7 +72,7 @@ model: opus
 
 | 判断内容 | 参照先 |
 |---------|--------|
-| 出力の記法 | 文書管理規則 §9.9（traceability）, §9.12（test-plan） |
+| 出力の記法 | 文書管理規則 §9.9（traceability）, §9.12（test-plan）, §9.40（spec-test） |
 | testing フェーズの手順 | プロセス規則 §4.6（testing フェーズ） |
 | テストの章の記法 | 仕様テンプレート Ch8-10 |
 | テスト品質のレビュー観点 | レビュー観点規約 R6（テスト品質） |

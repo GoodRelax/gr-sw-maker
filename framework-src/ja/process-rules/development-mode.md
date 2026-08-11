@@ -37,7 +37,7 @@
 | `担当者` | やる側。エージェント・`利用者`・道具のいずれか。**1 行 1 担当者。複数なら行を分ける** |
 | `モデル` | **その担当者を動かすモデル。** 正本は `agents/*.md` の `model:` であり、**本列は写しである**（検査 18f が一致を強制する）。方式で落とす場合だけ `opus<br />簡易は sonnet` の形で併記する |
 | `入力` | 読むもの。**仕様書を読む行は `対象:` と `根拠:` に割る**（§3.1） |
-| `出力` | **書くファイル。** `agent-list.md` §2 の file_type で書く |
+| `出力` | **書くファイル。** `agent-list.md` §2 の file_type で書く。**仕様書は部の単位で書き分ける —— 第 1 部 `spec-foundation`（Ch1-4）／第 2 部 `spec-architecture`（Ch5-7）／第 3 部 `spec-test`（Ch8-10）。ANMS（簡易）では 3 型とも単一の `spec` へ畳まれる**（名簿 §2・文書管理規則 §9.39）。**`spec` を作業表に書いてはならない（MUST NOT）** —— 畳んだ後の名前であり、どの部を書くのかが表から消える |
 | `依頼元へ返す` | **依頼元に返す値。** 場所・合否・次の一手だけである（`agent-orchestration-rules.md` §3.6） |
 | `備考` | 上のどれにも入らないこと。**1 文ごとに改行する** |
 
@@ -480,7 +480,7 @@ flowchart TD
 | エージェント | **無条件 11 エージェント** —— srs-writer<br />architect<br />technical-authority<br />project-manager<br />review-agent<br />implementer<br />security-reviewer<br />license-checker<br />test-designer<br />tester<br />user-manual-writer |
 | 条件付きで増えるエージェント | **8 エージェント** —— runbook-writer<br />field-test-engineer<br />feedback-classifier<br />field-issue-analyst<br />incident-reporter<br />progress-monitor<br />process-improver<br />change-manager<br />**全部有効なら 19 エージェント。** |
 | 簡易では決して起動しないエージェント | **2 エージェント** —— risk-manager（`4k` 免除）<br />decree-writer（`Fe` 免除）<br />**19 ＋ 2 = 21。名簿は現在 24 件あり、一致しない。**<br />差は `test-engineer`（作業表で 1 度も使わない）と ``（どの行にも現れない）、および `test-designer` / `tester`（簡易では条件付き・免除の行にしか現れない）である。 |
-| 成果物 | user-order<br />CLAUDE.md<br />**tech-decision**<br />pipeline-state<br />interview-record<br />src<br />spec-foundation<br />spec-architecture<br />spec<br />traceability<br />test-plan<br />review<br />security-scan-report<br />license-report<br />final-report<br />user-manual<br />handoff<br />**17 件（表 M の `実施` から機械で導出した）。** |
+| 成果物 | user-order<br />CLAUDE.md<br />**tech-decision**<br />pipeline-state<br />interview-record<br />src<br />spec-foundation<br />spec-architecture<br />spec-test<br />traceability<br />test-plan<br />review<br />security-scan-report<br />license-report<br />final-report<br />user-manual<br />handoff<br />**17 件（表 M の `実施` から機械で導出した）。**<br />**ANMS なので 3 型は単一の `spec` へ畳まれ、現物のファイルは 1 枚である。** |
 | レビュー報告 | 1 本（`7a` で R1〜R7 網羅）。<br />合格線 Critical 0 / High 0。 |
 | ゲート | 全 8 ゲートを判定する。 |
 
@@ -603,7 +603,7 @@ flowchart TD
 >
 > | 出力 | 使う手順 | 名簿の状況 |
 > |---|---|---|
-> | `spec` | `4c` `4d` `5c` `6a`〜`6h` | **`spec-foundation` = Ch1-2 / `spec-architecture` = Ch3-6 は旧 6 章構成の切れ目であり、`spec-writing-rules.md` の部境界（Ch1-4 / Ch5-7 / Ch8-10）と切り方が違う。** ソフトウェア仕様・テスト戦略・テスト 3 系統に当たる型が無い |
+> | `spec` | — | **解消した**（2026-08-12）。`4c` `4d` を `spec-architecture`、`5c` `6a`〜`6h` を `spec-test` へ振り替え、部の境界（Ch1-4 / Ch5-7 / Ch8-10）に揃えた。**ANMS で 3 型が `spec` 1 枚へ畳まれる規則は §「作業表の列」が持つ** |
 > | `safety` | `4l` | 無い |
 > | `release-checklist` | `7b` | 無い |
 > | `stakeholder-register` ほか | — | 実在する。問題ではない |

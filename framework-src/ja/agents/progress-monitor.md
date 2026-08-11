@@ -40,10 +40,10 @@ model: sonnet
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
 | review | review-agent | レビュー結果から品質メトリクスを取得 | result, 重大度別の指摘件数 |
-| defect | test-engineer | defect 数の追跡 | defect_id, status |
-| performance-report | test-engineer | 性能テスト結果の追跡 | NFR ごとの実測値 |
-| test-progress.json | test-engineer | テスト消化曲線データ | 日付と消化数 |
-| defect-curve.json | test-engineer | defect 発見/修正データ | 日付と発見数・修正数 |
+| defect | tester | defect 数の追跡 | defect_id, status |
+| performance-report | tester | 性能テスト結果の追跡 | NFR ごとの実測値 |
+| test-progress.json | progress-monitor（自身が `6j` で更新する） | テスト消化曲線データ | 日付と消化数 |
+| defect-curve.json | progress-monitor（自身が `6j` で更新する） | defect 発見/修正データ | 日付と発見数・修正数 |
 | cost-log.json | framework | APIコスト追跡 | フェーズごとのトークン消費 |
 
 ### Out

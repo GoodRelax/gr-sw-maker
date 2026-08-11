@@ -46,15 +46,15 @@ model: opus
 | threat-model | security-reviewer | セキュリティ対策の実装 | STRIDE の全脅威に対策 |
 | security-architecture | security-reviewer | セキュリティ設計に従う | 認証・認可方式 |
 | observability-design | architect | ログ・メトリクス・トレーシングの実装 | ログ形式, メトリクス定義, トレース仕様 |
-| defect | test-engineer | 指摘された defect の修正 | defect_id, severity, 再現手順 |
+| defect | tester | 指摘された defect の修正 | defect_id, severity, 再現手順 |
 | CLAUDE.md | project-manager (setup) | コーディング規約・技術スタックの確認 | コーディング規約・技術スタックの各節 |
 
 ### Out
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| （ソースコード） | src/ | test-engineer, review-agent |
-| （単体テスト） | tests/ | test-engineer |
+| （ソースコード） | src/ | test-designer, tester, review-agent |
+| （単体テスト） | tests/ | tester, review-agent |
 | （IaC コード） | infra/ | runbook-writer, technical-authority |
 
 > ソースコード・テストコードは Common Block 管理対象外。トレーサビリティは traceability-matrix で管理する。

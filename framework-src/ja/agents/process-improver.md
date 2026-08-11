@@ -34,7 +34,7 @@ defect 票・レビュー指摘・進捗データを分析し、繰り返し発�
 
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
-| defect | test-engineer | defect パターンの分析 | defect_id, root_cause |
+| defect | tester | defect パターンの分析 | defect_id, root_cause |
 | review | review-agent | レビュー指摘の傾向分析 | 各指摘に severity と観点 ID |
 | progress | progress-monitor | 品質メトリクスの推移確認 | 品質メトリクスの時系列 |
 | decision | project-manager | 過去の意思決定の振り返り | decision_status, 判断根拠 |

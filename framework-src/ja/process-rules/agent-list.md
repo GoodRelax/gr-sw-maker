@@ -119,14 +119,13 @@
 
 ### test-engineer
 
-| file_type | ディレクトリ | 単/連 | 主要フェーズ |
-|-----------|------------|:-----:|------------|
-| test-plan | project-management/ | 単 | delivery（オーナー: test-designer） |
-| defect | project-records/defects/ | 連 | testing（オーナー: tester） |
-| traceability | project-records/traceability/ | 単 | planning 以降（オーナー: test-designer） |
-| performance-report | project-records/performance/ | 連 | testing（オーナー: tester） |
+**所有する file_type は無い。**
 
-> test-engineer は上記 file_type に加え、test-progress.json と defect-curve.json（project-management/progress/）を生成する。これらは JSON 時系列データであり file_type（Common Block 管理対象）ではないが、progress-monitor が消費する。
+> **本エージェントは作業表のどの行にも現れず、いずれの開発方式でも起動しない。** 旧版は `test-plan` / `defect` / `traceability` / `performance-report` の 4 型を所有していたが、利用者の決定により `test-plan` と `traceability` を test-designer へ、`defect` と `performance-report` を tester へ移した（2026-08-12 に文書管理規則 §11 へ反映）。**現行の所有は下記 test-designer / tester の節が持つ。ここに再掲しない。**
+>
+> `test-progress.json` と `defect-curve.json`（project-management/progress/）は progress-monitor が `6j` で更新する。JSON 時系列データであり file_type（Common Block 管理対象）ではない。
+>
+> **名簿から外すかどうかは PoC 後に決める**（目標件数 21 / 23 / 24 の決着と併せて判断する）。
 
 ### review-agent
 

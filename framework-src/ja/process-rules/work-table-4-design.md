@@ -19,8 +19,8 @@
 | `4a`<br />設計 | 要求を満たすアーキテクチャを検討し、<br />設計の章に書いてレイヤーを仕訳ける | main-agent | architect | opus | 対象: 全文 | spec-architecture | 仕様書の場所<br />書いたレイヤー仕訳 | **設計はトレースの鎖に載らない**（`spec-writing-rules.md`「5.1〜5.6 は持たない」）。<br />`5.6` の `ADR` だけが UID を持ち、それも鎖の外である。<br />**親を張ってはならない（MUST NOT）。** |
 | `4b`<br />設計 | アーキテクチャ案の要点をまとめる | main-agent | architect | opus | `4a` の spec-architecture | — | 案の要点 | **文は下で起草させる。** |
 | `4b`<br />設計 | 案を利用者に示し、<br />確認するかどうかを尋ねる | **main-agent** | **利用者** | — | 案の要点 | — | 確認する / しない | **[直列]** **旧版は architect をこの手順の主担当としていた。**<br />作業の実体が利用者への問いなので、`main-agent` の行へ移した。<br />**尋ねずに進んではならない。** |
-| `4c`<br />設計 | 設計を実装できる粒度まで具体化し、<br />ソフトウェア仕様の章に書く | main-agent | architect | opus | 対象: 全文 | spec<br />**traceability** | 仕様書の場所 | **`SWS` の親は `FR` または `NFR` である**（`spec-writing-rules.md` の型ごとの欄、Role は `Satisfies`）。<br />設計の章を親にしてはならない（MUST NOT）。<br />**ユーザーマニュアルの根拠になる**（§3.3）。 |
-| `4d`<br />設計 | 何をどの層で確かめるかを決め、<br />テスト戦略の章に書く | main-agent | architect | opus | 対象: 全文 | spec | 戦略の場所 |  |
+| `4c`<br />設計 | 設計を実装できる粒度まで具体化し、<br />ソフトウェア仕様の章に書く | main-agent | architect | opus | 対象: 全文 | spec-architecture<br />**traceability** | 仕様書の場所 | **`SWS` の親は `FR` または `NFR` である**（`spec-writing-rules.md` の型ごとの欄、Role は `Satisfies`）。<br />設計の章を親にしてはならない（MUST NOT）。<br />**ユーザーマニュアルの根拠になる**（§3.3）。<br />**`traceability` のオーナーは test-designer である。本行は architect が書くので移管に当たる**（名簿 §2）。 |
+| `4d`<br />設計 | 何をどの層で確かめるかを決め、<br />テスト戦略の章に書く | main-agent | architect | opus | 対象: 全文 | spec-architecture | 戦略の場所 |  |
 | `4d`<br />設計 | テスト戦略が実行できるか確かめる | main-agent | test-designer | opus | 対象: テスト<br />根拠: `4d` の戦略 | — | 可否と理由 | **[直列]** **兄弟で並べて起動する**<br />（`agent-orchestration-rules.md` §4.5.1）。<br />戦略を書くのは architect、確かめるのは test-designer である。 |
 | `4e`<br />設計 | ソフトウェア仕様から OpenAPI を生成する | main-agent | architect | opus | 対象: 全文 | openapi | openapi の場所 | API を持つ場合。 |
 | `4f`<br />設計<br />**新設** | API のバージョニング戦略と非推奨通知ポリシーを決め、<br />ADR に書く | main-agent | architect | opus | `4e` の openapi | spec-architecture | `ADR` の UID | 第三者に公開する API を持つ場合。<br />**`4e` は生成するだけで、戦略を持たない。** |

@@ -38,7 +38,7 @@ model: opus
 | field-issue（classified） | feedback-classifier | 分析対象のチケット | issue_id, type, status = classified |
 | spec-foundation | srs-writer | 影響分析・仕様書更新要否の判定 | Ch4 の全 FR/NFR に ID |
 | spec-architecture | architect | 影響分析・仕様書更新要否の判定 | Ch3-4 |
-| （src/, tests/） | implementer, test-engineer | 原因分析対象のソースコード | 再現手順が指すモジュール |
+| （src/, tests/） | implementer, tester | 原因分析対象のソースコード | 再現手順が指すモジュール |
 
 ### Out
 

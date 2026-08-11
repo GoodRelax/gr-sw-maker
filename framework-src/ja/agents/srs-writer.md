@@ -48,7 +48,7 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| spec-foundation | docs/spec/{project}-spec.md (ANMS) or docs/spec/{project}-spec-ch1-2.md (ANPS) | architect, review-agent |
+| spec-foundation | ANMS: `docs/spec/01-10-spec.md` の Ch1-4（file_type は `spec` へ畳まれる） / ANPS: `docs/spec/` の第 1 部ファイル | architect, review-agent |
 | interview-record | project-management/interview-record.md | architect, project-manager |
 
 ### Work
@@ -91,6 +91,8 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 ### 出力規則
 
 出力する file_type（spec-foundation, interview-record）は文書管理規則 §9 の Form Block 仕様に従って作成する。
+
+**ANMS では仕様書が 1 枚に畳まれ、file_type は `spec` になる**（名簿 §2・文書管理規則 §9.39）。このとき Form Block は `spec:` 名前空間で書き、**Common Block と Form Block を触れるのは本エージェントだけである。** architect（Ch5-7）と test-designer / tester（Ch8-10）は Detail の該当章のみを書く。
 
 ### 読むべき規則の節
 

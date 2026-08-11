@@ -47,7 +47,7 @@ model: opus
 | review | review-agent | ゲート判定の入力 | result, 各指摘に severity と finding_level |
 | threat-model | security-reviewer | セキュリティゲート判定 | unmitigated_critical_count |
 | security-scan-report | security-reviewer | SCA/SAST 判定 | critical_count, high_count |
-| traceability | test-engineer | 追跡可能性の判定 | 全 FR の実装・テスト対応 |
+| traceability | test-designer | 追跡可能性の判定 | 全 FR の実装・テスト対応 |
 | deployment-design | architect | infra/ との整合判定 | 環境定義, デプロイ手順 |
 
 ### Out

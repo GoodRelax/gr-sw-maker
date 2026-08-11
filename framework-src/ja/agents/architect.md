@@ -50,14 +50,14 @@ docs/spec/ の仕様書 Ch5-7 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 
 | file_type | 出力先 | 次の消費者 |
 |-----------|--------|-----------|
-| spec-architecture | docs/spec/ | implementer, review-agent, security-reviewer |
+| spec-architecture | ANMS: `docs/spec/01-10-spec.md` の Ch5-7（file_type は `spec` へ畳まれ、**Common Block と Form Block には触れない**） / ANPS: `docs/spec/` の第 2 部ファイル | implementer, review-agent, security-reviewer |
 | observability-design | docs/observability/ | implementer |
-| hw-requirement-spec | docs/hardware/ | implementer, test-engineer（条件付き） |
+| hw-requirement-spec | docs/hardware/ | implementer, test-designer（条件付き） |
 | ai-requirement-spec | docs/ai/ | implementer（条件付き） |
 | framework-requirement-spec | docs/framework/ | implementer（条件付き） |
 | disaster-recovery-plan | docs/operations/ | runbook-writer, 運用チーム |
 | deployment-design | docs/operations/ | implementer, runbook-writer, technical-authority |
-| openapi.yaml | docs/api/ | implementer, test-engineer |
+| openapi.yaml | docs/api/ | implementer, test-designer |
 
 > openapi.yaml は外部ツール規定形式（文書管理規則 §13）であり file_type ではない。Common Block 管理対象外だが、architect が生成・管理する。
 

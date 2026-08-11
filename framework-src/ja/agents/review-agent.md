@@ -47,10 +47,10 @@ model: opus
 | spec-foundation | srs-writer | R1 レビュー対象 | Ch1-4, 全 FR/NFR に ID |
 | spec-architecture | architect | R2/R4/R5/R7 レビュー対象 | Ch5-7, Ch6 の全 SWS に Parent（FR / NFR） |
 | （src/） | implementer | R2/R3/R4/R5/R7 レビュー対象 | 全関数に `@purity` タグ |
-| （tests/） | test-engineer | R6 レビュー対象 | テストの実行結果 |
-| test-plan | test-engineer | R6 テスト計画の妥当性レビュー | テスト観点と対象 FR |
-| performance-report | test-engineer | R5 性能テスト結果のレビュー | NFR ごとの実測値 |
-| traceability | test-engineer | R1 要求-テスト間トレースの完全性レビュー | 全 FR の実装・テスト対応 |
+| （tests/） | test-designer, implementer | R6 レビュー対象 | テストの実行結果 |
+| test-plan | test-designer | R6 テスト計画の妥当性レビュー | テスト観点と対象 FR |
+| performance-report | tester | R5 性能テスト結果のレビュー | NFR ごとの実測値 |
+| traceability | test-designer | R1 要求-テスト間トレースの完全性レビュー | 全 FR の実装・テスト対応 |
 | review-standards.md | framework | R1-R7 の詳細チェック項目 | 総合レビューチェックリストの全行 |
 
 ### Out
@@ -123,8 +123,8 @@ review:
 
 | # | 重大度 | 指摘概要 | 対応 | 参照 |
 |:-:|:------:|---------|:----:|------|
-| 1 | High | Ch3.3 の Adapter 層にビジネスロジックが混入（R2.16） | 未対応 | — |
-| 2 | High | Ch3.4 の在庫更新が Check-Then-Act で非原子（R4.2） | 未対応 | — |
+| 1 | High | Ch5.1 の Adapter 層にビジネスロジックが混入（R2.16） | 未対応 | — |
+| 2 | High | Ch5.5 の在庫更新が Check-Then-Act で非原子（R4.2） | 未対応 | — |
 | 3 | Medium | Ch6 の SWS 3 件に Parent がない（R1.1） | 未対応 | — |
 
 - `dimensions` は適用した観点 ID をカンマ区切りで列挙する
@@ -136,7 +136,7 @@ review:
 | 対象 | 適用するレビュー観点 |
 |------|-------------------|
 | 仕様書 Ch1-4 | R1: 要求品質（R1a構造品質 + R1b表現品質） |
-| 仕様書 Ch3-4・設計文書 | R2: 設計原則, R4: 並行性・状態遷移（設計レベル）, R5: パフォーマンス（設計レベル）, R7: 純粋性・構造（設計レベル） |
+| 仕様書 Ch5-7・設計文書 | R2: 設計原則, R4: 並行性・状態遷移（設計レベル）, R5: パフォーマンス（設計レベル）, R7: 純粋性・構造（設計レベル） |
 | 実装コード | R2: 設計原則, R3: コーディング品質, R4: 並行性・状態遷移（実装レベル）, R5: パフォーマンス（実装レベル）, R7: 純粋性・構造（実装レベル） |
 | テストコード | R6: テスト品質 |
 
@@ -160,7 +160,7 @@ review:
 | 指摘観点 | 戻り先 |
 |---------|--------|
 | R1 | 仕様書 Ch1-4 修正（planning フェーズ相当） |
-| R2/R4/R5/R7（設計レベル） | 仕様書 Ch3-4 修正（design フェーズ相当） |
+| R2/R4/R5/R7（設計レベル） | 仕様書 Ch5-7 修正（design フェーズ相当） |
 | R3/R5/R7（実装レベル） | コード修正（implementation フェーズ相当） |
 | R6 | テスト修正（testing フェーズ相当） |
 
@@ -171,7 +171,7 @@ review:
 | タイミング | 対象 | 観点 |
 |-----------|------|------|
 | planning フェーズ完了後 | 仕様書 Ch1-4 | R1 |
-| design フェーズ完了後 | 仕様書 Ch3-4・設計 | R2, R4, R5, R7（設計レベル） |
+| design フェーズ完了後 | 仕様書 Ch5-7・設計 | R2, R4, R5, R7（設計レベル） |
 | 各モジュール実装完了後 | 実装コード | R2, R3, R4, R5, R7（実装レベル） |
 | testing フェーズ完了後 | テストコード | R6 |
 | delivery フェーズ最終 | 全成果物 | R1-R7 全観点 |
