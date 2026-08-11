@@ -514,7 +514,7 @@
 | # | 作業 |
 |:-:|---|
 | 1 | `DIR_TARGETS` に `{ kind: "tools", dest: "tools" }` を足す。**`framework-src/tools/` → 利用者の `tools/`** |
-| 2 | **`.claude/settings.json` を生成する。** フック（`gate-guard` ／ `kotodama-kun`）・statusLine（`session-meter`）・`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH: 1` を配線する |
+| 2 | **`.claude/settings.json` を生成する。** フック（`gate-guard` ／ `kotodama-kun` ／ `progress-log`）・statusLine（`session-meter`）・`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH: 1` を配線する |
 | 3 | **既存の `settings.json` は上書きせず併合する（MUST）。** 丸ごと置き換えると利用者の権限設定と MCP 設定が消える |
 | 4 | `check-parity.mjs` が `framework-src/tools/` を言語ディレクトリと誤認しないか確かめ、必要なら除外する |
 | 5 | 既存の `tools/` を `maintenance-tools/` へ改名し、CI（`.github/workflows/framework-check.yml`）と `framework-development.md`（日英）の参照を直す |
@@ -525,6 +525,7 @@
 |---|---|
 | `gate-guard.mjs` ／ `session-meter.mjs` ／ `otel-sink.mjs` ／ `spec-query/` | **既存。移すだけ** |
 | **`kotodama-kun.mjs`** | **新設。** `agents/kotodama-kun.md` を廃止して道具にする（`07` §4.6）。**照合の実装は `check-terms.mjs` と共有し、二重に持たない** |
+| **`progress-log.mjs`** | **新設。** 手順の開始・終了・担い手・時刻を `progress-log.json` へ 1 行追記するフック（`07` §4.5.3）。**エージェントを起動しない。** `Fa` と `Fc` がこれを読む。**トークンは取れない**（`06` §3.1）ので、そちらは `main-agent` が Agent の返り値を渡す |
 
 ### 9.5 新設する道具（フレームワーク保守側）
 
@@ -689,3 +690,6 @@
 | 5 | 名簿と名簿検査を **22 → 21 エージェント**へ直す | `agent-list.md` ／ `maintenance-tools/check-roster.mjs` |
 | 6 | **project-manager の description を直す** | 「ユーザーへの報告を行う」→「報告文を起草し `main-agent` へ渡す」。**エージェントは親にしか返せない** |
 | 7 | 役割の移動を反映する | `agents/architect.md` `srs-writer.md` `technical-authority.md`（Phase 1 の担当変更。`00-mode-matrix.md` §4.1） |
+| 8 | **`progress-log.mjs` を新設し、フックとして配線する**（§9.3・§9.4） | `framework-src/tools/` ／ `.claude/settings.json`。**開始・終了の記録に手順を立てない**（`07` §4.5.3） |
+| 9 | **`progress-log.json` を「file_type ではない生成物」に足す** | `agent-list.md` §2（`cost-log.json` と同じ扱い。**file_type にはしない**） |
+| 10 | **フックが Agent の返り値を受け取れるかを確かめる** | 未確認（`06` §3.1 は「hook は計測値を持たない」を公式で確認）。**受け取れない前提で設計してあるので、結果によらず経路は変わらない** |
