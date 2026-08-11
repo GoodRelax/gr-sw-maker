@@ -479,7 +479,7 @@ flowchart TD
 | 手順 | **無条件 53**（うち `Phase 0` インストールが 5）。<br />条件付き 31。<br />免除 13。<br />**合計 97**。 |
 | エージェント | **無条件 11 エージェント** —— srs-writer<br />architect<br />technical-authority<br />project-manager<br />review-agent<br />implementer<br />security-reviewer<br />license-checker<br />test-designer<br />tester<br />user-manual-writer |
 | 条件付きで増えるエージェント | **8 エージェント** —— runbook-writer<br />field-test-engineer<br />feedback-classifier<br />field-issue-analyst<br />incident-reporter<br />progress-monitor<br />process-improver<br />change-manager<br />**全部有効なら 19 エージェント。** |
-| 簡易では決して起動しないエージェント | **2 エージェント** —— risk-manager（`4k` 免除）<br />decree-writer（`Fe` 免除）<br />**19 ＋ 2 = 21。名簿は現在 24 件あり、一致しない。**<br />差は `test-engineer`（作業表で 1 度も使わない）と `framework-translation-verifier`（どの行にも現れない）、および `test-designer` / `tester`（簡易では条件付き・免除の行にしか現れない）である。 |
+| 簡易では決して起動しないエージェント | **2 エージェント** —— risk-manager（`4k` 免除）<br />decree-writer（`Fe` 免除）<br />**19 ＋ 2 = 21。名簿は現在 24 件あり、一致しない。**<br />差は `test-engineer`（作業表で 1 度も使わない）と ``（どの行にも現れない）、および `test-designer` / `tester`（簡易では条件付き・免除の行にしか現れない）である。 |
 | 成果物 | user-order<br />CLAUDE.md<br />**tech-decision**<br />pipeline-state<br />interview-record<br />src<br />spec-foundation<br />spec-architecture<br />spec<br />traceability<br />test-plan<br />review<br />security-scan-report<br />license-report<br />final-report<br />user-manual<br />handoff<br />**17 件（表 M の `実施` から機械で導出した）。** |
 | レビュー報告 | 1 本（`7a` で R1〜R7 網羅）。<br />合格線 Critical 0 / High 0。 |
 | ゲート | 全 8 ゲートを判定する。 |

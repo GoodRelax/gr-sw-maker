@@ -78,7 +78,7 @@ gr-sw-maker フレームワーク文書を $ARGUMENTS に翻訳してくださ�
 2. `process-rules/glossary-{src}.md` を読み込み、用語の対訳表を作成する
 3. 各ファイルを翻訳し、`*-{target}.md` として出力する
 4. 品質セルフチェックを実施する（§6）
-5. framework-translation-verifier エージェントで原文との一致性を検証する
+5. 原文との一致性を検証する。**検証エージェント `framework-translation-verifier` は退避中である**（`maintenance/2026-08-10/suspended/`）。en が出来た時点で一部を改修して名簿へ戻す
 
 ---
 

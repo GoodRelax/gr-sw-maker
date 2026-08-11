@@ -152,7 +152,6 @@ flowchart TB
         end
         subgraph QualityGuard["品質ガード（2）"]
             Koto_Agent["kotodama-kun"]
-            FTV_Agent["framework-translation-verifier"]
         end
         subgraph DocWriter["文書作成（3）"]
             UMW_Agent["user-manual-writer"]
@@ -1504,7 +1503,6 @@ project_root/
       risk-manager.md             ... リスク管理エージェント
       license-checker.md          ... ライセンス確認エージェント
       kotodama-kun.md             ... 用語・命名チェッカー
-      framework-translation-verifier.md ... 翻訳一致性検証エージェント
       user-manual-writer.md       ... ユーザーマニュアル作成エージェント
       runbook-writer.md           ... 運用手順書作成エージェント
       incident-reporter.md        ... incident 報告エージェント
@@ -1690,7 +1688,6 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 - **Risk Manager Agent（risk-manager）**: project-records/risks/にリスクエントリを記録し、risk-register.mdを管理する。score≧6はユーザーに通知
 - **License Checker Agent（license-checker）**: 依存ライブラリ追加時にライセンス互換性を確認し、帰属表示を管理する
 - **Kotodama-kun Agent（kotodama-kun）**: 成果物の用語・命名がフレームワーク用語集およびプロジェクト用語集に準拠しているかチェックする
-- **Framework Translation Verifier Agent（framework-translation-verifier）**: リリース前にフレームワーク文書の多言語間翻訳一致性を検証する
 - **User Manual Writer Agent（user-manual-writer）**: delivery フェーズでユーザーマニュアルを docs/ に作成する
 - **Runbook Writer Agent（runbook-writer）**: delivery フェーズで運用手順書を docs/operations/ に作成する
 - **Incident Reporter Agent（incident-reporter）**: operation フェーズで incident 報告書を project-records/incidents/ に作成する
@@ -2641,7 +2638,6 @@ sequenceDiagram
     participant RM as risk-manager
     participant CM as change-manager
     participant Lic as license-checker
-    participant FTV as framework-translation-verifier
     participant UMW as user-manual-writer
     participant RBW as runbook-writer
     participant IR as incident-reporter
@@ -2855,7 +2851,6 @@ PM Agent はこのスキーマに従って `project-management/progress/progress
 | `risk-manager`                    | リスク特定・評価・軽減策管理                                          | sonnet | プロセス管理 |
 | `license-checker`                 | OSSライセンス互換性確認                                               | haiku  | プロセス管理 |
 | `kotodama-kun`                    | 用語・命名の整合性チェック                                            | haiku  | 品質保証     |
-| `framework-translation-verifier`  | フレームワーク文書の多言語間翻訳一致性検証                            | sonnet | 品質保証     |
 | `user-manual-writer`              | ユーザーマニュアルの作成                                              | sonnet | 納品物       |
 | `runbook-writer`                  | 運用手順書（Runbook）の作成                                           | sonnet | 納品物       |
 | `incident-reporter`               | incident 報告書の作成                                              | sonnet | 運用         |

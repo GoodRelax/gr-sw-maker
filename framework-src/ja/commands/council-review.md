@@ -38,7 +38,6 @@
 
 ### 起動方法
 
-`Agent tool`（subagent_type: "framework-translation-verifier", description: "Full JA-EN translation consistency gate"）
 
 > **注意:** Phase 0 はバックグラウンドではなくフォアグラウンドで実行する。結果を確認してからでないと次フェーズに進めない。
 
@@ -213,7 +212,7 @@ full-auto-dev-document-rules §7 の file_type マスターテーブルの実際
 - [ ] 各エージェントの file_type 所有権に重複がないか（F04 §2 の全セクション横断）
 - [ ] F04 §3 データフロー図（メイン図 + DocWriter系図 + kotodama-kun図）の矢印が、対応するエージェントの In/Out と整合しているか
 - [ ] F02 §1.2 全体アーキテクチャ図（グループレベル概要）が F04 §3（詳細図）と矛盾していないか
-- [ ] file_type を所有しないエージェント（kotodama-kun, framework-translation-verifier, decree-writer）の入出力パターンが一貫しているか
+- [ ] file_type を所有しないエージェント（kotodama-kun, decree-writer）の入出力パターンが一貫しているか
 - [ ] decree-writer の安全チェック（SR1-SR6）が F02 §3.3.3 の改善サイクルと整合しているか
 - [ ] decree-writer の承認テーブル（CLAUDE.md=ユーザー, agents=project-manager, process-rules=ユーザー）が関連ファイルで一致しているか
 

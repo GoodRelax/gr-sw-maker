@@ -153,7 +153,6 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 - **Risk Manager Agent（risk-manager）**: project-records/risks/にリスクエントリを記録し、risk-register.mdを管理する。score≧6はユーザーに通知
 - **License Checker Agent（license-checker）**: 依存ライブラリ追加時にライセンス互換性を確認し、帰属表示を管理する
 - **Kotodama-kun Agent（kotodama-kun）**: 成果物の用語・命名がフレームワーク用語集およびプロジェクト用語集に準拠しているかチェックする
-- **Framework Translation Verifier Agent（framework-translation-verifier）**: リリース前にフレームワーク文書の多言語間翻訳一致性を検証する
 - **User Manual Writer Agent（user-manual-writer）**: delivery フェーズでユーザーマニュアルを docs/ に作成する
 - **Runbook Writer Agent（runbook-writer）**: delivery フェーズで運用手順書を docs/operations/ に作成する
 - **Incident Reporter Agent（incident-reporter）**: operation フェーズで incident 報告書を project-records/incidents/ に作成する

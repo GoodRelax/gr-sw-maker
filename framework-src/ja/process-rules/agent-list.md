@@ -39,20 +39,19 @@
 | 10 | risk-manager | リスク特定・評価・監視、リスク台帳管理 | sonnet | planning 以降 |
 | 11 | license-checker | OSS ライセンス互換性確認、帰属表示管理 | haiku | implementation, delivery |
 | 12 | kotodama-kun | 用語・命名の整合性チェック（フレームワーク用語集 + プロジェクト用語集） | sonnet | 全フェーズ（Out 生成時） |
-| 13 | framework-translation-verifier | フレームワーク文書の多言語間翻訳一致性を検証 | sonnet | delivery（リリース前） |
-| 14 | user-manual-writer | ユーザーマニュアルの作成 | sonnet | delivery |
-| 15 | runbook-writer | 運用手順書（Runbook）の作成 | sonnet | delivery |
-| 16 | incident-reporter | incident 報告書の作成 | sonnet | operation |
-| 17 | process-improver | ふりかえり・根本原因分析・プロセス改善策の提案 | sonnet | 全フェーズ（フェーズ完了時） |
+| 13 | user-manual-writer | ユーザーマニュアルの作成 | sonnet | delivery |
+| 14 | runbook-writer | 運用手順書（Runbook）の作成 | sonnet | delivery |
+| 15 | incident-reporter | incident 報告書の作成 | sonnet | operation |
+| 16 | process-improver | ふりかえり・根本原因分析・プロセス改善策の提案 | sonnet | 全フェーズ（フェーズ完了時） |
 
 > **model 割当の根拠:** kotodama-kun は和製英語の判定と文書横断の同義語検出を行う。いずれも意味理解を要し、かつ全エージェントの Out 生成時に呼ばれるため呼出頻度が最も高い。誤検出と見逃しの双方がフレームワーク全体に波及するため sonnet を割り当てる。
-| 18 | decree-writer | 承認済み改善策のガバナンスファイルへの安全な適用 | sonnet | 全フェーズ（フェーズ完了時） |
-| 19 | field-test-engineer | ユーザーとの実機テスト、フィードバック記録、修正後の実機検証 | sonnet | testing（条件付き: 実機テスト有効時） |
-| 20 | feedback-classifier | フィードバックを仕様書と照合し defect / CR / 質問に分類、チケット起票 | sonnet | testing（条件付き: 実機テスト有効時） |
-| 21 | field-issue-analyst | 原因分析（defect）、対策立案（defect / CR）、影響範囲・副作用・代替案比較 | opus | testing（条件付き: 実機テスト有効時） |
-| 22 | technical-authority | 技術判断の裁定、仕様・設計・実装・テストの整合保証、品質ゲート判定 | opus | planning 以降（ゲート時） |
-| 23 | test-designer | テストの受入基準とテストケースを設計し、仕様書のテストの章に書く | opus | planning・design・testing・delivery |
-| 24 | tester | テストを実行し、結果を仕様書のテスト結果の節に記録する | sonnet | testing |
+| 17 | decree-writer | 承認済み改善策のガバナンスファイルへの安全な適用 | sonnet | 全フェーズ（フェーズ完了時） |
+| 18 | field-test-engineer | ユーザーとの実機テスト、フィードバック記録、修正後の実機検証 | sonnet | testing（条件付き: 実機テスト有効時） |
+| 19 | feedback-classifier | フィードバックを仕様書と照合し defect / CR / 質問に分類、チケット起票 | sonnet | testing（条件付き: 実機テスト有効時） |
+| 20 | field-issue-analyst | 原因分析（defect）、対策立案（defect / CR）、影響範囲・副作用・代替案比較 | opus | testing（条件付き: 実機テスト有効時） |
+| 21 | technical-authority | 技術判断の裁定、仕様・設計・実装・テストの整合保証、品質ゲート判定 | opus | planning 以降（ゲート時） |
+| 22 | test-designer | テストの受入基準とテストケースを設計し、仕様書のテストの章に書く | opus | planning・design・testing・delivery |
+| 23 | tester | テストを実行し、結果を仕様書のテスト結果の節に記録する | sonnet | testing |
 
 ---
 
@@ -174,15 +173,6 @@
 | spec-foundation (Ch1.8 Glossary) | srs-writer | プロジェクト用語集との照合 |
 | full-auto-dev-document-rules.md §7 | framework | file_type 名・名前空間の正式定義 |
 
-### framework-translation-verifier
-
-> framework-translation-verifier は file_type を所有しない。検証結果は review として project-records/reviews/ に記録する（review-agent の file_type を借用）。
-
-| 入力 | 提供元 | 用途 |
-|------|--------|------|
-| 多言語ファイルペア | framework | 翻訳一致性の検証対象 |
-| process-rules/, essays/, README 等 | framework | 構造・テーブル・リンク・コードブロック・用語の一致検証 |
-
 ### user-manual-writer
 
 | file_type | ディレクトリ | 単/連 | 主要フェーズ |
@@ -297,7 +287,6 @@ flowchart TD
     CM["change-manager"]
     RM["risk-manager"]
     Lic["license-checker"]
-    FTV["framework-translation-verifier"]
     PI["process-improver"]
     DW["decree-writer"]
     TA["technical-authority"]
@@ -327,7 +316,6 @@ flowchart TD
     Orch -->|"decision"| Arch
     Orch -->|"executive-dashboard<br/>final-report"| User
     User -->|"&lt;&lt;action&gt;&gt;<br/>change-request-input"| CM
-    FTV -->|"review"| Orch
     Orch -->|"&lt;&lt;action&gt;&gt;<br/>retrospective-trigger"| PI
     PI -->|"retrospective-report"| Orch
     Orch -->|"&lt;&lt;action&gt;&gt;<br/>approved-improvement"| DW
@@ -348,7 +336,6 @@ flowchart TD
     style CM fill:#d5dbdb,stroke:#333,color:#000
     style RM fill:#d5dbdb,stroke:#333,color:#000
     style Lic fill:#d5dbdb,stroke:#333,color:#000
-    style FTV fill:#af7ac5,stroke:#333,color:#fff
     style PI fill:#F0E68C,stroke:#333,color:#000
     style TA fill:#e59866,stroke:#333,color:#000
     style DW fill:#F0E68C,stroke:#333,color:#000
@@ -448,7 +435,6 @@ kotodama-kun を**使用しない**エージェント:
 | review-agent | 他エージェントの成果物を評価する側 |
 | change-manager | ユーザー起点の変更要求を記録するだけで用語創出が少ない |
 | license-checker | 外部ライセンス名をそのまま記録 |
-| framework-translation-verifier | 翻訳一致性の検証が主務。用語定義自体は変更しない |
 | decree-writer | 承認済み改善策を適用するだけで新規用語を生成しない |
 | feedback-classifier | 仕様書との照合・分類判定のみで用語創出が少ない |
 | field-issue-analyst | 原因分析・対策立案で既存用語を使用するのみ |
@@ -468,7 +454,7 @@ kotodama-kun を**使用しない**エージェント:
 | design | project-manager, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5/R7 PASS |
 | implementation | project-manager, implementer, test-engineer(単体), security-reviewer(SCA), kotodama-kun, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5/R7 PASS, SCA クリア |
 | testing | project-manager, test-engineer, kotodama-kun, review-agent, technical-authority, progress-monitor, process-improver, decree-writer, field-test-engineer(条件付き), feedback-classifier(条件付き), field-issue-analyst(条件付き) | R6 PASS, 全テスト PASS |
-| delivery | project-manager, kotodama-kun, review-agent, technical-authority, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R7 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
+| delivery | project-manager, kotodama-kun, review-agent, technical-authority, license-checker, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R7 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
 | operation | project-manager, security-reviewer(パッチ), progress-monitor, incident-reporter, process-improver, decree-writer | SLA 達成 |
 
 ---
