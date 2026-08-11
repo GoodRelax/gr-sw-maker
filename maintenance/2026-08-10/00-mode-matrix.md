@@ -23,7 +23,7 @@
 
 | 列 | 中身 |
 |---|---|
-| `フェーズ` | **フェーズ番号・フェーズ名・手順記号を 1 つのセルに持つ。** フェーズ名が**その作業の目的**である。**`新設` / `統合` / `分割` を併記した行は、`commands/full-auto-dev.md` に本体がまだ無い** |
+| `フェーズ` | **手順記号とフェーズ名を 1 つのセルに持つ。** フェーズ名が**その作業の目的**である。**フェーズ番号は書かない** —— 手順記号の先頭文字がそれを表す。**`新設` / `統合` / `分割` を併記した行は、`commands/full-auto-dev.md` に本体がまだ無い** |
 | `作業` | **目的を達成する手段を書く。動詞で終える（MUST）。** 状態（「〜されている」）で書いてはならない —— **前提条件に見え、指示にならない** |
 | `依頼元` | 頼む側。`main-agent` か `利用者` |
 | `担い手` | やる側。エージェント・`利用者`・道具のいずれか。**1 行 1 担い手。複数なら行を分ける** |
@@ -34,7 +34,9 @@
 
 **`出力` と `依頼元へ返す` を混ぜてはならない（MUST NOT）。** 前者はファイル、後者は戻り値である。**成果物の全文を返させない**という規約（`07` §4.7 の規約 1）は、両者を分けて初めて検査できる。
 
-**1 行は 1 往復である。**
+**1 行は 1 依頼である。往復の数は `07` §4.2・§4.3 が決める。**
+
+重い依頼（レビュー・仕様の詳細化・実機テスト）には受領通知が挟まり、指摘には回答と再判定が続く。**表は依頼の単位を持ち、往復の数は持たない。**
 
 ```text
 依頼元 --作業_と_入力--> 担い手
@@ -56,6 +58,9 @@
 | **`新設`** | **その手順の本体がまだ無い。新しく作る** | 作業表 |
 | **`統合`** | **既存の複数手順を 1 つにまとめた** | 作業表 |
 | **`分割`** | **既存の 1 手順を 2 つに割った** | 作業表 |
+| **`[直列]`** | **前の行の完了を待つ**（同じ手順記号の 2 行目以降） | 作業表 |
+| **`[同時]`** | **前の行と同時に起動してよい**（同上） | 作業表 |
+| **`[簡易・標準]` / `[厳格]`** | **方式で経路が変わる行。互いに排他である** | 作業表 |
 
 **可否を表すセルの値は上記だけである。`任意` を使ってはならない（MUST NOT）。** 表 0・A・E-2 は記述値を持つ表であり、この制限の対象外である。
 
@@ -93,7 +98,7 @@
 | 枚数 | 1 | 4 | 14 | Critical で厳格になった小さなプロジェクトでは、14 枚それぞれが小さくなるだけで枚数は減らない |
 | 分割の単位 | 分割しない | 部 | 章 | |
 | StrictDoc | 使わない | 使う | 使う | ANMS でも記法は同じ。export と検出クエリを使わないだけである |
-| 文法ファイル | `spec-anms.sgra` | `spec.sgra` | `spec.sgra` | `tools/spec-query/` から仕様書フォルダへ複製する（MUST の本文は `02` の「文法の配置」節） |
+| 文法ファイル | `spec-anms.sgra` | `spec.sgra` | `spec.sgra` | `tools/spec-query/` から仕様書フォルダへ複製する（MUST の本文は `02` の「ファイル名と番号の規則」節。**`02` に「文法の配置」という節は無い**） |
 | テンプレートの行数（記入前） | **再計測** | **再計測** | **再計測** | Chapter 8 の削除後に測り直す。仕様書テンプレートに各ノード型 2 件ずつを置いた状態 |
 | ファイル名 | `01-10-spec` | 4 枚 | 14 枚 | 一覧は `02` の「ファイル名と番号の規則」節が持つ |
 
@@ -108,8 +113,8 @@
 | 方式 | 粒度 | 枚数 |
 |---|---|---|
 | 簡易 | **全文** | ANMS は 1 枚しかない |
-| 標準 | **部** | 4 枚のうち該当する部 |
-| 厳格 | **章** | 14 枚のうち該当する章 |
+| 標準 | **部** | **3 部 ＋ 付録の 4 枚**のうち該当する部 |
+| 厳格 | **章** | 14 枚のうち該当する章。**テスト 3 章はケースと結果で 2 枚に割れる**ので、そこだけ節の粒度になる |
 
 **例外は 4 つだけである。**
 
@@ -128,7 +133,7 @@
 
 **`対象` は判断する当のもの、`根拠` はその判断が的を射るために要る上流である。**
 
-> **なぜ `根拠` を分けて書くのか。** `07-agent-orchestration-rules.md` §3.5 が「**節約してよいのは成果物であって、前提ではない**」と定めている。同書は `main-agent` について書いているが、**機構はすべての担い手に効く。** 目的と上流を知らないエージェントは、返ってきたものが筋に合っているかを判断できない。
+> **なぜ `根拠` を分けて書くのか。** `07-agent-orchestration-rules.md` §3.5 が「**節約してよいのは成果物であって、前提ではない**」と定めている。同書は `main-agent` について書いているが、**本表はこれをすべての担い手へ広げて適用する**（`07` にこの一般化は無い。広げる判断は本表が負う）。 目的と上流を知らないエージェントは、返ってきたものが筋に合っているかを判断できない。
 >
 > **サブエージェントは会話履歴・呼んだスキル・読んだファイルを見ない**（`06-agent-connection-report.md` §2.3）。**したがって `入力` 列に書いたものが、そのエージェントが知ることのほぼ全部になる。** 作業表は依頼文の材料である。
 
@@ -139,7 +144,7 @@
 | 設計レビュー | 何を満たすための設計かを知らず、**正当な単純化を抽象化不足と誤る** |
 | テストレビュー | 何を確かめたいかを知らず、**書式しか見られない** |
 | 結果の判定 | 期待と実際が食い違ったとき、**テストと実装のどちらが誤りかを決められない** |
-| ユーザーマニュアル | 操作手順・画面・メッセージが SW仕様にしかないため、**要求だけでは書けない** |
+| ユーザーマニュアル | 操作手順・画面・メッセージが ソフトウェア仕様にしかないため、**要求だけでは書けない** |
 
 「対象ノードの祖先」とは、対象ノードから親をたどった鎖である。
 
@@ -152,7 +157,32 @@ flowchart TD
     TC -->|"引く範囲"| TE["test-designer"]
 ```
 
-祖先は 4 ノードであって 4 章ではない。引く道具は未作成である（`tools/spec-query/` にあるのは `checks.jq` / `spec.sgra` / `spec-anms.sgra` の 3 つ）。段 6 で `ancestors.jq` を新設する。
+**祖先の長さは系統で変わる。** `UC` を通る鎖は `GL → UC → FR → SWS → TC → TR` で 4 ノード、`NFR` 直結の `TC` は 2 ノード、`NFR → SWS` を経るものは 3 ノードである（`02` の鎖の図）。**「祖先は 4 ノード」と決め打ってはならない。**
+
+引く道具は未作成である（`tools/spec-query/` にあるのは `checks.jq` / `spec.sgra` / `spec-anms.sgra` の 3 つ）。段 6 で `ancestors.jq` を新設する。**それまでは UID を手で手繰る。**
+
+### 3.3 `入力` に使ってよい語
+
+**`入力` 列に書けるのは下表の語だけである（MUST）。** 表に無い語を書いてはならない —— 依頼を受けたエージェントが、どのファイルを開けばよいか決められなくなる。
+
+| 語 | 指すもの（`02` の章名） | ノード型 | 注意 |
+|---|---|---|---|
+| `全文` | 仕様書のすべての章 | すべて | §3.1 の例外 4 者だけが使う |
+| `目的` | Foundation の Goals | `GL` | **鎖の根である** |
+| `概要` | System Overview | 持たない | 機器と経路。ID が無いので名前で参照する |
+| `UC` | Use Cases | `UC` | アクターと主成功シナリオ |
+| `要求` | Requirements | `FR` / `NFR` | |
+| `NFR` | Requirements のうち非機能 | `NFR` | 数値目標を持つもの |
+| `設計` | Design ＋ Software Specification | `ADR` のみ（鎖の外） | **設計レビューの対象範囲である。テスト戦略を含まない** |
+| `ソフトウェア仕様` | Software Specification | `SWS` | 操作手順・画面・メッセージはここにしかない |
+| `テスト戦略` | Test Strategy | 持たない | **第 2 部（設計側）にある。第 3 部ではない** |
+| `テスト` | Use Case Tests ＋ Software Specification Tests ＋ Non-Functional Tests | `TC` / `TR` | 第 3 部。**`テスト戦略` と混同しない** |
+| `対象ノードの祖先` | 対象から親をたどった鎖 | 可変 | 長さは 2〜4（上記） |
+| `自分が書く結果の節` | 各テスト章の Test Results 節 | `TR` | 系統ごとに別の節である |
+
+**章番号とファイル名は本表に書かない。** 語から章名が決まり、章名からファイルが決まる。**後半の対応は `02` の「ファイル名と番号の規則」が持つ。**
+
+> **未決:** 仕様書のファイル名の正本が 2 つある。§2 の表 A は `01-10-spec` / 14 枚、`02` は `01-11-spec.md` / 15 枚（`02` は Chapter 8 削除前のままである）。**どちらを引いてもファイルが一意に決まらないので、段 6 で `02` を追随させるまで、依頼文には実ファイル名を与件として添える**（§4 の「依頼に必ず添える与件」）。
 
 ---
 ## 4. 作業表 —— フェーズの流れ
@@ -163,15 +193,29 @@ flowchart TD
 
 ### 目的はフェーズ名が担う
 
-**`フェーズ` 列がフェーズ番号とフェーズ名を持ち、それが作業の目的を表す。** だから `作業` 列は**目的を達成する手段**を書く。
+**`フェーズ` 列がフェーズ名を持ち、それが作業の目的を表す。** だから `作業` 列は**目的を達成する手段**を書く。
 
 | 列 | 答えるもの | 例 |
 |---|---|---|
-| `フェーズ` | **なぜ**（目的） | Phase 4<br />設計 |
+| `フェーズ` | **なぜ**（目的） | `4a`<br />設計 |
 | `作業` | **どうやって**（手段） | 要求を満たすアーキテクチャを検討し、設計の章に書く |
 | `出力` ＋ `依頼元へ返す` | **どうなれば終わりか**（完了条件） | spec-architecture が書かれ、張った親の範囲が返っている |
 
 **完了条件の列は要らない。** 出力と戻り値がそろえば終わりである。
+
+### 依頼に必ず添える与件
+
+**`入力` 列は手順ごとに変わるものだけを持つ。** 全依頼に共通するものは列に書かず、**依頼文の側で必ず添える（MUST）。**
+
+| 与件 | どこから取るか | 無いと何が起きるか |
+|---|---|---|
+| **開発方式**（簡易 / 標準 / 厳格） | `1d` の decision | 読む粒度（§3.1）も、報告を残すか（表 E-1）も決まらない |
+| **仕様形式**（ANMS / ANPS-part / ANPS-chapter） | §2 の表 A ＋ 開発方式 | 仕様書が 1 枚なのか 14 枚なのか決まらない |
+| **仕様書の実ファイル一覧** | 仕様書のフォルダの現物 | §3.3 の語から開くファイルが決まらない（§3.3 の未決） |
+| **現在のフェーズと直前のゲートの結果** | pipeline-state | 前提が満たされているか判断できない |
+| **並列で起動された兄弟の有無と、自分に割り当てられた連番** | `main-agent` | 同時に書くと出力の採番が衝突する |
+
+> **これは列の代わりではない。** サブエージェントは会話履歴を見ないので（`06` §2.3）、**与件も `入力` と同じく依頼文に載らなければ届かない。** 列に書かないのは、88 手順すべてに同じ 5 行を書くのが冗長だからである。
 
 > **フェーズ名を節見出しと重ねて書くのは冗長に見えるが、意図してそうしている。** **1 行がそのまま 1 つの依頼文になる。**行を抜き出したときに目的が失われてはならない。
 >
@@ -188,7 +232,7 @@ flowchart TD
 
 **合計 88 は方式によらない。** 方式が変えるのは実施か免除かであって、手順の存在ではない。**厳格に免除が 1 つも無い。**
 
-**行数は手順数より多い。** 担い手が複数なら行を分けるためである。**同じ手順記号の行は、すべて依頼元が同じでなければならない**（兄弟の規則。`07` §4.5.1）。
+**行数は手順数より多い。** 担い手が複数なら行を分けるためである。**同じ手順記号の行は、すべて依頼元が同じでなければならない。** これは作業表の規則であり、`07` §4.5.1 の兄弟形を表に写したものである（`07` にこの文は無い）。
 
 ### 4.1 Phase 0 インストール
 
@@ -196,27 +240,27 @@ flowchart TD
 
 | フェーズ | 作業 | 依頼元 | 担い手 | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|
-| Phase 0<br />インストール<br />`0a`<br />**新設** | gr-sw-maker を取得し、<br />主言語を選ぶ | **利用者** | **利用者** | — | — | — | 主言語は `setup.js` の引数になる。<br />翻訳言語は空でよい。 |
-| Phase 0<br />インストール<br />`0b`<br />**新設** | `node setup.js {lang}` を実行し、<br />規則・エージェント・命令・道具を配置する | **利用者** | `setup.js` | `framework-src/{lang}/`<br />`framework-src/tools/` | process-rules<br />agents<br />commands<br />CLAUDE.md<br />user-order | 配置したファイルの一覧 | **道具の配布経路はまだ無い**<br />（`03-work-order.md` §9.1）。<br />現在の `setup.js` は `tools/` を配らない。 |
-| Phase 0<br />インストール<br />`0c`<br />**新設** | `.claude/settings.json` を生成し、<br />既存の設定に併合する | **利用者** | `setup.js` | 既存の `.claude/settings.json` | settings.json | 併合の結果 | **丸ごと置き換えてはならない（MUST NOT）。**<br />利用者の権限設定と MCP 設定が消える。<br />配線するのはフック・statusLine・`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH: 1` である。 |
-| Phase 0<br />インストール<br />`0d`<br />**新設** | 配置物を数え、<br />不足を洗い出す | **利用者** | **利用者** | `0b` の一覧<br />settings.json | — | 不足の一覧 | **そろっていなくても以降は黙って進む。**<br />フックも statusLine も、届いていなければ何も言わずに沈黙する。<br />**「0 件」と「動いていない」を区別できるのはここだけである。** |
-| Phase 0<br />インストール<br />`0e`<br />**新設** | `user-order.md` の 3 問に答えを書く | **利用者** | **利用者** | user-order のひな形 | user-order | — | `1a` の入力になる。<br />**`CLAUDE.md` の中身は `1c` で埋める。ここでは触らない。** |
+| `0a`<br />インストール<br />**新設** | gr-sw-maker を取得し、<br />主言語を選ぶ | **利用者** | **利用者** | — | — | — | 主言語は `setup.js` の引数になる。<br />翻訳言語は空でよい。 |
+| `0b`<br />インストール<br />**新設** | `node setup.js {lang}` を実行し、<br />規則・エージェント・命令・道具を配置する | **利用者** | `setup.js` | `framework-src/{lang}/`<br />`framework-src/tools/` | process-rules<br />agents<br />commands<br />CLAUDE.md<br />user-order | 配置したファイルの一覧 | **道具の配布経路はまだ無い**<br />（`03-work-order.md` §9.1）。<br />現在の `setup.js` は `tools/` を配らない。 |
+| `0c`<br />インストール<br />**新設** | `.claude/settings.json` を生成し、<br />既存の設定に併合する | **利用者** | `setup.js` | 既存の `.claude/settings.json` | settings.json | 併合の結果 | **丸ごと置き換えてはならない（MUST NOT）。**<br />利用者の権限設定と MCP 設定が消える。<br />配線するのはフック・statusLine・`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH: 1` である。 |
+| `0d`<br />インストール<br />**新設** | 配置物を数え、<br />不足を洗い出す | **利用者** | **利用者** | `0b` の一覧<br />settings.json | — | 不足の一覧 | **そろっていなくても以降は黙って進む。**<br />フックも statusLine も、届いていなければ何も言わずに沈黙する。<br />**「0 件」と「動いていない」を区別できるのはここだけである。** |
+| `0e`<br />インストール<br />**新設** | `user-order.md` の 3 問に答えを書く | **利用者** | **利用者** | user-order のひな形 | user-order | — | `1a` の入力になる。<br />**`CLAUDE.md` の中身は `1c` で埋める。ここでは触らない。** |
 
-> **§11 の検査に例外が要る。** `利用者` と `setup.js` は `agent-list.md` §1 の名簿に無く、`settings.json` は §2 の file_type に無い。**Phase 0 の全行を対象外とする。**
+> **§11 の検査に例外が要る。** `利用者` と `setup.js` は `agent-list.md` §1 の名簿に無く、`settings.json` は §2 の file_type に無い。**Phase 0 の全行を検査 12 と検査 18 の対象外とする**（他の検査は Phase 0 でも効く）。
 
 ### 4.2 Phase 1 初期設定
 
 | フェーズ | 作業 | 依頼元 | 担い手 | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|
-| Phase 1<br />初期設定<br />`1a` | user-order を読み、<br />何を作るのかを前提として持つ | **main-agent** | **main-agent** | user-order | — | — | **前提を持たないエージェントは「次を選ぶ」ができない**<br />（`07` §3.5）。<br />user-order は 3 問形式で小さく、以降のすべての判断の入力になる。<br />**srs-writer も `2a` で読むが、それは解析のためであって代替にならない。** |
-| Phase 1<br />初期設定<br />`1b` | user-order を仕様書テンプレートの必須項目に照らし、<br />不足を洗い出す | main-agent | srs-writer | user-order | — | 不足の一覧 | 不足はインタビューで解消する。<br />user-order 自体は直さない。 |
-| Phase 1<br />初期設定<br />`1c` | user-order から決めごとを起こし、<br />CLAUDE.md の案を書く | main-agent | architect | user-order<br />`1b` の不足の一覧 | CLAUDE.md | 案の場所<br />利用者が埋める箇所 | **project-manager から移した。**<br />設計上の決めごとを並べた文書であり、設計のエージェントが起草する。 |
-| Phase 1<br />初期設定<br />`1d`<br />**新設** | 表 0 に照らして開発方式を選び、<br />CLAUDE.md へ記録する | **main-agent** | **main-agent** | 表 0<br />user-order | decision | — | **表 0 を引くだけで軽く、以降の分岐の入力になる。**<br />CLAUDE.md「開発方式」節へ記録する。<br />節も未新設である。 |
-| Phase 1<br />初期設定<br />`1e`<br />**新設** | 関与者を洗い出し、<br />ステークホルダー登録簿に書く | main-agent | srs-writer | user-order<br />`1b` の不足の一覧 | stakeholder-register | 登録簿の場所<br />関与者の数 | **project-manager から移した。**<br />要求側の成果物である。 |
-| Phase 1<br />初期設定<br />`1f`<br />**統合** | 条件付き 13 プロセスをプロセス規則 §3.4 に照らし、<br />要否を一括で判定する | main-agent | technical-authority | user-order<br />`1d` の decision<br />プロセス規則 §3.4 | decision | 13 件の可否と理由 | **project-manager から移した。判定が本務である。**<br />旧 `0c`〜`0n2` の 13 手順を 1 つにまとめる。 |
-| Phase 1<br />初期設定<br />`1g` | 評価結果をまとめ、<br />利用者へ渡す報告文を書く | main-agent | project-manager | `1d` の decision<br />`1f` の decision | — | 報告文 | **文は下で起草させる**<br />（`07` §4.7 の規約 5）。 |
-| Phase 1<br />初期設定<br />`1g` | 報告文を利用者に示し、<br />確認を得る | **main-agent** | **利用者** | 報告文 | — | 確認 / 差し戻し | **利用者と話せるのは `main-agent` だけである**<br />（構造上の制約）。 |
-| Phase 1<br />初期設定<br />`1h` | 方式と評価結果を pipeline-state に書いて初期化する | main-agent | project-manager | `1d` の decision<br />`1f` の decision | pipeline-state | 初期化の完了 | 記録が本務である。 |
+| `1a`<br />初期設定 | user-order を読み、<br />何を作るのかを前提として持つ | **main-agent** | **main-agent** | user-order | — | — | **前提を持たないエージェントは「次を選ぶ」ができない**<br />（`07` §3.5）。<br />user-order は 3 問形式で小さく、以降のすべての判断の入力になる。<br />**srs-writer も `2a` で読むが、それは解析のためであって代替にならない。** |
+| `1b`<br />初期設定 | user-order を仕様書テンプレートの必須項目に照らし、<br />不足を洗い出す | main-agent | srs-writer | user-order | — | 不足の一覧 | 不足はインタビューで解消する。<br />user-order 自体は直さない。 |
+| `1c`<br />初期設定 | user-order から決めごとを起こし、<br />CLAUDE.md の案を書く | main-agent | architect | user-order<br />`1b` の不足の一覧 | CLAUDE.md | 案の場所<br />利用者が埋める箇所 | **project-manager から移した。**<br />設計上の決めごとを並べた文書であり、設計のエージェントが起草する。 |
+| `1d`<br />初期設定<br />**新設** | 表 0 に照らして開発方式を選び、<br />CLAUDE.md へ記録する | main-agent | technical-authority | 表 0<br />user-order | tech-decision | 決めた方式と理由 | **表 0 を引くだけで軽く、以降の分岐の入力になる。**<br />CLAUDE.md「開発方式」節へ記録する。<br />節も未新設である。 |
+| `1e`<br />初期設定<br />**新設** | 関与者を洗い出し、<br />ステークホルダー登録簿に書く | main-agent | srs-writer | user-order<br />`1b` の不足の一覧 | stakeholder-register | 登録簿の場所<br />関与者の数 | **project-manager から移した。**<br />要求側の成果物である。 |
+| `1f`<br />初期設定<br />**統合** | 条件付き 13 プロセスをプロセス規則 §3.4 に照らし、<br />要否を一括で判定する | main-agent | technical-authority | user-order<br />`1d` の decision<br />プロセス規則 §3.4 | tech-decision | 13 件の可否と理由 | **project-manager から移した。判定が本務である。**<br />旧 `0c`〜`0n2` の 13 手順を 1 つにまとめる。 |
+| `1g`<br />初期設定 | 評価結果をまとめ、<br />利用者へ渡す報告文を書く | main-agent | project-manager | `1d` の decision<br />`1f` の decision | — | 報告文 | **文は下で起草させる**<br />（`07` §4.7 の規約 5）。 |
+| `1g`<br />初期設定 | 報告文を利用者に示し、<br />確認を得る | **main-agent** | **利用者** | 報告文 | — | 確認 / 差し戻し | **[直列]** **利用者と話せるのは `main-agent` だけである**<br />（構造上の制約）。 |
+| `1h`<br />初期設定 | 方式と評価結果を pipeline-state に書いて初期化する | main-agent | project-manager | `1d` の decision<br />`1f` の decision | pipeline-state | 初期化の完了 | 記録が本務である。 |
 
 **手順数が 18 → 8 になる。** 統合で 12 減り、新設で 2 増える。**現物は `commands/full-auto-dev.md` の `0a`〜`0p` で 18 手順である**（旧ドキュメントの「19」は誤りである）。
 
@@ -226,19 +270,19 @@ flowchart TD
 
 | フェーズ | 作業 | 依頼元 | 担い手 | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|
-| Phase 2<br />企画<br />`2a` | user-order を読み解き、<br />要求と曖昧点を洗い出す | main-agent | srs-writer | user-order | — | 曖昧点と不足の一覧 | `1a` で `main-agent` が読むのは前提としてである。<br />ここは解析であり、目的が違う。 |
-| Phase 2<br />企画<br />`2b` | 曖昧点を埋めるインタビューの設問を書く | main-agent | srs-writer | user-order<br />`2a` の一覧 | — | 設問一覧 | **srs-writer が利用者に直接聞くことはできない**<br />（`07` §4.5 の規約 1）。 |
-| Phase 2<br />企画<br />`2b` | 設問を利用者に問い、<br />回答を持ち帰る | **main-agent** | **利用者** | 設問一覧 | — | 回答 |  |
-| Phase 2<br />企画<br />`2c` | 回答を interview-record に記録し、<br />未解決の質問を数える | main-agent | srs-writer | 回答 | interview-record | 記録の場所<br />未解決の質問数 | `2i` が未解決の質問数を見る。 |
-| Phase 2<br />企画<br />`2d` | 確かめたい要求を選び、<br />モック / サンプル / PoC を作る | main-agent | srs-writer | interview-record | src | 試作の場所<br />確かめた要求 | 要求を確かめるための試作である。<br />製品の実装ではない。 |
-| Phase 2<br />企画<br />`2e` | 要求を仕様書の要求の章に書き、<br />ID を付ける | main-agent | srs-writer | user-order<br />interview-record<br />仕様書テンプレート | spec-foundation<br />**traceability** | 仕様書の場所<br />付けた ID の範囲 | **トレーサビリティの起点である。** |
-| Phase 2<br />企画<br />`2e` | 付けた ID をテストから引けるか確かめる | main-agent | test-designer | `2e` の ID 範囲 | — | 可否と理由 | ID はテストの紐づけ先になる。<br />**兄弟で並べて起動する。srs-writer が test-designer を呼んではならない**<br />（`07` §4.5.1）。 |
-| Phase 2<br />企画<br />`2f` | 以降の章の枠を仕様書テンプレートから写す | main-agent | srs-writer | 仕様書テンプレート | spec-foundation | 完了 | 章の枠だけを置く。<br />中身は Phase 4 以降が埋める。 |
-| Phase 2<br />企画<br />`2g` | 仕様書の概要をまとめ、<br />利用者へ渡す報告文を書く | main-agent | srs-writer | spec-foundation | — | 報告文 | **旧版は srs-writer をこの手順の主担当としていた。**<br />作業の実体が利用者への報告なので、`main-agent` の行へ移した。 |
-| Phase 2<br />企画<br />`2g` | 概要を利用者に示し、<br />承認を得る | **main-agent** | **利用者** | 報告文 | — | 承認 / 差し戻し | `1g` と同じ形である。 |
-| Phase 2<br />企画<br />`2h` | 要求を R1 の 6 項目に照らし、<br />指摘を挙げる | main-agent | review-agent | 対象: 要求<br />根拠: 概要と UC | review | 指摘の場所と件数<br />Critical / High の有無 | **R1 は 1 観点なので、厳格でも 1 エージェントである**<br />（割る先が無い）。<br />報告ファイルを残すかは表 E-1。<br />指摘への回答は分類を付けて 1 通で送る<br />（`07` §4.3）。 |
-| Phase 2<br />企画<br />`2i`<br />**分割** | interview-record を合格条件に照らし、<br />GATE-INTERVIEW の可否を出す | main-agent | technical-authority | interview-record | — | 可否と理由 | 合格条件はプロセス規則 §9.4.1 が持つ。<br />**`2j` と同じ遷移に属するが、条件が別なので行を分ける。** |
-| Phase 2<br />企画<br />`2j`<br />**分割** | R1 の結果と承認を合格条件に照らし、<br />GATE-PLANNING の可否を出す | main-agent | technical-authority | `2h` の review<br />`2g` の承認 | — | 可否と理由 | 合格条件はプロセス規則 §9.4.1 が持つ。<br />**`2h` の R1 PASS を要するため `2i` の後に置く。** |
+| `2a`<br />企画 | user-order を読み解き、<br />要求と曖昧点を洗い出す | main-agent | srs-writer | user-order | — | 曖昧点と不足の一覧 | `1a` で `main-agent` が読むのは前提としてである。<br />ここは解析であり、目的が違う。 |
+| `2b`<br />企画 | 曖昧点を埋めるインタビューの設問を書く | main-agent | srs-writer | user-order<br />`2a` の一覧 | — | 設問一覧 | **srs-writer が利用者に直接聞くことはできない**<br />（`07` §4.5 の規約 1）。 |
+| `2b`<br />企画 | 設問を利用者に問い、<br />回答を持ち帰る | **main-agent** | **利用者** | 設問一覧 | — | 回答 | **[直列]**  |
+| `2c`<br />企画 | 回答を interview-record に記録し、<br />未解決の質問を数える | main-agent | srs-writer | 回答 | interview-record | 記録の場所<br />未解決の質問数 | `2i` が未解決の質問数を見る。 |
+| `2d`<br />企画 | 確かめたい要求を選び、<br />モック / サンプル / PoC を作る | main-agent | srs-writer | interview-record | src | 試作の場所<br />確かめた要求 | 要求を確かめるための試作である。<br />製品の実装ではない。 |
+| `2e`<br />企画 | 要求を仕様書の要求の章に書き、<br />ID を付ける | main-agent | srs-writer | user-order<br />interview-record<br />仕様書テンプレート | spec-foundation<br />**traceability** | 仕様書の場所<br />付けた ID の範囲 | 鎖の根は `GL` であって要求ではない（`02` §ID と採番）。<br />**したがって本手順の前に `2e` が要る。**<br />**`traceability` のオーナーは test-engineer である**（名簿 §2）。<br />複数の体が追記する性質なので、名簿側で共同所有を定義するまで暫定である。 |
+| `2e`<br />企画 | 付けた ID をテストから引けるか確かめる | main-agent | test-designer | `2e` の ID 範囲 | — | 可否と理由 | **[直列]** ID はテストの紐づけ先になる。<br />**兄弟で並べて起動する。srs-writer が test-designer を呼んではならない**<br />（`07` §4.5.1）。 |
+| `2f`<br />企画 | 以降の章の枠を仕様書テンプレートから写す | main-agent | srs-writer | 仕様書テンプレート | spec-foundation | 完了 | 章の枠だけを置く。<br />中身は Phase 4 以降が埋める。 |
+| `2g`<br />企画 | 仕様書の概要をまとめ、<br />利用者へ渡す報告文を書く | main-agent | srs-writer | spec-foundation | — | 報告文 | **旧版は srs-writer をこの手順の主担当としていた。**<br />作業の実体が利用者への報告なので、`main-agent` の行へ移した。 |
+| `2g`<br />企画 | 概要を利用者に示し、<br />承認を得る | **main-agent** | **利用者** | 報告文 | — | 承認 / 差し戻し | **[直列]** `1g` と同じ形である。 |
+| `2h`<br />企画 | 要求を R1 の 6 項目に照らし、<br />指摘を挙げる | main-agent | review-agent | 対象: 要求<br />根拠: 概要と UC | review | 指摘の場所と件数<br />Critical / High の有無 | **R1 は 1 観点なので、厳格でも 1 エージェントである**<br />（割る先が無い）。<br />報告ファイルを残すかは表 E-1。<br />指摘への回答は分類を付けて 1 通で送る<br />（`07` §4.3）。 |
+| `2i`<br />企画<br />**分割** | interview-record を合格条件に照らし、<br />GATE-INTERVIEW の可否を出す | main-agent | technical-authority | interview-record | tech-decision | 可否と理由 | 合格条件はプロセス規則 §9.4.1 が持つ。<br />**`2j` と同じ遷移に属するが、条件が別なので行を分ける。** |
+| `2j`<br />企画<br />**分割** | R1 の結果と承認を合格条件に照らし、<br />GATE-PLANNING の可否を出す | main-agent | technical-authority | `2h` の review<br />`2g` の承認 | tech-decision | 可否と理由 | 合格条件はプロセス規則 §9.4.1 が持つ。<br />**`2h` の R1 PASS を要するため `2i` の後に置く。** |
 
 **手順数が 9 → 10 になる。** 旧 `1i` の 1 手順 2 ゲートを割った。**ゲートは方式によらず全 8 つ判定するので、割っても判定の数は変わらない。**
 
@@ -248,36 +292,36 @@ flowchart TD
 
 | フェーズ | 作業 | 依頼元 | 担い手 | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|
-| Phase 3<br />外部依存選定<br />`3a` | `1f` の評価結果を読み、<br />立っているフラグを一覧にする | main-agent | project-manager | `1f` の decision | — | 該当するフラグの一覧 |  |
-| Phase 3<br />外部依存選定<br />`3b` | 要求を満たす外部依存の候補を比較し、<br />採る案を選ぶ | main-agent | architect | 対象: 全文<br />`3a` のフラグ一覧 | — | 候補と比較結果<br />推す案と理由 | **外部依存の選定は重要判断であり、利用者の確認が要る**<br />（CLAUDE.md「重要判断の基準」）。<br />確認は `3f` で行う。 |
-| Phase 3<br />外部依存選定<br />`3c` | 各外部依存に求めることを requirement-spec に書く | main-agent | architect | `3b` の選定結果 | hw-requirement-spec<br />ai-requirement-spec<br />framework-requirement-spec | 各 spec の場所 | 外部依存 1 つにつき 1 件である。<br />**どの file_type になるかは依存の種類で決まる。** |
-| Phase 3<br />外部依存選定<br />`3d` | 外部依存を差し替えられる Adapter 層の I/F を設計する | main-agent | architect | `3c` の requirement-spec | spec-architecture | I/F の場所 | 差し替えの境界をここで引く。 |
-| Phase 3<br />外部依存選定<br />`3e` | 選定の結果と理由を decision に記録する | main-agent | project-manager | `3b` の比較結果と理由 | decision | decision の場所 | 根拠は `3b` で architect が出したものを渡す。<br />記録が project-manager の本務である。 |
-| Phase 3<br />外部依存選定<br />`3f` | 選定結果をまとめ、<br />利用者へ渡す報告文を書く | main-agent | project-manager | `3e` の decision | — | 報告文 | **文は下で起草させる。** |
-| Phase 3<br />外部依存選定<br />`3f` | 選定結果を利用者に示し、<br />承認を得る | **main-agent** | **利用者** | 報告文 | — | 承認 / 差し戻し | 作業の実体が利用者への報告である。 |
-| Phase 3<br />外部依存選定<br />`3g` | 選定と承認を合格条件に照らし、<br />GATE-DEPENDENCY の可否を出す | main-agent | technical-authority | `3e` の decision<br />`3f` の承認 | — | 可否と理由 | 合格条件はプロセス規則 §9.4.1 が持つ。 |
+| `3a`<br />外部依存選定 | `1f` の評価結果を読み、<br />立っているフラグを一覧にする | main-agent | project-manager | `1f` の decision | — | 該当するフラグの一覧 |  |
+| `3b`<br />外部依存選定 | 要求を満たす外部依存の候補を比較し、<br />採る案を選ぶ | main-agent | architect | 対象: 全文<br />`3a` のフラグ一覧 | — | 候補と比較結果<br />推す案と理由 | **外部依存の選定は重要判断であり、利用者の確認が要る**<br />（CLAUDE.md「重要判断の基準」）。<br />確認は `3f` で行う。 |
+| `3c`<br />外部依存選定 | 各外部依存に求めることを requirement-spec に書く | main-agent | architect | `3b` の選定結果 | hw-requirement-spec<br />ai-requirement-spec<br />framework-requirement-spec | 各 spec の場所 | 外部依存 1 つにつき 1 件である。<br />**どの file_type になるかは依存の種類で決まる。** |
+| `3d`<br />外部依存選定 | 外部依存を差し替えられる Adapter 層の I/F を設計する | main-agent | architect | `3c` の requirement-spec | spec-architecture | I/F の場所 | 差し替えの境界をここで引く。 |
+| `3e`<br />外部依存選定 | 選定の結果と理由を decision に記録する | main-agent | project-manager | `3b` の比較結果と理由 | decision | decision の場所 | 根拠は `3b` で architect が出したものを渡す。<br />記録が project-manager の本務である。 |
+| `3f`<br />外部依存選定 | 選定結果をまとめ、<br />利用者へ渡す報告文を書く | main-agent | project-manager | `3e` の decision | — | 報告文 | **文は下で起草させる。** |
+| `3f`<br />外部依存選定 | 選定結果を利用者に示し、<br />承認を得る | **main-agent** | **利用者** | 報告文 | — | 承認 / 差し戻し | **[直列]** 作業の実体が利用者への報告である。 |
+| `3g`<br />外部依存選定 | 選定と承認を合格条件に照らし、<br />GATE-DEPENDENCY の可否を出す | main-agent | technical-authority | `3e` の decision<br />`3f` の承認 | tech-decision | 可否と理由 | 合格条件はプロセス規則 §9.4.1 が持つ。 |
 
 ### 4.5 Phase 4 設計
 
 | フェーズ | 作業 | 依頼元 | 担い手 | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|
-| Phase 4<br />設計<br />`4a` | 要求を満たすアーキテクチャを検討し、<br />設計の章に書いてレイヤーを仕訳ける | main-agent | architect | 対象: 全文 | spec-architecture<br />**traceability** | 仕様書の場所<br />張った親の範囲 | 設計ノードの親を張る。<br />**トレーサビリティがここで要求につながる。** |
-| Phase 4<br />設計<br />`4b` | アーキテクチャ案の要点をまとめる | main-agent | architect | `4a` の spec-architecture | — | 案の要点 | **文は下で起草させる。** |
-| Phase 4<br />設計<br />`4b` | 案を利用者に示し、<br />確認するかどうかを尋ねる | **main-agent** | **利用者** | 案の要点 | decision | 確認する / しない | **旧版は architect をこの手順の主担当としていた。**<br />作業の実体が利用者への問いなので、`main-agent` の行へ移した。<br />**尋ねずに進んではならない。** |
-| Phase 4<br />設計<br />`4c` | 設計を実装できる粒度まで具体化し、<br />ソフトウェア仕様の章に書く | main-agent | architect | 対象: 全文 | spec<br />**traceability** | 仕様書の場所 | SW仕様は設計ノードの子である。<br />**ユーザーマニュアルの根拠になる**<br />（§3）。 |
-| Phase 4<br />設計<br />`4d` | 何をどの層で確かめるかを決め、<br />テスト戦略の章に書く | main-agent | architect | 対象: 全文 | spec | 戦略の場所 |  |
-| Phase 4<br />設計<br />`4d` | テスト戦略が実行できるか確かめる | main-agent | test-designer | 対象: テスト<br />根拠: `4d` の戦略 | — | 可否と理由 | **兄弟で並べて起動する**<br />（`07` §4.5.1）。<br />戦略を書くのは architect、確かめるのは test-designer である。 |
-| Phase 4<br />設計<br />`4e` | ソフトウェア仕様から OpenAPI を生成する | main-agent | architect | 対象: 全文 | openapi | openapi の場所 | API を持つ場合。 |
-| Phase 4<br />設計<br />`4f`<br />**新設** | API のバージョニング戦略と非推奨通知ポリシーを決め、<br />ADR に書く | main-agent | architect | `4e` の openapi | ADR | ADR の場所 | 第三者に公開する API を持つ場合。<br />**`4e` は生成するだけで、戦略を持たない。** |
-| Phase 4<br />設計<br />`4g` | 入力経路から脅威を洗い出し、<br />防ぐ設計を書く | main-agent | security-reviewer | 対象: 全文<br />根拠: `4a` の spec-architecture | threat-model<br />security-architecture | 脅威の一覧<br />設計の場所 | 外部からの入力経路がある場合。<br />**§3 のとおり全文を読む。脅威は要求を横断する。** |
-| Phase 4<br />設計<br />`4h` | 何を観測すれば異常が分かるかを決め、<br />可観測性設計を書く | main-agent | architect | 対象: 全文 | observability-design | 設計の場所 | 常駐サービスかローカル実行かで中身が変わる<br />（CLAUDE.md「可観測性要求」）。 |
-| Phase 4<br />設計<br />`4i` | どこへどう配るかを決め、<br />デプロイ設計を書く | main-agent | architect | 対象: 全文 | deployment-design | 設計の場所 | 配布以外のデプロイ先がある場合。<br />**免除したときは、免除の記録をもって GATE-DELIVERY を充足とする**<br />（プロセス規則 §9.4.1）。 |
-| Phase 4<br />設計<br />`4j` | 実装を担い手に割り、<br />WBS とガントチャートを書く | main-agent | progress-monitor | `4a` の spec-architecture<br />`1e` の stakeholder-register | wbs | wbs の場所 | 並列実装が要求する。<br />worktree の割当は `5a` が持つ。 |
-| Phase 4<br />設計<br />`4k` | リスクを洗い出してスコアを付け、<br />台帳に書く | main-agent | risk-manager | 対象: 全文<br />`4a` の spec-architecture | risk<br />risk-register | 台帳の場所<br />スコア 6 以上の件数 | **スコア 6 以上は利用者に通知する**<br />（CLAUDE.md「重要判断の基準」）。<br />通知するのは `main-agent` である。 |
-| Phase 4<br />設計<br />`4l` | 危害を洗い出し、<br />安全分析（HARA / FMEA / FTA）を行う | main-agent | security-reviewer | 対象: 全文<br />`4g` の threat-model | safety | 分析結果の場所 | 機能安全フラグ。<br />Critical では必須である。 |
-| Phase 4<br />設計<br />`4m` | 設計を R2・R4・R5・R7 に照らし、<br />指摘を挙げる | main-agent | review-agent | 対象: 設計<br />根拠: 要求 | review | 指摘の場所と件数<br />Critical / High の有無 | **[簡易・標準]** 1 エージェントが 4 観点をまとめて見る。<br />指摘への回答は分類を付けて 1 通で送る<br />（`07` §4.3）。 |
-| Phase 4<br />設計<br />`4m` | 設計を担当する 1 観点に照らし、<br />指摘を挙げる | main-agent | `review-agent` × 4<br />R2 / R4 / R5 / R7 を 1 エージェントずつ | 対象: 設計<br />根拠: 要求 | review | 各自の指摘の場所と件数 | **[厳格]** 1 観点 = 1 エージェント。R をまたがない。<br />**再委託しない。統合は `4n` が行う**<br />（`07` §4.5.2）。<br />4 エージェントとも同じ根拠を読む。 |
-| Phase 4<br />設計<br />`4n` | 指摘を統合し、<br />合格条件に照らして GATE-DESIGN の可否を出す | main-agent | technical-authority | `4m` の review<br />`4b` の decision | — | 可否と理由<br />統合済みの指摘 | **厳格では観点別の重複をここで除く**<br />（`07` §4.5.2）。<br />統合に新しいエージェントも新しい階層も要らない。 |
+| `4a`<br />設計 | 要求を満たすアーキテクチャを検討し、<br />設計の章に書いてレイヤーを仕訳ける | main-agent | architect | 対象: 全文 | spec-architecture | 仕様書の場所<br />書いたレイヤー仕訳 | **設計はトレースの鎖に載らない**（`02`「5.1〜5.6 は持たない」）。<br />`5.6` の `ADR` だけが UID を持ち、それも鎖の外である。<br />**親を張ってはならない（MUST NOT）。** |
+| `4b`<br />設計 | アーキテクチャ案の要点をまとめる | main-agent | architect | `4a` の spec-architecture | — | 案の要点 | **文は下で起草させる。** |
+| `4b`<br />設計 | 案を利用者に示し、<br />確認するかどうかを尋ねる | **main-agent** | **利用者** | 案の要点 | — | 確認する / しない | **[直列]** **旧版は architect をこの手順の主担当としていた。**<br />作業の実体が利用者への問いなので、`main-agent` の行へ移した。<br />**尋ねずに進んではならない。** |
+| `4c`<br />設計 | 設計を実装できる粒度まで具体化し、<br />ソフトウェア仕様の章に書く | main-agent | architect | 対象: 全文 | spec<br />**traceability** | 仕様書の場所 | **`SWS` の親は `FR` または `NFR` である**（`02` の型ごとの欄、Role は `Satisfies`）。<br />設計の章を親にしてはならない（MUST NOT）。<br />**ユーザーマニュアルの根拠になる**（§3.3）。 |
+| `4d`<br />設計 | 何をどの層で確かめるかを決め、<br />テスト戦略の章に書く | main-agent | architect | 対象: 全文 | spec | 戦略の場所 |  |
+| `4d`<br />設計 | テスト戦略が実行できるか確かめる | main-agent | test-designer | 対象: テスト<br />根拠: `4d` の戦略 | — | 可否と理由 | **[直列]** **兄弟で並べて起動する**<br />（`07` §4.5.1）。<br />戦略を書くのは architect、確かめるのは test-designer である。 |
+| `4e`<br />設計 | ソフトウェア仕様から OpenAPI を生成する | main-agent | architect | 対象: 全文 | openapi | openapi の場所 | API を持つ場合。 |
+| `4f`<br />設計<br />**新設** | API のバージョニング戦略と非推奨通知ポリシーを決め、<br />ADR に書く | main-agent | architect | `4e` の openapi | spec-architecture | `ADR` の UID | 第三者に公開する API を持つ場合。<br />**`4e` は生成するだけで、戦略を持たない。** |
+| `4g`<br />設計 | 入力経路から脅威を洗い出し、<br />防ぐ設計を書く | main-agent | security-reviewer | 対象: 全文<br />根拠: `4a` の spec-architecture | threat-model<br />security-architecture | 脅威の一覧<br />設計の場所 | 外部からの入力経路がある場合。<br />**§3 のとおり全文を読む。脅威は要求を横断する。** |
+| `4h`<br />設計 | 何を観測すれば異常が分かるかを決め、<br />可観測性設計を書く | main-agent | architect | 対象: 全文 | observability-design | 設計の場所 | 常駐サービスかローカル実行かで中身が変わる<br />（CLAUDE.md「可観測性要求」）。 |
+| `4i`<br />設計 | どこへどう配るかを決め、<br />デプロイ設計を書く | main-agent | architect | 対象: 全文 | deployment-design | 設計の場所 | 配布以外のデプロイ先がある場合。<br />**免除したときは、免除の記録をもって GATE-DELIVERY を充足とする**<br />（プロセス規則 §9.4.1）。 |
+| `4j`<br />設計 | 実装を担い手に割り、<br />WBS とガントチャートを書く | main-agent | progress-monitor | `4a` の spec-architecture<br />`1e` の stakeholder-register | wbs | wbs の場所 | 並列実装が要求する。<br />worktree の割当は `5a` が持つ。 |
+| `4k`<br />設計 | リスクを洗い出してスコアを付け、<br />台帳に書く | main-agent | risk-manager | 対象: 全文<br />`4a` の spec-architecture | risk<br />risk-register | 台帳の場所<br />スコア 6 以上の件数 | **スコア 6 以上は利用者に通知する**<br />（CLAUDE.md「重要判断の基準」）。<br />通知するのは `main-agent` である。 |
+| `4l`<br />設計 | 危害を洗い出し、<br />安全分析（HARA / FMEA / FTA）を行う | main-agent | security-reviewer | 対象: 全文<br />`4g` の threat-model | safety | 分析結果の場所 | 機能安全フラグ。<br />Critical では必須である。 |
+| `4m`<br />設計 | 設計を R2・R4・R5・R7 に照らし、<br />指摘を挙げる | main-agent | review-agent | 対象: 設計<br />根拠: 要求 | review | 指摘の場所と件数<br />Critical / High の有無 | **[簡易・標準]** 1 エージェントが 4 観点をまとめて見る。<br />指摘への回答は分類を付けて 1 通で送る<br />（`07` §4.3）。 |
+| `4m`<br />設計 | 設計を担当する 1 観点に照らし、<br />指摘を挙げる | main-agent | `review-agent` × 4<br />R2 / R4 / R5 / R7 を 1 エージェントずつ | 対象: 設計<br />根拠: 要求 | review | 各自の指摘の場所と件数 | **[厳格]** 1 観点 = 1 エージェント。R をまたがない。<br />**再委託しない。統合は `4n` が行う**<br />（`07` §4.5.2）。<br />4 エージェントとも同じ根拠を読む。 |
+| `4n`<br />設計 | 指摘を統合し、<br />合格条件に照らして GATE-DESIGN の可否を出す | main-agent | technical-authority | `4m` の review<br />`4b` の decision | tech-decision | 可否と理由<br />統合済みの指摘 | **厳格では観点別の重複をここで除く**<br />（`07` §4.5.2）。<br />統合に新しいエージェントも新しい階層も要らない。 |
 
 **旧 `3d`（設計原則 準拠確認の章を設定する）は削除した。** Chapter 8 の削除に伴う。**読み替えは `03-work-order.md` §6.4 が持つ。**
 
@@ -287,20 +331,20 @@ flowchart TD
 
 | フェーズ | 作業 | 依頼元 | 担い手 | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|
-| Phase 5<br />実装<br />`5a` | 仕様どおりに動くコードを書く | main-agent | implementer | 対象: 全文<br />`4a` の spec-architecture | src | 実装の場所<br />未実装の残り | **[簡易・標準]** 単線で実装する。 |
-| Phase 5<br />実装<br />`5a` | worktree とブランチを担い手ごとに割り当てる | main-agent | project-manager | `4j` の wbs | — | 割当表 | **[厳格]** 割当が本務である。<br />**project-manager が implementer を呼んではならない**<br />（`07` §3.7・§4.5.1）。 |
-| Phase 5<br />実装<br />`5a` | 割り当てられたブランチで、<br />仕様どおりに動くコードを書く | main-agent | `implementer` × N<br />worktree 1 つにつき 1 エージェント | 対象: 全文<br />割当表 | src | 各自の実装の場所 | **[厳格]** Git worktree で並列実装する。<br />**worktree ごとにキャッシュが冷える**（`06` §1.3）。N エージェントぶんの下限を毎回払う。 |
-| Phase 5<br />実装<br />`5b` | 可観測性設計に従い、<br />構造化ログ・メトリクス・トレーシングを組み込む | main-agent | implementer | `4h` の observability-design | src | 組み込みの完了 | 適用範囲は CLAUDE.md「可観測性要求」が持つ。 |
-| Phase 5<br />実装<br />`5c` | 全ビジネスロジックを覆う単体テストを書いて走らせる | main-agent | implementer | 対象: 全文<br />`5a` の src | src | 合格率<br />カバレッジ | **作成と実行を同じエージェントが行う唯一のテストである。**<br />**`6a`〜`6d` と揃えない理由:** 単体テストは実装と一体で書かれ、実装したエージェントが走らせるのが自然だからである。<br />揃えると同じコードを 2 エージェントが読むことになり、下限を二重に払う。 |
-| Phase 5<br />実装<br />`5c` | 単体テストで確かめるべき観点を洗い出して渡す | main-agent | test-designer | 対象: テスト | — | 観点の一覧 | **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
-| Phase 5<br />実装<br />`5d` | デプロイ設計に従い、<br />IaC コードを書く | main-agent | implementer | `4i` の deployment-design | src | 実装の場所 | 配布以外のデプロイ先がある場合。 |
-| Phase 5<br />実装<br />`5e` | 実装を R2・R3・R4・R5・R7 に照らし、<br />指摘を挙げる | main-agent | review-agent | 対象: 全文<br />`5a` の src | review | 指摘の場所と件数<br />Critical / High の有無 | **[簡易・標準]** 1 エージェントが 5 観点をまとめて見る。<br />**レビュアーは直さない**<br />（`07` §4.7 の規約 3）。 |
-| Phase 5<br />実装<br />`5e` | 実装を担当する 1 観点に照らし、<br />指摘を挙げる | main-agent | `review-agent` × 5<br />R2 / R3 / R4 / R5 / R7 を 1 エージェントずつ | 対象: 全文<br />`5a` の src | review | 各自の指摘の場所と件数 | **[厳格]** 1 観点 = 1 エージェント。R をまたがない。<br />**再委託しない。統合は `5i` が行う**<br />（`07` §4.5.2）。<br />同時実行の上限 20 に対して余裕がある。 |
-| Phase 5<br />実装<br />`5f` | 依存関係に SCA を走らせ、<br />脆弱性を洗い出す | main-agent | security-reviewer | 依存関係の一覧 | security-scan-report | 報告の場所と件数 | **本手順は SCA だけである。SAST は `5g` が持つ。**<br />依存が 0 件なら該当なしと記録する。 |
-| Phase 5<br />実装<br />`5f` | 依存のライセンス面から帰属表示の要否を判定する | main-agent | license-checker | 依存関係の一覧 | — | 帰属表示の要否 | **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
-| Phase 5<br />実装<br />`5g`<br />**新設** | ソースに SAST を走らせ、<br />脆弱性を洗い出す | main-agent | security-reviewer | `5a` の src | security-scan-report | 報告の場所と件数 | 簡易は外部入力を扱う場合のみ。<br />**旧 §3.2.8 を SCA と 2 件に割って生まれた**<br />（`03-work-order.md` §13.2）。<br />走らせる時期も対象も SCA と違う。 |
-| Phase 5<br />実装<br />`5h` | 依存のライセンス互換性を確認し、<br />帰属表示をそろえる | main-agent | license-checker | 依存関係の一覧<br />`5f` の帰属表示の要否 | license-report | 報告の場所<br />非互換の件数 | 依存ライブラリを追加したら必ず走らせる。 |
-| Phase 5<br />実装<br />`5i` | 指摘とスキャン結果を統合し、<br />合格条件に照らして GATE-IMPL の可否を出す | main-agent | technical-authority | `5e` の review<br />`5f` `5g` の security-scan-report<br />`5h` の license-report | — | 可否と理由<br />統合済みの指摘 | 合格条件はプロセス規則 §9.4.1 が持つ。<br />**厳格では 5 エージェントの指摘をここで統合する**<br />（`07` §4.5.2）。 |
+| `5a`<br />実装 | 仕様どおりに動くコードを書く | main-agent | implementer | 対象: 全文<br />`4a` の spec-architecture | src | 実装の場所<br />未実装の残り | **[簡易・標準]** 単線で実装する。 |
+| `5a`<br />実装 | worktree とブランチを担い手ごとに割り当てる | main-agent | project-manager | `4j` の wbs | — | 割当表 | **[厳格]** 割当が本務である。<br />**project-manager が implementer を呼んではならない**<br />（`07` §3.7・§4.5.1）。 |
+| `5a`<br />実装 | 割り当てられたブランチで、<br />仕様どおりに動くコードを書く | main-agent | `implementer` × N<br />worktree 1 つにつき 1 エージェント | 対象: 全文<br />割当表 | src | 各自の実装の場所 | **[厳格]** Git worktree で並列実装する。<br />**worktree ごとにキャッシュが冷える**（`06` §1.3）。N エージェントぶんの下限を毎回払う。 |
+| `5b`<br />実装 | 可観測性設計に従い、<br />構造化ログ・メトリクス・トレーシングを組み込む | main-agent | implementer | `4h` の observability-design | src | 組み込みの完了 | 適用範囲は CLAUDE.md「可観測性要求」が持つ。 |
+| `5c`<br />実装 | 全ビジネスロジックを覆う単体テストを書いて走らせる | main-agent | implementer | 対象: 全文<br />`5a` の src | src<br />spec | 合格率<br />カバレッジ | **作成と実行を同じエージェントが行う唯一のテストである。**<br />**`6a`〜`6d` と揃えない理由:** 単体テストは実装と一体で書かれ、実装したエージェントが走らせるのが自然だからである。<br />揃えると同じコードを 2 エージェントが読むことになり、下限を二重に払う。 |
+| `5c`<br />実装 | 単体テストで確かめるべき観点を洗い出して渡す | main-agent | test-designer | 対象: テスト | — | 観点の一覧 | **[直列]** **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
+| `5d`<br />実装 | デプロイ設計に従い、<br />IaC コードを書く | main-agent | implementer | `4i` の deployment-design | src | 実装の場所 | 配布以外のデプロイ先がある場合。 |
+| `5e`<br />実装 | 実装を R2・R3・R4・R5・R7 に照らし、<br />指摘を挙げる | main-agent | review-agent | 対象: 全文<br />`5a` の src | review | 指摘の場所と件数<br />Critical / High の有無 | **[簡易・標準]** 1 エージェントが 5 観点をまとめて見る。<br />**レビュアーは直さない**<br />（`07` §4.7 の規約 3）。 |
+| `5e`<br />実装 | 実装を担当する 1 観点に照らし、<br />指摘を挙げる | main-agent | `review-agent` × 5<br />R2 / R3 / R4 / R5 / R7 を 1 エージェントずつ | 対象: 全文<br />`5a` の src | review | 各自の指摘の場所と件数 | **[厳格]** 1 観点 = 1 エージェント。R をまたがない。<br />**再委託しない。統合は `5i` が行う**<br />（`07` §4.5.2）。<br />同時実行の上限 20 に対して余裕がある。 |
+| `5f`<br />実装 | 依存関係に SCA を走らせ、<br />脆弱性を洗い出す | main-agent | security-reviewer | 依存関係の一覧 | security-scan-report | 報告の場所と件数 | **本手順は SCA だけである。SAST は `5g` が持つ。**<br />依存が 0 件なら該当なしと記録する。 |
+| `5f`<br />実装 | 依存のライセンス面から帰属表示の要否を判定する | main-agent | license-checker | 依存関係の一覧 | — | 帰属表示の要否 | **[同時]** **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
+| `5g`<br />実装<br />**新設** | ソースに SAST を走らせ、<br />脆弱性を洗い出す | main-agent | security-reviewer | `5a` の src | security-scan-report | 報告の場所と件数 | 簡易は外部入力を扱う場合のみ。<br />**旧 §3.2.8 を SCA と 2 件に割って生まれた**<br />（`03-work-order.md` §13.2）。<br />走らせる時期も対象も SCA と違う。 |
+| `5h`<br />実装 | 依存のライセンス互換性を確認し、<br />帰属表示をそろえる | main-agent | license-checker | 依存関係の一覧<br />`5f` の帰属表示の要否 | license-report | 報告の場所<br />非互換の件数 | 依存ライブラリを追加したら必ず走らせる。 |
+| `5i`<br />実装 | 指摘とスキャン結果を統合し、<br />合格条件に照らして GATE-IMPL の可否を出す | main-agent | technical-authority | `5e` の review<br />`5f` `5g` の security-scan-report<br />`5h` の license-report | tech-decision | 可否と理由<br />統合済みの指摘 | 合格条件はプロセス規則 §9.4.1 が持つ。<br />**厳格では 5 エージェントの指摘をここで統合する**<br />（`07` §4.5.2）。 |
 
 **手順数が 8 → 9 になる。** `5g` の新設で 1 増える。
 
@@ -308,18 +352,18 @@ flowchart TD
 
 | フェーズ | 作業 | 依頼元 | 担い手 | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|
-| Phase 6<br />テスト<br />`6a`<br />**分割** | 結合テストの受入基準を決め、<br />テストコードを書く | main-agent | test-designer | 対象: テスト<br />根拠: 対象ノードの祖先 | test-plan<br />**traceability** | test-plan の場所<br />ケース数 | **旧 `5a` の前半である。** |
-| Phase 6<br />テスト<br />`6a`<br />**分割** | 設計の意図を渡す | main-agent | architect | `4a` の spec-architecture | — | 意図の要点 | **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
-| Phase 6<br />テスト<br />`6b`<br />**分割** | 結合テストを走らせ、<br />結果を記録する | main-agent | tester | 対象: 自分が書く結果の節<br />根拠: 対応するケースとその祖先 | test-plan | 合格率<br />失敗したケース | **旧 `5a` の後半である。**<br />**書いたエージェントと走らせるエージェントを分ける。** 期待を書いた者が結果も書くと、食い違いを見落とす。<br />defect は発見したエージェントが起票する<br />（`Fg`）。 |
-| Phase 6<br />テスト<br />`6c`<br />**分割** | システムテストの受入基準を決め、<br />テストコードを書く | main-agent | test-designer | 対象: テスト<br />根拠: 対象ノードの祖先 | test-plan | test-plan の場所<br />ケース数 | **旧 `5b` の前半である。** |
-| Phase 6<br />テスト<br />`6d`<br />**分割** | システムテストを走らせ、<br />結果を記録する | main-agent | tester | 対象: 自分が書く結果の節<br />根拠: 対応するケースとその祖先 | test-plan | 合格率<br />失敗したケース | **旧 `5b` の後半である。** |
-| Phase 6<br />テスト<br />`6e` | 性能テストを走らせ、<br />NFR の数値目標との差を出す | main-agent | tester | 対象: 自分が書く結果の節<br />根拠: 数値目標を持つ NFR | performance-report | 達成 / 未達の別<br />未達の項目 | 数値目標を持つ NFR がある場合。 |
-| Phase 6<br />テスト<br />`6f` | 実機でテストを行い、<br />フィードバックを記録する | main-agent | field-test-engineer | `6b` `6d` の結果<br />利用者の操作 | field-issue | 記録の場所<br />挙がった件数 | 実機テストフラグ。<br />**利用者と実機でやり取りする部分は `main-agent` を通す。** |
-| Phase 6<br />テスト<br />`6f` | フィードバックを仕様書に照らし、<br />defect / CR / 質問に分類する | main-agent | feedback-classifier | 対象: 全文<br />`6f` の field-issue | field-issue | 分類の内訳 | **兄弟で並べて起動する。field-test-engineer が呼んではならない**<br />（`07` §4.5.1）。 |
-| Phase 6<br />テスト<br />`6f` | 原因を分析し、<br />対策を立てる | main-agent | field-issue-analyst | `6f` の field-issue と分類 | field-issue | 原因と対策案<br />影響範囲 | 同上。 |
-| Phase 6<br />テスト<br />`6g` | テスト消化曲線と defect curve を更新する | main-agent | progress-monitor | `6b` `6d` の結果<br />defect の一覧 | progress | 曲線の場所<br />収束の傾向 | 1 週間未満の走行では点が足りない。 |
-| Phase 6<br />テスト<br />`6h` | テストコードを R6 に照らし、<br />指摘を挙げる | main-agent | review-agent | 対象: テスト<br />根拠: 対象ノードの祖先 | review | 指摘の場所と件数<br />Critical / High の有無 | **R6 は 1 観点なので、厳格でも 1 エージェントである**<br />（割る先が無い）。 |
-| Phase 6<br />テスト<br />`6i` | テスト結果と指摘を合格条件に照らし、<br />GATE-TEST の可否を出す | main-agent | technical-authority | `6h` の review<br />`6b` `6d` `6e` の結果 | — | 可否と理由 | 合格条件はプロセス規則 §9.4.1 が持つ。 |
+| `6a`<br />テスト<br />**分割** | 結合テストの受入基準を決め、<br />テストコードを書く | main-agent | test-designer | 対象: テスト<br />根拠: 対象ノードの祖先 | spec<br />**traceability** | ケースの章の場所<br />付けた `TC` の UID 範囲 | **旧 `5a` の前半である。**<br />**`traceability` のオーナーは test-engineer である**（名簿 §2）。<br />複数の体が追記する性質なので、名簿側で共同所有を定義するまで暫定である。 |
+| `6a`<br />テスト<br />**分割** | 設計の意図を渡す | main-agent | architect | `4a` の spec-architecture | — | 意図の要点 | **[直列]** **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
+| `6b`<br />テスト<br />**分割** | 結合テストを走らせ、<br />結果を記録する | main-agent | tester | 対象: 自分が書く結果の節<br />根拠: 対応するケースとその祖先 | spec | 合格率<br />失敗した `TC` の UID | **旧 `5a` の後半である。**<br />**書いたエージェントと走らせるエージェントを分ける。** 期待を書いた者が結果も書くと、食い違いを見落とす。<br />defect は発見したエージェントが起票する<br />（`Fg`）。 |
+| `6c`<br />テスト<br />**分割** | システムテストの受入基準を決め、<br />テストコードを書く | main-agent | test-designer | 対象: テスト<br />根拠: 対象ノードの祖先 | spec | ケースの章の場所<br />付けた `TC` の UID 範囲 | **旧 `5b` の前半である。** |
+| `6d`<br />テスト<br />**分割** | システムテストを走らせ、<br />結果を記録する | main-agent | tester | 対象: 自分が書く結果の節<br />根拠: 対応するケースとその祖先 | spec | 合格率<br />失敗した `TC` の UID | **旧 `5b` の後半である。** |
+| `6e`<br />テスト | 性能テストを走らせ、<br />NFR の数値目標との差を出す | main-agent | tester | 対象: 自分が書く結果の節<br />根拠: 数値目標を持つ NFR | performance-report<br />spec | 達成 / 未達の別<br />未達の項目 | 数値目標を持つ NFR がある場合。 |
+| `6f`<br />テスト | 実機でテストを行い、<br />フィードバックを記録する | main-agent | field-test-engineer | `6b` `6d` の結果<br />利用者の操作 | field-issue | 記録の場所<br />挙がった件数 | 実機テストフラグ。<br />**利用者と実機でやり取りする部分は `main-agent` を通す。** |
+| `6f`<br />テスト | フィードバックを仕様書に照らし、<br />defect / CR / 質問に分類する | main-agent | feedback-classifier | 対象: 全文<br />`6f` の field-issue | field-issue | 分類の内訳 | **[直列]** **兄弟で並べて起動する。field-test-engineer が呼んではならない**<br />（`07` §4.5.1）。 |
+| `6f`<br />テスト | 原因を分析し、<br />対策を立てる | main-agent | field-issue-analyst | `6f` の field-issue と分類 | field-issue | 原因と対策案<br />影響範囲 | **[直列]** 同上。 |
+| `6g`<br />テスト | テスト消化曲線と defect curve を更新する | main-agent | progress-monitor | `6b` `6d` の結果<br />defect の一覧 | progress | 曲線の場所<br />収束の傾向 | 1 週間未満の走行では点が足りない。 |
+| `6h`<br />テスト | テストコードを R6 に照らし、<br />指摘を挙げる | main-agent | review-agent | 対象: テスト<br />根拠: 対象ノードの祖先 | review | 指摘の場所と件数<br />Critical / High の有無 | **R6 は 1 観点なので、厳格でも 1 エージェントである**<br />（割る先が無い）。 |
+| `6i`<br />テスト | テスト結果と指摘を合格条件に照らし、<br />GATE-TEST の可否を出す | main-agent | technical-authority | `6h` の review<br />`6b` `6d` `6e` の結果 | tech-decision | 可否と理由 | 合格条件はプロセス規則 §9.4.1 が持つ。 |
 
 **手順数が 7 → 9 になる。** 分割で 2 増える。
 
@@ -327,22 +371,22 @@ flowchart TD
 
 | フェーズ | 作業 | 依頼元 | 担い手 | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|
-| Phase 7<br />納品<br />`7a` | 全成果物を R1〜R7 に照らし、<br />指摘を挙げる | main-agent | review-agent | 対象: 全文<br />全成果物 | review | 指摘の場所と件数<br />Critical / High の有無 | **[簡易・標準]** 1 エージェントが 7 観点をまとめて見る。<br />**簡易はここで R1〜R7 を網羅する**<br />（表 E-1）。 |
-| Phase 7<br />納品<br />`7a` | 全成果物を担当する 1 観点に照らし、<br />指摘を挙げる | main-agent | `review-agent` × 7<br />R1〜R7 を 1 エージェントずつ | 対象: 全文<br />全成果物 | review | 各自の指摘の場所と件数 | **[厳格]** 1 観点 = 1 エージェント。R をまたがない。<br />**7 観点が 4 分野に収まらない問題が消える。**<br />**再委託しない。統合は `7k` が行う**<br />（`07` §4.5.2）。<br />エージェントの下限は 27k〜35k なので、下限だけで 7 倍になる。**これが厳格の値段である。** |
-| Phase 7<br />納品<br />`7b`<br />**新設** | 全ゲートの結果を集め、<br />リリース判定チェックリストを埋める | main-agent | project-manager | 全ゲートの判定結果<br />`7a` の review | release-checklist | チェックリストの場所<br />未充足の項目 | 複数バージョンを並行保守するとき<br />（標準）。 |
-| Phase 7<br />納品<br />`7b`<br />**新設** | チェックリストに照らし、<br />リリースの可否を出す | main-agent | technical-authority | release-checklist | — | 可否と理由 | **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
-| Phase 7<br />納品<br />`7c` | デプロイ設計に従い、<br />コンテナをビルドする | main-agent | implementer | `4i` の deployment-design<br />`5a` の src | container-image | 成果物の場所<br />タグ | 配布以外のデプロイ先がある場合。<br />`7c`〜`7f` は同じ条件に従う。 |
-| Phase 7<br />納品<br />`7d` | ビルドしたコンテナをデプロイする | main-agent | implementer | `7c` の container-image | — | デプロイ先<br />結果 | 同上。 |
-| Phase 7<br />納品<br />`7e` | 監視が動いているか確かめ、<br />欠けている計装を洗い出す | main-agent | implementer | `4h` の observability-design | — | 確認結果<br />欠けている計装 | 同上。 |
-| Phase 7<br />納品<br />`7f` | ロールバック手順を書き、<br />試す | main-agent | implementer | `4i` の deployment-design | runbook | 手順の場所<br />試行の結果 | 同上。 |
-| Phase 7<br />納品<br />`7g` | 全ゲートの結果と waiver をまとめ、<br />最終レポートを書く | main-agent | project-manager | 全ゲートの判定結果<br />waiver の記録 | final-report | レポートの場所 | 統合が本務である。<br />waiver は条件 3 によりここへ転記する<br />（プロセス規則 §9.1.1）。 |
-| Phase 7<br />納品<br />`7h` | 概要と UC を利用者の操作手順に翻訳し、<br />ユーザーマニュアルを書く | main-agent | user-manual-writer | 対象: 概要と UC<br />根拠: SW仕様 | user-manual | マニュアルの場所<br />未記載の機能 | **§3 のとおり SW仕様を根拠として読む。**<br />要求だけでは操作手順を書けない。 |
-| Phase 7<br />納品<br />`7i` | 運用と復旧の手順を書き、<br />引継ぎ資料をそろえる | main-agent | runbook-writer | 対象: 概要と設計<br />根拠: NFR | runbook | runbook の場所 | 運用・保守フラグ。<br />**トレーニング・知識移転もここに乗る。** |
-| Phase 7<br />納品<br />`7i` | マニュアルと運用手順書を突き合わせ、<br />重複と食い違いを洗い出す | main-agent | user-manual-writer | `7h` の user-manual<br />`7i` の runbook | — | 重複と食い違いの一覧 | **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
-| Phase 7<br />納品<br />`7j` | 受入基準を利用者が実行できる手順に落とす | main-agent | test-designer | 対象: テスト<br />根拠: 概要と UC | test-plan | 手順書の場所 | **受入基準を書く側なので test-designer である。** |
-| Phase 7<br />納品<br />`7k` | 指摘を統合し、<br />合格条件に照らして GATE-DELIVERY の可否を出す | main-agent | technical-authority | `7a` の review<br />`7g` の final-report | — | 可否と理由<br />統合済みの指摘 | 合格条件はプロセス規則 §9.4.1 が持つ。<br />**厳格では 7 エージェントの指摘をここで統合する。**<br />免除した成果物は、免除の記録をもって充足とする。 |
-| Phase 7<br />納品<br />`7l` | 最終レポートをまとめ、<br />完了報告の文を書く | main-agent | project-manager | `7g` の final-report | — | 報告文 | **文は下で起草させる。** |
-| Phase 7<br />納品<br />`7l` | 完了を利用者に報告する | **main-agent** | **利用者** | 報告文 | — | 受領 | 作業の実体が利用者への報告である。 |
+| `7a`<br />納品 | 全成果物を R1〜R7 に照らし、<br />指摘を挙げる | main-agent | review-agent | 対象: 全文<br />全成果物 | review | 指摘の場所と件数<br />Critical / High の有無 | **[簡易・標準]** 1 エージェントが 7 観点をまとめて見る。<br />**簡易はここで R1〜R7 を網羅する**<br />（表 E-1）。 |
+| `7a`<br />納品 | 全成果物を担当する 1 観点に照らし、<br />指摘を挙げる | main-agent | `review-agent` × 7<br />R1〜R7 を 1 エージェントずつ | 対象: 全文<br />全成果物 | review | 各自の指摘の場所と件数 | **[厳格]** 1 観点 = 1 エージェント。R をまたがない。<br />**7 観点が 4 分野に収まらない問題が消える。**<br />**再委託しない。統合は `7k` が行う**<br />（`07` §4.5.2）。<br />エージェントの下限は 27k〜35k なので、下限だけで 7 倍になる。**これが厳格の値段である。** |
+| `7b`<br />納品<br />**新設** | 全ゲートの結果を集め、<br />リリース判定チェックリストを埋める | main-agent | project-manager | 全ゲートの判定結果<br />`7a` の review | release-checklist | チェックリストの場所<br />未充足の項目 | 複数バージョンを並行保守するとき<br />（標準）。 |
+| `7b`<br />納品<br />**新設** | チェックリストに照らし、<br />リリースの可否を出す | main-agent | technical-authority | release-checklist | tech-decision | 可否と理由 | **[直列]** **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
+| `7c`<br />納品 | デプロイ設計に従い、<br />コンテナをビルドする | main-agent | implementer | `4i` の deployment-design<br />`5a` の src | container-image | 成果物の場所<br />タグ | 配布以外のデプロイ先がある場合。<br />`7c`〜`7f` は同じ条件に従う。 |
+| `7d`<br />納品 | ビルドしたコンテナをデプロイする | main-agent | implementer | `7c` の container-image | — | デプロイ先<br />結果 | 同上。 |
+| `7e`<br />納品 | 監視が動いているか確かめ、<br />欠けている計装を洗い出す | main-agent | implementer | `4h` の observability-design | — | 確認結果<br />欠けている計装 | 同上。 |
+| `7f`<br />納品 | ロールバック手順を書き、<br />試す | main-agent | implementer | `4i` の deployment-design | runbook | 手順の場所<br />試行の結果 | 同上。<br />**`runbook` のオーナーは runbook-writer である**（名簿 §2）。<br />手順を書くのは runbook-writer、試すのは implementer に割るのが筋であり、1 行にまとめているのは暫定である。 |
+| `7g`<br />納品 | 全ゲートの結果と waiver をまとめ、<br />最終レポートを書く | main-agent | project-manager | 全ゲートの判定結果<br />waiver の記録 | final-report | レポートの場所 | 統合が本務である。<br />waiver は条件 3 によりここへ転記する<br />（プロセス規則 §9.1.1）。 |
+| `7h`<br />納品 | 概要と UC を利用者の操作手順に翻訳し、<br />ユーザーマニュアルを書く | main-agent | user-manual-writer | 対象: 概要と UC<br />根拠: ソフトウェア仕様 | user-manual | マニュアルの場所<br />未記載の機能 | **§3 のとおり ソフトウェア仕様を根拠として読む。**<br />要求だけでは操作手順を書けない。 |
+| `7i`<br />納品 | 運用と復旧の手順を書き、<br />引継ぎ資料をそろえる | main-agent | runbook-writer | 対象: 概要と設計<br />根拠: NFR | runbook | runbook の場所 | 運用・保守フラグ。<br />**トレーニング・知識移転もここに乗る。** |
+| `7i`<br />納品 | マニュアルと運用手順書を突き合わせ、<br />重複と食い違いを洗い出す | main-agent | user-manual-writer | `7h` の user-manual<br />`7i` の runbook | — | 重複と食い違いの一覧 | **[直列]** **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
+| `7j`<br />納品 | 受入基準を利用者が実行できる手順に落とす | main-agent | test-designer | 対象: テスト<br />根拠: 概要と UC | test-plan | 手順書の場所 | **受入基準を書く側なので test-designer である。** |
+| `7k`<br />納品 | 指摘を統合し、<br />合格条件に照らして GATE-DELIVERY の可否を出す | main-agent | technical-authority | `7a` の review<br />`7g` の final-report | tech-decision | 可否と理由<br />統合済みの指摘 | 合格条件はプロセス規則 §9.4.1 が持つ。<br />**厳格では 7 エージェントの指摘をここで統合する。**<br />免除した成果物は、免除の記録をもって充足とする。 |
+| `7l`<br />納品 | 最終レポートをまとめ、<br />完了報告の文を書く | main-agent | project-manager | `7g` の final-report | — | 報告文 | **文は下で起草させる。** |
+| `7l`<br />納品 | 完了を利用者に報告する | **main-agent** | **利用者** | 報告文 | — | 受領 | **[直列]** 作業の実体が利用者への報告である。 |
 
 **手順数が 11 → 12 になる。** `7b` の新設で 1 増える。**旧 `6b`〜`6e` の 1 行 4 手順は 4 行に開いた。** 記号ごとに担い手と出力が要るためである。
 
@@ -352,13 +396,34 @@ flowchart TD
 
 | フェーズ | 作業 | 依頼元 | 担い手 | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|
-| Phase 8<br />運用・保守<br />`8a` | incident の受け口と連絡経路を決め、<br />体制を立ち上げる | main-agent | incident-reporter | `7i` の runbook | — | 体制の記録の場所<br />連絡経路 | 運用・保守フラグ。 |
-| Phase 8<br />運用・保守<br />`8b` | パッチ適用とスキャンを定期実行するよう設定する | main-agent | security-reviewer | `5f` `5g` の security-scan-report | — | 設定の場所<br />実行間隔 | パッチ対応時間の目標は CLAUDE.md「品質目標」が持つ。 |
-| Phase 8<br />運用・保守<br />`8c` | SLA 監視が動いているか確かめ、<br />違反を数える | main-agent | progress-monitor | `4h` の observability-design | progress | 確認結果<br />SLA 違反の件数 | `4h` の可観測性設計が定めた閾値と突き合わせる。 |
-| Phase 8<br />運用・保守<br />`8d` | 復旧手順の訓練を計画する | main-agent | runbook-writer | `7i` の runbook<br />`7f` のロールバック手順 | disaster-recovery-plan | 計画の場所<br />実施時期 |  |
-| Phase 8<br />運用・保守<br />`8e` | incident の経緯と影響を報告書に書く | main-agent | incident-reporter | incident の記録 | incident-report | 報告書の場所<br />影響範囲 |  |
-| Phase 8<br />運用・保守<br />`8e` | 根本原因を分析し、<br />改善案を出す | main-agent | process-improver | `8e` の incident-report | retrospective-report | 原因と改善案 | **兄弟で並べて起動する**<br />（`07` §4.5.1）。<br />改善案の適用は `Fe` が行う。 |
-| Phase 8<br />運用・保守<br />`8f` | 終了の条件に照らし、<br />GATE-EOL の可否を出す | main-agent | technical-authority | `8e` の incident-report<br />`7g` の final-report | — | 可否と理由 | 終了する場合。<br />合格条件はプロセス規則 §9.4.1 が持つ。 |
+| `8a`<br />運用・保守 | incident の受け口と連絡経路を決め、<br />体制を立ち上げる | main-agent | incident-reporter | `7i` の runbook | — | 連絡経路と受け口の一覧<br />連絡経路 | 運用・保守フラグ。 |
+| `8b`<br />運用・保守 | パッチ適用とスキャンを定期実行するよう設定する | main-agent | security-reviewer | `5f` `5g` の security-scan-report | — | 実行間隔と対象<br />実行間隔 | パッチ対応時間の目標は CLAUDE.md「品質目標」が持つ。 |
+| `8c`<br />運用・保守 | SLA 監視が動いているか確かめ、<br />違反を数える | main-agent | progress-monitor | `4h` の observability-design | progress | 確認結果<br />SLA 違反の件数 | `4h` の可観測性設計が定めた閾値と突き合わせる。 |
+| `8d`<br />運用・保守 | 復旧手順の訓練を計画する | main-agent | runbook-writer | `7i` の runbook<br />`7f` のロールバック手順 | disaster-recovery-plan | 計画の場所<br />実施時期 | <br />**`disaster-recovery-plan` のオーナーは名簿では architect である。**<br />運用の文書を設計の体が持つのは不自然であり、名簿側の見直しが要る（未決）。 |
+| `8e`<br />運用・保守 | incident の経緯と影響を報告書に書く | main-agent | incident-reporter | incident の記録 | incident-report | 報告書の場所<br />影響範囲 |  |
+| `8e`<br />運用・保守 | 根本原因を分析し、<br />改善案を出す | main-agent | process-improver | `8e` の incident-report | retrospective-report | 原因と改善案 | **[直列]** **兄弟で並べて起動する**<br />（`07` §4.5.1）。<br />改善案の適用は `Fe` が行う。 |
+| `8f`<br />運用・保守 | 終了の条件に照らし、<br />GATE-EOL の可否を出す | main-agent | technical-authority | `8e` の incident-report<br />`7g` の final-report | tech-decision | 可否と理由 | 終了する場合。<br />合格条件はプロセス規則 §9.4.1 が持つ。 |
+
+### 4.10 不足している手順（2026-08-11 のレビューで判明）
+
+**下表の作業は、どの行も担っていない。** いずれも `01` / `02` / `07` が要求している。
+
+**採番はまだ当てない。** `03-work-order.md` §6.6 が「対応表を全手順ぶん確定させてから 1 回で当てる」と定めており、**ここで足すと振り直しが二度目になる。** 手順記号・表 M・手順数・`03` §6.4 の対応表は、下表が確定してから一度に更新する。
+
+| # | 不足している作業 | 置く先（案） | なぜ要るか |
+|:-:|---|---|---|
+| 1 | **目的・システム概要・ユースケースを書き、`GL` と `UC` に ID を付ける** | Phase 2、現 `2e` の直前 | `02`「親をたどると必ず `GL` に着く（MUST）」。**現在 `GL` を作る行が無く、鎖が最初の一手で切れる。** `02`「Chapter 2 を書かずに Chapter 4 を書いてはならない（MUST NOT）」にも反する |
+| 2 | **ユースケーステストの受入基準とテストコードを書く** | Phase 6、現 `6d` の後 | 仕様書のテストは 3 系統（`UC` / `SWS` / `NFR`）。**`UC` 系統のケースを作る行が無い** |
+| 3 | **ユースケーステストを走らせ、結果を記録する** | 同上 | 現 `6b` は結合、`6d` はシステム、`6e` は性能。**`UC` テストの実行者が居ない** |
+| 4 | **非機能テストの受入基準とテストコードを書く** | Phase 6、現 `6e` の直前 | `6e` は実行だけで、ケースを作る行が無い |
+| 5 | **指摘に分類を付けて 1 通で回答し、再判定を受ける** | §5.2 随時 | `07` §4.3 が定める往復。**表 E-1 が厳格で「再レビュー ◎」を必須としているのに、手順記号が無く、表 M にも §9 の手順数にも数えられていない** |
+| 6 | **リスク score≧6・コスト閾値の到達・ゲート FAIL を即時に利用者へ上げる** | §5.2 随時 | `07` §4.5.3 が「即時。`main` が利用者へ上げる（報告文は下で起草させる）」と定める。**他の利用者接点はすべて「起草の行」＋「利用者の行」に割っているのに、この 3 事象だけ行が無い** |
+
+**足すと 88 → 94 になる。** 手順数・表 M・§9 の導出・`03-work-order.md` §6.3 の合計は、そのときに数え直す。
+
+> **`5c` の単体テストは足さない。** `TEST_LEVEL: Unit` は `SWS` テストの属性であり、系統が増えるわけではない。**ケースを仕様書に載せる必要はあるので、`5c` の `出力` に `spec` を足した。**
+
+---
 
 ---
 
@@ -372,12 +437,12 @@ flowchart TD
 
 | フェーズ | 作業 | 依頼元 | 担い手 | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|
-| 共通<br />フェーズ完了時<br />`Fa` | トークン消費とコストを数え、<br />予算と突き合わせる | main-agent | progress-monitor | `progress-log`（フックの記録）<br />Agent の返り値 | progress | 累計と予算比 | **計測が本務である。**<br />予算とアラート閾値は CLAUDE.md「品質目標」が持つ。<br />閾値に達したら `main-agent` が利用者へ通知する。<br />**トークンはフックでは取れないので、`main-agent` が Agent の返り値を渡す**<br />（`06` §3.1・§3.2）。 |
-| 共通<br />フェーズ完了時<br />`Fb` | 続きから再開できる引継ぎを書く | main-agent | project-manager | pipeline-state<br />当該フェーズの成果物の場所 | handoff | 引継ぎ文の場所 | 文脈の圧縮が起きたときに書く。<br />発火を判断するのは `main-agent` である<br />（自分の文脈の話であるため）。<br />**引継ぎ閾値と比べる値は現在生まれていない**<br />（`06` §1.2）。 |
-| 共通<br />フェーズ完了時<br />`Fc` | pipeline-state と executive-dashboard を更新し、<br />報告文を書く | main-agent | project-manager | 当該フェーズのゲート判定結果<br />`progress-log`（フックの記録） | pipeline-state<br />executive-dashboard | 報告文<br />次のフェーズ | **統合が本務である。**<br />簡易は pipeline-state のみ。<br />**手順ごとに起動してはならない。フェーズ境界にまとめる**<br />（`07` §4.5.3）。 |
-| 共通<br />フェーズ完了時<br />`Fc` | フェーズの完了を利用者に報告する | **main-agent** | **利用者** | 報告文 | — | 受領 / 差し戻し | **報告するのは `main-agent` である。** |
-| 共通<br />フェーズ完了時<br />`Fd` | defect とゲートの結果からふりかえり、<br />改善案を出す | main-agent | process-improver | 当該フェーズの defect<br />ゲート判定結果 | retrospective-report | 報告の場所<br />改善案 | 各フェーズ完了時に行う。<br />改善案の適用は `Fe` が受ける。 |
-| 共通<br />フェーズ完了時<br />`Fe` | 承認済みの改善策をガバナンスファイルへ適用する | main-agent | decree-writer | `Fd` の改善案<br />利用者の承認 | governance-change-log | before/after diff | `Fd` に従属する。<br />**承認するのは利用者である**<br />（`main-agent` 経由）。 |
+| `Fa`<br />フェーズ完了時 | トークン消費とコストを数え、<br />予算と突き合わせる | main-agent | progress-monitor | `progress-log`（フックの記録）<br />Agent の返り値 | progress | 累計と予算比 | **計測が本務である。**<br />予算とアラート閾値は CLAUDE.md「品質目標」が持つ。<br />閾値に達したら `main-agent` が利用者へ通知する。<br />**トークンはフックでは取れないので、`main-agent` が Agent の返り値を渡す**<br />（`06` §3.1・§3.2）。 |
+| `Fb`<br />フェーズ完了時 | 続きから再開できる引継ぎを書く | main-agent | project-manager | pipeline-state<br />当該フェーズの成果物の場所 | handoff | 引継ぎ文の場所 | 文脈の圧縮が起きたときに書く。<br />発火を判断するのは `main-agent` である<br />（自分の文脈の話であるため）。<br />**引継ぎ閾値と比べる値は現在生まれていない**<br />（`06` §1.2）。 |
+| `Fc`<br />フェーズ完了時 | pipeline-state と executive-dashboard を更新し、<br />報告文を書く | main-agent | project-manager | 当該フェーズのゲート判定結果<br />`progress-log`（フックの記録） | pipeline-state<br />executive-dashboard | 報告文<br />次のフェーズ | **統合が本務である。**<br />簡易は pipeline-state のみ。<br />**手順ごとに起動してはならない。フェーズ境界にまとめる**<br />（`07` §4.5.3）。 |
+| `Fc`<br />フェーズ完了時 | フェーズの完了を利用者に報告する | **main-agent** | **利用者** | 報告文 | — | 受領 / 差し戻し | **[直列]** **報告するのは `main-agent` である。** |
+| `Fd`<br />フェーズ完了時 | defect とゲートの結果からふりかえり、<br />改善案を出す | main-agent | process-improver | 当該フェーズの defect<br />ゲート判定結果 | retrospective-report | 報告の場所<br />改善案 | 各フェーズ完了時に行う。<br />改善案の適用は `Fe` が受ける。 |
+| `Fe`<br />フェーズ完了時 | 承認済みの改善策をガバナンスファイルへ適用する | main-agent | decree-writer | `Fd` の改善案<br />利用者の承認 | governance-change-log | before/after diff | `Fd` に従属する。<br />**承認するのは利用者である**<br />（`main-agent` 経由）。 |
 
 > **旧 `Fa`（当該フェーズの全 Out の用語・命名をチェックする）は削除した。エージェントを起動しない。** `tools/kotodama-kun.mjs` が `Write` / `Edit` の前に走り、**書いたエージェントにその場で差し戻る**（`07` §4.6）。`main-agent` には何も届かない。**読み替えは `03-work-order.md` §6.4 が持つ。**
 
@@ -387,13 +452,13 @@ flowchart TD
 
 | フェーズ | 作業 | 依頼元 | 担い手 | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|
-| 共通<br />随時<br />`Ff` | 変更要求の影響を分析し、<br />change-request に記録する | main-agent | change-manager | 利用者の変更要求<br />対象: 全文 | change-request | 影響度<br />change-request の場所 | 仕様書承認後に利用者から出たとき。 |
-| 共通<br />随時<br />`Ff` | 影響度 high の変更を利用者に示し、<br />承認を得る | **main-agent** | **利用者** | change-request | — | 承認 / 却下 | **影響度 high は利用者の承認が要る**<br />（CLAUDE.md「重要判断の基準」）。 |
-| 共通<br />随時<br />`Fg`<br />**新設** | defect 票を起こし、<br />状態を進める | main-agent | tester | 発見したエージェントからの報告 | defect | 起票数<br />未解決の件数 | 発見したエージェントが発見のその場で起票する<br />（即時起票ルール）。<br />**状態を進めるのは tester である。** |
-| 共通<br />随時<br />`Fg`<br />**新設** | defect を修正する | main-agent | implementer | `Fg` の defect | src | 修正の場所 | **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
-| 共通<br />随時<br />`Fg`<br />**新設** | CR に当たる defect を change-request へ振り分ける | main-agent | change-manager | `Fg` の defect | change-request | 振り分けの結果 | 同上。 |
-| 共通<br />随時<br />`Fh`<br />**新設** | 文書の版を上げ、<br />廃止文書を `old/` へ移す | main-agent | **各 file_type のオーナー** | 当該 file_type の現物 | 全 file_type | 新しい版の場所 | **単一の担い手を置かない唯一の行である。**<br />オーナーの対応は `agent-list.md` §2 が持つ。 |
-| 共通<br />随時<br />`Fh`<br />**新設** | 新旧の版の差分を確かめる | main-agent | review-agent | 新旧の版 | — | 差分の可否 | **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
+| `Ff`<br />随時 | 変更要求の影響を分析し、<br />change-request に記録する | main-agent | change-manager | 利用者の変更要求<br />対象: 全文 | change-request | 影響度<br />change-request の場所 | 仕様書承認後に利用者から出たとき。 |
+| `Ff`<br />随時 | 影響度 high の変更を利用者に示し、<br />承認を得る | **main-agent** | **利用者** | change-request | — | 承認 / 却下 | **[直列]** **影響度 high は利用者の承認が要る**<br />（CLAUDE.md「重要判断の基準」）。 |
+| `Fg`<br />随時<br />**新設** | defect 票を起こし、<br />状態を進める | main-agent | tester | 発見したエージェントからの報告 | defect | 起票数<br />未解決の件数 | 発見したエージェントが発見のその場で起票する<br />（即時起票ルール）。<br />**状態を進めるのは tester である。** |
+| `Fg`<br />随時<br />**新設** | defect を修正する | main-agent | implementer | `Fg` の defect | src | 修正の場所 | **[直列]** **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
+| `Fg`<br />随時<br />**新設** | CR に当たる defect を change-request へ振り分ける | main-agent | change-manager | `Fg` の defect | change-request | 振り分けの結果 | **[直列]** 同上。 |
+| `Fh`<br />随時<br />**新設** | 文書の版を上げ、<br />廃止文書を `old/` へ移す | main-agent | **各 file_type のオーナー** | 当該 file_type の現物 | 全 file_type | 新しい版の場所 | **単一の担い手を置かない唯一の行である。**<br />オーナーの対応は `agent-list.md` §2 が持つ。 |
+| `Fh`<br />随時<br />**新設** | 新旧の版の差分を確かめる | main-agent | review-agent | 新旧の版 | — | 差分の可否 | **[直列]** **兄弟で並べて起動する**<br />（`07` §4.5.1）。 |
 
 ---
 
@@ -572,8 +637,8 @@ flowchart TD
 | 手順 | **無条件 48**（うち `Phase 0` インストールが 5）。<br />条件付き 27。<br />免除 13。<br />**合計 88**（`03-work-order.md` §6.3 と一致する）。 |
 | エージェント | **無条件 11 エージェント** —— srs-writer<br />architect<br />technical-authority<br />project-manager<br />review-agent<br />implementer<br />security-reviewer<br />license-checker<br />test-designer<br />tester<br />user-manual-writer |
 | 条件付きで増えるエージェント | **8 エージェント** —— runbook-writer<br />field-test-engineer<br />feedback-classifier<br />field-issue-analyst<br />incident-reporter<br />progress-monitor<br />process-improver<br />change-manager<br />**全部有効なら 19 エージェント。** |
-| 簡易では決して起動しないエージェント | **2 エージェント** —— risk-manager（`4k` 免除）<br />decree-writer（`Fe` 免除）<br />**19 ＋ 2 = 21 で、名簿の 21 エージェントと一致する**（`03-work-order.md` §16 の作業 5）。 |
-| 成果物 | user-order<br />CLAUDE.md<br />decision<br />pipeline-state<br />interview-record<br />**src**<br />spec-foundation<br />spec-architecture<br />spec<br />traceability<br />**test-plan**<br />review<br />security-scan-report<br />license-report<br />final-report<br />user-manual<br />handoff<br />**17 件。** |
+| 簡易では決して起動しないエージェント | **2 エージェント** —— risk-manager（`4k` 免除）<br />decree-writer（`Fe` 免除）<br />**19 ＋ 2 = 21。名簿は現在 22 件あり、一致しない。**<br />差は `test-engineer`（作業表で 1 度も使わない）と `framework-translation-verifier`（どの行にも現れない）、および未登録の `test-designer` / `tester`（§11.2 の既知 FAIL）である。 |
+| 成果物 | user-order<br />CLAUDE.md<br />**tech-decision**<br />pipeline-state<br />interview-record<br />src<br />spec-foundation<br />spec-architecture<br />spec<br />traceability<br />test-plan<br />review<br />security-scan-report<br />license-report<br />final-report<br />user-manual<br />handoff<br />**17 件（表 M の `実施` から機械で導出した）。** |
 | レビュー報告 | 1 本（`7a` で R1〜R7 網羅）。<br />合格線 Critical 0 / High 0。 |
 | ゲート | 全 8 ゲートを判定する。 |
 
@@ -627,7 +692,9 @@ flowchart TD
 
 **項目数の偏り（R2 が 20、R4 が 3）は許容する。** 割る目的は負荷分散ではなく**文脈の分離**であり、早く終わるエージェントが出ても損ではない。
 
-> **厳格の値段:** エージェントの文脈には下限（27k〜35k）がある。最終レビューを 7 エージェントで回すと**下限だけで 7 倍**になる。簡易・標準の約 38k 相当に対し、**厳格は約 260k 相当である。**
+> **厳格の値段:** 最終レビュー 1 エージェントの実測は約 38k 相当である（下限は 27k〜35k で、それより上に積まれる）。**7 エージェントで回すと約 260k 相当になる。**
+>
+> **下限と実測を混同しない。** 7 倍になるのは実測のほうであり、下限だけを 7 倍しても 189k〜245k にしかならない。
 
 > 仕様書の分割（表 A・A-2）にも差がある。 本節が挙げるのは作業表と表 E の差だけである。
 
@@ -665,32 +732,41 @@ flowchart TD
 | # | 判定 |
 |:-:|---|
 | 12 | **`依頼元` と `担い手` が `agent-list.md` §1 の名簿に実在する。** 名簿外の値として `**main-agent**` / `**利用者**` / `**各 file_type のオーナー**` / `setup.js` の 4 つだけを許す |
-| 13 | **全行に `担い手` が 1 つある。** 複数を書いてはならない（`× N` の形は 1 つとみなす） |
+| 13 | **全行に `担い手` が 1 つある。** 複数を書いてはならない。**`× N` の形と `**各 file_type のオーナー**` を 1 つとみなす** |
 | 14 | **同じ手順記号の行が複数あれば、`依頼元` はすべて同じである**（兄弟の規則。`07` §4.5.1） |
 | 15 | **`担い手` が `**利用者**` の行は、`依頼元` が `**main-agent**` である**（`07` §4.5 の規約 1）。エージェントが利用者に直接話す経路を許さない |
 | 16 | **`依頼元` は `**main-agent**` か `**利用者**` だけである**（`07` §4.5 の規約 3・7）。エージェントがエージェントを起動する経路を許さない |
 | 17 | **`担い手` がその方式で 1 つも `実施` を持たないエージェントは、その方式で起動しない**（旧 表 C の導出。表 M を引く） |
-| 18 | **`出力` に現れる名前が `agent-list.md` §2 の file_type に実在する。** file_type でないものは除外リストで明示する（現在 `agents` / `commands` / `settings.json` —— いずれも `Phase 0` の配置物） |
+| 18 | **`出力` に現れる名前が `agent-list.md` §2 の file_type に実在する。** file_type でない生成物は除外リストで明示する —— `src` / `openapi` / `container-image` / `settings.json` / `agents` / `commands` / `CLAUDE.md`。**前 3 者は名簿 §2 が「file_type ではない生成物」として明示的に列挙している。新設候補ではない** |
+| **18b** | **`出力` の file_type のオーナーが `担い手` と一致する。** 異なる行は `備考` に移管の宣言を持つ（`07` §4.7 の規約 4） |
+| **18c** | **`担い手` が `review-agent` の行の `出力` は `review` だけである**（`07` §4.7 の規約 3。レビュアーに直させない） |
+| **18d** | **`担い手` が `**main-agent**` の行は `出力` が `—` である**（`07` §4.5 の規約 1。`main-agent` に記録させない） |
+| **18e** | **`依頼元へ返す` の各値が「場所」「可否」「件数」「次の一手」のいずれかに分類できる。** 分類できない値があれば FAIL（`07` §3.6・§4.3 の規約 4・§4.7 の規約 1） |
 | 19 | **全行に `依頼元へ返す` がある。** 空欄を許さない。**`—` を許すのは `依頼元` と `担い手` が同じ行だけである**（自分でやる行に戻り値は無い） |
 | 20 | **`出力` と `依頼元へ返す` に同じ値が現れない。** 現れたら成果物を返させている（`07` §4.7 の規約 1 違反） |
 | 21 | **`作業` が手段として書かれ、動詞で終わる。** 状態表現（「〜ている」「〜である」）を許さない —— **前提条件に見え、指示にならない** |
 | **21b** | **全行の `フェーズ` がフェーズ名と手順記号の両方を持つ。** フェーズ名が欠けた行は目的を持たない |
+| **21c** | **`入力` に現れる語がすべて §3.3 の一覧に実在する。** 一覧に無い語を書いてはならない —— 依頼を受けた側が開くファイルを決められない |
+| **21d** | **同じ手順記号に複数行あるとき、2 行目以降の `備考` が `[直列]` / `[同時]` / `[簡易・標準]` / `[厳格]` のいずれかで始まる。** 「兄弟で並べて起動する」は階層の話であって順序の話ではない |
 | 22 | **仕様書を読む行の `入力` は `対象:` と `根拠:` の両方を持つ。** 片方だけを許さない。§3.1 の例外 4 エージェントは `全文` / `節` のみでよい |
 | 23 | **`入力` に章番号（`Ch` で始まる字面）が 0 件である。** 観点と章の対応は `review-standards.md` が持つ |
 
-> **検査 18 は現状 FAIL する。** `出力` に書いた 7 件が `agent-list.md` §2 の file_type に無い。**名簿を直すか出力を寄せるかは名簿側の判断であり、本表では決めない。**
+> **現状 FAIL する検査が 3 つある。段 1・段 6 で解消する。**
+>
+> **検査 12**（`依頼元` と `担い手` が名簿に実在する）—— **`test-designer` と `tester` が `agent-list.md` §1 に無い。** 作業表は 10 行で担い手に使っている。名簿は現在 22 件で、追加は `03-work-order.md` §8 の作業 6 が持つ。
+>
+> **検査 18**（`出力` が file_type に実在する）—— 次の 4 件が名簿に無い。**名簿を直すか出力を寄せるかは名簿側の判断であり、本表では決めない。**
 >
 > | 出力 | 使う手順 | 名簿の状況 |
 > |---|---|---|
-> | `spec` | `4c` `4d` | `spec-foundation` と `spec-architecture` はあるが、SW仕様とテスト戦略に当たる型が無い |
-> | `openapi` | `4e` | 無い |
-> | `ADR` | `4f` | 無い。`tech-decision` に寄せられるかは要判断 |
+> | `spec` | `4c` `4d` `5c` `6a`〜`6e` | **`spec-foundation` = Ch1-2 / `spec-architecture` = Ch3-6 は旧 6 章構成の切れ目であり、`02` の部境界（Ch1-4 / Ch5-7 / Ch8-10）と切り方が違う。** ソフトウェア仕様・テスト戦略・テスト 3 系統に当たる型が無い |
 > | `safety` | `4l` | 無い |
-> | `container-image` | `7c` | 無い。そもそもファイルでない |
 > | `release-checklist` | `7b` | 無い |
-> | `CLAUDE.md` | `0b` `1c` | 無い。`process-rules` はあるが CLAUDE.md は別物である |
+> | `stakeholder-register` ほか | — | 実在する。誤りではない |
 >
-> **逆に、名簿にあって `出力` に一度も現れないものが 4 件ある** —— `file` / `full-auto-dev-document-rules` / `glossary` / `tech-decision`。**前 3 者はフレームワーク自身の文書であり、利用者の成果物ではない。**
+> **`openapi` / `src` / `container-image` は新設しない。** 名簿 §2 が「**file_type ではない生成物**: openapi.yaml, src/, tests/, infra/, cost-log.json, …」と明示的に列挙している。**除外リストへ入れるのが正しい。**
+>
+> **検査 18b**（オーナーの一致）—— `7f` `8d` および `traceability` を書く行が不一致であり、**いずれも `備考` に宣言を入れた**（`00` 冒頭の「黙って上書きしない」に従う）。名簿側の是正は別途。
 
 ### 11.4 既知の欠陥で落ちること
 
