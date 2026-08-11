@@ -29,7 +29,9 @@
 | `Fd`<br />フェーズ完了時 | defect とゲートの結果からふりかえり、<br />改善案を出す | main-agent | process-improver | sonnet | 当該フェーズの defect<br />ゲート判定結果 | retrospective-report | 報告の場所<br />改善案 | 各フェーズ完了時に行う。<br />改善案の適用は `Fe` が受ける。 |
 | `Fe`<br />フェーズ完了時 | 承認済みの改善策をガバナンスファイルへ適用する | main-agent | decree-writer | sonnet | `Fd` の改善案<br />利用者の承認 | governance-change-log | before/after diff | `Fd` に従属する。<br />**承認するのは利用者である**<br />（`main-agent` 経由）。 |
 
-> **旧 `Fa`（当該フェーズの全 Out の用語・命名をチェックする）は削除した。エージェントを起動しない。** `tools/kotodama-kun.mjs` が `Write` / `Edit` の前に走り、**書いたエージェントにその場で差し戻る**（`agent-orchestration-rules.md` §4.6）。`main-agent` には何も届かない。
+> **旧 `Fa`（当該フェーズの全 Out の用語・命名をチェックする）は削除した。フェーズ境界でまとめて起動しない。** 用語チェックは **`terminology-checker`** が受け持ち、**Out を生成したエージェントが完了報告に用語チェック要請を含めて返し、`main-agent` が起動する**（`agent-orchestration-rules.md` §4.6 の規約 6。2026-08-12 決定）。**書いた体の手元で閉じるので作業表に行を持たない。**
+>
+> **道具にはしない。** 6 観点のうち機械で決まるのは非採用語との照合だけで、和製英語の判定・同義語の検出・品詞の妥当性は意味理解を要する（同 規約 5）。
 
 > **開始・終了の記録にも手順を立てない。エージェントを起動しない。** `tools/progress-log.mjs` がフックとして走り、**手順記号・担当者・時刻を `progress-log` へ 1 行追記する**（`agent-orchestration-rules.md` §4.5.3）。`Fa` と `Fc` はその記録を読む。**手順ごとに progress-monitor や project-manager を起動してはならない（MUST NOT）** —— 起動には下限（27k〜35k）があり、小さい報告を頻繁に出すのが最も高くつく。**`progress-log.json` は file_type ではない生成物である**（`cost-log.json` と同じ扱い）。
 

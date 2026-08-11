@@ -139,7 +139,7 @@
 | security-reviewer | **常に全文** | 脅威は要求を横断する。<br />1 つの入力経路が別の要求の資産に届く。 |
 | tester | **常に節** | 結果はケースに 1 対 1 で紐づく。<br />自分が書く結果の節と、対応するケースだけでよい。 |
 
-**`Ch1 Foundation` は全担当者・全方式で必ず読む。** 用語集と表記規約がそこにあり、読まなければ用語がぶれる（`tools/kotodama-kun.mjs` が書き込みのたびに検査する）。**粒度の対象外であり、`入力` 列にも書かない。**
+**`Ch1 Foundation` は全担当者・全方式で必ず読む。** 用語集と表記規約がそこにあり、読まなければ用語がぶれる（`terminology-checker` が Out ごとに検査する）。**粒度の対象外であり、`入力` 列にも書かない。**
 
 **章番号を書いてはならない（MUST NOT）。** 観点と章の対応は `review-standards.md` が持つ。ここで番号を並べると正本が 2 つになる。
 
@@ -482,7 +482,9 @@ flowchart TD
 | `Fd`<br />フェーズ完了時 | defect とゲートの結果からふりかえり、<br />改善案を出す | main-agent | process-improver | sonnet | 当該フェーズの defect<br />ゲート判定結果 | retrospective-report | 報告の場所<br />改善案 | 各フェーズ完了時に行う。<br />改善案の適用は `Fe` が受ける。 |
 | `Fe`<br />フェーズ完了時 | 承認済みの改善策をガバナンスファイルへ適用する | main-agent | decree-writer | sonnet | `Fd` の改善案<br />利用者の承認 | governance-change-log | before/after diff | `Fd` に従属する。<br />**承認するのは利用者である**<br />（`main-agent` 経由）。 |
 
-> **旧 `Fa`（当該フェーズの全 Out の用語・命名をチェックする）は削除した。エージェントを起動しない。** `tools/kotodama-kun.mjs` が `Write` / `Edit` の前に走り、**書いたエージェントにその場で差し戻る**（`agent-orchestration-rules.md` §4.6）。`main-agent` には何も届かない。
+> **旧 `Fa`（当該フェーズの全 Out の用語・命名をチェックする）は削除した。フェーズ境界でまとめて起動しない。** 用語チェックは **`terminology-checker`** が受け持ち、**Out を生成したエージェントが完了報告に用語チェック要請を含めて返し、`main-agent` が起動する**（`agent-orchestration-rules.md` §4.6 の規約 6。2026-08-12 決定）。**書いた体の手元で閉じるので作業表に行を持たない。**
+>
+> **道具にはしない。** 6 観点のうち機械で決まるのは非採用語との照合だけで、和製英語の判定・同義語の検出・品詞の妥当性は意味理解を要する（同 規約 5）。
 
 > **開始・終了の記録にも手順を立てない。エージェントを起動しない。** `tools/progress-log.mjs` がフックとして走り、**手順記号・担当者・時刻を `progress-log` へ 1 行追記する**（`agent-orchestration-rules.md` §4.5.3）。`Fa` と `Fc` はその記録を読む。**手順ごとに progress-monitor や project-manager を起動してはならない（MUST NOT）** —— 起動には下限（27k〜35k）があり、小さい報告を頻繁に出すのが最も高くつく。**`progress-log.json` は file_type ではない生成物である**（`cost-log.json` と同じ扱い）。
 
@@ -688,7 +690,7 @@ flowchart TD
 | 手順 | **無条件 53**（うち `Phase 0` インストールが 5）。<br />条件付き 31。<br />免除 13。<br />**合計 97**。 |
 | エージェント | **無条件 11 エージェント** —— srs-writer<br />architect<br />technical-authority<br />project-manager<br />review-agent<br />implementer<br />security-reviewer<br />license-checker<br />test-designer<br />tester<br />user-manual-writer |
 | 条件付きで増えるエージェント | **8 エージェント** —— runbook-writer<br />field-test-engineer<br />feedback-classifier<br />field-issue-analyst<br />incident-reporter<br />progress-monitor<br />process-improver<br />change-manager<br />**全部有効なら 19 エージェント。** |
-| 簡易では決して起動しないエージェント | **2 エージェント** —— risk-manager（`4k` 免除）<br />decree-writer（`Fe` 免除）<br />**19 ＋ 2 = 21。名簿は現在 22 件である。**<br />差は `kotodama-kun` の 1 件のみで、**作業表のどの行にも現れない**（道具として呼ぶ設計だが、実体は未作成）。<br />**`test-engineer` は名簿から外した**（2026-08-12 決定。作業表で 1 度も使わないため）。 |
+| 簡易では決して起動しないエージェント | **2 エージェント** —— risk-manager（`4k` 免除）<br />decree-writer（`Fe` 免除）<br />**19 ＋ 2 = 21。名簿は現在 22 件である。**<br />差は `terminology-checker` の 1 件のみで、**作業表のどの行にも現れない**。**完了報告の用語チェック要請で呼ばれるため、手順を持たない**（`agent-orchestration-rules.md` §4.6 の規約 6）。<br />**`test-engineer` は名簿から外した**（2026-08-12 決定。作業表で 1 度も使わないため）。 |
 | 成果物 | user-order<br />CLAUDE.md<br />**tech-decision**<br />pipeline-state<br />interview-record<br />src<br />spec-foundation<br />spec-architecture<br />spec-test<br />traceability<br />test-plan<br />review<br />security-scan-report<br />license-report<br />final-report<br />user-manual<br />handoff<br />**17 件（表 M の `実施` から機械で導出した）。**<br />**ANMS なので 3 型は単一の `spec` へ畳まれ、現物のファイルは 1 枚である。** |
 | レビュー報告 | 1 本（`7a` で R1〜R7 網羅）。<br />合格線 Critical 0 / High 0。 |
 | ゲート | 全 8 ゲートを判定する。 |
@@ -836,7 +838,7 @@ flowchart TD
 
 | # | 検算 | 状態 |
 |:-:|---|---|
-| 1 | 導出した起動エージェントが旧 表 C と一致する | **実施済み。** 簡易は旧表の 12 エージェントと一致した。**その後 kotodama-kun を道具化したため、現在の導出は 11 エージェントである**（§9）。標準・厳格は旧表の宣言が `17` だったが実測 `16` で、旧表の側が誤っていた |
+| 1 | 導出した起動エージェントが旧 表 C と一致する | **実施済み。** 簡易は旧表の 12 エージェントと一致した。**その後 `terminology-checker`（旧 kotodama-kun）が作業表に行を持たなくなったため、現在の導出は 11 エージェントである**（§9。完了報告の要請で呼ばれる）。標準・厳格は旧表の宣言が `17` だったが実測 `16` で、旧表の側が誤っていた |
 | 2 | 導出した成果物が旧 表 D-2 と一致する | 未実施 |
 | 3 | 導出した手順数が旧 表 B-1 と一致する | 未実施。**新設・統合・分割を除いた状態で比べる** |
 

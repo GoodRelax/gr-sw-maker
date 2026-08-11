@@ -114,7 +114,7 @@ gr-sw-maker フレームワークの全エージェント定義ファイル（EN
 - [ ] C6: Exception テーブルが現実的な異常ケースをカバーしているか
 - [ ] C7: tools フロントマターが責務と整合しているか（read-only エージェントに Write がないか等）
 - [ ] C8: process-improver に Write/Edit がないこと、decree-writer に Write/Edit があることを確認
-- [ ] C9: kotodama-kun チェックが必要なエージェントの Procedure に用語チェック手順が含まれているか（対象外: project-manager, review-agent, change-manager, license-checker, framework-translation-verifier, decree-writer）
+- [ ] C9: terminology-checker チェックが必要なエージェントの Procedure に「用語チェック要請を完了報告に含めて返す」があるか（対象外は名簿 §3 の「terminology-checker を使用しないエージェント」表が持つ。現在 8 体: project-manager, review-agent, change-manager, license-checker, decree-writer, feedback-classifier, field-issue-analyst, field-test-engineer）
 
 ## 出力形式
 
@@ -210,9 +210,9 @@ full-auto-dev-document-rules §7 の file_type マスターテーブルの実際
 
 **検証項目:**
 - [ ] 各エージェントの file_type 所有権に重複がないか（F04 §2 の全セクション横断）
-- [ ] F04 §3 データフロー図（メイン図 + DocWriter系図 + kotodama-kun図）の矢印が、対応するエージェントの In/Out と整合しているか
+- [ ] F04 §3 データフロー図（メイン図 + DocWriter系図 + terminology-checker図）の矢印が、対応するエージェントの In/Out と整合しているか
 - [ ] F02 §1.2 全体アーキテクチャ図（グループレベル概要）が F04 §3（詳細図）と矛盾していないか
-- [ ] file_type を所有しないエージェント（kotodama-kun, decree-writer）の入出力パターンが一貫しているか
+- [ ] file_type を所有しないエージェント（terminology-checker, decree-writer）の入出力パターンが一貫しているか
 - [ ] decree-writer の安全チェック（SR1-SR6）が F02 §3.3.3 の改善サイクルと整合しているか
 - [ ] decree-writer の承認テーブル（CLAUDE.md=ユーザー, agents=project-manager, process-rules=ユーザー）が関連ファイルで一致しているか
 

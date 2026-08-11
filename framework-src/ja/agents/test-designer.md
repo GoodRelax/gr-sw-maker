@@ -56,6 +56,7 @@ model: opus
 3. `TC` ノードを書き、UID を採番する
 4. テストコードを書く
 5. `traceability` に対象ノードとの対応を追記する
+6. 用語チェック要請を完了報告に含めて返す（`spec-test` のケース節、`traceability`、`test-plan`）
 
 ## Rules
 

@@ -55,6 +55,7 @@ model: sonnet
 3. `TC` 1 件につき `TR` を 1 件書く。親は `TC`、Role は `ResultOf`
 4. 失敗したものは即時に defect を起票する
 5. 合格率を出す
+6. 用語チェック要請を完了報告に含めて返す（`spec-test` の結果節、`defect`）
 
 ## Rules
 

@@ -152,7 +152,7 @@ flowchart TB
             License_Agent["license-checker"]
         end
         subgraph QualityGuard["品質ガード（2）"]
-            Koto_Agent["kotodama-kun"]
+            Term_Agent["terminology-checker"]
         end
         subgraph DocWriter["文書作成（3）"]
             UMW_Agent["user-manual-writer"]
@@ -1504,7 +1504,7 @@ project_root/
       change-manager.md           ... 変更管理エージェント
       risk-manager.md             ... リスク管理エージェント
       license-checker.md          ... ライセンス確認エージェント
-      kotodama-kun.md             ... 用語・命名チェッカー
+      terminology-checker.md             ... 用語・命名チェッカー
       user-manual-writer.md       ... ユーザーマニュアル作成エージェント
       runbook-writer.md           ... 運用手順書作成エージェント
       incident-reporter.md        ... incident 報告エージェント
@@ -1689,7 +1689,7 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 - **Change Manager Agent（change-manager）**: 仕様書承認後のユーザー起点の変更要求をproject-records/change-requests/に記録し、影響分析を行う。impact_level=highはユーザー承認必須。AI側の技術的変更はdefect/decisionで管理する
 - **Risk Manager Agent（risk-manager）**: project-records/risks/にリスクエントリを記録し、risk-register.mdを管理する。score≧6はユーザーに通知
 - **License Checker Agent（license-checker）**: 依存ライブラリ追加時にライセンス互換性を確認し、帰属表示を管理する
-- **Kotodama-kun Agent（kotodama-kun）**: 成果物の用語・命名がフレームワーク用語集およびプロジェクト用語集に準拠しているかチェックする
+- **Terminology Checker Agent（terminology-checker）**: 成果物の用語・命名がフレームワーク用語集およびプロジェクト用語集に準拠しているかチェックする
 - **User Manual Writer Agent（user-manual-writer）**: delivery フェーズでユーザーマニュアルを docs/ に作成する
 - **Runbook Writer Agent（runbook-writer）**: delivery フェーズで運用手順書を docs/operations/ に作成する
 - **Incident Reporter Agent（incident-reporter）**: operation フェーズで incident 報告書を project-records/incidents/ に作成する
@@ -2630,7 +2630,7 @@ sequenceDiagram
     participant User as ユーザー
     participant Orch as project-manager
     participant SRS as srs-writer
-    participant Koto as kotodama-kun
+    participant Term as terminology-checker
     participant Arch as architect
     participant Sec as security-reviewer
     participant Impl as implementer
@@ -2648,8 +2648,8 @@ sequenceDiagram
 
     User->>Orch: コンセプト提示
     Orch->>SRS: 仕様書 Ch1-2 作成を依頼
-    SRS->>Koto: spec-foundation の用語チェックを依頼
-    Koto->>SRS: チェック結果を返却
+    SRS->>Term: spec-foundation の用語チェックを依頼
+    Term->>SRS: チェック結果を返却
     SRS->>Orch: Ch1-2 完成を報告
     Orch->>Review: Ch1-2 の R1 レビューを依頼
     Review->>Orch: レビュー結果（PASS）を報告
@@ -2680,8 +2680,8 @@ sequenceDiagram
 
     Arch->>Sec: API インターフェース定義を共有
     Sec->>Arch: セキュリティ要求を共有
-    Arch->>Koto: spec-architecture の用語チェックを依頼
-    Koto->>Arch: チェック結果を返却
+    Arch->>Term: spec-architecture の用語チェックを依頼
+    Term->>Arch: チェック結果を返却
     Arch->>Orch: Ch3-6+OpenAPI+observability-design 完成を報告
     Orch->>Review: Ch3-6 の R2/R4/R5/R7 レビューを依頼
     Review->>Orch: レビュー結果（PASS）を報告
@@ -2853,7 +2853,7 @@ PM Agent はこのスキーマに従って `project-management/progress/progress
 | `change-manager`                  | 変更要求の受付・影響分析・記録                                        | sonnet | プロセス管理 |
 | `risk-manager`                    | リスク特定・評価・軽減策管理                                          | sonnet | プロセス管理 |
 | `license-checker`                 | OSSライセンス互換性確認                                               | haiku  | プロセス管理 |
-| `kotodama-kun`                    | 用語・命名の整合性チェック                                            | haiku  | 品質保証     |
+| `terminology-checker`             | 用語・命名の整合性チェック                                            | sonnet | 品質保証     |
 | `user-manual-writer`              | ユーザーマニュアルの作成                                              | sonnet | 納品物       |
 | `runbook-writer`                  | 運用手順書（Runbook）の作成                                           | sonnet | 納品物       |
 | `incident-reporter`               | incident 報告書の作成                                              | sonnet | 運用         |

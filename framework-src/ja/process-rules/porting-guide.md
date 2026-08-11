@@ -183,8 +183,9 @@
 
 | 役割ランク | Claude | OpenAI | Google | 用途 |
 |---|---|---|---|---|
-| 高（判断・設計） | opus | o3 | gemini-2.5-pro | project-manager, architect, review-agent, security-reviewer, srs-writer, implementer, field-issue-analyst |
-| 低（単純ルール） | haiku | gpt-4.1-mini | gemini-2.5-flash | license-checker, kotodama-kun |
+| 高（判断・設計） | opus | o3 | gemini-2.5-pro | project-manager, architect, review-agent, security-reviewer, srs-writer, implementer, field-issue-analyst, technical-authority, test-designer |
+| 中（意味理解を要する照合） | sonnet | gpt-4.1 | gemini-2.5-flash | **terminology-checker**, progress-monitor, change-manager, risk-manager, tester, process-improver |
+| 低（単純ルール） | haiku | gpt-4.1-mini | gemini-2.5-flash | license-checker |
 
 > 推奨値はPoC検証で調整すること。各モデルの能力・コスト・速度バランスはプラットフォームごとに異なる。
 

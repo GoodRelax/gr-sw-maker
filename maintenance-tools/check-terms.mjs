@@ -28,13 +28,13 @@ import { SRC, languages, markdownFiles, read, stripFences, finish } from "./lib/
 const GLOSSARY = "process-rules/glossary.md";
 
 // Files whose subject is the terminology itself. They must be able to write a
-// rejected term in order to reject it: kotodama-kun's severity table cites
+// rejected term in order to reject it: terminology-checker's severity table cites
 // "mixing bug and defect" as the mistake it looks for, and council-review asks
 // whether the taxonomy and the glossary still agree.
 const ALLOWED = new Set([
   GLOSSARY,
   "process-rules/defect-taxonomy.md",
-  "agents/kotodama-kun.md",
+  "agents/terminology-checker.md",
   "commands/council-review.md",
 ]);
 
@@ -42,7 +42,7 @@ const ALLOWED = new Set([
 // is rejected in favour of `status` for a workflow position, but it is also the
 // only word for a state machine, a document state and pipeline-state. A checker
 // that cannot tell those apart would be turned off within a day, so it does not
-// try; kotodama-kun keeps the judgement calls.
+// try; terminology-checker keeps the judgement calls.
 const NOT_MECHANICAL = new Set(["state"]);
 
 const problems = [];
