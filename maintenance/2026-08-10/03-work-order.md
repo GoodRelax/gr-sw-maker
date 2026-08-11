@@ -23,7 +23,7 @@
 | 9 | 表 B-1・B-2・C・D-1・D-2 | **廃止し、`00-mode-matrix.md` §4・§5 の作業表へ統合した。** エージェント起動・成果物・手順数は作業表から導出する |
 | 10 | フェーズの採番 | **`Phase 0 インストール` を新設し 1 つずらす。`Step` は使わない**（§6） |
 | 11 | エージェント連携 | **規則を `07-agent-orchestration-rules.md` として新設する**（§16） |
-| 12 | 道具の置き場 | **`framework-src/tools/`（配る）と `maintenance-tools/`（配らない）に割る**（§9） |
+| 12 | 道具の置き場 | **`tools/`（配る・据え置き）と `maintenance-tools/`（配らない）に割る**（§9）。**2026-08-11 に実施済み** |
 | 13 | kotodama-kun | **エージェントを廃止し `tools/kotodama-kun.mjs` にする。名前は残す**（§9・§16） |
 
 ---
@@ -33,7 +33,7 @@
 | 段 | 内容 | 本書の節 | 状態 |
 |:-:|---|---|---|
 | 0 | 基準線を取る（`maintenance-tools/context-census.mjs`） | §9 | 未着手 |
-| **0.5** | **道具の置き場を割り、配布経路を作る**（`framework-src/tools/` 新設・`tools/` を `maintenance-tools/` へ改名・`setup.js` 拡張・`settings.json` 生成） | **§9** | **未着手。他の段が道具を足す前に行う** |
+| **0.5** | **道具の置き場を割り、配布経路を作る** | **§9** | **半分済（2026-08-11）。** 置き場の分割は済。**配布経路（`setup.js` 拡張・`settings.json` 生成）は未着手** |
 | 1 | 開発方式の整理を `framework-src/` へ適用（**採番の振り直しを含む**） | §6・§8・§9・§16 | 対応表のみ完成。適用は未着手 |
 | 2 | 引用節をエージェント定義へ展開（`build-agents.mjs` / `rule-section.mjs`） | §9 | 未着手 |
 | 3 | 引けない参照形 22 件を直す | — | 未着手 |
@@ -43,7 +43,15 @@
 | 7 | en 追随 | 各節に併記 | 未着手 |
 | 8 | 効果測定 ＋ 配置物の照合（`check-deployed.mjs`） | §9 | 未着手 |
 
-**済んでいるのは用語集の手順 1a だけである。** `framework-src/{ja,en}/process-rules/glossary.md`（各 206 行）に新語 19・紛らわしい対 7・章番号 2 件が入っている。**それ以外、今回の決定は `framework-src/` に 1 件も入っていない。**
+**`framework-src/` に入っているのは次の 3 件だけである。**
+
+| 済んだこと | 実体 |
+|---|---|
+| 用語集 手順 1a | `framework-src/{ja,en}/process-rules/glossary.md`（各 206 行）に新語 19・紛らわしい対 7・章番号 2 件 |
+| 作業表の配布（2026-08-11） | `framework-src/ja/process-rules/` の `development-mode.md` と `work-table-*.md` 計 11 ファイル。**`00-mode-matrix.md` からの生成物であり手で編集してはならない** |
+| 道具の置き場の分割（2026-08-11） | §9.2。`framework-src/` 自体は変わらないが、道具の参照先が全面的に移った |
+
+**それ以外、今回の決定は `framework-src/` に 1 件も入っていない。**
 
 ---
 
@@ -498,30 +506,27 @@
 
 ### 9.2 置き場を消費者で割る
 
-**軸は言語ではなく「配るか否か」である。** 道具は ASCII 固定なので `{lang}` では割れない。
+**軸は言語ではなく「配るか否か」である。** 道具は ASCII 固定なので `{lang}` では割れない。**割るかどうかの正本は `create.js` の `USER_TOOLS` である。**
 
-**2026-08-11 に実施した。** 配る側の置き場は当初 `framework-src/tools/` を予定していたが、利用者の判断で **`tools/` 据え置き**に決まった。
+**2026-08-11 に実施した。** 経緯と、`framework-src/tools/` を採らなかった理由は `History/2026-08-11/00-tools-placement-record.md` が持つ。
 
 | 置き場 | 誰が走らせるか | 配るか | ファイル数 |
 |---|---|:-:|:-:|
 | **`tools/`**（据え置き） | **利用者のプロジェクト** | **配る** | 7 |
 | **`maintenance-tools/`**（`tools/` から分離） | フレームワークの CI・保守 | 配らない | 12 |
 
-**`framework-src/tools/` を採らなかった技術的な理由がある。** `maintenance-tools/lib/framework.mjs` の `languages()` は `framework-src/` 直下の**ディレクトリを全て言語コードとして返す。** そこに `tools/` を作れば `tools` が言語として扱われ、`check-parity` `check-roster` `check-tagnames` `check-terms` の 4 本が一斉に壊れる。この配置を採るなら `languages()` の修正が前提になる。
-
-**据え置きの利点は `.claude/settings.json` を書き替えずに済むことである。** 配線先の `gate-guard.mjs` と `session-meter.mjs` が動かないため、利用者プロジェクト側の配置も変わらない。
-
 > **`maintenance/`（作業記録）と `maintenance-tools/`（フレームワークを保守する道具）は別物である。** 隣に並ぶので、リポジトリの `README` に区別を 1 行書く。
 
 ### 9.3 `setup.js` を拡張する
 
-| # | 作業 |
-|:-:|---|
-| 1 | `DIR_TARGETS` に `{ kind: "tools", dest: "tools" }` を足す。**`framework-src/tools/` → 利用者の `tools/`** |
-| 2 | **`.claude/settings.json` を生成する。** フック（`gate-guard` ／ `kotodama-kun` ／ `progress-log`）・statusLine（`session-meter`）・`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH: 1` を配線する |
-| 3 | **既存の `settings.json` は上書きせず併合する（MUST）。** 丸ごと置き換えると利用者の権限設定と MCP 設定が消える |
-| 4 | `check-parity.mjs` が `framework-src/tools/` を言語ディレクトリと誤認しないか確かめ、必要なら除外する |
-| 5 | 既存の `tools/` を `maintenance-tools/` へ改名し、CI（`.github/workflows/framework-check.yml`）と `framework-development.md`（日英）の参照を直す |
+| # | 作業 | 状態 |
+|:-:|---|---|
+| 1 | `DIR_TARGETS` に `{ kind: "tools", dest: "tools" }` を足す。**配る元はリポジトリ直下の `tools/` である** | 未着手 |
+| 2 | **`.claude/settings.json` を生成する。** フック（`gate-guard` ／ `kotodama-kun` ／ `progress-log`）・statusLine（`session-meter`）・`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH: 1` を配線する | 未着手。作業表の `0c` |
+| 3 | **既存の `settings.json` は上書きせず併合する（MUST）。** 丸ごと置き換えると利用者の権限設定と MCP 設定が消える | 未着手 |
+| 4 | ~~`check-parity.mjs` が `framework-src/tools/` を言語ディレクトリと誤認しないか確かめる~~ | **不要。** `framework-src/tools/` を作らないと決めた |
+| 5 | 既存の `tools/` を `maintenance-tools/` へ改名し、CI（`.github/workflows/framework-check.yml`）と `framework-development.md`（日英）の参照を直す | **済**（2026-08-11） |
+| 6 | **CI に `node maintenance-tools/split-work-table.mjs --check` を足す。** 現在は生成物の陳腐化を検査が捕まえられない | 未着手 |
 
 ### 9.4 配る道具
 
@@ -541,7 +546,7 @@
 | `maintenance-tools/rule-section.mjs` | 2 | 非常口。展開外の節を引く。**使用は表の誤りの信号** |
 | `maintenance-tools/check-ownership-citations.mjs` | 4 | 引用の不足を落とす |
 | `maintenance-tools/check-orphan-sections.mjs` | 4 | 引用の過剰を一覧に出す（FAIL させない） |
-| `framework-src/tools/spec-query/ancestors.jq` | 6 | `TC` の UID から祖先の鎖を返す。**配る側** |
+| `tools/spec-query/ancestors.jq` | 6 | `TC` の UID から祖先の鎖を返す。**配る側** |
 | `maintenance-tools/check-deployed.mjs` | 8 | 配置物が正本の展開と一致するか |
 
 ---
