@@ -367,21 +367,9 @@ Choosing one development mode determines the specification, the work, the owners
 
 **Exemption matrix:**
 
-| Process / deliverable | Simple | Standard | Strict |
-|-----------------------|:------:|:--------:|:------:|
-| WBS / Gantt chart | exempt | exempt | required |
-| Progress report (progress/) | exempt | required | required |
-| Cost log (cost-log.json) | exempt | required | required |
-| pipeline-state | **required** | **required** | **required** |
-| executive-dashboard.md | exempt | required | required |
-| stakeholder-register.md | exempt | conditional (multiple stakeholders) | required |
-| Performance test (k6 etc.) | conditional (an NFR carries a numeric target) | required | required |
-| Observability design | exempt | required | required |
-| deployment-design | conditional (a deployment target beyond distribution) | required | required |
-| Implementation review (separate report) | merged into the final review | required | required |
-| Test review (separate report) | merged into the final review | required | required |
-| Functional safety analysis (HARA/FMEA/FTA) | conditional | conditional | conditional (required when Critical) |
-| Threat modelling (STRIDE) | conditional | required | required |
+**Which steps run and which are exempt is held by table M in `process-rules/development-mode.md`, for all 96 steps. It is not repeated here.**
+
+**This section holds only the selection criteria.** Exemption is decided per step, not per "process / deliverable". **Deciding it in two places guarantees they drift apart.**
 
 > **pipeline-state is required in every mode.** It is the only state record that allows a run to resume after an interruption; losing it makes the run itself unrecoverable.
 

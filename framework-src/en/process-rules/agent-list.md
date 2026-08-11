@@ -78,6 +78,8 @@ Derived from Document Management Rules §11. **Each file_type has a single owner
 | user-order | root | S | planning (validation) |
 | interview-record | project-management/ | S | planning |
 | spec-foundation | docs/spec/ | S | planning |
+| spec | docs/spec/ | single | planning onward |
+| spec-test | docs/spec/ | single | testing |
 
 > srs-writer is responsible for validation only of user-order; user-order itself is not modified. The initial creation is performed by the user. Gaps identified during validation are resolved through interviews and reflected in spec-foundation.
 
@@ -92,6 +94,9 @@ Derived from Document Management Rules §11. **Each file_type has a single owner
 | framework-requirement-spec | docs/framework/ | S | design (conditional) |
 | disaster-recovery-plan | docs/operations/ | S | design |
 | deployment-design | docs/operations/ | S | design |
+> **`spec` is the single ANMS (simple mode) file.** Part 1 is written by srs-writer, part 2 by architect and part 3 by test-designer, so **this file type alone changes owner by chapter (the only exception).** Only srs-writer may touch its Common Block and Form Block.
+>
+> **ANPS splits it into three.** `spec-foundation` is part 1 (goals, overview, use cases, requirements), `spec-architecture` is part 2 (design, software specification, test strategy) and `spec-test` is part 3 (use case tests, software specification tests, non-functional tests).
 
 > In addition to the above file_types, architect generates and manages openapi.yaml (docs/api/). openapi.yaml is an external tool prescribed format (Document Management Rules §13) and is not a file_type, but is consumed by implementer and test-engineer.
 

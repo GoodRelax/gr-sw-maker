@@ -34,6 +34,17 @@ const DIR_TARGETS = [
 ];
 const FILE_TARGETS = ["CLAUDE.md", "user-order.md"];
 
+// Names the framework used to ship and no longer does. deployDir() only removes
+// files that some language still owns, so a retired name would otherwise stay in
+// a user's project forever: a retired agent remains selectable, and an old work
+// table coexists with the current one under a different file name. That is how
+// two step symbols come to mean two different things at once.
+const RETIRED = {
+  agents: ["orchestrator.md"],
+  commands: [],
+  "process-rules": [],
+};
+
 function ask(prompt) {
   return new Promise((resolve) => {
     const rl = readline.createInterface({
@@ -107,13 +118,15 @@ function deployDir(langCode, kind, destRelative) {
   // leaves no residue. Files the framework does not own are never touched.
   const owned = frameworkOwnedNames(kind);
   const current = new Set(sources);
+  const retired = new Set(RETIRED[kind] || []);
   let removed = 0;
   for (const existing of fs.readdirSync(destDir)) {
     if (!existing.endsWith(".md")) continue;
     const legacy = LEGACY_SUFFIX.exec(existing);
     const isStale = owned.has(existing) && !current.has(existing);
     const isLegacy = legacy !== null && owned.has(`${legacy[1]}.md`);
-    if (!isStale && !isLegacy) continue;
+    const isRetired = retired.has(existing);
+    if (!isStale && !isLegacy && !isRetired) continue;
     fs.unlinkSync(path.join(destDir, existing));
     removed++;
   }

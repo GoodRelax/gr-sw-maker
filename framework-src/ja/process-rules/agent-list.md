@@ -78,6 +78,8 @@
 | user-order | ルート | 単 | planning（バリデーション） |
 | interview-record | project-management/ | 単 | planning |
 | spec-foundation | docs/spec/ | 単 | planning |
+| spec | docs/spec/ | 単 | planning 以降 |
+| spec-test | docs/spec/ | 単 | testing |
 
 > srs-writer は user-order のバリデーションのみを担当し、user-order 自体は修正しない。初期作成はユーザーが行う。バリデーションで発見された不足はインタビューで解消し、spec-foundation に反映する。
 
@@ -92,6 +94,9 @@
 | framework-requirement-spec | docs/framework/ | 単 | design（条件付き） |
 | disaster-recovery-plan | docs/operations/ | 単 | design |
 | deployment-design | docs/operations/ | 単 | design |
+> **`spec` は ANMS（簡易）の 1 枚である。** 第 1 部を srs-writer、第 2 部を architect、第 3 部を test-designer が書くため、**この file_type だけは章ごとにオーナーが変わる（唯一の例外）。** Common Block と Form Block を触れるのは srs-writer である。
+>
+> **ANPS では 3 つに割れる。** `spec-foundation` が第 1 部（目的・概要・UC・要求）、`spec-architecture` が第 2 部（設計・SW仕様・テスト戦略）、`spec-test` が第 3 部（UC テスト・SW仕様テスト・非機能テスト）である。
 
 > architect は上記 file_type に加え、openapi.yaml（docs/api/）を生成・管理する。openapi.yaml は外部ツール規定形式（文書管理規則 §13）であり file_type ではないが、implementer と test-engineer が消費する。
 
