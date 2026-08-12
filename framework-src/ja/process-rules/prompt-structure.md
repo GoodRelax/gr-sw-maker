@@ -307,7 +307,7 @@ model: opus | sonnet | haiku | inherit
 
 | 異常 | 対応 |
 |------|------|
-| {異常条件の説明} | {安全な対応。原則: 推測で進まない。project-manager に報告する} |
+| {異常条件の説明} | {安全な対応。原則: 推測で進まない。project-manager に報告する ＝ **完了報告に含めて返す**} |
 ```
 
 **共通原則:** わからないときは推測で進まない。project-manager に報告する。
@@ -327,7 +327,9 @@ model: opus | sonnet | haiku | inherit
 **ルール:**
 - Start Conditions 未達、Procedure 中の想定外、End Conditions 達成不能の3類型を網羅する
 - 上記の共通 Exception 行を必ず含める（MUST）
-- 報告先は原則 project-manager。project-manager がユーザーに聞くかどうかは project-manager の判断
+- **免除・条件不成立で生まれなかった `In` を、欠落として差し戻してはならない（MUST NOT）**（2026-08-12 追加）。開発方式が免除した成果物と、条件付きの手順が条件に当たらず走らなかった成果物は、**走らなかった記録をもって充足とみなす**（プロセス規則 §3.1.1・§9.4.1）。**差し戻してよいのは「作られるはずのものが作られていない」場合だけである。** どの成果物が免除されたかは依頼文の与件（開発方式）から判断する
+- **「project-manager に報告する」は、完了報告にその旨を含めて返すという意味である**（2026-08-12 に明確化）。**エージェントが project-manager を直接起動してはならない（MUST NOT）** —— エージェント間の経路は存在せず、依頼元は `main-agent` か利用者だけである（`agent-orchestration-rules.md` §4.5 の規約 3・7、および `.claude/settings.json` の `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH: 1`）。**受け取った `main-agent` が、必要と判断すれば project-manager を起動する。**
+- **この読み替えは全エージェント定義の Exception 表・Procedure に一律で適用する。** 各定義の「project-manager に報告 / 要請 / 判断を求める」を個別に書き換える必要はない
 - 対応は「安全側に倒す動作」を記述する（停止する、判断を委ねる、選択肢を提示する等）
 
 ---

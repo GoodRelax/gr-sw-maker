@@ -130,7 +130,7 @@ process-rules/ 配下の全ファイル（本文書を含む）に適用する�
     improvement/                  # ふりかえり・改善記録
     release/                      # リリース判定チェックリスト
     incidents/                    # 本番 incident 記録（条件付き）
-    legal/                        # 法規調査結果（条件付き）
+    legal/                        # 法的調査の結果（条件付き）
     safety/                       # 機能安全記録（条件付き）
     field-issues/                 # フィールドテストフィードバック（条件付き）
     snapshots/                    # プロジェクトスナップショット（zip等）
@@ -1013,7 +1013,7 @@ enum を定義するときは、次の 4 種の**メタ状態**が観測され�
 
 | フィールド | 型 | 必須 | 説明 | 値域・制約 |
 |-----------|------|------|------|-----------|
-| pipeline-state:phase | int | Yes | 現在のフェーズ | 0-7 |
+| pipeline-state:phase | int | Yes | 現在のフェーズ | 0-8（プロセス規則 §2.1。0=install 〜 8=operation） |
 | pipeline-state:phase_label | string | Yes | 人間可読なフェーズ名 | — |
 | pipeline-state:step | string | Yes | 現在のステップID | — |
 | pipeline-state:step_label | string | Yes | ステップの説明 | — |
@@ -1071,7 +1071,20 @@ enum を定義するときは、次の 4 種の**メタ状態**が観測され�
 | review:high_count | int | Yes | High指摘の件数 | → プロセス規則 §9.4.1（各 GATE の条件） |
 | review:medium_count | int | Yes | Medium指摘の件数 | — |
 | review:low_count | int | Yes | Low指摘の件数 | — |
-| review:gate_phase | string | No | このレビューがゲートするフェーズ遷移（例: "1->2"） | — |
+| review:gate_phase | string | **条件付き Yes** | このレビューがゲートするフェーズ遷移 | **下表の 5 値のみ。**`{遷移元}->{遷移先}` をフェーズ**名**で、半角矢印・空白なしで書く。**番号で書いてはならない（MUST NOT）**。**`review:gate` を書かない場合は必須である** —— `tools/gate-guard.mjs` は本欄でゲートを絞ってから観点を集めるため、**欄が無い review、および下表に無い値の review は、どのゲートの証拠にもならない** |
+
+**`review:gate_phase` の値域（`tools/gate-guard.mjs` の `GATE_TRANSITIONS` が正本と一致することを要する）:**
+
+| ゲート | `gate_phase` に書く値 |
+|---|---|
+| GATE-PLANNING | `planning->dependency-selection`、**または `planning->design`**（外部依存の 3 フラグがすべて不成立で Phase 3 を飛ばす場合） |
+| GATE-DESIGN | `design->implementation` |
+| GATE-IMPL | `implementation->testing` |
+| GATE-TEST | `testing->delivery` |
+
+> **`GATE-INTERVIEW` / `GATE-DEPENDENCY` / `GATE-DELIVERY` / `GATE-EOL` は書込みを守っていない**ので `gate_phase` による解錠の対象外である（`tools/gate-guard.mjs` の `GUARDED`）。これらのゲートを判定する review は `review:gate` にゲート ID を直接書く。
+>
+> **§9.4.1 の遷移列は全角矢印と空白で印字されている（`planning → dependency-selection`）。そのまま写してはならない（MUST NOT）** —— 機械照合は半角・空白なしで行う。
 | review:findings_resolved_count | int | Yes | 対応が「修正」の指摘件数 | — |
 | review:findings_deferred_count | int | No | 対応が「据置き」の指摘件数。各件に project-records/decisions/ への decision 記録が必須 | — |
 
@@ -1126,7 +1139,7 @@ Michael NygardのADR形式: Status / Context / Decision / Consequences を記載
 
 | フィールド | 型 | 必須 | 説明 | 値域・制約 |
 |-----------|------|------|------|-----------|
-| progress:phase | int | Yes | 現在のフェーズ（pipeline-stateと同期） | 0-7 |
+| progress:phase | int | Yes | 現在のフェーズ（pipeline-stateと同期） | 0-8（プロセス規則 §2.1） |
 | progress:completion_pct | int | Yes | プロジェクト全体の完了率 | 0-100 |
 | progress:wbs_completed | string | Yes | "完了/全体" タスク数 | — |
 | progress:test_pass_rate | string | No | "合格/全体"（implementation フェーズ以前は空） | — |
@@ -1150,7 +1163,7 @@ Michael NygardのADR形式: Status / Context / Decision / Consequences を記載
 | defect:severity | enum | Yes | defect severity | critical / high / medium / low |
 | defect:defect_status | enum | Yes | defect status | open / in-analysis / in-fix / in-retest / closed |
 | defect:assigned_to | string | Yes | 修正担当エージェント | — |
-| defect:found_in_phase | int | Yes | defect が発見されたフェーズ | 0-7 |
+| defect:found_in_phase | int | Yes | defect が発見されたフェーズ | 0-8（プロセス規則 §2.1） |
 | defect:related_requirement | string | No | 要求ID（例: FR-001）。追跡可能な場合 | — |
 | defect:closed_reason | enum | No | 終端の理由（`closed` 以外で終端した場合は必須） | fixed / rejected / cannot-reproduce / withdrawn |
 | defect:reproduction_attempt_count | int | No | 再現試行の回数（`cannot-reproduce` の場合は必須） | 1 以上 |
@@ -1613,7 +1626,7 @@ external-dependency-spec 共通章構成に従う。非標準I/Fの詳細仕様�
 
 | フィールド | 型 | 必須 | 説明 | 値域・制約 |
 |-----------|------|------|------|-----------|
-| retrospective-report:phase | enum | Yes | ふりかえり対象フェーズ | setup / planning / dependency-selection / design / implementation / testing / delivery / operation |
+| retrospective-report:phase | enum | Yes | ふりかえり対象フェーズ | install / setup / planning / dependency-selection / design / implementation / testing / delivery / operation |
 | retrospective-report:defect_pattern_count | int | Yes | 分析した defect パターン数 | 0以上 |
 | retrospective-report:improvement_count | int | Yes | 提案した改善策の数 | 0以上 |
 | retrospective-report:approval_status | enum | Yes | 改善策の承認状態 | proposed / approved / applied / rejected |
@@ -1662,7 +1675,7 @@ field-issue の詳細を記載する。field-test-engineer がフィードバッ
 | tech-decision:id | string | Yes | 一意の識別子 | TD-NNN |
 | tech-decision:title | string | Yes | 判断の表題 | — |
 | tech-decision:decision_status | enum | Yes | 判断の状態 | proposed / decided / superseded |
-| tech-decision:phase | enum | Yes | 対象フェーズ | setup / planning / dependency-selection / design / implementation / testing / delivery / operation |
+| tech-decision:phase | enum | Yes | 対象フェーズ | install / setup / planning / dependency-selection / design / implementation / testing / delivery / operation |
 | tech-decision:gate | string | No | 対象ゲート（ゲート判定の場合） | GATE-XXX |
 | tech-decision:verdict | enum | No | ゲート判定結果（ゲート判定の場合） | PASS / FAIL / CONDITIONAL / NOT-APPLICABLE。**CONDITIONAL と NOT-APPLICABLE は理由を Detail Block に書く** |
 | tech-decision:fail_count | integer | No | 同一ゲートの連続 FAIL 回数 | 0 以上 |
@@ -1749,7 +1762,7 @@ owner は architect である。`infra/` の実装は implementer が行い、�
 
 | フィールド | 型 | 必須 | 説明 | 値域・制約 |
 |-----------|------|------|------|-----------|
-| session-handoff:phase | enum | Yes | 中断時点のフェーズ | setup / planning / dependency-selection / design / implementation / testing / delivery / operation |
+| session-handoff:phase | enum | Yes | 中断時点のフェーズ | install / setup / planning / dependency-selection / design / implementation / testing / delivery / operation |
 | session-handoff:next_action | string | Yes | 次のセッションが最初に取るべき行動 | — |
 | session-handoff:plan_delta_count | int | Yes | 計画と実際の差分の件数 | 0以上。**0 でない場合は Detail Block に列挙する** |
 | session-handoff:self_inflicted_defect_count | int | Yes | 自分で作り込んで自分で直した defect の件数 | 0以上。**0 でない場合は Detail Block に列挙する** |

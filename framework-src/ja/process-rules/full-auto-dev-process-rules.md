@@ -217,18 +217,21 @@ flowchart TB
 
 **フェーズ名定義:**
 
-| フェーズ名 | 番号 | 意味 | 文書管理規則での参照名 |
-|-----------|:---:|------|----------------------|
-| setup | 0 | セットアップ・プロセス評価 | `phase-setup` |
-| planning | 1 | 企画（インタビュー＆仕様） | `phase-planning` |
-| dependency-selection | 2 | 外部依存の選定（条件付き） | `phase-dependency-selection` |
-| design | 3 | 設計 | `phase-design` |
-| implementation | 4 | 実装 | `phase-implementation` |
-| testing | 5 | テスト | `phase-testing` |
-| delivery | 6 | 納品 | `phase-delivery` |
-| operation | 7 | 運用・保守（条件付き） | `phase-operation` |
+| フェーズ名 | 番号 | 意味 | 手順記号 | 文書管理規則での参照名 |
+|-----------|:---:|------|:-:|----------------------|
+| install | 0 | インストール（フレームワークの配置） | `0a`〜`0e` | `phase-install` |
+| setup | 1 | 初期設定・プロセス評価 | `1a`〜`1i` | `phase-setup` |
+| planning | 2 | 企画（インタビュー＆仕様） | `2a`〜`2k` | `phase-planning` |
+| dependency-selection | 3 | 外部依存の選定（条件付き） | `3a`〜`3g` | `phase-dependency-selection` |
+| design | 4 | 設計 | `4a`〜`4n` | `phase-design` |
+| implementation | 5 | 実装 | `5a`〜`5i` | `phase-implementation` |
+| testing | 6 | テスト | `6a`〜`6l` | `phase-testing` |
+| delivery | 7 | 納品 | `7a`〜`7m` | `phase-delivery` |
+| operation | 8 | 運用・保守（条件付き） | `8a`〜`8f` | `phase-operation` |
 
-番号は便宜上の順序であり、文書管理規則の `commissioned_by` フィールドではフェーズ名（`phase-{name}`）で参照する。
+**番号は手順記号の先頭文字と一致する（2026-08-12 に統一）。** 以前は `install` を持たない 0〜7 の 8 段で、作業表の 9 段と 1 ずつずれていた —— **同じ「Phase 5」が実装とテストの両方を指す状態だった。** 手順記号 97 件がすべて作業表の体系に依存しているため、そちらへ寄せた。
+
+文書管理規則の `commissioned_by` フィールドではフェーズ名（`phase-{name}`）で参照する。**番号を使うのは `pipeline-state:phase` などの int 欄だけであり、値域は 0-8 である。**
 
 **条件付きフェーズの有効化条件:**
 
@@ -245,13 +248,13 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    subgraph Phase0["Phase 0: プロセス評価"]
+    subgraph Phase1["Phase 1: 初期設定・プロセス評価"]
         P0A["AI: user-order.mdバリデーション<br/>CLAUDE.md提案（言語設定含む）<br/>仕様形式選定（ANMS/ANPS/ANGS）"]
         P0B["ユーザー: CLAUDE.md確認・承認<br/>言語・条件付きプロセス・仕様形式確認"]
         P0A -->|"評価結果報告"| P0B
     end
 
-    subgraph Phase1["Phase 1: 企画"]
+    subgraph Phase2["Phase 2: 企画"]
         P1A["ユーザー: コンセプト提示"]
         P1H["AI: 構造化インタビュー<br/>（外部依存の識別含む）"]
         P1HU["ユーザー: インタビュー確認"]
@@ -263,7 +266,7 @@ flowchart TD
         P1B -->|"Ch1-4 完成"| P1C
     end
 
-    subgraph Phase2["Phase 2: 外部依存の選定（条件付き）"]
+    subgraph Phase3["Phase 3: 外部依存の選定（条件付き）"]
         P2S1["AI: 候補調査・技術評価<br/>コスト・ライセンス確認"]
         P2S2["ユーザー: 選定承認"]
         P2S3["AI: requirement-spec完成"]
@@ -271,7 +274,7 @@ flowchart TD
         P2S2 -->|"承認"| P2S3
     end
 
-    subgraph Phase3["Phase 3: 設計"]
+    subgraph Phase4["Phase 4: 設計"]
         P3DA["AI: 仕様書 Ch5-7詳細化"]
         P3DB["AI: セキュリティ設計"]
         P3DC["AI: WBS・リスク管理"]
@@ -283,7 +286,7 @@ flowchart TD
         P3DE -->|"設計完了"| P3DD
     end
 
-    subgraph Phase4["Phase 4: 実装"]
+    subgraph Phase5["Phase 5: 実装"]
         P4A["AI: コード実装<br/>（Git worktree並列）"]
         P4B["AI: 単体テスト"]
         P4C["AI: コードレビュー(R2-R5)"]
@@ -293,7 +296,7 @@ flowchart TD
         P4C -->|"PASS"| P4D
     end
 
-    subgraph Phase5["Phase 5: テスト"]
+    subgraph Phase6["Phase 6: テスト"]
         P5TA["AI: 結合テスト"]
         P5TB["AI: システムテスト"]
         P5TG["AI: 性能テスト"]
@@ -303,7 +306,7 @@ flowchart TD
         P5TG -->|"性能OK"| P5TC
     end
 
-    subgraph Phase6["Phase 6: 納品"]
+    subgraph Phase7["Phase 7: 納品"]
         P6A["AI: 最終レビュー(R1-R7)"]
         P6B["AI: デプロイ・スモークテスト"]
         P6C["AI: 最終レポート"]
@@ -313,14 +316,14 @@ flowchart TD
         P6C -->|"レポート提出"| P6D
     end
 
-    Phase0 -->|"承認"| Phase1
-    Phase1 -->|"R1 PASS"| Phase2
-    Phase2 -->|"選定完了"| Phase3
-    Phase3 -->|"R2/R4/R5/R7 PASS"| Phase4
-    Phase4 -->|"スキャンOK"| Phase5
-    Phase5 -->|"R6 PASS"| Phase6
+    Phase1 -->|"承認"| Phase2
+    Phase2 -->|"R1 PASS"| Phase3
+    Phase3 -->|"選定完了"| Phase4
+    Phase4 -->|"R2/R4/R5/R7 PASS"| Phase5
+    Phase5 -->|"スキャンOK"| Phase6
+    Phase6 -->|"R6 PASS"| Phase7
 
-    subgraph Phase7["Phase 7: 運用・保守（条件付き）"]
+    subgraph Phase8["Phase 8: 運用・保守（条件付き）"]
         P7A["AI: 運用移行・runbook作成"]
         P7B["AI/人間: 監視・incident 対応"]
         P7C["AI: 保守パッチ・依存更新"]
@@ -330,9 +333,9 @@ flowchart TD
         P7C -->|"EOL判断"| P7D
     end
 
-    Phase6 -->|"受入完了"| Phase7
-    Phase6 -.->|"納品完了型は<br/>ここで終了"| End["プロジェクト完了"]
-    Phase7 -->|"EOL完了"| End
+    Phase7 -->|"受入完了"| Phase8
+    Phase7 -.->|"納品完了型は<br/>ここで終了"| End["プロジェクト完了"]
+    Phase8 -->|"EOL完了"| End
 ```
 
 ---
@@ -698,7 +701,7 @@ process-improver エージェントがふりかえりと根本原因分析を担
 
 | プロセス                         | 追加が必要な条件（1つでも該当すれば追加）                                                                                                                                                                    | 判断時期                                                                     |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| **法規調査**                     | ・個人情報・個人データを扱う<br>・医療・ヘルスケア分野<br>・金融・決済処理を扱う<br>・通信サービスを提供する<br>・EU市場向けに提供する<br>・公共・行政向けシステム                                           | setup フェーズ 仕様書作成**前**<br>（最優先で判断）                                    |
+| **法的調査**                     | ・個人情報・個人データを扱う<br>・医療・ヘルスケア分野<br>・金融・決済処理を扱う<br>・通信サービスを提供する<br>・EU市場向けに提供する<br>・公共・行政向けシステム                                           | setup フェーズ 仕様書作成**前**<br>（最優先で判断）                                    |
 | **特許調査**                     | ・新規アルゴリズム・手法を独自実装する<br>・AIモデルを組み込む<br>・金融・ECの新規ビジネスロジックを実装する<br>・商用製品として第三者に販売・提供する                                                       | design フェーズ 設計開始**前**<br>（アルゴリズム選定時）                             |
 | **技術動向調査**                 | ・開発期間が6ヶ月以上<br>・採用予定ライブラリの最終リリースが1年以上前<br>・AI/ML・クラウドネイティブ等の急変領域<br>・主要依存関係のEOLが開発期間内に到来                                                   | setup フェーズ 技術スタック選定時<br>（長期プロジェクトは各フェーズ開始時に再評価） |
 | **機能安全（HARA/FMEA/FTA）**    | ・人命・身体への直接的影響がある（医療機器・車載・産業機器）<br>・IEC 61508 / ISO 26262 / IEC 62304 等への準拠が要求される<br>・社会インフラへの重大な影響がある<br>・金融基幹系で重大な資産損害リスクがある | setup フェーズ コンセプト提示時<br>（**最優先で判断**、安全要求は仕様書作成前に確定）      |
@@ -708,7 +711,7 @@ process-improver エージェントがふりかえりと根本原因分析を担
 | **フレームワーク要求定義**        | ・非標準I/Fのフレームワークを使用する<br>・フレームワーク固有の制約がアーキテクチャに大きく影響する<br>・フレームワークの差し替えが将来想定される<br>・フレームワークのEOL/ライセンス変更リスクがある         | setup フェーズ 技術スタック選定時<br>（標準I/Fのフレームワークはdecision記録で十分）          |
 | **HW生産工程管理** | ・HW連携かつ量産を行う<br>・サプライチェーン管理が必要<br>・受入検査・ロット管理が必要 | setup フェーズ<br>（HW連携が有効な場合に追加判断） |
 | **製品i18n/l10n** | ・多言語対応が製品要求である<br>・RTL（右→左）言語をサポートする<br>・日時/通貨/数値フォーマットのローカライゼーションが必要 | setup フェーズ<br>（NFRとして仕様書 Ch2に含める） |
-| **認証取得** | ・CE/FCC/医療機器認証等の公的認証が必要<br>・認証機関への提出文書作成が必要<br>・認証取得後の変更管理（再認証トリガー）が必要 | setup フェーズ<br>（法規調査と同時に判断） |
+| **認証取得** | ・CE/FCC/医療機器認証等の公的認証が必要<br>・認証機関への提出文書作成が必要<br>・認証取得後の変更管理（再認証トリガー）が必要 | setup フェーズ<br>（法的調査と同時に判断） |
 | **運用・保守** | ・本番環境でサービスを運用する<br>・リリース後のdefect 修正・パッチ適用が必要<br>・SLA（稼働率・応答時間）の保証が必要 | setup フェーズ<br>（operation フェーズの有効化判断） |
 | **実機テスト** | ・HW連携プロジェクトで実機デバイスとの結合テストが必要<br>・ユーザー立会のもとで実機動作を確認する必要がある<br>・モックでは再現できない実機固有の動作検証が必要 | setup フェーズ<br>（HW連携が有効な場合に追加判断） |
 
@@ -737,7 +740,7 @@ CLAUDE.md「条件付きプロセス」に記載する項目名は下表で固�
 full-auto-dev コマンドの setup フェーズで、リードエージェントが以下を自動評価する（第8章8.1参照）。
 
 1. 機能安全 → 該当する場合は**即座にユーザーに確認**を求め、仕様書作成前に安全要求を確定する。`project-records/safety/` を作成し、design フェーズに HARA（必須）・FMEA（Ch3確定後）・FTA（高リスク hazard がある場合）を追加する。手法の詳細と採用基準は [defect-taxonomy.md §7](defect-taxonomy.md) を参照
-2. 法規調査 → 該当する場合はCLAUDE.mdに追記し、仕様書 Ch2 の非機能要求セクションに規制要求を含める。`project-records/legal/` を作成する
+2. 法的調査 → 該当する場合はCLAUDE.mdに追記し、仕様書 Ch2 の非機能要求セクションに規制要求を含める。`project-records/legal/` を作成する
 3. 特許調査 → 該当する場合はWBSの design フェーズ開始前に特許調査タスクを追加する。`project-records/legal/patent-clearance.md` に記録する
 4. 技術動向調査 → 該当する場合は各フェーズ開始時に技術動向確認ステップをWBSに追加する。`docs/tech-watch.md` を作成する
 5. アクセシビリティ → 該当する場合は仕様書 Ch2 のNFRにWCAG 2.1 AA準拠要求を追加し、review-agentのR1チェック項目に含める
@@ -746,7 +749,7 @@ full-auto-dev コマンドの setup フェーズで、リードエージェン�
 8. フレームワーク要求定義 → 該当する場合はCLAUDE.mdに追記し、dependency-selection フェーズで外部依存の評価・選定を実施し、design フェーズで `docs/framework/framework-requirement-spec.md` のCh3-6を完成させる。標準I/Fのフレームワークは `project-records/decisions/` に選定理由を記録するのみで十分
 9. HW生産工程管理 → HW連携が有効かつ量産を行う場合に追加。サプライチェーン管理・受入検査をWBSに含める
 10. 製品i18n/l10n → 該当する場合は仕様書 Ch2 のNFRにi18n要求を追加し、design フェーズでメッセージカタログ設計を含める
-11. 認証取得 → 法規調査に加え、認証取得に必要な提出文書作成・認証機関対応をWBSに追加する。`project-records/legal/certification/` を作成する
+11. 認証取得 → 法的調査に加え、認証取得に必要な提出文書作成・認証機関対応をWBSに追加する。`project-records/legal/certification/` を作成する
 12. 運用・保守 → 本番運用する場合はoperation フェーズを有効化する。design フェーズでRPO/RTO・バックアップ戦略・監視体制を設計に含める
 13. 実機テスト → HW連携が有効な場合、**または**モックでは再現できない実機固有の動作検証が必要な場合に追加（§3.4.1 の OR 条件に一致させる）。testing フェーズで field-test-engineer / feedback-classifier / field-issue-analyst をアクティベートする。フィードバック管理は [実機テスト フィードバック管理規則](field-issue-handling-rules.md) に従う
 
@@ -1010,21 +1013,21 @@ gantt
     dateFormat  YYYY-MM-DD
     axisFormat  %m/%d
 
-    section Phase0_評価
+    section Phase1_初期設定
     user-order.mdバリデーション     : done, p0a, 2026-03-01, 1d
     CLAUDE.md提案_承認             : done, p0a2, after p0a, 1d
     条件付きプロセス評価           : done, p0b, after p0a2, 1d
 
-    section Phase1_企画
+    section Phase2_企画
     仕様書 Ch1-4作成                 : done, p1b, after p0b, 2d
     Ch1-4レビュー(R1)              : done, p1c, after p1b, 1d
     仕様書承認                    : milestone, p1d, after p1c, 0d
 
-    section Phase2_選定
+    section Phase3_選定
     外部依存の評価・選定           : p2s, after p1d, 2d
     選定承認                      : milestone, p2m, after p2s, 0d
 
-    section Phase3_設計
+    section Phase4_設計
     仕様書 Ch5-7詳細化              : p3a, after p2m, 3d
     OpenAPI仕様生成               : p3e, after p2m, 2d
     セキュリティ設計               : p3b, after p2m, 2d
@@ -1032,20 +1035,20 @@ gantt
     WBS・リスク管理               : p3c, after p2m, 1d
     設計レビュー(R2/R4/R5/R7)        : p3d, after p3a, 1d
 
-    section Phase4_実装
+    section Phase5_実装
     モジュールA実装               : p4a, after p3d, 5d
     モジュールB実装               : p4b, after p3d, 4d
     単体テスト                    : p4c, after p4a, 3d
     コードレビュー(R2-R5)        : p4d, after p4c, 2d
     SCA・シークレットスキャン      : p4e, after p4d, 1d
 
-    section Phase5_テスト
+    section Phase6_テスト
     結合テスト                    : p5a, after p4e, 3d
     システムテスト                 : p5b, after p5a, 2d
     性能テスト                    : p5g, after p5b, 1d
     テストレビュー(R6)             : p5c, after p5g, 1d
 
-    section Phase6_納品
+    section Phase7_納品
     最終レビュー(R1-R7)            : p6a, after p5c, 1d
     コンテナビルド・デプロイ        : p6b, after p6a, 1d
     最終レポート作成               : p6c, after p6b, 1d
@@ -1735,7 +1738,7 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 
 # 以下は該当する条件が存在する場合のみ有効化する
 
-# 法規調査: [有効/無効] - 理由: [記載]
+# 法的調査: [有効/無効] - 理由: [記載]
 
 # 特許調査: [有効/無効] - 理由: [記載]
 
@@ -1969,10 +1972,13 @@ flowchart TD
 
 #### 9.1.1 ゲート再試行ポリシー
 
-| FAIL 回数 | 対応 |
-|:--------:|------|
-| 1-2 回目 | technical-authority が戻し先を決定し、修正を要請する |
-| 3 回目 | ユーザーへエスカレーションする。waiver の要否を判断する |
+| FAIL 回数 | 簡易 / 標準 | 厳格 |
+|:--------:|------|------|
+| 1 回目 | technical-authority が戻し先を決定し、修正を要請する | 同左 |
+| 2 回目 | 同上 | **ユーザーへエスカレーションする。waiver の要否を判断する** |
+| 3 回目 | ユーザーへエスカレーションする。waiver の要否を判断する | — |
+
+**厳格は 1 段早く上げる**（`development-mode.md` の表 E-2 が正本。2026-08-12 に本表へ反映）。**開発方式は依頼文の与件として渡される。**
 
 **waiver を認める条件（3 つすべてを満たすこと。MUST）:**
 

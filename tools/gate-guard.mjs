@@ -61,6 +61,21 @@ const GATE_PERSPECTIVES = {
   "GATE-TEST": ["R6"],
 };
 
+// The transition each gate stands at, as review:gate_phase records it. This is
+// what keeps the perspective fallback from leaking across gates: GATE-DESIGN
+// applies R2/R4/R5/R7, which is four of the five GATE-IMPL wants, so without
+// scoping a single R3 review would open implementation on design's evidence.
+// dependency-selection is conditional, so planning hands off to design whenever
+// the external-dependency flags are all inapplicable. Both spellings name the
+// same gate; rejecting the second would keep GATE-PLANNING shut for every
+// project that has no external dependencies -- most of them.
+const GATE_TRANSITIONS = {
+  "GATE-PLANNING": ["planning->dependency-selection", "planning->design"],
+  "GATE-DESIGN": ["design->implementation"],
+  "GATE-IMPL": ["implementation->testing"],
+  "GATE-TEST": ["testing->delivery"],
+};
+
 function allow() {
   process.exit(ALLOW);
 }
@@ -151,6 +166,11 @@ function fieldRegion(block, name) {
  * them from a single review would keep the gate shut for the whole of strict
  * mode. A review that names its gate outright still short-circuits, which is
  * the simple and standard case.
+ *
+ * Accumulation is scoped to the transition the gate stands at. Gates share
+ * perspectives -- GATE-IMPL wants the four GATE-DESIGN already applies, plus
+ * R3 -- so pooling every review on disk would let one gate open on the
+ * evidence collected for an earlier one.
  */
 function gatePassed(projectDir, gate) {
   const dir = resolve(projectDir, "project-records", "reviews");
@@ -173,9 +193,11 @@ function gatePassed(projectDir, gate) {
     if (named) continue;
 
     // review:gate is optional in the Form Block spec, so fall back to the
-    // perspectives the review applied. Collected across files: one review
-    // covering every perspective passes on its own, and several single-
-    // perspective reviews pass once between them they cover the set.
+    // perspectives the review applied -- but only from reviews standing at
+    // this gate's transition. A review that names neither gate nor transition
+    // cannot be attributed, and unattributable evidence opens nothing.
+    if (!GATE_TRANSITIONS[gate].includes(fieldValue(block, "gate_phase"))) continue;
+
     const dimensions = fieldRegion(block, "dimensions");
     if (!dimensions) continue;
     for (const id of dimensions.match(/R\d+/g) ?? []) applied.add(id);

@@ -38,10 +38,17 @@ import { resolve, dirname } from "node:path";
 
 const LOG = ["project-management", "progress", "progress-log.json"];
 
-// Work-table step symbols: 0a-8f for the phases, Fa-Fk for the common steps.
-// Anchored on a word boundary so an id inside a longer token is not mistaken
-// for a step.
-const STEP = /\b([0-8][a-n]|F[a-k])\b/;
+// Work-table step symbols: 0a-8f for the phases, 4a-4n and 7a-7m being the
+// longest, plus Fa-Fk for the common steps.
+//
+// The backticked form is tried first because the work table writes step symbols
+// that way, and the bare form collides with ordinary English -- "the 3d scene"
+// reads as step 3d and there is no way to tell them apart from the string. The
+// bare fallback is kept anyway: a request that names its step without backticks
+// is far more common than one that says "3d", and a mislabelled row in a log
+// costs less than a row with no step at all.
+const STEP_QUOTED = /`([0-8][a-n]|F[a-k])`/;
+const STEP_BARE = /(?<![A-Za-z0-9])([0-8][a-n]|F[a-k])(?![A-Za-z0-9])/;
 
 function done() {
   process.exit(0);
@@ -68,7 +75,11 @@ function stepSymbol(input) {
   if (!input) return null;
   const description = typeof input.description === "string" ? input.description : "";
   const prompt = typeof input.prompt === "string" ? input.prompt.slice(0, 400) : "";
-  const match = STEP.exec(description) || STEP.exec(prompt);
+  const match =
+    STEP_QUOTED.exec(description) ||
+    STEP_QUOTED.exec(prompt) ||
+    STEP_BARE.exec(description) ||
+    STEP_BARE.exec(prompt);
   return match ? match[1] : null;
 }
 

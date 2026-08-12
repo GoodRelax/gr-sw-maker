@@ -86,6 +86,7 @@ OWASP Top 10 および CWE/SANS Top 25 に基づくセキュリティ設計と�
 | 出力の記法 | 文書管理規則 §9.15（threat-model）, §9.16（security-architecture）, §9.17（security-scan-report） |
 | セキュリティ要求 | CLAUDE.md「セキュリティ要求」 |
 | 実施タイミング | プロセス規則 §4.4（design フェーズ）, §4.5（implementation フェーズ） |
+| **免除・条件不成立で生まれなかった入力の扱い** | **プロンプト構造規約「Exception」（差し戻してよいのは「作られるはずのものが作られていない」場合だけ）** |
 
 規則全文をロードせず、上記の節のみを読む。
 

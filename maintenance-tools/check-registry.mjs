@@ -16,7 +16,7 @@
 
 import { join } from "node:path";
 import { existsSync } from "node:fs";
-import { SRC, languages, read, finish } from "./lib/framework.mjs";
+import { SRC, languages, markdownFiles, read, finish } from "./lib/framework.mjs";
 
 const problems = [];
 let checkedTypes = 0;
@@ -128,12 +128,28 @@ for (const lang of languages()) {
         `${lang}: 名簿 §5 が「${restated[1]}」と書くが文書管理規則 §7 の実測は ${measured.total} 件`
       );
     }
+    // The roster count is restated in prose across the rules, not inside the
+    // roster itself, so every rules document is scanned for it.
     const agentCount = (roster.match(/^\| \d+ \| [a-z][a-z0-9-]* \|/gm) || []).length;
-    const declaredAgents = [...roster.matchAll(/名簿は現在 (\d+) 件/g)].map((m) => Number(m[1]));
-    for (const declared of declaredAgents) {
-      if (declared !== agentCount) {
-        problems.push(`${lang}: 名簿が「現在 ${declared} 件」と書くが §1 の実測は ${agentCount} 件`);
+    const rulesDir = join(SRC, lang, "process-rules");
+    for (const file of markdownFiles(rulesDir)) {
+      const text = read(join(rulesDir, file));
+      for (const match of text.matchAll(/名簿は現在 (\d+) 件/g)) {
+        if (Number(match[1]) !== agentCount) {
+          problems.push(
+            `${lang}/process-rules/${file}: 「名簿は現在 ${match[1]} 件」と書くが §1 の実測は ${agentCount} 件`
+          );
+        }
       }
+    }
+
+    // Tier counts restated in the roster summary.
+    const condDeclared = /（計 (\d+)）/.exec(roster);
+    const condMeasured = tiers.filter((tier) => tier === "Conditional").length;
+    if (condDeclared && Number(condDeclared[1]) !== condMeasured) {
+      problems.push(
+        `${lang}: 名簿 §5 が条件付き「計 ${condDeclared[1]}」と書くが実測 ${condMeasured} 件`
+      );
     }
   }
 }
