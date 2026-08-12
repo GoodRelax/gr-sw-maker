@@ -42,6 +42,8 @@ model: sonnet
 | CLAUDE.md | project-manager (setup) | プロジェクト設定の確認 | 品質目標・重要判断の基準の各節 |
 | field-issue（type=cr） | feedback-classifier | 実機テスト由来のスコープ変更の受付 | issue_id, type = cr, 変更内容 |
 
+> **ANMS（開発方式が簡易）では `spec-foundation` / `spec-architecture` / `spec-test` は単一の `spec`（`docs/spec/01-10-spec.md`）へ畳まれる**（文書管理規則 §9.39・名簿 §2）。**上表が名指しした file_type のファイルが無いことを欠落として差し戻してはならない（MUST NOT）。** 同じ章を `spec` の中から読む。仕様形式は依頼文の与件で渡される（`development-mode.md`「依頼に必ず添える与件」）。
+
 ### Out
 
 | file_type | 出力先 | 次の消費者 |

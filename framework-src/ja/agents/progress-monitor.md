@@ -22,7 +22,7 @@ model: sonnet
 
 ### Start Conditions
 
-- [ ] 仕様書 Ch3-6 が完成し、design フェーズ以降に入っている
+- [ ] 仕様書 Ch5-7 が完成し、design フェーズ以降に入っている
 
 ### End Conditions
 

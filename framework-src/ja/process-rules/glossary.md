@@ -109,7 +109,7 @@
 | document_status vs {type}_status | 同じ status。document_status = Common Block（文書ライフサイクル: draft/in-review/approved/archived）。{type}_status = Form Block（ドメイン固有のワークフロー位置） |
 | fault vs defect | fault = コードに潜在する不正状態（未発見）。defect = 発見後に記録された正式な問題票（file_type）。fault が発見されて defect として起票される |
 | failure vs incident | failure = 要求を満たさなくなった技術的事象（テスト中含む）。incident = failure が本番でサービスに影響した運用的事象。テスト中の failure は incident ではない |
-| defect vs incident | defect = テスト・開発中の発見記録（file_type: defect, owner: test-engineer）。incident = 本番での発生記録（file_type: incident-report, owner: incident-reporter）。フェーズが異なる |
+| defect vs incident | defect = テスト・開発中の発見記録（file_type: defect, owner: tester）。incident = 本番での発生記録（file_type: incident-report, owner: incident-reporter）。フェーズが異なる |
 | hazard vs risk | hazard = 人命・財産への危険源（IEC 61508）。risk = プロジェクト目標への影響（file_type: risk）。hazard は機能安全固有、risk は全プロジェクト共通 |
 | actor vs Chapter 3 のアクター（Actor） | actor = Common Block のフィールドで、その文書を誰が生成し誰が承認したかを記録する表記規約（`{agent-name}` / `human:{id}` / `process:{id}`）。Chapter 3 のアクター = 目標を持つ主体。**別物である。後者を指すときは「Chapter 3 のアクター」と書く（MUST）** |
 | Use Case vs ユースケース | Use Case = Clean Architecture の層の名前（コードの層）。ユースケース = Chapter 3 のアクターの目標。**別物である。後者を指すときは「Chapter 3 のユースケース」または `UC-xxx` と書く（MUST）** |

@@ -23,7 +23,7 @@ model: sonnet
 ### Start Conditions
 
 - [ ] 条件付きプロセス「実機テスト」が有効である
-- [ ] 自動テスト（test-engineer 担当）が完了している
+- [ ] 自動テスト（tester 担当）が完了している
 - [ ] 実機デバイスが接続・利用可能である
 
 ### End Conditions
@@ -39,8 +39,10 @@ model: sonnet
 |-----------|--------|------|---------|
 | spec-foundation | srs-writer | テスト対象の要求仕様 | Ch4 の全 FR/NFR に ID |
 | spec-architecture | architect | テスト対象の設計仕様 | Ch6 の全 SWS に Parent（FR / NFR） |
-| （src/, tests/） | implementer, test-engineer | テスト対象の最新 SW | 実機に配置可能なビルド成果物 |
-| （自動テスト結果） | test-engineer | 修正後の自動テスト結果の確認 | 全テストの合否 |
+| （src/, tests/） | implementer, tester | テスト対象の最新 SW | 実機に配置可能なビルド成果物 |
+| （自動テスト結果） | tester | 修正後の自動テスト結果の確認 | 全テストの合否 |
+
+> **ANMS（開発方式が簡易）では `spec-foundation` / `spec-architecture` / `spec-test` は単一の `spec`（`docs/spec/01-10-spec.md`）へ畳まれる**（文書管理規則 §9.39・名簿 §2）。**上表が名指しした file_type のファイルが無いことを欠落として差し戻してはならない（MUST NOT）。** 同じ章を `spec` の中から読む。仕様形式は依頼文の与件で渡される（`development-mode.md`「依頼に必ず添える与件」）。
 
 ### Out
 
@@ -69,7 +71,7 @@ model: sonnet
 
 ### 実機検証（tested → verified）
 
-2. test-engineer による自動テスト全 PASS を確認する
+2. tester による自動テスト全 PASS を確認する
 3. 修正後の SW を実機にデプロイする
 4. ユーザーと一緒に以下を検証する:
    - 影響分析で列挙された機能が正常に動作するか

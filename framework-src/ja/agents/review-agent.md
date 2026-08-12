@@ -53,6 +53,8 @@ model: opus
 | traceability | test-designer | R1 要求-テスト間トレースの完全性レビュー | 全 FR の実装・テスト対応 |
 | review-standards.md | framework | R1-R7 の詳細チェック項目 | 総合レビューチェックリストの全行 |
 
+> **ANMS（開発方式が簡易）では `spec-foundation` / `spec-architecture` / `spec-test` は単一の `spec`（`docs/spec/01-10-spec.md`）へ畳まれる**（文書管理規則 §9.39・名簿 §2）。**上表が名指しした file_type のファイルが無いことを欠落として差し戻してはならない（MUST NOT）。** 同じ章を `spec` の中から読む。仕様形式は依頼文の与件で渡される（`development-mode.md`「依頼に必ず添える与件」）。
+
 ### Out
 
 | file_type | 出力先 | 次の消費者 |
@@ -101,13 +103,41 @@ model: opus
 
 ### 出力例
 
+**Form Block は YAML frontmatter に置く（MUST）。独自のタグ形式（`<!-- FIELD: … -->`）を用いてはならない（MUST NOT）**（文書管理規則 §5）。**`tools/gate-guard.mjs` は frontmatter しか読まない。タグ形式で書くとゲートが永久に開かない。**
+
 review:
 
 ```markdown
-<!-- FIELD: review -->
+---
+okf_version: "0.2"
+type: review
+description: 設計レビュー（R2/R4/R5/R7）の指摘
+
+schema_version: "0.1"
+language: ja
+
+document_status: draft
+document_version: "0.1"
+
+owner: review-agent
+commissioned_by: phase-design
+consumed_by:
+  - technical-authority
+  - project-manager
+
+project: my-app
+purpose: GATE-DESIGN の判定材料として設計の指摘を残す
+
+generated:
+  by: review-agent
+  at: 2026-08-12T09:00:00Z
+updated:
+  by: review-agent
+  at: 2026-08-12T09:00:00Z
+
 review:
   id: review-012
-  target: docs/spec/my-app-spec.md Ch5-7
+  target: docs/spec/01-10-spec.md Ch5-7
   dimensions: R2,R4,R5,R7
   result: fail
   critical_count: 0
@@ -117,7 +147,10 @@ review:
   gate_phase: design->implementation
   findings_resolved_count: 0
   findings_deferred_count: 0
+---
 ```
+
+**`result` は小文字の `pass` / `fail` である**（文書管理規則 §9.3）。**`gate-guard` は `result` を厳密比較するので、`PASS` と書くと不合格として扱われる。** 本文で「総合判定（PASS / FAIL）」と述べるのは読み手向けの表現であり、**フィールドの値ではない。**
 
 指摘対応テーブル（全レビュー報告で必須）:
 

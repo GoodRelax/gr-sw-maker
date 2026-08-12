@@ -21,9 +21,16 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 
 ### Start Conditions
 
-- [ ] CLAUDE.md が確定している（仕様形式・言語設定が決定済み）
 - [ ] user-order.md が存在し、必須項目（What / Why）が記載されている
-- [ ] setup フェーズの条件付きプロセス評価が完了している
+
+> **Phase 1 の `1b`（user-order の不足洗い出し）は、上記 1 件だけで起動する。** CLAUDE.md は `1c`〜`1e`、条件付きプロセス評価は `1g` で決まるため、**`1b` の時点ではまだ存在しない。それを起動条件にしてはならない（MUST NOT）** —— 走行が始まらない。
+>
+> **Phase 2 の `2a`〜`2h`（仕様書の作成）は、加えて次を満たしていること。**
+>
+> - [ ] CLAUDE.md の仕様形式・言語設定・開発方式が確定している（`1d` `1e`）
+> - [ ] 条件付きプロセスの要否判定が済んでいる（`1g`）
+>
+> **開発方式と仕様形式は依頼文の与件でも渡される**（`development-mode.md`「依頼に必ず添える与件」）。CLAUDE.md を読めない場合は与件を正とする。
 
 ### End Conditions
 
@@ -50,14 +57,19 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 |-----------|--------|-----------|
 | spec-foundation | ANMS: `docs/spec/01-10-spec.md` の Ch1-4（file_type は `spec` へ畳まれる） / ANPS: `docs/spec/` の第 1 部ファイル | architect, review-agent |
 | interview-record | project-management/interview-record.md | architect, project-manager |
+| traceability | project-records/traceability/ | test-designer, technical-authority, review-agent |
+
+> **`traceability` のオーナーは test-designer である**（名簿 §2）。**`2e` `2f` で `GL` / `UC` / `FR` / `NFR` に ID を付けた時点の対応を本エージェントが起こし、以降 test-designer が追記する。** 移管であり、作業表 `2e` `2f` の備考が宣言している。
 
 ### Work
 
 | ファイル | 用途 |
 |---------|------|
-| （モック / サンプル / PoC） | ユーザーにコンセプトを確認してもらうための試作。Procedure の該当ステップでのみ作成する |
+| （モック / サンプル / PoC） | ユーザーにコンセプトを確認してもらうための試作（`2d`）。**置き場は `project-management/prototype/`。** Procedure の該当ステップでのみ作成する |
 
 > 試作物は spec-foundation が確定した時点で削除する。仕様の正は spec-foundation であり、試作物を残すと二つの正が並存する。作成手段を持たない場合は作成せず、その旨をユーザーに伝えて文章と図で確認する。
+>
+> **`src/` `tests/` `infra/` へ置いてはならない（MUST NOT）。** `tools/gate-guard.mjs` が GATE-DESIGN 通過まで 3 つとも拒否するため、**置いた瞬間に Phase 2 で走行が止まる。** 試作は `Work` であって `Out` ではなく、製品の実装でもない。
 
 ## Procedure
 
@@ -83,14 +95,15 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
    - 機能要求を EARS 構文で記述する（6パターン。構文形は仕様テンプレート Ch1.9 が持つ）
    - 非機能要求を EARS 構文 + 数式で記述する。**測定可能な数値基準を含める**
    - すべての要求に ID（FR-xxx, NFR-xxx）を付与し、`Parent` に `UC-xxx` または `GL-xxx` を張る
-10. 用語チェック要請を完了報告に含めて返す（spec-foundation, interview-record）
-11. Ch5-10 のスケルトン（見出しのみ）を配置し、architect の起動要請を完了報告に含めて返す
+10. `traceability` に `GL` → `UC` → `FR` / `NFR` の対応を起こす（`2e` `2f`）。**テスト側の欄はこの時点では空でよい。** 埋めるのは test-designer である
+11. 用語チェック要請を完了報告に含めて返す（spec-foundation, interview-record, traceability）
+12. Ch5-10 のスケルトン（見出しのみ）を配置し、architect の起動要請を完了報告に含めて返す
 
 ## Rules
 
 ### 出力規則
 
-出力する file_type（spec-foundation, interview-record）は文書管理規則 §9 の Form Block 仕様に従って作成する。
+出力する file_type（spec-foundation, interview-record, traceability）は文書管理規則 §9 の Form Block 仕様に従って作成する。
 
 **ANMS では仕様書が 1 枚に畳まれ、file_type は `spec` になる**（名簿 §2・文書管理規則 §9.39）。このとき Form Block は `spec:` 名前空間で書き、**Common Block と Form Block を触れるのは本エージェントだけである。** architect（Ch5-7）と test-designer / tester（Ch8-10）は Detail の該当章のみを書く。
 
@@ -98,7 +111,7 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 
 | 判断内容 | 参照先 |
 |---------|--------|
-| 出力の記法 | 文書管理規則 §9.10（interview-record）, §9.13（spec-foundation） |
+| 出力の記法 | 文書管理規則 §9.10（interview-record）, §9.13（spec-foundation）, §9.9（traceability） |
 | planning フェーズの手順 | プロセス規則 §4.2（planning フェーズ） |
 | 要求品質のレビュー観点 | レビュー観点規約 R1（要求品質） |
 | 章構成と記法 | 仕様テンプレート Ch1-4 |

@@ -141,11 +141,22 @@ function fieldRegion(block, name) {
   return parts.join("\n");
 }
 
-/** Is there a passing review on record for this gate? */
+/**
+ * Is there passing review evidence on record for this gate?
+ *
+ * Strict mode splits one review step into one agent per perspective, so the
+ * evidence for a single gate arrives as several files that each carry one
+ * dimension. Perspectives are therefore accumulated across every passing
+ * review rather than being required to appear in one file -- demanding all of
+ * them from a single review would keep the gate shut for the whole of strict
+ * mode. A review that names its gate outright still short-circuits, which is
+ * the simple and standard case.
+ */
 function gatePassed(projectDir, gate) {
   const dir = resolve(projectDir, "project-records", "reviews");
   if (!existsSync(dir)) return false;
 
+  const applied = new Set();
   for (const name of readdirSync(dir)) {
     if (!name.endsWith(".md")) continue;
     let text;
@@ -158,19 +169,18 @@ function gatePassed(projectDir, gate) {
     if (fieldValue(block, "result") !== "pass") continue;
 
     const named = fieldValue(block, "gate");
-    if (named) {
-      if (named === gate) return true;
-      continue;
-    }
+    if (named === gate) return true;
+    if (named) continue;
+
     // review:gate is optional in the Form Block spec, so fall back to the
-    // perspectives the review applied. A review covering every perspective the
-    // gate requires is the same evidence under a different field.
+    // perspectives the review applied. Collected across files: one review
+    // covering every perspective passes on its own, and several single-
+    // perspective reviews pass once between them they cover the set.
     const dimensions = fieldRegion(block, "dimensions");
     if (!dimensions) continue;
-    const applied = new Set(dimensions.match(/R\d+/g) ?? []);
-    if (GATE_PERSPECTIVES[gate].every((id) => applied.has(id))) return true;
+    for (const id of dimensions.match(/R\d+/g) ?? []) applied.add(id);
   }
-  return false;
+  return GATE_PERSPECTIVES[gate].every((id) => applied.has(id));
 }
 
 /* -- main ----------------------------------------------------------------- */

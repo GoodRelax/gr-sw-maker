@@ -218,7 +218,7 @@ process-rules/ 配下の全ファイル（本文書を含む）に適用する�
 | ファイル | 命名例 | 備考 |
 |---------|--------|------|
 | ANMS仕様書 | `my-app-spec.md` | 単一ファイル |
-| ANPS Ch1-2 | `my-app-spec-ch1-2.md` | チャプター分割 |
+| ANPS 第 1 部 | `01-04-foundation.md` | チャプター分割 |
 | ANPS Ch3 | `my-app-spec-ch3.md` | チャプター分割 |
 ## 3.5 ルート配置文書
 
@@ -422,7 +422,7 @@ delivery フェーズで project-manager が作成。ユーザーがプロジェ
 
 ### 実例5: user-order.md / {project}-spec.md（仕様書）
 
-srs-writerがCh1-2を作成、architectがCh3-6を詳細化。
+srs-writer が Ch1-4 を作成、architect が Ch5-7 を詳細化。
 
 | 情報 | 候補 | 判断 | 理由 |
 |------|------|------|------|
@@ -855,7 +855,7 @@ external-dependency-spec（抽象テンプレート）
 | disaster-recovery-plan | `phase-design` | 運用チーム, project-manager | architect |
 | stakeholder-register | `phase-setup` | 全エージェント | project-manager |
 | retrospective-report | フェーズ完了時（随時） | project-manager | process-improver |
-| field-issue | 実機テスト中（随時） | project-manager, implementer, test-engineer | field-test-engineer |
+| field-issue | 実機テスト中（随時） | project-manager, implementer, tester | field-test-engineer |
 
 ---
 
@@ -1638,7 +1638,7 @@ field-issue の詳細を記載する。field-test-engineer がフィードバッ
 | tech-decision:gate | string | No | 対象ゲート（ゲート判定の場合） | GATE-XXX |
 | tech-decision:verdict | enum | No | ゲート判定結果（ゲート判定の場合） | PASS / FAIL / CONDITIONAL / NOT-APPLICABLE。**CONDITIONAL と NOT-APPLICABLE は理由を Detail Block に書く** |
 | tech-decision:fail_count | integer | No | 同一ゲートの連続 FAIL 回数 | 0 以上 |
-| tech-decision:send_back_to | enum | No | 戻し先（FAIL の場合） | design / implementation |
+| tech-decision:send_back_to | enum | No | 戻し先（FAIL の場合） | planning / design / implementation / testing。**プロセス規則 §4.7.1 の 4 経路と対応する。** R1 の指摘は planning、R6 の指摘は testing へ戻すため、この 2 値が無いと `Fk` が戻し先を記録できず走行が終端する |
 | tech-decision:rationale | text | Yes | 判断根拠 | — |
 | tech-decision:waiver | string | No | waiver の有無と参照 | none / waiver 記録への参照 |
 | tech-decision:reevaluate_at | string | No | 再評価の時期（waiver 時は必須） | — |

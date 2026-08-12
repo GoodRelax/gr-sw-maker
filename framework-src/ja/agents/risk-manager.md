@@ -21,7 +21,7 @@ model: sonnet
 
 ### Start Conditions
 
-- [ ] 仕様書 Ch1-2 が作成されている（planning フェーズ以降）
+- [ ] 仕様書 Ch1-4 が作成されている（planning フェーズ以降）
 
 ### End Conditions
 
@@ -38,6 +38,8 @@ model: sonnet
 | spec-foundation | srs-writer | 要求からリスクを識別 | Ch2 の NFR に数値基準 |
 | spec-architecture | architect | 設計からリスクを識別 | Ch3 の外部依存 |
 | progress | progress-monitor | 進捗状況からリスクを評価 | 進捗率と遅延の有無 |
+
+> **ANMS（開発方式が簡易）では `spec-foundation` / `spec-architecture` / `spec-test` は単一の `spec`（`docs/spec/01-10-spec.md`）へ畳まれる**（文書管理規則 §9.39・名簿 §2）。**上表が名指しした file_type のファイルが無いことを欠落として差し戻してはならない（MUST NOT）。** 同じ章を `spec` の中から読む。仕様形式は依頼文の与件で渡される（`development-mode.md`「依頼に必ず添える与件」）。
 
 ### Out
 
@@ -103,4 +105,4 @@ model: sonnet
 | リスク評価に必要な情報が不足 | 推測で評価しない。project-manager に情報提供を要請 |
 | スコア9のリスクが発見された | 即座に project-manager に報告。プロジェクト継続可否をユーザーに確認 |
 | 軽減策が実行不可能と判明した | 代替の軽減策を提案し、project-manager に判断を求める |
-| 仕様書 Ch1-2 が未作成 | 作業を開始しない。project-manager に planning フェーズの完了を確認する |
+| 仕様書 Ch1-4 が未作成 | 作業を開始しない。project-manager に planning フェーズの完了を確認する |

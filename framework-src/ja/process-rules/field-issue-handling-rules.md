@@ -48,7 +48,7 @@ field-issue は実機テストフェーズ専用の正式記録であり、既�
 
 本規則で使用するエージェントの役割・責務は [エージェント一覧](agent-list.md) を参照（Single Source of Truth）。本規則では重複定義しない。
 
-本規則に関与するエージェント: field-test-engineer, feedback-classifier, field-issue-analyst, project-manager, srs-writer, architect, implementer, review-agent, test-engineer
+本規則に関与するエージェント: field-test-engineer, feedback-classifier, field-issue-analyst, project-manager, srs-writer, architect, implementer, review-agent, test-designer, tester
 
 ---
 
@@ -234,7 +234,7 @@ field-issue は `verified` だけで終わるわけではない。**3 つの終�
 
 | 項目 | 内容 |
 |---|---|
-| 担当 | srs-writer（Ch1-2）/ architect（Ch3-6） |
+| 担当 | srs-writer（Ch1-4）/ architect（Ch5-7） |
 | 実施内容 | 承認された対策案に基づき仕様書を更新する |
 | ゲート条件（CR） | 仕様書の更新が完了していること（必須） |
 | ゲート条件（defect） | 仕様の曖昧さが原因の場合、仕様書の更新が完了していること。更新不要の場合はスキップ可 |

@@ -36,8 +36,10 @@ model: sonnet
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
 | field-issue（reported） | field-test-engineer | 分類対象のフィードバック | issue_id, status = reported, 現象と再現手順 |
-| spec-foundation | srs-writer | 仕様照合（Ch1-2: 要求定義） | Ch4 の全 FR/NFR に ID |
-| spec-architecture | architect | 仕様照合（Ch3-6: 設計仕様） | Ch3-4 |
+| spec-foundation | srs-writer | 仕様照合（Ch1-4: 要求定義） | Ch4 の全 FR/NFR に ID |
+| spec-architecture | architect | 仕様照合（Ch5-7: 設計仕様） | Ch3-4 |
+
+> **ANMS（開発方式が簡易）では `spec-foundation` / `spec-architecture` / `spec-test` は単一の `spec`（`docs/spec/01-10-spec.md`）へ畳まれる**（文書管理規則 §9.39・名簿 §2）。**上表が名指しした file_type のファイルが無いことを欠落として差し戻してはならない（MUST NOT）。** 同じ章を `spec` の中から読む。仕様形式は依頼文の与件で渡される（`development-mode.md`「依頼に必ず添える与件」）。
 
 ### Out
 
@@ -89,10 +91,11 @@ field-issue チケットの更新は文書管理規則 §9.33 の Form Block 仕
 
 ### 出力例
 
+**Form Block は Common Block と同じ YAML frontmatter の中に置く（MUST）。独自のタグ形式（`<!-- FIELD: … -->`）を用いてはならない（MUST NOT）**（文書管理規則 §5）。**以下は frontmatter 末尾の `{名前空間}:` の部分だけを抜き出したものである。** 前段の OKF キー（`okf_version` 〜 `updated`）は §5 のテンプレートに従って必ず添える。
+
 field-issue（classified）:
 
-```markdown
-<!-- FIELD: field-issue -->
+```yaml
 field-issue:
   issue_id: FI-007
   type: defect

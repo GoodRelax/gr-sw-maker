@@ -28,8 +28,8 @@
 | # | name | 役割 | model | 主要フェーズ |
 |:-:|------|------|:-----:|------------|
 | 1 | project-manager | 進行状態の記録、PM 情報（進捗・コスト・リスク・変更要求）の統合、**`main-agent` 経由での報告** | opus | 全フェーズ |
-| 2 | srs-writer | ユーザーコンセプトの構造化、インタビュー、仕様書 Ch1-2 作成 | opus | planning |
-| 3 | architect | 仕様書 Ch3-6 詳細化、OpenAPI・可観測性・外部依存要求の設計 | opus | design |
+| 2 | srs-writer | ユーザーコンセプトの構造化、インタビュー、仕様書 Ch1-4 作成 | opus | planning |
+| 3 | architect | 仕様書 Ch5-7 詳細化、OpenAPI・可観測性・外部依存要求の設計 | opus | design |
 | 4 | security-reviewer | 脅威モデリング、セキュリティ設計、脆弱性スキャン | opus | design, implementation |
 | 5 | implementer | ソースコード実装、単体テスト作成 | opus | implementation |
 | 6 | review-agent | R1-R7 観点での品質レビュー、重大度付き指摘の起票 | opus | 全フェーズ（ゲート時） |
@@ -213,8 +213,8 @@
 | 入力 | 提供元 | 用途 |
 |------|--------|------|
 | field-issue（reported） | field-test-engineer | 分類対象のフィードバック |
-| spec-foundation | srs-writer | 仕様照合（Ch1-2: 要求定義） |
-| spec-architecture | architect | 仕様照合（Ch3-6: 設計仕様） |
+| spec-foundation | srs-writer | 仕様照合（Ch1-4: 要求定義） |
+| spec-architecture | architect | 仕様照合（Ch5-7: 設計仕様） |
 
 ### field-issue-analyst（条件付き: 実機テスト有効時）
 
@@ -440,13 +440,13 @@ terminology-checker を**使用しない**エージェント:
 
 | フェーズ | 起動されるエージェント | 品質ゲート |
 |---------|---------------------|-----------|
-| setup | project-manager | CLAUDE.md 承認 |
-| planning | project-manager, srs-writer, terminology-checker, review-agent, technical-authority, process-improver, decree-writer | R1 PASS → 仕様書承認 |
-| dependency-selection | project-manager, architect, terminology-checker, license-checker, technical-authority | ユーザー選定承認 |
-| design | project-manager, architect, security-reviewer, terminology-checker, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5/R7 PASS |
+| setup | project-manager, srs-writer, architect, technical-authority | CLAUDE.md 承認 |
+| planning | project-manager, srs-writer, test-designer, terminology-checker, review-agent, technical-authority, process-improver, decree-writer | R1 PASS → 仕様書承認 |
+| dependency-selection | project-manager, architect, terminology-checker, technical-authority | ユーザー選定承認 |
+| design | project-manager, architect, test-designer, security-reviewer, terminology-checker, progress-monitor, risk-manager, review-agent, technical-authority, process-improver, decree-writer | R2/R4/R5/R7 PASS |
 | implementation | project-manager, implementer(単体テストも), test-designer(観点出し), security-reviewer(SCA), terminology-checker, license-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5/R7 PASS, SCA クリア |
-| testing | project-manager, test-engineer, terminology-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer, field-test-engineer(条件付き), feedback-classifier(条件付き), field-issue-analyst(条件付き) | R6 PASS, 全テスト PASS |
-| delivery | project-manager, terminology-checker, review-agent, technical-authority, license-checker, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R7 全 PASS, 翻訳一致性検証 PASS, ユーザー受入 |
+| testing | project-manager, test-designer, tester, architect(設計意図), terminology-checker, review-agent, technical-authority, progress-monitor, process-improver, decree-writer, field-test-engineer(条件付き), feedback-classifier(条件付き), field-issue-analyst(条件付き) | R6 PASS, 全テスト PASS |
+| delivery | project-manager, test-designer, implementer(条件付き), terminology-checker, review-agent, technical-authority, user-manual-writer, runbook-writer(条件付き), process-improver, decree-writer | R1-R7 全 PASS, 受入テスト合格, ユーザー受入 |
 | operation | project-manager, security-reviewer(パッチ), progress-monitor, incident-reporter, process-improver, decree-writer | SLA 達成 |
 
 ---

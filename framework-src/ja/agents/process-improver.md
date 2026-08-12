@@ -86,10 +86,11 @@ defect 票・レビュー指摘・進捗データを分析し、繰り返し発�
 
 ### 出力例
 
+**Form Block は Common Block と同じ YAML frontmatter の中に置く（MUST）。独自のタグ形式（`<!-- FIELD: … -->`）を用いてはならない（MUST NOT）**（文書管理規則 §5）。**以下は frontmatter 末尾の `{名前空間}:` の部分だけを抜き出したものである。** 前段の OKF キー（`okf_version` 〜 `updated`）は §5 のテンプレートに従って必ず添える。
+
 retrospective-report:
 
-```markdown
-<!-- FIELD: retrospective-report -->
+```yaml
 retrospective-report:
   phase: implementation
   defect_pattern_count: 3

@@ -36,9 +36,11 @@ model: sonnet
 
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
-| spec-foundation | srs-writer | 機能要求・ユーザーフローの理解 | Ch1 のユーザーフロー, Ch2 の全 FR に ID |
-| spec-architecture | architect | システム構成・APIの理解 | Ch3 の外部インターフェース |
+| spec-foundation | srs-writer | 機能要求・ユーザーフローの理解 | Ch2 のシステム概要, Ch3 の全 UC, Ch4.1 の全 FR に ID |
+| spec-architecture | architect | システム構成・操作手順の理解 | Ch6 のソフトウェア仕様（操作手順・画面・メッセージはここにしかない） |
 | pipeline-state | project-manager | 現在のフェーズ確認 | current_phase |
+
+> **ANMS（開発方式が簡易）では `spec-foundation` / `spec-architecture` / `spec-test` は単一の `spec`（`docs/spec/01-10-spec.md`）へ畳まれる**（文書管理規則 §9.39・名簿 §2）。**上表が名指しした file_type のファイルが無いことを欠落として差し戻してはならない（MUST NOT）。** 同じ章を `spec` の中から読む。仕様形式は依頼文の与件で渡される（`development-mode.md`「依頼に必ず添える与件」）。
 
 ### Out
 

@@ -481,7 +481,7 @@ flowchart TD
 | 条件付きで増えるエージェント | **8 エージェント** —— runbook-writer<br />field-test-engineer<br />feedback-classifier<br />field-issue-analyst<br />incident-reporter<br />progress-monitor<br />process-improver<br />change-manager<br />**全部有効なら 19 エージェント。** |
 | 簡易では決して起動しないエージェント | **2 エージェント** —— risk-manager（`4k` 免除）<br />decree-writer（`Fe` 免除）<br />**19 ＋ 2 = 21。名簿は現在 22 件である。**<br />差は `terminology-checker` の 1 件のみで、**作業表のどの行にも現れない**。**完了報告の用語チェック要請で呼ばれるため、手順を持たない**（`agent-orchestration-rules.md` §4.6 の規約 6）。<br />**`test-engineer` は名簿から外した**（2026-08-12 決定。作業表で 1 度も使わないため）。 |
 | 成果物 | user-order<br />CLAUDE.md<br />**tech-decision**<br />pipeline-state<br />interview-record<br />src<br />spec-foundation<br />spec-architecture<br />spec-test<br />traceability<br />test-plan<br />review<br />security-scan-report<br />license-report<br />final-report<br />user-manual<br />handoff<br />**17 件（表 M の `実施` から機械で導出した）。**<br />**ANMS なので 3 型は単一の `spec` へ畳まれ、現物のファイルは 1 枚である。** |
-| レビュー報告 | 1 本（`7a` で R1〜R7 網羅）。<br />合格線 Critical 0 / High 0。 |
+| レビュー報告 | **5 本 ＋ 再レビュー分**（`2i` `4m` `5e` `6k` `7a`。表 E-1 が正）。<br />**簡易でも報告ファイルを残す。** `gate-guard` は `project-records/reviews/` の実ファイルしか見ないので、残さないとゲートが開かない。<br />`7a` は 1 エージェントで R1〜R7 を網羅する。<br />合格線 Critical 0 / High 0。 |
 | ゲート | 全 8 ゲートを判定する。 |
 
 > **`test-plan` が新たに簡易の成果物になった。** 旧 `5a` `5b` を「作成 / 実行」に割った結果、受入基準とテストコードが `6a` `6c` の `出力` として現れたためである。**統合しなければ出てこなかった。**

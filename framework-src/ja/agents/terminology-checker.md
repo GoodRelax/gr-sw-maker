@@ -40,6 +40,8 @@ model: sonnet
 | spec-foundation (Ch1.8 Glossary) | srs-writer | プロジェクト用語集との照合 | Ch1.8 の用語表 |
 | full-auto-dev-document-rules.md §7 | framework | file_type 名・名前空間の正式定義 | file_type マスターテーブル |
 
+> **ANMS（開発方式が簡易）では `spec-foundation` / `spec-architecture` / `spec-test` は単一の `spec`（`docs/spec/01-10-spec.md`）へ畳まれる**（文書管理規則 §9.39・名簿 §2）。**上表が名指しした file_type のファイルが無いことを欠落として差し戻してはならない（MUST NOT）。** 同じ章を `spec` の中から読む。仕様形式は依頼文の与件で渡される（`development-mode.md`「依頼に必ず添える与件」）。
+
 ### Out
 
 | file_type | 出力先 | 次の消費者 |

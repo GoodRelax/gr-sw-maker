@@ -309,7 +309,7 @@ flowchart TD
 | `2b`<br />企画 | 曖昧点を埋めるインタビューの設問を書く | main-agent | srs-writer | opus | user-order<br />`2a` の一覧 | — | 設問一覧 | **srs-writer が利用者に直接聞くことはできない**<br />（`agent-orchestration-rules.md` §4.5 の規約 1）。 |
 | `2b`<br />企画 | 設問を利用者に問い、<br />回答を持ち帰る | **main-agent** | **利用者** | — | 設問一覧 | — | 回答 | **[直列]**  |
 | `2c`<br />企画 | 回答を interview-record に記録し、<br />未解決の質問を数える | main-agent | srs-writer | opus | 回答 | interview-record | 記録の場所<br />未解決の質問数 | `2j` が未解決の質問数を見る。 |
-| `2d`<br />企画 | 確かめたい要求を選び、<br />モック / サンプル / PoC を作る | main-agent | srs-writer | opus | interview-record | src | 試作の場所<br />確かめた要求 | 要求を確かめるための試作である。<br />製品の実装ではない。 |
+| `2d`<br />企画 | 確かめたい要求を選び、<br />モック / サンプル / PoC を作る | main-agent | srs-writer | opus | interview-record | — | 試作の場所<br />確かめた要求 | 要求を確かめるための試作である。<br />製品の実装ではない。<br />**`src/` へ置いてはならない（MUST NOT）。** `gate-guard` が GATE-DESIGN まで `src/` を拒否するため、置くと Phase 2 で走行が止まる。<br />**試作物は `Work` であって `Out` ではない。** 置き場は `project-management/prototype/` とし、仕様書が確定した時点で消す（srs-writer の `Work`）。 |
 | `2e`<br />企画<br />**新設** | 目的とシステム概要とユースケースを書き、<br />`GL` と `UC` に ID を付ける | main-agent | srs-writer | opus | user-order<br />interview-record<br />仕様書テンプレート | spec-foundation<br />**traceability** | 仕様書の場所<br />付けた `GL` と `UC` の UID 範囲 | **鎖の根はここで生まれる。**<br />`spec-writing-rules.md`「親をたどると必ず `GL` に着く（MUST）」。<br />**`spec-writing-rules.md`「Chapter 2 を書かずに Chapter 4 を書いてはならない（MUST NOT）」により、`2f` より前に置く。**<br />**`traceability` のオーナーは test-designer である。本行は srs-writer が書くので移管に当たる**（名簿 §2）。 |
 | `2f`<br />企画 | 要求を仕様書の要求の章に書き、<br />ID を付ける | main-agent | srs-writer | opus | user-order<br />interview-record<br />仕様書テンプレート | spec-foundation<br />**traceability** | 仕様書の場所<br />付けた ID の範囲 | 鎖の根は `GL` であって要求ではない（`spec-writing-rules.md` §ID と採番）。<br />**したがって本手順の前に `2e` が要る。**<br />**`traceability` のオーナーは test-designer である**（名簿 §2）。**本行は srs-writer が書くので移管に当たる。**<br />複数の体が追記する性質なので、名簿側で共同所有を定義するまで暫定である。 |
 | `2f`<br />企画 | 付けた ID をテストから引けるか確かめる | main-agent | test-designer | opus | `2f` の ID 範囲 | — | 可否と理由 | **[直列]** ID はテストの紐づけ先になる。<br />**兄弟で並べて起動する。srs-writer が test-designer を呼んではならない**<br />（`agent-orchestration-rules.md` §4.5.1）。 |
@@ -380,7 +380,7 @@ flowchart TD
 | `5f`<br />実装 | 依存のライセンス面から帰属表示の要否を判定する | main-agent | license-checker | haiku | `5a` の依存関係の一覧 | — | 帰属表示の要否 | **[同時]** **兄弟で並べて起動する**<br />（`agent-orchestration-rules.md` §4.5.1）。 |
 | `5g`<br />実装<br />**新設** | ソースに SAST を走らせ、<br />脆弱性を洗い出す | main-agent | security-reviewer | opus | `5a` の src | security-scan-report | 報告の場所と件数 | 簡易は外部入力を扱う場合のみ。<br />**旧 §3.2.8 を SCA と 2 件に割って生まれた**<br />。<br />走らせる時期も対象も SCA と違う。 |
 | `5h`<br />実装 | 依存のライセンス互換性を確認し、<br />帰属表示をそろえる | main-agent | license-checker | haiku | 依存関係の一覧<br />`5f` の帰属表示の要否 | license-report | 報告の場所<br />非互換の件数 | 依存ライブラリを追加したら必ず走らせる。 |
-| `5i`<br />実装 | 指摘とスキャン結果を統合し、<br />合格条件に照らして GATE-IMPL の可否を出す | main-agent | technical-authority | opus | `5e` の review<br />`5f` `5g` の security-scan-report<br />`5h` の license-report | tech-decision | 可否と理由<br />統合済みの指摘 | 合格条件はプロセス規則 §9.4.1 が持つ。<br />**厳格では 5 エージェントの指摘をここで統合する**<br />（`agent-orchestration-rules.md` §4.5.2）。 |
+| `5i`<br />実装 | 指摘とスキャン結果を統合し、<br />合格条件に照らして GATE-IMPL の可否を出す | main-agent | technical-authority | opus | `5e` の review<br />`5f` `5g` の security-scan-report<br />`5h` の license-report<br />**`5c` の合格率とカバレッジ** | tech-decision | 可否と理由<br />統合済みの指摘 | 合格条件はプロセス規則 §9.4.1 が持つ。<br />**厳格では 5 エージェントの指摘をここで統合する**<br />（`agent-orchestration-rules.md` §4.5.2）。<br />**単体テストの合格率とカバレッジを tech-decision に転記する。** 単体テストは仕様書に載らないので（`5c`）、**ここが唯一の記録点であり、`6l` の GATE-TEST がこれを読む。** |
 
 **手順数が 8 → 9 になる。** `5g` の新設で 1 増える。
 
@@ -402,7 +402,7 @@ flowchart TD
 | `6i`<br />テスト | 原因を分析し、<br />対策を立てる | main-agent | field-issue-analyst | opus | `6i` の field-issue と分類 | field-issue | 原因と対策案<br />影響範囲 | **[直列]** 同上。 |
 | `6j`<br />テスト | テスト消化曲線と defect curve を更新する | main-agent | progress-monitor | sonnet | `6b` `6d` の結果<br />defect の一覧 | progress | 曲線の場所<br />収束の傾向 | 1 週間未満の走行では点が足りない。 |
 | `6k`<br />テスト | テストコードを R6 に照らし、<br />指摘を挙げる | main-agent | review-agent | opus | 対象: テスト<br />根拠: 対象ノードの祖先 | review | 指摘の場所と件数<br />Critical / High の有無 | **R6 は 1 観点なので、厳格でも 1 エージェントである**<br />（割る先が無い）。 |
-| `6l`<br />テスト | テスト結果と指摘を合格条件に照らし、<br />GATE-TEST の可否を出す | main-agent | technical-authority | opus | `6k` の review<br />`6b` `6d` `6f` `6h` の結果 | tech-decision | 可否と理由<br />統合済みの指摘 | 合格条件はプロセス規則 §9.4.1 が持つ。 |
+| `6l`<br />テスト | テスト結果と指摘を合格条件に照らし、<br />GATE-TEST の可否を出す | main-agent | technical-authority | opus | `6k` の review<br />`6b` `6d` `6f` `6h` の結果<br />**`5i` の tech-decision**<br />`6a` `6e` `6g` の traceability | tech-decision | 可否と理由<br />統合済みの指摘 | 合格条件はプロセス規則 §9.4.1 が持つ。<br />**カバレッジは `5i` の tech-decision から読む。** 単体テストは仕様書に載らないため、他に載る場所がない。<br />`traceability` は「全 FR にテスト対応がある」の判定に要る。 |
 
 **手順数が 7 → 12 になる。** 分割で 2、UC テストのケースと実行および非機能テストのケースの新設で 3 増える。
 
@@ -692,7 +692,7 @@ flowchart TD
 | 条件付きで増えるエージェント | **8 エージェント** —— runbook-writer<br />field-test-engineer<br />feedback-classifier<br />field-issue-analyst<br />incident-reporter<br />progress-monitor<br />process-improver<br />change-manager<br />**全部有効なら 19 エージェント。** |
 | 簡易では決して起動しないエージェント | **2 エージェント** —— risk-manager（`4k` 免除）<br />decree-writer（`Fe` 免除）<br />**19 ＋ 2 = 21。名簿は現在 22 件である。**<br />差は `terminology-checker` の 1 件のみで、**作業表のどの行にも現れない**。**完了報告の用語チェック要請で呼ばれるため、手順を持たない**（`agent-orchestration-rules.md` §4.6 の規約 6）。<br />**`test-engineer` は名簿から外した**（2026-08-12 決定。作業表で 1 度も使わないため）。 |
 | 成果物 | user-order<br />CLAUDE.md<br />**tech-decision**<br />pipeline-state<br />interview-record<br />src<br />spec-foundation<br />spec-architecture<br />spec-test<br />traceability<br />test-plan<br />review<br />security-scan-report<br />license-report<br />final-report<br />user-manual<br />handoff<br />**17 件（表 M の `実施` から機械で導出した）。**<br />**ANMS なので 3 型は単一の `spec` へ畳まれ、現物のファイルは 1 枚である。** |
-| レビュー報告 | 1 本（`7a` で R1〜R7 網羅）。<br />合格線 Critical 0 / High 0。 |
+| レビュー報告 | **5 本 ＋ 再レビュー分**（`2i` `4m` `5e` `6k` `7a`。表 E-1 が正）。<br />**簡易でも報告ファイルを残す。** `gate-guard` は `project-records/reviews/` の実ファイルしか見ないので、残さないとゲートが開かない。<br />`7a` は 1 エージェントで R1〜R7 を網羅する。<br />合格線 Critical 0 / High 0。 |
 | ゲート | 全 8 ゲートを判定する。 |
 
 > **`test-plan` が新たに簡易の成果物になった。** 旧 `5a` `5b` を「作成 / 実行」に割った結果、受入基準とテストコードが `6a` `6c` の `出力` として現れたためである。**統合しなければ出てこなかった。**

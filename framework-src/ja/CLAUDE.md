@@ -146,7 +146,8 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 - **Architect Agent（architect）**: docs/spec/ の ANMS 仕様書 Ch5-7 を詳細化（Design・Software Specification・Test Strategy）。docs/api/ にOpenAPI仕様を生成する
 - **Security Agent（security-reviewer）**: docs/security/ にセキュリティ設計を作成。実装コードの脆弱性レビューを行う。スキャン結果はproject-records/security/にsecurity-scan-reportとして記録する
 - **Implementer Agent（implementer）**: src/ 配下にコードを実装する。設計文書に従い、Clean Architecture・DIPを遵守する。単体テストも作成する
-- **Test Agent（test-engineer）**: tests/ 配下にテストを作成・実行する。カバレッジレポートを生成する
+- **Test Designer Agent（test-designer）**: 受入基準とテストケースを設計し、仕様書 Ch8-10 のケース節に書く。traceability と test-plan を所有する
+- **Tester Agent（tester）**: テストを実行し、結果を仕様書 Ch8-10 の結果節に記録する。defect と performance-report を所有する
 - **Review Agent（review-agent）**: project-records/reviews/ にレビュー報告を出力する。R1〜R7の観点（SW工学原則・並行性・パフォーマンス）でレビューし、Critical/High指摘がゼロになるまで次フェーズへの移行をブロックする
 - **PM Agent（progress-monitor）**: project-management/progress/ に進捗レポートを出力する。WBS/defect curve/コストを管理する
 - **Change Manager Agent（change-manager）**: 仕様書承認後のユーザー起点の変更要求をproject-records/change-requests/に記録し、影響分析を行う。impact_level=highはユーザー承認必須。AI側の技術的変更はdefect/decisionで管理する

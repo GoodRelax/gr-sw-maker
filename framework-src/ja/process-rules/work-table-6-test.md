@@ -30,6 +30,6 @@
 | `6i`<br />テスト | 原因を分析し、<br />対策を立てる | main-agent | field-issue-analyst | opus | `6i` の field-issue と分類 | field-issue | 原因と対策案<br />影響範囲 | **[直列]** 同上。 |
 | `6j`<br />テスト | テスト消化曲線と defect curve を更新する | main-agent | progress-monitor | sonnet | `6b` `6d` の結果<br />defect の一覧 | progress | 曲線の場所<br />収束の傾向 | 1 週間未満の走行では点が足りない。 |
 | `6k`<br />テスト | テストコードを R6 に照らし、<br />指摘を挙げる | main-agent | review-agent | opus | 対象: テスト<br />根拠: 対象ノードの祖先 | review | 指摘の場所と件数<br />Critical / High の有無 | **R6 は 1 観点なので、厳格でも 1 エージェントである**<br />（割る先が無い）。 |
-| `6l`<br />テスト | テスト結果と指摘を合格条件に照らし、<br />GATE-TEST の可否を出す | main-agent | technical-authority | opus | `6k` の review<br />`6b` `6d` `6f` `6h` の結果 | tech-decision | 可否と理由<br />統合済みの指摘 | 合格条件はプロセス規則 §9.4.1 が持つ。 |
+| `6l`<br />テスト | テスト結果と指摘を合格条件に照らし、<br />GATE-TEST の可否を出す | main-agent | technical-authority | opus | `6k` の review<br />`6b` `6d` `6f` `6h` の結果<br />**`5i` の tech-decision**<br />`6a` `6e` `6g` の traceability | tech-decision | 可否と理由<br />統合済みの指摘 | 合格条件はプロセス規則 §9.4.1 が持つ。<br />**カバレッジは `5i` の tech-decision から読む。** 単体テストは仕様書に載らないため、他に載る場所がない。<br />`traceability` は「全 FR にテスト対応がある」の判定に要る。 |
 
 **手順数が 7 → 12 になる。** 分割で 2、UC テストのケースと実行および非機能テストのケースの新設で 3 増える。

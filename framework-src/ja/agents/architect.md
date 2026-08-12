@@ -21,9 +21,18 @@ docs/spec/ の仕様書 Ch5-7 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 
 ### Start Conditions
 
+**Phase 4 の設計（`4a`〜`4i`）で起動する場合:**
+
 - [ ] 仕様書 Ch1-4 が srs-writer により作成され、R1 PASS 済み
 - [ ] 仕様書がユーザーに承認されている
 - [ ] CLAUDE.md の技術スタック・コーディング規約が確定している
+
+**Phase 1 の `1c`（CLAUDE.md の案を書く）で起動する場合は、上記をいずれも満たさない。**
+
+- [ ] user-order.md が存在する
+- [ ] `1b` が返した「不足の一覧」を受け取っている
+
+> **`1c` は仕様書より前に走る。** CLAUDE.md は設計上の決めごとを並べた文書であり、設計のエージェントが起草する（作業表 `1c`、project-manager から移管）。**仕様書が無いことを欠落として差し戻してはならない（MUST NOT）** —— Phase 1 が始まらない。**この行の出力は `CLAUDE.md` であって file_type ではない。**
 
 ### End Conditions
 
@@ -46,6 +55,8 @@ docs/spec/ の仕様書 Ch5-7 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 | CLAUDE.md | project-manager (setup) | 技術スタック・コーディング規約の確認 | 技術スタック・コーディング規約・品質目標の各節 |
 | spec-template | framework | Ch5-7 の記法を確認する | Ch5-7 の章構成 |
 
+> **ANMS（開発方式が簡易）では `spec-foundation` / `spec-architecture` / `spec-test` は単一の `spec`（`docs/spec/01-10-spec.md`）へ畳まれる**（文書管理規則 §9.39・名簿 §2）。**上表が名指しした file_type のファイルが無いことを欠落として差し戻してはならない（MUST NOT）。** 同じ章を `spec` の中から読む。仕様形式は依頼文の与件で渡される（`development-mode.md`「依頼に必ず添える与件」）。
+
 ### Out
 
 | file_type | 出力先 | 次の消費者 |
@@ -58,6 +69,7 @@ docs/spec/ の仕様書 Ch5-7 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 | disaster-recovery-plan | docs/operations/ | runbook-writer, 運用チーム |
 | deployment-design | docs/operations/ | implementer, runbook-writer, technical-authority |
 | openapi.yaml | docs/api/ | implementer, test-designer |
+| CLAUDE.md | ルート（`1c` の案。利用者が `1d` で記入必須欄を埋める） | 全エージェント |
 
 > openapi.yaml は外部ツール規定形式（文書管理規則 §13）であり file_type ではない。Common Block 管理対象外だが、architect が生成・管理する。
 

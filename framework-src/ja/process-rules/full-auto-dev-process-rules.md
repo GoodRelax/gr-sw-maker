@@ -30,9 +30,9 @@
 
 - [第4章 開発ワークフロー](#第4章-開発ワークフロー)
   - 4.1 setup フェーズ: 条件付きプロセス評価（必須）
-  - 4.2 planning フェーズ: 企画 — インタビューから仕様書 Ch1-2 作成
+  - 4.2 planning フェーズ: 企画 — インタビューから仕様書 Ch1-4 作成
   - 4.3 dependency-selection フェーズ: 外部依存の選定 — 評価・選定・調達（条件付き）
-  - 4.4 design フェーズ: 設計 — 仕様書 Ch3-6 詳細化・セキュリティ・WBS
+  - 4.4 design フェーズ: 設計 — 仕様書 Ch5-7 詳細化・セキュリティ・WBS
   - 4.5 implementation フェーズ: 実装 — 並列開発とテスト
   - 4.6 testing フェーズ: テスト — 統合テスト・性能テスト・品質監視
   - 4.7 delivery フェーズ: 納品 — デプロイメント・最終レポート・受入テスト
@@ -106,7 +106,7 @@
 **Claude Codeが担当する業務（それ以外すべて）:**
 
 - 開発計画立案（WBS/ガントチャート）、要員(AI)管理、リソース管理、進捗管理
-- 仕様書作成（Ch1-2: Foundation・Requirements、形式はANMS/ANPS/ANGSから選定）、セキュリティ設計、仕様書詳細化（Ch3-6: Architecture・Specification・Test Strategy・Design Principles）
+- 仕様書作成（Ch1-4: Foundation・System Overview・Use Cases・Requirements、形式はANMS/ANPS/ANGSから選定）、セキュリティ設計、仕様書詳細化（Ch3-6: Architecture・Specification・Test Strategy・Design Principles）
 - SW実装、単体テスト、結合テスト、システムテスト、性能テスト
 - テスト消化曲線の監視、defect curveの監視
 - ボトルネック/弱点領域へのリソース/人員(AI)追加
@@ -255,12 +255,12 @@ flowchart TD
         P1A["ユーザー: コンセプト提示"]
         P1H["AI: 構造化インタビュー<br/>（外部依存の識別含む）"]
         P1HU["ユーザー: インタビュー確認"]
-        P1B["AI: 仕様書 Ch1-2作成"]
-        P1C["AI: Ch1-2レビュー(R1)"]
+        P1B["AI: 仕様書 Ch1-4作成"]
+        P1C["AI: Ch1-4レビュー(R1)"]
         P1A -->|"コンセプト"| P1H
         P1H -->|"インタビュー結果"| P1HU
         P1HU -->|"確認OK"| P1B
-        P1B -->|"Ch1-2完成"| P1C
+        P1B -->|"Ch1-4 完成"| P1C
     end
 
     subgraph Phase2["Phase 2: 外部依存の選定（条件付き）"]
@@ -272,7 +272,7 @@ flowchart TD
     end
 
     subgraph Phase3["Phase 3: 設計"]
-        P3DA["AI: 仕様書 Ch3-6詳細化"]
+        P3DA["AI: 仕様書 Ch5-7詳細化"]
         P3DB["AI: セキュリティ設計"]
         P3DC["AI: WBS・リスク管理"]
         P3DE["AI: OpenAPI・可観測性設計"]
@@ -435,7 +435,7 @@ flowchart LR
 
 **参照標準:** CMMI-RD/TS, ISO/IEC 12207, AUTOSAR
 
-要求IDからテストケースIDまでの双方向トレーサビリティを維持する。srs-writerが要求IDを付与し、architectが仕様書 Ch4 の Gherkin シナリオに `(traces: FR-xxx)` を付記し、test-engineerがテスト実装時に更新する。
+要求IDからテストケースIDまでの双方向トレーサビリティを維持する。srs-writerが要求IDを付与し、architect が仕様書 Ch6 の `SWS` に `FR` / `NFR` の親を張り、test-designer がテストケース作成時に traceability を更新する。
 
 **トレーサビリティマトリクス:** `project-records/traceability/traceability-matrix.md`（Markdown シングルトン、Common Block + traceability: Form Block付き）
 
@@ -499,7 +499,7 @@ stateDiagram-v2
 **実装フェーズにおける仕様乖離:** 実装中に、承認済み仕様からの設計変更が発生した場合（例：アルゴリズムの差し替え、APIコントラクトの変更、状態管理方式の変更）、implementer は以下を実行しなければならない:
 1. 乖離を defect（仕様の fault に起因する場合）または CR（実装中に発見された新たな要求・制約に起因する場合）として記録する
 2. 修正の適用と再テスト後、仕様書を実際の実装に合わせて更新する
-3. 乖離が Ch1-2（要求）に影響する場合は、change-manager を経由して影響分析を行う
+3. 乖離が Ch1-4（要求）に影響する場合は、change-manager を経由して影響分析を行う
 
 #### 3.2.5 ライセンス管理
 
@@ -826,7 +826,7 @@ setup フェーズは全自動開発の**最初のステップ**であり、仕�
 
 評価結果はユーザーに報告し、追加プロセスの有効化について確認を求める。確認後、CLAUDE.mdの条件付きプロセスセクションを更新してから planning フェーズに進む。
 
-### 4.2 planning フェーズ: 企画 — インタビューから仕様書 Ch1-2 作成
+### 4.2 planning フェーズ: 企画 — インタビューから仕様書 Ch1-4 作成
 
 #### 4.2.1 ユーザーのアクション: コンセプト提示
 
@@ -899,15 +899,15 @@ AIが作成したインタビュー記録をユーザーに提示し、以下を
 
 **スキップ条件:** CLI ツール、バッチ処理、ライブラリ等、UIが存在しないプロジェクトではUIモックは不要。ただしAPIサンプルやデータモデルサンプルは有効。
 
-#### 4.2.5 AI のアクション: 仕様書 Ch1-2 自動生成
+#### 4.2.5 AI のアクション: 仕様書 Ch1-4 自動生成
 
-インタビュー記録（interview-record.md）と user-order.md を入力として、仕様書 Ch1-2 を作成する。
+インタビュー記録（interview-record.md）と user-order.md を入力として、仕様書 Ch1-4 を作成する。
 
 ```bash
 claude "user-order.mdを読み込み、ほぼ全自動開発を開始してください。
 まず構造化インタビューを実施してください。
 インタビュー完了後、process-rules/spec-template.md を参照し、
-仕様書（Ch1-2: Foundation・Requirements）を docs/spec/ に作成してください（形式はsetupフェーズで選定したANMS/ANPS/ANGSに従う）。
+仕様書（Ch1-4: Foundation・System Overview・Use Cases・Requirements）を docs/spec/ に作成してください（形式はsetupフェーズで選定したANMS/ANPS/ANGSに従う）。
 作成後、review-agentでR1観点のレビューを実施し、
 PASSしたら仕様書の概要を報告し、重要な判断が必要な箇所があれば提示してください。"
 ```
@@ -1016,8 +1016,8 @@ gantt
     条件付きプロセス評価           : done, p0b, after p0a2, 1d
 
     section Phase1_企画
-    仕様書Ch1-2作成                 : done, p1b, after p0b, 2d
-    Ch1-2レビュー(R1)              : done, p1c, after p1b, 1d
+    仕様書 Ch1-4作成                 : done, p1b, after p0b, 2d
+    Ch1-4レビュー(R1)              : done, p1c, after p1b, 1d
     仕様書承認                    : milestone, p1d, after p1c, 0d
 
     section Phase2_選定
@@ -1025,7 +1025,7 @@ gantt
     選定承認                      : milestone, p2m, after p2s, 0d
 
     section Phase3_設計
-    仕様書 Ch3-6詳細化              : p3a, after p2m, 3d
+    仕様書 Ch5-7詳細化              : p3a, after p2m, 3d
     OpenAPI仕様生成               : p3e, after p2m, 2d
     セキュリティ設計               : p3b, after p2m, 2d
     可観測性設計                   : p3f, after p2m, 1d
@@ -1256,7 +1256,7 @@ xychart-beta
 1. field-test-engineer が最新 SW でユーザーとテストし、フィードバックを記録する
 2. feedback-classifier がフィードバックを仕様書と照合し、defect / CR / 質問に分類する
 3. field-issue-analyst が原因分析（defect）・対策立案（defect / CR）を行う
-4. 承認後、既存エージェント群（srs-writer / architect → review-agent → implementer → review-agent → test-engineer）が修正を実施する
+4. 承認後、既存エージェント群（srs-writer / architect → review-agent → implementer → review-agent → test-designer → tester）が修正を実施する
 5. field-test-engineer が実機で修正を検証する
 
 **管理規則:** フィードバックの詳細なステータス遷移（13 ステータス・12 ゲート・5 禁止事項）は [実機テスト フィードバック管理規則](field-issue-handling-rules.md) を参照。
@@ -1493,8 +1493,8 @@ project_root/
   .claude/
     agents/                       ... カスタムエージェント定義
       project-manager.md             ... オーケストレーター（フェーズ遷移・意思決定）
-      srs-writer.md               ... 仕様書作成（Ch1-2）エージェント
-      architect.md                ... 仕様書詳細化（Ch3-6）エージェント
+      srs-writer.md               ... 仕様書作成（Ch1-4）エージェント
+      architect.md                ... 仕様書詳細化（Ch5-7）エージェント
       security-reviewer.md        ... セキュリティ設計エージェント
       implementer.md              ... 実装エージェント（src/ + 単体テスト）
       test-designer.md            ... テスト設計エージェント
@@ -1683,7 +1683,8 @@ Agent Teamsで作業する場合、以下のロール定義を使用する:
 - **Architect Agent（architect）**: docs/spec/ の ANMS 仕様書 Ch5-7 を詳細化（Design・Software Specification・Test Strategy）。docs/api/ にOpenAPI仕様を生成する
 - **Security Agent（security-reviewer）**: docs/security/ にセキュリティ設計を作成。実装コードの脆弱性レビューを行う。スキャン結果はproject-records/security/にsecurity-scan-reportとして記録する
 - **Implementer Agent（implementer）**: src/ 配下にコードを実装する。設計文書に従い、Clean Architecture・DIPを遵守する。単体テストも作成する
-- **Test Agent（test-engineer）**: tests/ 配下にテストを作成・実行する。カバレッジレポートを生成する
+- **Test Designer Agent（test-designer）**: 受入基準とテストケースを設計し、仕様書 Ch8-10 のケース節に書く
+- **Tester Agent（tester）**: テストを実行し、結果を仕様書 Ch8-10 の結果節に記録する
 - **Review Agent（review-agent）**: project-records/reviews/ にレビュー報告を出力する。R1〜R7の観点（SW工学原則・並行性・パフォーマンス）でレビューし、Critical/High指摘がゼロになるまで次フェーズへの移行をブロックする
 - **PM Agent（progress-monitor）**: project-management/progress/ に進捗レポートを出力する。WBS/defect curve/コストを管理する
 - **Change Manager Agent（change-manager）**: 仕様書承認後のユーザー起点の変更要求をproject-records/change-requests/に記録し、影響分析を行う。impact_level=highはユーザー承認必須。AI側の技術的変更はdefect/decisionで管理する
@@ -1900,9 +1901,9 @@ Phase 3: 結果を最終レポートに統合（project-records/reviews/）
 
 ```mermaid
 flowchart TD
-    Spec1["仕様書 Ch1-2 作成完了"]
+    Spec1["仕様書 Ch1-4 作成完了"]
     Spec1_Review{"R1レビュー<br/>PASS?"}
-    Spec2["仕様書 Ch3-6+OpenAPI+可観測性設計 完了"]
+    Spec2["仕様書 Ch5-7+OpenAPI+可観測性設計 完了"]
     Spec2_Review{"R2/R4/R5/R7レビュー<br/>PASS?"}
     Impl["実装+SCA完了"]
     Code_Review{"R2/R3/R4/R5/R7レビュー<br/>PASS?"}
@@ -1915,10 +1916,10 @@ flowchart TD
     ST["システムテスト完了"]
     TR["R6テストレビュー<br/>PASS?"]
     Final["最終R1-R7レビュー"]
-    R1Fail["仕様書 Ch1-2 修正<br/>Phase 1相当"]
-    R2Fail["仕様書 Ch3-4 修正<br/>Phase 3相当"]
-    R3Fail["コード修正<br/>Phase 4相当"]
-    R6Fail["テスト修正<br/>Phase 5相当"]
+    R1Fail["仕様書 Ch1-4 修正<br/>planning 相当"]
+    R2Fail["仕様書 Ch5-7 修正<br/>design 相当"]
+    R3Fail["コード修正<br/>implementation 相当"]
+    R6Fail["テスト修正<br/>testing 相当"]
     Deploy["デプロイメント・<br/>スモークテスト"]
     Done["納品準備完了"]
 
@@ -1996,9 +1997,11 @@ flowchart TD
 
 | 判定 | 戻し先 |
 |------|--------|
-| 仕様書 Ch5-6 を修正しなければ再発する | design |
+| 仕様書 Ch1-4（要求・UC）を修正しなければ再発する（R1 の指摘） | planning |
+| 仕様書 Ch5-7（設計・SW 仕様・テスト戦略）を修正しなければ再発する | design |
 | コードのみで解消する | implementation |
-| 両方必要 | design を優先し、実装修正を後続タスクとして紐付ける |
+| テストの側に fault がある（R6 の指摘） | testing |
+| 複数必要 | 上流を優先し、下流の修正を後続タスクとして紐付ける |
 
 review-agent が出す戻り先は推奨であり、確定は technical-authority が行う（§4.7.1）。
 
@@ -2014,13 +2017,13 @@ review-agentが適用する7つの観点。**詳細なチェックリストは `
 
 | 観点                     | 内容                                                                                                                                                            | 適用対象                  |
 | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| **R1: 要求品質**         | 完全性・テスト可能性・矛盾・曖昧表現・用語一貫性・アクセシビリティ(WCAG)                                                                                        | 仕様書 Ch1-2              |
-| **R2: SW設計原則**       | SOLID (SRP/OCP/LSP/ISP/DIP)、DRY、KISS、YAGNI、SoC、SLAP、LOD、CQS、POLA、PIE、CA、Naming、Prompt Engineering（AI/LLM連携時） | 仕様書 Ch3-4・コード      |
+| **R1: 要求品質**         | 完全性・テスト可能性・矛盾・曖昧表現・用語一貫性・アクセシビリティ(WCAG)                                                                                        | 仕様書 Ch1-4              |
+| **R2: SW設計原則**       | SOLID (SRP/OCP/LSP/ISP/DIP)、DRY、KISS、YAGNI、SoC、SLAP、LOD、CQS、POLA、PIE、CA、Naming、Prompt Engineering（AI/LLM連携時） | 仕様書 Ch5-7・コード      |
 | **R3: コーディング品質** | エラーハンドリング完全性・入力バリデーション・防御的プログラミング                                                                                              | コード                    |
-| **R4: 並行性・状態遷移** | デッドロック（リソース取得順序・長時間ロック）、レースコンディション（Check-Then-Act・DB Read-Modify-Write・Promise競合）、グリッジ（非原子更新・中間状態露出） | 仕様書 Ch3-4・コード      |
-| **R5: パフォーマンス**   | アルゴリズム計算量（O(n²)以上）、N+1クエリ、メモリリーク、不要な直列化、ネットワーク/フロントエンド最適化（overfetching・不要な再レンダリング） | 仕様書 Ch3-4・コード      |
+| **R4: 並行性・状態遷移** | デッドロック（リソース取得順序・長時間ロック）、レースコンディション（Check-Then-Act・DB Read-Modify-Write・Promise競合）、グリッジ（非原子更新・中間状態露出） | 仕様書 Ch5-7・コード      |
+| **R5: パフォーマンス**   | アルゴリズム計算量（O(n²)以上）、N+1クエリ、メモリリーク、不要な直列化、ネットワーク/フロントエンド最適化（overfetching・不要な再レンダリング） | 仕様書 Ch5-7・コード      |
 | **R6: テスト品質**       | テスト独立性・境界値・異常系・フレーキーテスト・要求カバレッジ・性能テストのNFR網羅                                                                             | テストコード              |
-| **R7: 純粋性・構造**     | 純粋性の分類（pure / semi-pure-a / semi-pure-b / non-pure）、計算ロジックへの副作用混在、収集と処理の分離、`@purity` タグ付与率、純粋性による構造分離 | 仕様書 Ch3-4・コード      |
+| **R7: 純粋性・構造**     | 純粋性の分類（pure / semi-pure-a / semi-pure-b / non-pure）、計算ロジックへの副作用混在、収集と処理の分離、`@purity` タグ付与率、純粋性による構造分離 | 仕様書 Ch5-7・コード      |
 
 ### 9.3 品質メトリクス定義
 
@@ -2084,9 +2087,9 @@ review-agentが適用する7つの観点。**詳細なチェックリストは `
 | GATE-PLANNING | planning → dependency-selection | R1 PASS、Ch1-4 のユーザー承認 | review, tech-decision |
 | GATE-INTERVIEW | planning → dependency-selection | interview-record が存在し、未解決の質問が残っていない | interview-record |
 | GATE-DEPENDENCY | dependency-selection → design | 外部依存の選定にユーザー承認がある、Adapter 層が DIP に適合（**外部依存の条件付きプロセスがすべて不成立なら、不成立の記録をもって充足とする**） | decision, tech-decision |
-| GATE-DESIGN | design → implementation | R2/R4/R5/R7 PASS、threat-model が存在し `unmitigated_critical_count` = 0、deployment-design が存在（§3.1.1 で免除した場合は免除の記録をもって充足とする） | review, threat-model, tech-decision |
+| GATE-DESIGN | design → implementation | R2/R4/R5/R7 PASS、threat-model が存在し `unmitigated_critical_count` = 0、deployment-design が存在（**条件不成立または §3.1.1 で免除した場合は、その記録をもって充足とする**）、threat-model も同じ（外部からの入力経路が無ければ不成立の記録をもって充足） | review, threat-model, tech-decision |
 | GATE-IMPL | implementation → testing | R2/R3/R4/R5/R7 PASS、SCA/SAST の Critical/High = 0（SAST が条件不成立なら記録をもって充足）、license-report に非互換ライセンスなし | review, security-scan-report, license-report |
-| GATE-TEST | testing → delivery | R6 PASS、カバレッジ目標達成、性能 NFR 充足（性能テストが条件不成立なら記録をもって充足）、traceability の全 FR にテスト対応がある | review, performance-report, traceability |
+| GATE-TEST | testing → delivery | R6 PASS、カバレッジ目標達成（**実測値は `5i` の tech-decision に転記された `5c` の値を用いる。** 単体テストは仕様書に載らないため他に記録先が無い）、性能 NFR 充足（性能テストが条件不成立なら記録をもって充足）、traceability の全 FR にテスト対応がある | review, performance-report, traceability, **tech-decision（`5i`）** |
 | GATE-DELIVERY | delivery → operation | R1-R7 最終 PASS、受入テスト合格、user-manual が存在し、runbook は条件不成立なら記録をもって充足 | review, final-report |
 | GATE-EOL | operation → 終了 | 後継システムへの移行完了、またはユーザーが EOL を承認、データ移行と保管期間の合意がある | decision |
 
@@ -2594,7 +2597,7 @@ Webで使いたい。スマホからも確認できるとうれしい。社内�
 
 ### 14.4 ステップ4: エージェントとコマンドを配置
 
-第7章のエージェント定義を `.claude/agents/` に、第8章のコマンドを `.claude/commands/` に配置する。特に **architect.md を忘れずに配置すること**（仕様書 Ch3-6 詳細化・OpenAPI仕様生成に必須）。
+第7章のエージェント定義を `.claude/agents/` に、第8章のコマンドを `.claude/commands/` に配置する。特に **architect.md を忘れずに配置すること**（仕様書 Ch5-7 詳細化・OpenAPI仕様生成に必須）。
 
 ### 14.5 ステップ5: 全自動開発を開始
 
@@ -2606,9 +2609,9 @@ claude
 以降、Claude Codeが以下を自動的に実行する:
 
 1. setup: user-order.mdバリデーション → CLAUDE.md提案 → 条件付きプロセスを評価 → ユーザーに確認
-2. planning: user-order.md + process-rules/spec-template.md を基に仕様書 Ch1-2 を作成 → R1レビュー → ユーザーに仕様書承認を求める
+2. planning: user-order.md + process-rules/spec-template.md を基に仕様書 Ch1-4 を作成 → R1レビュー → ユーザーに仕様書承認を求める
 3. dependency-selection: 外部依存の評価・選定（条件付き — HW連携・AI/LLM連携・フレームワーク要求定義が有効な場合）→ ユーザー承認
-4. design: 仕様書 Ch3-6 詳細化/OpenAPI仕様/セキュリティ設計/可観測性設計/WBSを並列作成 → 設計レビュー
+4. design: 仕様書 Ch5-7 詳細化/OpenAPI仕様/セキュリティ設計/可観測性設計/WBSを並列作成 → 設計レビュー
 5. implementation: Gitブランチ戦略に従いコード実装とテストを並列実行 → コードレビュー → SCA/シークレットスキャン
 6. testing: テスト消化曲線・defect curveを監視しながら品質を確保 → 性能テスト → テストレビュー
 7. delivery: 最終レビュー → コンテナビルド・デプロイ・スモークテスト → 最終レポートを作成し、ユーザーに受入テストを依頼
@@ -2647,11 +2650,11 @@ sequenceDiagram
     participant DW as decree-writer
 
     User->>Orch: コンセプト提示
-    Orch->>SRS: 仕様書 Ch1-2 作成を依頼
+    Orch->>SRS: 仕様書 Ch1-4 作成を依頼
     SRS->>Term: spec-foundation の用語チェックを依頼
     Term->>SRS: チェック結果を返却
-    SRS->>Orch: Ch1-2 完成を報告
-    Orch->>Review: Ch1-2 の R1 レビューを依頼
+    SRS->>Orch: Ch1-4 完成を報告
+    Orch->>Review: Ch1-4 の R1 レビューを依頼
     Review->>Orch: レビュー結果（PASS）を報告
     Orch->>PI: planning フェーズのふりかえりを依頼
     PI->>Orch: retrospective-report を提出
@@ -2673,7 +2676,7 @@ sequenceDiagram
     Orch->>User: 承認を要請（impact_level = high の場合）
 
     par 並列設計フェーズ
-        Orch->>Arch: 仕様書 Ch3-6 詳細化+OpenAPI+observability-design 作成を依頼
+        Orch->>Arch: 仕様書 Ch5-7 詳細化+OpenAPI+observability-design 作成を依頼
         Orch->>Sec: セキュリティ設計を依頼
         Orch->>PM: WBS 作成を依頼
     end
@@ -2682,8 +2685,8 @@ sequenceDiagram
     Sec->>Arch: セキュリティ要求を共有
     Arch->>Term: spec-architecture の用語チェックを依頼
     Term->>Arch: チェック結果を返却
-    Arch->>Orch: Ch3-6+OpenAPI+observability-design 完成を報告
-    Orch->>Review: Ch3-6 の R2/R4/R5/R7 レビューを依頼
+    Arch->>Orch: Ch5-7+OpenAPI+observability-design 完成を報告
+    Orch->>Review: Ch5-7 の R2/R4/R5/R7 レビューを依頼
     Review->>Orch: レビュー結果（PASS）を報告
     Orch->>PI: design フェーズのふりかえりを依頼
     PI->>Orch: retrospective-report を提出
@@ -2842,8 +2845,8 @@ PM Agent はこのスキーマに従って `project-management/progress/progress
 | エージェント名      | 役割                                                                | モデル | 区分         |
 | ------------------- | ------------------------------------------------------------------- | ------ | ------------ |
 | `project-manager`                    | プロジェクト全体のオーケストレーション、フェーズ遷移制御、意思決定記録 | opus   | コア         |
-| `srs-writer`                      | 仕様書 Ch1-2（Foundation・Requirements）の作成                        | opus   | コア         |
-| `architect`                       | 仕様書 Ch3-6 詳細化・OpenAPI仕様・マイグレーション設計                | opus   | コア         |
+| `srs-writer`                      | 仕様書 Ch1-4（Foundation・Requirements）の作成                        | opus   | コア         |
+| `architect`                       | 仕様書 Ch5-7 詳細化・OpenAPI仕様・マイグレーション設計                | opus   | コア         |
 | `security-reviewer`               | セキュリティ設計・脆弱性レビュー・SCA                                 | opus   | コア         |
 | `implementer`                     | ソースコード実装、単体テスト作成                                      | opus   | コア         |
 | `test-designer`                   | テストの受入基準とケースの設計（仕様書 Ch8-10 のケース節）             | opus   | コア         |
