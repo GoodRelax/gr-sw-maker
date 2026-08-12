@@ -1,0 +1,74 @@
+#!/bin/sh
+# Reject a commit that changes one language tree without the other.
+#
+# Install with:   git config core.hooksPath maintenance-tools/hooks
+#
+# check-parity reads the working tree, so it cannot see that a commit is
+# one-sided when the change preserves structure -- a reworded sentence in ja
+# alone passes every count. The staged-pair test below is what actually closes
+# that gap; check-parity then catches structural damage in what is staged.
+#
+# ---------------------------------------------------------------------------
+# SUSPENDED 2026-08-11, on the user's instruction (see work order 11.1).
+#
+# Why: ja is being reworked ahead of en, and en will be brought up to it in one
+# batch once the user says so. Until then every commit is one-sided by design,
+# so this hook would block all of them.
+#
+# What is suspended: the staged-pair test and the check-parity call below. Both
+# are commented out, not deleted -- the rule is still in force, only its
+# enforcement is paused. Do NOT delete the MUST text in
+# framework-development.md 5.1.
+#
+# Resume when: the user says the ja/en pause is over. Uncomment both blocks,
+# then run "node maintenance-tools/check-parity.mjs" and close whatever it reports before
+# re-enabling the hook for everyone.
+#
+# Still available meanwhile: "node maintenance-tools/check-parity.mjs" run by hand. It is
+# deliberately left working so the current gap can be measured at any time.
+# ---------------------------------------------------------------------------
+
+set -e
+
+printf 'pre-commit: ja/en pair check is SUSPENDED (work order 11.1). Run "node maintenance-tools/check-parity.mjs" to see the gap.
+'
+exit 0
+
+# set -e
+#
+# staged=$(git diff --cached --name-only --diff-filter=ACMR)
+# missing=""
+#
+# for path in $staged; do
+#   case "$path" in
+#     framework-src/*/*)
+#       lang=$(printf '%s' "$path" | cut -d/ -f2)
+#       rest=$(printf '%s' "$path" | cut -d/ -f3-)
+#       for other in $(ls framework-src); do
+#         [ "$other" = "$lang" ] && continue
+#         counterpart="framework-src/$other/$rest"
+#         [ -e "$counterpart" ] || continue
+#         printf '%s\n' "$staged" | grep -qxF "$counterpart" || missing="$missing  $counterpart\n"
+#       done
+#       ;;
+#   esac
+# done
+#
+# if [ -n "$missing" ]; then
+#   printf 'pre-commit: this commit changes one language tree without the other.\n'
+#   printf 'Not staged:\n'
+#   printf "$missing"
+#   printf '\nja and en go in the same commit (framework-development.md 5.1).\n'
+#   printf 'Override with --no-verify only when the counterpart genuinely needs no change.\n'
+#   exit 1
+# fi
+#
+# # The pair test above is pure shell and always runs. check-parity needs node,
+# # and a hook that blocks every commit when node is off PATH would be worse than
+# # the drift it prevents, so its absence is reported rather than fatal.
+# if command -v node >/dev/null 2>&1; then
+#   node maintenance-tools/check-parity.mjs
+# else
+#   printf 'pre-commit: node not found, skipping check-parity.\n'
+# fi
+#

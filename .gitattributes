@@ -1,2 +1,15 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Force LF in the working tree for everything we distribute, so that
+# setup.js / create.js output is byte-identical on every platform.
+*.md   text eol=lf
+*.js   text eol=lf
+*.mjs  text eol=lf
+*.json text eol=lf
+*.yml  text eol=lf
+
+# Git hooks have no extension, so none of the rules above reach them. Checked
+# out with CRLF they fail on Linux and macOS with "bad interpreter: /bin/sh^M",
+# which turns the hook into a no-op that still looks installed.
+maintenance-tools/hooks/* text eol=lf

@@ -1,0 +1,276 @@
+# プロジェクト: [プロジェクト名]
+
+## プロジェクト概要
+
+[ユーザーが提示するコンセプトをここに記載]
+
+## 概念の区別（重要）
+
+- **gr-sw-maker** = ツール名 / リポジトリ名 / npm パッケージ名
+- **full-auto-dev** = 手法論名（ツールに依存しない上位概念）
+- full-auto-dev を gr-sw-maker に置換してはならない。逆も同様
+- ファイル名・文書内での使い分け: ツール固有の話題には gr-sw-maker、手法論・プロセスの話題には full-auto-dev を使う
+
+## 開発方針
+
+- 本プロジェクトはほぼ全自動開発で進行する
+- ユーザーへの確認は重要判断のみに限定する
+- 軽微な技術的判断はClaude Codeが自律的に行う
+- 仕様書はdocs/spec/配下に出力する（形式はプロジェクト規模に応じて ANMS / ANPS-part / ANPS-chapter を選択）。その他の設計成果物はdocs/配下にMarkdownで出力する
+- プロセス文書（パイプライン状態、引継ぎ、進捗）はproject-management/配下に出力する
+- プロセス記録（レビュー、意思決定、リスク、defect、CR、トレーサビリティ）はproject-records/配下に出力する
+- コードはsrc/配下、テストはtests/配下、IaCはinfra/配下に配置する
+- 運用規則は以下を参照する:
+  - process-rules/full-auto-dev-process-rules.md（プロセス規則: フェーズ定義・品質管理）
+  - process-rules/full-auto-dev-document-rules.md **v0.1.0**（文書管理規則: 命名・ブロック構造・バージョニング。PoC前のPre-release）
+  - process-rules/agent-list.md（エージェント一覧: 名簿・オーナーシップ・データフロー）
+  - process-rules/prompt-structure.md（プロンプト構造規約: S0-S6）
+  - process-rules/glossary.md（用語集: 選定理由・略称判定・紛らわしい対の区別）
+  - process-rules/defect-taxonomy.md（defect 系用語の体系: error/fault/failure/defect/incident/hazard の定義と使い分け）
+  - process-rules/review-standards.md（レビュー観点規約: R1-R7）
+  - process-rules/field-issue-handling-rules.md（実機テスト フィードバック管理規則: 条件付き）
+
+## 言語設定
+
+- プロジェクト主言語: [例: ja]
+- 翻訳言語: [例: en（空欄 = 単一言語プロジェクト）]
+- 主言語のファイルはサフィックスなし。翻訳版のみ `-{lang}.md` を付与する
+- フィールド名・名前空間は英語固定。フィールド値・Detail Block・エージェントプロンプトは主言語で記述する
+
+## 開発方式
+
+Phase 1 の `1e` で判定し、ここに記録する（プロセス規則 §3.1.1）。
+
+- 判定結果: [簡易 / 標準 / 厳格 のいずれか。**記入必須**]
+- 判定の根拠: [期間・モジュール数・外部依存・Critical のどれで決まったか]
+- Critical: [有効 / 無効。有効なら期間・規模によらず厳格]
+- 免除した成果物: [免除マトリクスで免除にしたものを列挙する。**記録なき免除は規約違反**]
+
+**方式は `簡易` / `標準` / `厳格` の 3 つだけである。他の区分名を使ってはならない（MUST NOT）。**
+
+## 仕様形式の選択
+
+プロジェクト規模に応じて仕様形式を選択する:
+
+| レベル | 略称 | 正式名称 | 表現 | 規模 |
+|--------|------|----------|------|------|
+| 1 | ANMS | AI-Native Minimal Spec | 単一Markdownファイル | 1コンテキストウィンドウに収まる |
+| 2 | ANPS-part | AI-Native Plural Spec（部で分割） | 4 枚（3 部 ＋ 付録） | 1 コンテキストに収まらない |
+| 3 | ANPS-chapter | AI-Native Plural Spec（章で分割） | 14 枚 | 章ごとに独立して育てる規模 |
+> **ANGS（GraphDB 方式）は研究段階であり、選択肢から外した**（2026-08-12 決定）。`spec_format` の値域にも含まれない。
+
+- テンプレート: process-rules/spec-template.md
+- setup フェーズでユーザーと規模を判断し、形式を決定する
+
+## 技術スタック
+
+- 言語: [例: TypeScript]
+- フレームワーク: [例: Next.js 15]
+- データベース: [例: PostgreSQL]
+- テストフレームワーク: [例: Vitest]
+- 性能テスト: [例: k6]
+- コンテナ: [例: Docker / docker-compose]
+- IaC: [例: Terraform]
+- CI/CD: [例: GitHub Actions]
+- 可観測性: [例: OpenTelemetry + Grafana]
+
+## ブランチ戦略
+
+- メインブランチ: main（直接コミット禁止）
+- 開発ブランチ: develop（統合ブランチ）
+- 機能ブランチ: feature/{issue番号}-{説明}（develop から分岐）
+- defect 修正ブランチ: fix/{issue番号}-{説明}
+- リリースブランチ: release/v{バージョン}（develop から分岐）
+- PRマージ: develop → main は review-agent PASS 後にのみ許可
+- Agent Teams の並列実装: git worktree を使用し、各エージェントは専用ブランチで作業
+
+## コーディング規約
+
+- [プロジェクト固有のルール]
+- Linter: [例: ESLint（JS/TS） / Ruff（Python） / clippy（Rust）]。**言語に応じて setup フェーズで選定し、決定を記録する**
+- すべての公開関数にJSDocコメントを付与する
+- エラーハンドリングは明示的に行う
+- ログ出力: [例: 構造化ログ（JSON形式）、`console.log` 禁止（常駐サービス） / 標準出力が成果物のため対象外（CLI）]。同上
+- **命名は言霊:** `type`, `data`, `info`, `value` 等の意味を持たない汎用語は禁止。名前は「それが何か」を一目で伝えること。何の種別かをドメインで限定する（例: `status` → `decision_status`）。**品詞とレイヤー別の命名は review-standards の R2.1 Naming 節に従う**（クラスは名詞句、Use Case は動詞句、イベントは過去形、単位が固定の量は名前に単位）
+- **AI/LLMプロンプト配置原則:** 製品のプロンプトは `src/` 配下（コードと同等）。プロジェクトを回すプロンプトは `.claude/` 配下（メタレイヤー）。混在させない
+
+## セキュリティ要求
+
+- 適用する脅威分類: [例: OWASP Top 10（Web） / 入力検証とパストラバーサル対策（CLI・ライブラリ）]。**setup フェーズで選定し、決定を記録する。** 攻撃面のないプロジェクトに Web 由来の項目を機械的に当てはめない
+- 認証方式: [例: JWT / セッション Cookie / OAuth 2.0 + OIDC]。**setup フェーズで選定し、決定を記録する。** 方式によって脅威モデルが変わるため、既定値を無条件に採らない
+- 入力値は必ずバリデーションする
+- SQLインジェクション対策: 永続ストアを使う場合はパラメタライズドクエリを使用する。**使わない場合は該当なしとして決定を記録する**
+- SAST: CodeQL（GitHub Actions で自動実行）
+- SCA: npm audit / Snyk（依存関係追加時に必ず実行）
+- シークレットスキャン: git-secrets または truffleHog（コミット前フック）
+- スキャン結果: project-records/security/ に記録する（SAST/SCA/シークレットスキャン）
+
+## 品質目標（全品質ゲートの Single Source of Truth）
+
+setup フェーズでユーザーと合意する。全エージェントおよび品質ゲートはこのセクションの閾値を参照する。
+
+| 指標 | 目標値 | 備考 |
+|------|--------|------|
+| 単体テスト合格率 | [例: 95%] 以上 | 全ビジネスロジック |
+| 結合テスト合格率 | [例: 100%] | APIエンドポイント |
+| コードカバレッジ | [例: 80%] 以上 | カバレッジツール |
+| E2Eテスト | 主要ユーザーフロー PASS | Ch8 ユースケーステストに対応 |
+| 性能テスト | NFR数値目標をすべて達成 | [例: k6] |
+| セキュリティ脆弱性 | Critical: 0, High: 0 | SAST/SCA スキャン結果（`security-scan-report`）。**重大度はスキャナ自身の格付けに従う。** CodeQL と npm audit では格付けが異なるため、**ツールと尺度を setup フェーズで選定し、決定を記録する** |
+| レビュー指摘 | Critical: 0, High: 0 | review-agent の出力 |
+| コーディング規約準拠 | 違反 0 件 | Linter 実行結果 |
+| コスト予算 | [記入必須: 例 50 USD] | アラート閾値の分母。cost-log.json の `budget_usd` に転記する。**未記入だと下行の相対閾値が比較対象を持たない** |
+| コスト予算アラート閾値 | 予算の [記入必須: 例 80%] | ユーザー通知をトリガー。**プレースホルダのままにしてはならない（MUST NOT）。** 未記入だと progress-monitor が比較対象を持たず、アラートが恒久的に発火しない |
+| コンテキスト使用率の引継ぎ閾値 | [記入必須: 例 80%] | 到達時に **`session-handoff`** を作成して再開点を残す（`handoff` とは別の file_type）。**比較する値は `tools/session-meter.mjs` が実測して書く `context_used_pct` だけである**（プロセス規則 §4.0.3）。**モデル自身の体感を閾値と比較してはならない（MUST NOT）。** statusLine が発火しない環境では `context_used_pct` が生まれないので、代わりに `compaction_count` の増加を契機とする |
+| パッチ対応時間 | Critical: [例: 48h], High: [例: 1週間] | operation フェーズのみ |
+
+## APIドキュメント
+
+- API 仕様: [例: OpenAPI 3.0 を docs/api/ に出力（HTTP API を持つ場合） / 該当なし（CLI・ライブラリ・バッチ）]。**setup フェーズで判断し、決定を記録する**
+- architect エージェントが仕様書 Ch5-6 詳細化と同時に生成する
+- 実装完了後 test-designer が結合テストのケースを起こし、tester が実行してエンドポイントとの整合性を検証する
+
+## 可観測性要求
+
+- 可観測性の適用範囲: [例: 常駐サービス（下記すべて） / ローカル実行（stdout・stderr・終了コードのみ）]。**setup フェーズで選定し、決定を記録する**
+- ログ: 構造化JSON形式、DEBUG/INFO/WARN/ERROR の4レベル
+- メトリクス: RED（Rate/Error/Duration）メトリクスを全APIに計装
+- トレーシング: OpenTelemetryでリクエスト追跡
+- アラート: エラーレート1%超、P99レイテンシがSLA超過でアラート
+
+## Agent Teams 設定
+
+Agent Teamsで作業する場合、以下のロール定義を使用する:
+
+- **Project Manager Agent（project-manager）**: プロジェクト全体のオーケストレーション。pipeline-state.md / executive-dashboard.md / final-report.md / decision記録を管理する。フェーズ遷移と品質ゲートを制御する。`.claude/agents/project-manager.md` で定義
+- **SRS Agent（srs-writer）**: user-order.md（3問形式）+ process-rules/spec-template.md を基に、仕様書を docs/spec/ に作成（Ch1-4 Foundation・System Overview・Use Cases・Requirements、形式はsetupフェーズで選定）。ユーザーコンセプトを構造化する
+- **Architect Agent（architect）**: docs/spec/ の ANMS 仕様書 Ch5-7 を詳細化（Design・Software Specification・Test Strategy）。docs/api/ にOpenAPI仕様を生成する
+- **Security Agent（security-reviewer）**: docs/security/ にセキュリティ設計を作成。実装コードの脆弱性レビューを行う。スキャン結果はproject-records/security/にsecurity-scan-reportとして記録する
+- **Implementer Agent（implementer）**: src/ 配下にコードを実装する。設計文書に従い、Clean Architecture・DIPを遵守する。単体テストも作成する
+- **Test Designer Agent（test-designer）**: 受入基準とテストケースを設計し、仕様書 Ch8-10 のケース節に書く。traceability と test-plan を所有する
+- **Tester Agent（tester）**: テストを実行し、結果を仕様書 Ch8-10 の結果節に記録する。defect と performance-report を所有する
+- **Review Agent（review-agent）**: project-records/reviews/ にレビュー報告を出力する。R1〜R7の観点（SW工学原則・並行性・パフォーマンス）でレビューし、Critical/High指摘がゼロになるまで次フェーズへの移行をブロックする
+- **PM Agent（progress-monitor）**: project-management/progress/ に進捗レポートを出力する。WBS/defect curve/コストを管理する
+- **Change Manager Agent（change-manager）**: 仕様書承認後のユーザー起点の変更要求をproject-records/change-requests/に記録し、影響分析を行う。impact_level=highはユーザー承認必須。AI側の技術的変更はdefect/decisionで管理する
+- **Risk Manager Agent（risk-manager）**: project-records/risks/にリスクエントリを記録し、risk-register.mdを管理する。score≧6はユーザーに通知
+- **License Checker Agent（license-checker）**: 依存ライブラリ追加時にライセンス互換性を確認し、帰属表示を管理する
+- **Terminology Checker Agent（terminology-checker）**: 成果物の用語・命名がフレームワーク用語集およびプロジェクト用語集に準拠しているかチェックする
+- **User Manual Writer Agent（user-manual-writer）**: delivery フェーズでユーザーマニュアルを docs/ に作成する
+- **Runbook Writer Agent（runbook-writer）**: delivery フェーズで運用手順書を docs/operations/ に作成する
+- **Incident Reporter Agent（incident-reporter）**: operation フェーズで incident 報告書を project-records/incidents/ に作成する
+- **Process Improver Agent（process-improver）**: 各フェーズ完了時にふりかえりを実施し、defect パターンの根本原因分析とプロセス改善策を提案する
+- **Decree Writer Agent（decree-writer）**: 承認済みの改善策をガバナンスファイル（CLAUDE.md、エージェント定義、process-rules）に安全に適用する。自己変更禁止・品質ゲート保護等の安全チェックを経て変更を実行し、before/after diff を記録する
+- **Field Test Engineer Agent（field-test-engineer）**（条件付き: 実機テスト有効時）: ユーザーとの実機テスト、フィードバック記録、修正後の実機検証を行う。field-issue チケットの owner
+- **Feedback Classifier Agent（feedback-classifier）**（条件付き: 実機テスト有効時）: フィードバックを仕様書と照合し defect / CR / 質問に分類する
+- **Field Issue Analyst Agent（field-issue-analyst）**（条件付き: 実機テスト有効時）: 原因分析（defect）、対策立案（defect / CR）、影響範囲・副作用・代替案比較を行う
+
+## 重要判断の基準
+
+以下の場合はユーザーに確認を求めること:
+
+- アーキテクチャに関する根本的な選択
+- 外部依存（HW/AI/フレームワーク）の選定（dependency-selection フェーズ）
+- 外部サービス/APIの選定
+- セキュリティモデルの重大な変更
+- 予算やスケジュールに影響する判断
+- 要求の曖昧さにより複数の解釈が可能な場合
+- リスクスコア6以上のリスクが発生した場合
+- コスト予算が上記「品質目標」のアラート閾値に到達した場合
+- 変更要求の影響度がHighの場合
+
+以下の場合はClaude Codeが自律的に判断してよい:
+
+- ライブラリの具体的なバージョン選定
+- コードのリファクタリング方針
+- テストケースの設計
+- ドキュメントの構成
+- defect 修正の方法
+
+## 必須プロセス設定（process-rules/full-auto-dev-process-rules.md 第3章参照）
+
+- 変更管理: 仕様書承認後の変更はchange-managerエージェント経由で処理する
+- リスク管理: planning フェーズ完了時にリスク台帳を作成し、各フェーズ開始時に更新する
+- トレーサビリティ: 要求ID→設計ID→テストIDの対応をproject-records/traceability/に記録する
+- 問題管理: defect は project-records/defects/ に defect 票として記録し、根本原因分析を行う
+- ライセンス管理: 依存ライブラリ追加時にlicense-checkerエージェントを実行する
+- 監査記録: 重要判断はproject-records/decisions/に記録する
+- コスト管理: APIトークン消費をproject-management/progress/cost-log.jsonに記録する
+
+## 条件付きプロセス（setup フェーズで判断）
+
+以下は該当する条件が存在する場合のみ有効化する:
+- 法的調査: [有効/無効] - 理由: [記載]
+- 特許調査: [有効/無効] - 理由: [記載]
+- 技術動向調査: [有効/無効] - 理由: [記載]
+- 機能安全(HARA/FMEA/FTA): [有効/無効] - 理由: [記載]
+- アクセシビリティ(WCAG 2.1): [有効/無効] - 理由: [記載]
+- HW連携: [有効/無効] - 理由: [記載]
+- AI/LLM連携: [有効/無効] - 理由: [記載]
+- フレームワーク要求定義: [有効/無効] - 理由: [記載]
+- HW生産工程管理: [有効/無効] - 理由: [記載]
+- 製品i18n/l10n: [有効/無効] - 理由: [記載]
+- 認証取得: [有効/無効] - 理由: [記載]
+- 運用・保守: [有効/無効] - 理由: [記載]
+- 実機テスト: [有効/無効] - 理由: [記載]
+
+## ドキュメントの記法規約（常時適用）
+
+**すべての生成文書に適用する。** 以下は文書の中身の書き方であり、外側の囲みとは独立している。
+
+- **推測や創作を出力してはならない（MUST NOT）。** 不明な点や調査が必要な点は、その旨を明記する
+- 図は原則 Mermaid を用いる。Mermaid で表現できない場合のみ PlantUML を用いる
+- コードと図はそれぞれ三重バッククォートのコードブロックに入れ、言語またはファイル種別を指定する
+- 各コードブロック・図の直前に `**タイトル:**` 形式の見出しを置く
+- 説明はコードブロックの外に、ブロック直後の空行を挟んで書く
+
+### Code and Diagram Block Rules
+
+- As a rule, use Mermaid for diagrams. Use PlantUML only when the diagram cannot be expressed in Mermaid.
+- Any diagrams or software code inside the Markdown must each be enclosed in their own code blocks using triple backticks ` ``` `.
+- Each code block must specify a language or file type (e.g., ` ```python ` or ` ```mermaid `).
+- Each code or diagram block must be preceded by a descriptive title in the format **title:**
+  (e.g., `**System Architecture:**`, `**Login Flow:**`)
+- Always follow the structure below for every code or diagram block:
+
+  > **title:**
+  >
+  > ```language
+  > (code or diagram content here without truncation or abbreviation)
+  > ```
+  >
+  > Write the explanation for the code block here, immediately after the block, following a blank line.
+
+- Do not write explanations inside the code blocks.
+- In all diagrams, use alphanumeric characters and underscores (`_`) by default; non-ASCII plain text (no spaces) is permitted when necessary. Special symbols (e.g., `\`, `/`, `|`, `<`, `>`, `{`, `}`) are strictly prohibited.
+- Output all diagram content without omission. Never use `...` or any shorthand.
+
+### Diagram Label and Notation Rules
+
+- All arrows and relationship lines in diagrams MUST have labels. Follow these notation rules:
+  1. Mermaid `flowchart` and `graph`: place the label inside the arrow using pipes (e.g., `A -->|Label| B`)
+  2. Other Mermaid diagrams / All PlantUML: place the label after the arrow using a colon (e.g., `A --> B : Label`)
+- For line breaks in labels or node text:
+  1. Mermaid: use `<br/>` inside a quoted string (e.g., `A -->|"Line1<br/>Line2"| B`, `A["Line1<br/>Line2"]`)
+  2. PlantUML: use `\n` (e.g., `A -> B : Line1\nLine2`)
+
+### Math Rules
+
+- Use standard LaTeX notation for all mathematical formulas.
+  1. Inline math: always use single dollar signs. Place a space before the opening `$`
+     and a space after the closing `$`
+     (e.g., `The function is $y = x + 1$ here.`)
+  2. Block equations: always place `$$` on its own line, above and below the formula.
+     Example:
+     > $$
+     > E = mc^2
+     > $$
+
+## ドキュメントの外殻規約（要求時のみ適用）
+
+**ユーザーが「1 回でコピーできる形」を明示的に要求した場合にのみ適用する。**
+
+- 文書全体を六重バッククォート ` `````` ` で囲み、言語を markdown と指定する
+- 六重バッククォートは最外殻に 1 回だけ使う
+- この形式を **MCBSMD**（Multiple Code Blocks in a Single Markdown）と呼ぶ
+
+> **リポジトリにコミットする文書には外殻を付けない（MUST NOT）。** 六重バッククォートで囲んだまま `.md` として保存すると、GitHub では全文が 1 つのコードブロックとして表示され、見出しも表もリンクも機能しなくなる。外殻はチャット上で受け渡すときの梱包であって、文書の一部ではない。

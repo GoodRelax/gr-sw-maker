@@ -1,0 +1,192 @@
+[GRAMMAR]
+ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+- TAG: GOAL
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: USE_CASE
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: SCENARIO
+    TYPE: String
+    REQUIRED: True
+  - TITLE: EXTENSIONS
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Satisfies
+- TAG: FUNC_REQ
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: ORIGIN
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Satisfies
+- TAG: NON_FUNC_REQ
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: ORIGIN
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Satisfies
+- TAG: SW_SPEC
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Satisfies
+- TAG: USE_CASE_TEST
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: GIVEN
+    TYPE: String
+    REQUIRED: True
+  - TITLE: WHEN
+    TYPE: String
+    REQUIRED: True
+  - TITLE: THEN
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Verifies
+  - TYPE: File
+- TAG: SW_SPEC_TEST
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TEST_LEVEL
+    TYPE: SingleChoice(Integration, System)
+    REQUIRED: True
+  - TITLE: GIVEN
+    TYPE: String
+    REQUIRED: True
+  - TITLE: WHEN
+    TYPE: String
+    REQUIRED: True
+  - TITLE: THEN
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Verifies
+  - TYPE: File
+- TAG: NON_FUNC_TEST
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: GIVEN
+    TYPE: String
+    REQUIRED: True
+  - TITLE: WHEN
+    TYPE: String
+    REQUIRED: True
+  - TITLE: THEN
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Verifies
+  - TYPE: File
+- TAG: TEST_RESULT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: RESULT
+    TYPE: SingleChoice(PASS, CONDITIONAL, FAIL, SKIP)
+    REQUIRED: True
+  - TITLE: EXECUTED_ON
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TESTED_VERSION
+    TYPE: String
+    REQUIRED: True
+  - TITLE: ENVIRONMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: EVIDENCE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: REMARK
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: ResultOf

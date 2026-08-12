@@ -1,4 +1,3 @@
-````markdown
 ## Draft (alpha version, work in progress)
 
 # ANGS (AI-Native Graph Spec) — Specification Management and Agent Coordination via Graph Structure
@@ -64,6 +63,8 @@ The three are used according to scale. ANPS fills the gap between ANMS and ANGS 
 
 We define the three elements involved in specification management — Markdown, Git, and GraphDB — as three categories in category theory.
 
+**How category theory is used in this paper:** this design uses category theory as a **conceptualization tool** — a language for describing the relationship between the three elements uniformly and for detecting a break in commutativity at design level. Formal proof of the category axioms (associativity, identity) is out of scope, and whether the morphisms (diffs) of $\mathcal{V}$ (Git) strictly satisfy them needs further verification. The commutativity condition $F \circ H \cong J$ serves as a guide for consistency tests in an implementation, not as a mathematical proof of equivalence.
+
 | Category                   | Managed Aspect        | Objects                       | Morphisms                |
 | -------------------------- | --------------------- | ----------------------------- | ------------------------ |
 | $\mathcal{M}$ (Markdown)   | Representation (view) | Specification sections with IDs | Cross-references between sections |
@@ -120,6 +121,8 @@ An essential corollary derived from the triangular relationship: Markdown is not
 
 This justifies an architecture where agents operate directly on the graph, and MD is generated only when humans want to review.
 
+**The gap with today's tooling:** as of 2026, the major AI coding agents are designed around Markdown files as their primary input. No agent that takes query results directly from a GraphDB and reasons over them is in practical use. The "MD is a view" principle therefore carries an impedance mismatch with the current toolchain. In the short term the workable arrangement is for the organizer to extract a subgraph and render it to Markdown for the sub-agent — that is, to use MD temporarily as the serialization format between agents.
+
 ### 2.3 GraphDB Version Management Is Delegated to Git
 
 Adding history management features (Temporal Tables, etc.) to GraphDB would complicate the schema. GraphDB is kept focused on referencing "the current specification structure," with version management delegated to Git.
@@ -130,6 +133,10 @@ Adding history management features (Temporal Tables, etc.) to GraphDB would comp
 | Structural reference   | GraphDB ( $\mathcal{G}$ )   | Structure traversal, dependency queries  |
 
 When a past graph is needed, it can be restored using the $J: \mathcal{V} \to \mathcal{G}$ functor (Git → GraphDB rebuild) defined in Section 2.1. Git here serves as a backup and version management tool, nothing more. The GraphDB schema can focus solely on "the current structure," greatly simplifying the design.
+
+**Read as CQRS, and its cost:** separating the read side (GraphDB) from the change history (Git) corresponds to the CQRS[3] arrangement. Martin Fowler warns that "CQRS adds a complexity that is an excessive risk for most systems." This design adopts the separation anyway because specification management is an inherently read-heavy domain: agents consult the specification constantly, while changes pass through human review and are infrequent. That read/write asymmetry is what justifies the trade-off. At a scale that fits in a single context window, the single Markdown file of the first paper is the right answer and this separation is unnecessary.
+
+**The granularity gap in treating Git as an event store:** an Event Store under CQRS is an append-only log of domain events ("requirement FR-042 was added", "the dependency of component CMP-003 changed"), optimized for replaying past states. A Git commit is a file diff, and one commit can carry several domain events at once. We recognize this granularity gap as an implementation problem. One approach is to carry structured domain-event tags in the commit message (e.g. `[ADD:FR-042] [MOD:CMP-003:depends_on]`) and have the $J$ functor parse them into graph operations. Whether that works needs implementation verification.
 
 ### 2.4 Any GraphDB Will Do (as Long as It's Replaceable)
 
@@ -577,11 +584,35 @@ ANMS (single-MD scale) and ANGS (graph scale) are proposals for constraints in t
 
 Just as type systems constrain C's memory operations, ANGS's graph schema constrains AI Coding's specification interpretation. Just as SOLID principles give structure to object-oriented complexity, STFB and CA dependency direction give structure to inter-agent coordination.
 
-This is not a peculiar proposal. It is the next step in the consistent pattern throughout the history of programming: "raise abstraction, guarantee quality with constraints."
+ANMS and ANGS sit on the continuation of this lineage. Against the historical pattern that rising abstraction demands new constraints, they offer one proposal for the constraints of the AI Coding generation. It is not the only answer, and there is no guarantee it is the best one. But the direction — answering a structural problem (lost context, then an implementation that contradicts the specification) with a structural constraint — is consistent with the path earlier generations took.
 
 ---
 
-## 7. Conclusion
+## 7. Limitations and Future Work
+
+### 7.1 No Implementation Verification
+
+This paper is a design argument and carries no verification by implementation. Without it, the following claims remain theoretical proposals.
+
+| Claim | What verification requires |
+| ----- | -------------------------- |
+| A break in commutativity $F \circ H \ncong J$ is effective at detecting defects | Implementing the F, H and J functors and measuring the inconsistency detection rate |
+| Context minimization via the forgetful functor suppresses contradictory implementations | Comparing implementation quality under full versus minimized context |
+| The unified STFB x CA direction constraint prevents dependency violations | Detecting constraint violations on the graph, and comparing implementation quality against specifications that contain them |
+
+A reference implementation and pilot verification on a mid-sized project (roughly 50-200 requirements) is planned as future work.
+
+### 7.2 The Cost of the Four-Component Arrangement
+
+GraphDB + Git + organizer + Markdown renderer costs substantially more to adopt than a single Markdown file. Identifying the project scale at which that cost is justified — in requirement count and agent count — is also future work.
+
+### 7.3 Formal Verification of the Category Theory
+
+As stated in Section 2.1, this paper uses category theory as a conceptualization tool and offers no formal proof that $\mathcal{M}$ , $\mathcal{G}$ and $\mathcal{V}$ strictly satisfy the category axioms. Whether composition of morphisms in $\mathcal{V}$ (Git) is associative depends on how a diff is represented and in what order diffs apply, and needs further formal treatment.
+
+---
+
+## 8. Conclusion
 
 This paper presented ANGS (AI-Native Graph Spec) as a method for applying ANMS to large-scale software.
 
@@ -612,4 +643,3 @@ This paper presented ANGS (AI-Native Graph Spec) as a method for applying ANMS t
 3. Young, G. "CQRS Documents" — Command Query Responsibility Segregation
 4. Mavin, A., et al. "EARS: Easy Approach to Requirements Syntax" — IEEE, 2009
 5. Cucumber. "Gherkin Reference"
-````

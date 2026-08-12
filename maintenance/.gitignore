@@ -1,0 +1,38 @@
+# StrictDoc's export and Python's cache. Both are regenerated on every run and
+# neither is source.
+#
+# Only output/strictdoc/ is excluded, not output/ itself: the folder may well
+# hold something that was put there on purpose. The leading **/ makes the rule
+# reach every spec folder under maintenance/, which one anchored rule cannot do
+# from here.
+#
+# Anything that writes into a spec folder must aim at output/strictdoc/. A bare
+# "strictdoc export <folder>" with no --output-dir scatters _cache/ and html/
+# straight into output/, which this does not catch - and that showing up in
+# git status is the signal that the wrong command was used.
+
+**/output/strictdoc/
+__pycache__/
+
+# The two below are NOT generated output, and they are a pair - track both or
+# ignore both, never one of them.
+#
+#   strictdoc_config.py   Configuration. It carries project_title and the set of
+#                         screens that are enabled, and it is meant to be edited.
+#   strictdoc-theme.css   Colour, rewritten by StrictDocStarter on every open.
+#                         strictdoc_config.py names it in custom_css_path, and
+#                         StrictDoc validates that path: with the config present
+#                         and the theme missing, export fails outright with
+#                         "config: custom_css_path: invalid path to a CSS file".
+#
+# They are ignored here because the folders under maintenance/ are measurement
+# snapshots - what they have to prove is that the export passes and the chain is
+# right, which needs neither file. Dropping the config costs three of StrictDoc's
+# screens (measured: 8 HTML files become 5); that is acceptable for a snapshot
+# and would not be for a real project.
+#
+# A project that people actually open must track both. See
+# prompt/handoff-2026-08-09-strictdoc-starter.md section 4.
+
+strictdoc_config.py
+strictdoc-theme.css

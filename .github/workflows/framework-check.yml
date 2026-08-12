@@ -1,0 +1,74 @@
+name: framework-check
+
+# These checks guard the framework repository, not a project built with it.
+# create.js removes .github/ from a generated project for that reason.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Nothing else runs if a script cannot be parsed, and a broken setup.js
+      # would make every check below fail for the wrong reason.
+      - name: syntax
+        run: |
+          for file in $(git ls-files '*.js' '*.mjs'); do
+            node --check "$file"
+          done
+
+      # Language tree parity and structural parity: same files, same shape.
+      - name: parity
+        run: node maintenance-tools/check-parity.mjs
+
+      # Agent roster, and the review perspective wiring that a grep for the old
+      # R1-R6 range cannot see.
+      - name: roster
+        run: node maintenance-tools/check-roster.mjs
+
+      # Dead links, and section citations that point at nothing.
+      - name: links
+        run: node maintenance-tools/check-links.mjs
+
+      # Form Block tag names that no Fields table defines.
+      - name: tagnames
+        run: node maintenance-tools/check-tagnames.mjs
+
+      # Terms the glossary rejected, which reached four phases of the trial
+      # before anything looked for them.
+      - name: terms
+        run: node maintenance-tools/check-terms.mjs
+
+      # Deploy fidelity, idempotency, language switching, and the .bak that
+      # protects an edited user-order.md.
+      - name: setup
+        run: node maintenance-tools/check-setup.mjs
+
+      # The work tables are the run path. A row naming a retired agent or an
+      # unregistered file_type produces a request that cannot be carried out.
+      - name: mode-matrix
+        run: node maintenance-tools/check-mode-matrix.mjs
+
+      # A file_type is described in five tables. Registering it in four of them
+      # leaves an agent with no way to decide what to write.
+      - name: registry
+        run: node maintenance-tools/check-registry.mjs
+
+      # The only mechanism that refuses work. Its three tables restate 9.4.1 and
+      # the porting guide; nothing compared them, so emptying ALWAYS_ALLOWED
+      # disabled the guard outright with every check still green.
+      - name: gate-guard
+        run: node maintenance-tools/check-gate-guard.mjs
+
+      # The generated work tables must match the source they were split from.
+      - name: work-table
+        run: node maintenance-tools/split-work-table.mjs --check

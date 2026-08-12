@@ -12,8 +12,17 @@
   "homepage": "https://github.com/GoodRelax/gr-sw-maker",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GoodRelax/create-gr-sw-maker.git"
+    "url": "git+https://github.com/GoodRelax/gr-sw-maker.git",
+    "directory": "create-gr-sw-maker"
   },
+  "bugs": {
+    "url": "https://github.com/GoodRelax/gr-sw-maker/issues"
+  },
+  "files": [
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
   "bin": {
     "create-gr-sw-maker": "bin/create.js"
   },

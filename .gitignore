@@ -1,8 +1,7 @@
-# Old
+# Scratch copies. This repository does not run the full-auto-dev process on
+# itself, so nothing here is the archive that Document Rules 3.10 requires;
+# a user project tracks its old/ instead (see gitignore-user.template).
 old/
-
-# Claude Code local settings
-.claude/settings.local.json
 
 # Dependencies
 node_modules/
@@ -16,22 +15,30 @@ coverage/
 *.pem
 *.key
 
-# === Framework repo only (create.js removes everything below this line) ===
+# Claude Code local settings
+.claude/settings.local.json
+
+# Rewritten by tools/otel-sink.mjs as telemetry arrives, and on the CLI also by
+# tools/session-meter.mjs. progress-monitor distills it into cost-log.json,
+# which is the record worth keeping; this file is the live reading.
+project-management/progress/session-state.json
 
 # Framework development private files (not distributed)
 prompt/
 maintenance/temporary/
-CLAUDE.md
 
-# setup.js deploy outputs (suffix-less copies of -ja/-en originals)
-# In user projects, these ARE the working files — create.js removes these rules.
-.claude/agents/*.md
-!.claude/agents/*-ja.md
-!.claude/agents/*-en.md
-.claude/commands/*.md
-!.claude/commands/*-ja.md
-!.claude/commands/*-en.md
-process-rules/*.md
-!process-rules/*-ja.md
-!process-rules/*-en.md
-user-order.md
+# setup.js deploy outputs.
+# The originals live under framework-src/{lang}/ and ARE tracked.
+# The leading "/" anchors each rule to the repo root so framework-src/ is untouched.
+/.claude/agents/
+/.claude/commands/
+/process-rules/
+/CLAUDE.md
+/user-order.md
+
+# setup.js writes these when it overwrites an edited CLAUDE.md or user-order.md.
+# They are backups of a deploy output, so they are output too -- but the rules
+# above are anchored to the exact file name and never covered them, and a
+# tracked CLAUDE.md.bak came back as a modified file on every re-deploy.
+/CLAUDE.md.bak
+/user-order.md.bak
