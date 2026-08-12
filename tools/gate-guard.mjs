@@ -113,7 +113,12 @@ function readStdin() {
  * gate that has not passed -- the direction the rules already take.
  */
 function formBlock(text, namespace) {
-  const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text);
+  // A BOM or a blank first line would otherwise make the frontmatter
+  // unreadable, and an unreadable review reads as a gate that never passed --
+  // shutting a gate whose evidence is in fact on disk. Neither is a defect in
+  // the review, so neither should cost the run.
+  const source = text.replace(/^﻿/, "").replace(/^\s*\n/, "");
+  const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(source);
   if (!frontmatter) return null;
 
   const lines = frontmatter[1].split(/\r?\n/);
@@ -177,6 +182,16 @@ function fieldRegion(block, name) {
  * evidence collected for an earlier one.
  */
 function gatePassed(projectDir, gate) {
+  // A path guarded by a gate this file does not describe cannot be judged.
+  // Failing here would throw, and a thrown hook exits non-2, which does not
+  // block -- so the write would pass with no record of why. Say so instead.
+  if (!GATE_PERSPECTIVES[gate] || !GATE_TRANSITIONS[gate]) {
+    process.stderr.write(
+      `gate-guard: ${gate} は GATE_PERSPECTIVES / GATE_TRANSITIONS に定義が無い。判定できないため許可する\n`
+    );
+    return true;
+  }
+
   const dir = resolve(projectDir, "project-records", "reviews");
   if (!existsSync(dir)) return false;
 

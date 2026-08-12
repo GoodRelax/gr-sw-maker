@@ -12,7 +12,7 @@
 
 すべてのエージェントは管理対象ファイルの作成・更新時にこのルールに従わなければならない（MUST）。
 
-プロセスが使う仕様書の形態（ANMS / ANPS / ANGS）にかかわらず、本文書の文書管理フォーマット（Common Block・Form Block等）はすべての管理対象文書に適用される。
+プロセスが使う仕様書の形態（ANMS / ANPS-part / ANPS-chapter）にかかわらず、本文書の文書管理フォーマット（Common Block・Form Block等）はすべての管理対象文書に適用される。
 
 **関連文書:** [プロセス規則](full-auto-dev-process-rules.md) — フェーズ定義・エージェント定義・品質管理等のプロセスルール
 
@@ -206,7 +206,7 @@ process-rules/ 配下の全ファイル（本文書を含む）に適用する�
 
 ## 3.4 仕様書（docs/spec/）
 
-プロジェクトの要求・設計仕様。仕様フォーマット（ANMS/ANPS/ANGS）に依存する。
+プロジェクトの要求・設計仕様。仕様フォーマット（ANMS / ANPS-part / ANPS-chapter）に依存する。
 
 **フォーマット:**
 
@@ -430,7 +430,7 @@ srs-writer が Ch1-4 を作成、architect が Ch5-7 を詳細化。
 
 | 情報 | 候補 | 判断 | 理由 |
 |------|------|------|------|
-| 仕様形式（ANMS/ANPS） | Form? Detail? | **Form Block** (`spec-foundation:spec_format`) | エージェントが読取方法を判断 |
+| 仕様形式（ANMS / ANPS-part / ANPS-chapter） | Form? Detail? | **Form Block** (`spec-foundation:spec_format`) | エージェントが読取方法を判断 |
 | 完成済みチャプター（Ch1-4内） | Form? Detail? | **Form Block** (`spec-foundation:completed_chapters`) | architectが引継ぎ可能か判断。document_status とは別概念（文書全体 vs チャプター単位） |
 | 完成済みチャプター | Form? Detail? | **Form Block** (`spec-architecture:completed_chapters`) | architectが作業開始位置を判断 |
 | 機能要求数 / 非機能要求数 | Form? Detail? | **Form Block** (`spec-foundation:fr_count`, `spec-foundation:nfr_count`) | traceabilityカバレッジ算出の母数 |
@@ -817,7 +817,8 @@ external-dependency-spec（抽象テンプレート）
 
 | フェーズ名 | 意味 |
 |-----------|------|
-| `phase-setup` | セットアップ・プロセス評価 |
+| `phase-install` | インストール（フレームワークの配置） |
+| `phase-setup` | 初期設定・プロセス評価 |
 | `phase-planning` | 企画（インタビュー＆仕様） |
 | `phase-dependency-selection` | 外部依存の評価・選定・調達 |
 | `phase-design` | 設計 |
@@ -1293,7 +1294,7 @@ WBSテーブル（タスクID、タスク名、担当エージェント、依存
 
 | フィールド | 型 | 必須 | 説明 | 値域・制約 |
 |-----------|------|------|------|-----------|
-| spec-foundation:spec_format | enum | Yes | 仕様書形式 | ANMS / ANPS（ANGS は研究段階であり値域に含めない） |
+| spec-foundation:spec_format | enum | Yes | 仕様書形式 | ANMS / ANPS-part / ANPS-chapter（**ANGS は研究段階であり値域に含めない**。方式との対応は `development-mode.md` の表 A） |
 | spec-foundation:fr_count | int | Yes | 機能要求の総数 | — |
 | spec-foundation:nfr_count | int | Yes | 非機能要求の総数 | — |
 | spec-foundation:completed_chapters | string | Yes | 完了済みチャプター（カンマ区切り） | 1 / 2 / 3 / 4 |
@@ -1493,8 +1494,10 @@ external-dependency-spec 共通章構成に従う。非標準I/Fの詳細仕様�
 
 | フィールド | 型 | 必須 | 説明 | 値域・制約 |
 |-----------|------|------|------|-----------|
-| user-order:format | enum | Yes | 選定された仕様書形式 | ANMS / ANPS（ANGS は研究段階であり値域に含めない） |
-| user-order:question_count | int | Yes | 3問形式の回答済み問数 | 3（固定） |
+| user-order:format | enum | **No** | 選定された仕様書形式 | ANMS / ANPS-part / ANPS-chapter。**`0e` の時点では未定である**（形式が決まるのは `1e` の開発方式判定の後）。決まるまで省略する |
+| user-order:question_count | int | **No** | 3問形式の回答済み問数 | 0〜3。**利用者が `0e` で書く時点では未記入でよい。** `1b` の srs-writer が数えて埋める |
+
+> **`user-order` は利用者が手で書く唯一の file_type である。** 配布されるひな形（`framework-src/{lang}/user-order.md`）は 3 つの見出しだけを持ち、Common Block も Form Block も持たない。**これを欠落として差し戻してはならない（MUST NOT）** —— 差し戻す先が居ない（書くのは利用者であり、`0e` のひな形にその欄が無い）。**`1b` の srs-writer が Common Block と Form Block を補って初めて管理対象になる。**
 
 ### Detail Block Guidance
 
@@ -1788,7 +1791,7 @@ owner は architect である。`infra/` の実装は implementer が行い、�
 
 | フィールド | 型 | 必須 | 説明 | 値域・制約 |
 |-----------|------|------|------|-----------|
-| spec:spec_format | enum | Yes | 仕様形式 | ANMS のみ。ANPS では spec-foundation / spec-architecture / spec-test に割れる |
+| spec:spec_format | enum | Yes | 仕様形式 | **`ANMS` のみ。** ANPS-part / ANPS-chapter では spec-foundation / spec-architecture / spec-test に割れる |
 | spec:completed_chapters | string | Yes | 完了済みチャプター（カンマ区切り） | 1 〜 10 |
 | spec:approved_chapters | string | No | **ユーザー承認済み**チャプター（カンマ区切り） | 1 〜 10。未承認なら省略 |
 | spec:fr_count | int | Yes | 機能要求の総数 | — |
@@ -2053,7 +2056,7 @@ CLAUDE.md に以下を設定する（setup フェーズで AI が提案）:
 | JSONをCommon Blockから除外 | 時系列データはチャート用にプログラムが消費する。MD構造を加えても利点なし |
 | UTCタイムスタンプ | マルチエージェント運用におけるタイムゾーンの曖昧性を排除 |
 | ステータスベースのバージョニング | ドラフトは生きた文書（上書きOK）、承認済みは履歴保存が必要 |
-| 仕様形態と独立 | 本ルールはプロセスの文書管理であり、仕様フォーマット（ANMS/ANPS/ANGS）の選択とは直交する。ただしCommon Blockは仕様書にも適用する（仕様フォーマットと共存可能） |
+| 仕様形態と独立 | 本ルールはプロセスの文書管理であり、仕様フォーマット（ANMS / ANPS-part / ANPS-chapter）の選択とは直交する。ただしCommon Blockは仕様書にも適用する（仕様フォーマットと共存可能） |
 | Common Block適用基準 | 旧基準（プロセス文書のみ）から「エージェントが管理するMD文書すべて」に拡張。外部ツール規定形式・JSON・コードのみを除外する |
 | process-rules/ をフレームワーク側に配置 | ルール文書はプロジェクト横断で不変。プロジェクト固有のPM成果物とは別管理 |
 | カテゴリ別命名規則 | プロセス文書・仕様書・一般文書・コード・設定はそれぞれ異なる規約に従う。統一すると不自然になる |

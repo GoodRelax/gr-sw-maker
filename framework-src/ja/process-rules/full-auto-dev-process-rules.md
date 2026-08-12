@@ -106,7 +106,7 @@
 **Claude Codeが担当する業務（それ以外すべて）:**
 
 - 開発計画立案（WBS/ガントチャート）、要員(AI)管理、リソース管理、進捗管理
-- 仕様書作成（Ch1-4: Foundation・System Overview・Use Cases・Requirements、形式はANMS/ANPS/ANGSから選定）、セキュリティ設計、仕様書詳細化（Ch3-6: Architecture・Specification・Test Strategy・Design Principles）
+- 仕様書作成（Ch1-4: Foundation・System Overview・Use Cases・Requirements、形式は ANMS / ANPS-part / ANPS-chapter から選定）、セキュリティ設計、仕様書詳細化（Ch3-6: Architecture・Specification・Test Strategy・Design Principles）
 - SW実装、単体テスト、結合テスト、システムテスト、性能テスト
 - テスト消化曲線の監視、defect curveの監視
 - ボトルネック/弱点領域へのリソース/人員(AI)追加
@@ -240,7 +240,7 @@ flowchart TB
 | dependency-selection | HW連携・AI/LLM連携・フレームワーク要求定義のいずれかが有効 | 条件付きプロセスに外部依存が該当しない場合 | §3.4 参照 |
 | operation | 本番環境でサービスを運用する、またはリリース後の保守が必要 | 納品完了型プロジェクト（成果物を渡して終了） | §3.4 参照 |
 
-仕様形式（ANMS/ANPS/ANGS）の選定もsetupフェーズで実施する（§4.1参照）。
+仕様形式（ANMS / ANPS-part / ANPS-chapter）の選定もsetupフェーズで実施する（§4.1参照）。
 
 ### 2.2 開発フェーズフロー
 
@@ -249,7 +249,7 @@ flowchart TB
 ```mermaid
 flowchart TD
     subgraph Phase1["Phase 1: 初期設定・プロセス評価"]
-        P0A["AI: user-order.mdバリデーション<br/>CLAUDE.md提案（言語設定含む）<br/>仕様形式選定（ANMS/ANPS/ANGS）"]
+        P0A["AI: user-order.mdバリデーション<br/>CLAUDE.md提案（言語設定含む）<br/>仕様形式選定（ANMS_ANPS-part_ANPS-chapter）"]
         P0B["ユーザー: CLAUDE.md確認・承認<br/>言語・条件付きプロセス・仕様形式確認"]
         P0A -->|"評価結果報告"| P0B
     end
@@ -786,7 +786,11 @@ full-auto-dev コマンドの setup フェーズで、リードエージェン�
 
 #### 4.0.3 引き継ぎの作成
 
-**コンテキスト使用率は観測できない。** 公式のテレメトリに文脈の残量を表す指標は存在せず、**推定値を閾値と比較してはならない（MUST NOT）。**分母を自前で持てば §3.2.7 が禁じた second source を作ることになる。観測できるのは**圧縮が起きたこと**であり、`project-management/progress/session-state.json` の `compaction_count` が前フェーズより増えたことで判る。増えていれば `session-handoff` を作成し、再開点を残す（`/session-handoff`）。**エージェント間の `handoff` とは別の file_type である。****これは事前の警告ではなく事後の記録であり、中断の要否はユーザーが判断する。**
+**モデルは自分のコンテキスト使用率を観測できない。** 公式のテレメトリに文脈の残量を表す指標は存在せず、**モデル自身の体感を閾値と比較してはならない（MUST NOT）。**分母を自前で持てば §3.2.7 が禁じた second source を作ることになる。
+
+**比較してよい値は 1 つだけである** —— `tools/session-meter.mjs` が実測して `project-management/progress/session-state.json` へ書く `context_used_pct`。**これは道具が測った値であって推定ではない。** CLAUDE.md「品質目標」の引継ぎ閾値はこの値と比較する。
+
+**ただし `statusLine` は CLI でしか発火しない**（§3.2.7）。デスクトップアプリでは `context_used_pct` が生まれないので、そこでは事後の契機に落とす —— 観測できるのは**圧縮が起きたこと**であり、`project-management/progress/session-state.json` の `compaction_count` が前フェーズより増えたことで判る。増えていれば `session-handoff` を作成し、再開点を残す（`/session-handoff`）。**エージェント間の `handoff` とは別の file_type である。****これは事前の警告ではなく事後の記録であり、中断の要否はユーザーが判断する。**
 
 #### 4.0.4 `aborted` 状態
 
@@ -814,11 +818,13 @@ setup フェーズは全自動開発の**最初のステップ**であり、仕�
 
 | レベル | 略称 | 正式名称 | 判断基準 |
 |:------:|------|----------|---------|
-| 1 | ANMS | AI-Native Minimal Spec | プロジェクト全体が1コンテキストウィンドウに収まる |
-| 2 | ANPS | AI-Native Plural Spec | 収まらないが、GraphDB不要 |
-| 3 | ANGS | AI-Native Graph Spec | 大規模（GraphDB活用）。**研究段階であり、現バージョンでは選択できない** |
+| 1 | ANMS | AI-Native Minimal Spec（単一 Markdown・1 枚） | プロジェクト全体が 1 コンテキストウィンドウに収まる |
+| 2 | ANPS-part | AI-Native Plural Spec（部で分割・4 枚） | 収まらない。部の単位で育てる |
+| 3 | ANPS-chapter | AI-Native Plural Spec（章で分割・14 枚） | 章ごとに独立して育てる規模 |
 
-選定結果は CLAUDE.md の「仕様形式の選択」セクションに記録する。
+> **ANGS（GraphDB 方式）は研究段階であり、選択肢から外した**（2026-08-12 決定）。`spec_format` と `user-order:format` の値域にも含まれない。
+
+**開発方式が決まれば形式も決まる** —— 簡易 = ANMS、標準 = ANPS-part、厳格 = ANPS-chapter（`development-mode.md` の表 A が唯一の対応表）。**選定結果は CLAUDE.md の「開発方式」節に「判定結果」と併せて記録する。**
 
 **言語設定:**
 
@@ -910,7 +916,7 @@ AIが作成したインタビュー記録をユーザーに提示し、以下を
 claude "user-order.mdを読み込み、ほぼ全自動開発を開始してください。
 まず構造化インタビューを実施してください。
 インタビュー完了後、process-rules/spec-template.md を参照し、
-仕様書（Ch1-4: Foundation・System Overview・Use Cases・Requirements）を docs/spec/ に作成してください（形式はsetupフェーズで選定したANMS/ANPS/ANGSに従う）。
+仕様書（Ch1-4: Foundation・System Overview・Use Cases・Requirements）を docs/spec/ に作成してください（形式はsetupフェーズで選定した ANMS / ANPS-part / ANPS-chapter に従う）。
 作成後、review-agentでR1観点のレビューを実施し、
 PASSしたら仕様書の概要を報告し、重要な判断が必要な箇所があれば提示してください。"
 ```
@@ -1503,6 +1509,7 @@ project_root/
       test-designer.md            ... テスト設計エージェント
       tester.md                   ... テスト実行エージェント
       review-agent.md             ... レビューエージェント（SW工学原則・並行性・性能）
+      technical-authority.md      ... 技術裁定・品質ゲート判定エージェント
       progress-monitor.md         ... 進捗管理エージェント
       change-manager.md           ... 変更管理エージェント
       risk-manager.md             ... リスク管理エージェント
@@ -1526,7 +1533,7 @@ project_root/
   docs/
     api/                          ... APIドキュメント（OpenAPI仕様）
     security/                     ... セキュリティ設計書
-    spec/                         ... AIが生成する正式仕様書（ANMS/ANPS/ANGS形式）
+    spec/                         ... AIが生成する正式仕様書（ANMS / ANPS-part / ANPS-chapter 形式）
     observability/                ... 可観測性設計書
     operations/                   ... 運用手順書・災害復旧計画
   project-management/
@@ -1585,7 +1592,7 @@ project_root/
 - 本プロジェクトはほぼ全自動開発で進行する
 - ユーザーへの確認は重要判断のみに限定する
 - 軽微な技術的判断はClaude Codeが自律的に行う
-- 仕様書はdocs/spec/配下に出力する（形式はプロジェクト規模に応じてANMS/ANPS/ANGSを選択）。その他の設計成果物はdocs/配下にMarkdownで出力する
+- 仕様書はdocs/spec/配下に出力する（形式はプロジェクト規模に応じて ANMS / ANPS-part / ANPS-chapter を選択）。その他の設計成果物はdocs/配下にMarkdownで出力する
 - プロセス文書（パイプライン状態、引継ぎ、進捗）はproject-management/配下に出力する
 - プロセス記録（レビュー、意思決定、リスク、defect、CR、トレーサビリティ）はproject-records/配下に出力する
 - コードはsrc/配下、テストはtests/配下、IaC (Infrastructure as Code)はinfra/配下に配置する
@@ -2091,6 +2098,7 @@ review-agentが適用する7つの観点。**詳細なチェックリストは `
 | ゲート ID | 遷移 | 条件 | 判定に用いる成果物 |
 |-----------|------|------|-------------------|
 | GATE-PLANNING | planning → dependency-selection | R1 PASS、Ch1-4 のユーザー承認 | review, tech-decision |
+| GATE-PLANNING | planning → design | R1 PASS、Ch1-4 のユーザー承認（**外部依存の 3 フラグがすべて不成立で Phase 3 を飛ばす場合の遷移。条件は上行と同じで、遷移先だけが違う**。`review:gate_phase` にはこちらを書く） | review, tech-decision |
 | GATE-INTERVIEW | planning → dependency-selection | interview-record が存在し、未解決の質問が残っていない | interview-record |
 | GATE-DEPENDENCY | dependency-selection → design | 外部依存の選定にユーザー承認がある、Adapter 層が DIP に適合（**外部依存の条件付きプロセスがすべて不成立なら、不成立の記録をもって充足とする**） | decision, tech-decision |
 | GATE-DESIGN | design → implementation | R2/R4/R5/R7 PASS、threat-model が存在し `unmitigated_critical_count` = 0、deployment-design が存在（**条件不成立または §3.1.1 で免除した場合は、その記録をもって充足とする**）、threat-model も同じ（外部からの入力経路が無ければ不成立の記録をもって充足） | review, threat-model, tech-decision |
@@ -2860,6 +2868,7 @@ PM Agent はこのスキーマに従って `project-management/progress/progress
 | `test-designer`                   | テストの受入基準とケースの設計（仕様書 Ch8-10 のケース節）             | opus   | コア         |
 | `tester`                          | テストの実行と結果の記録・性能テスト                                  | sonnet | コア         |
 | `review-agent`                    | SW工学原則・並行性・パフォーマンス観点のレビュー（R1〜R7）            | opus   | コア         |
+| `technical-authority`             | 技術判断の裁定、品質ゲートの可否判定                                  | opus   | コア         |
 | `progress-monitor`                | 進捗管理・WBS・品質メトリクス・コスト追跡・エージェント監視           | sonnet | コア         |
 | `change-manager`                  | 変更要求の受付・影響分析・記録                                        | sonnet | プロセス管理 |
 | `risk-manager`                    | リスク特定・評価・軽減策管理                                          | sonnet | プロセス管理 |

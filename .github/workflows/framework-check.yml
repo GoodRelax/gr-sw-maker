@@ -63,6 +63,12 @@ jobs:
       - name: registry
         run: node maintenance-tools/check-registry.mjs
 
+      # The only mechanism that refuses work. Its three tables restate 9.4.1 and
+      # the porting guide; nothing compared them, so emptying ALWAYS_ALLOWED
+      # disabled the guard outright with every check still green.
+      - name: gate-guard
+        run: node maintenance-tools/check-gate-guard.mjs
+
       # The generated work tables must match the source they were split from.
       - name: work-table
         run: node maintenance-tools/split-work-table.mjs --check

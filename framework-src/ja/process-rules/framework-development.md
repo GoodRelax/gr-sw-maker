@@ -28,9 +28,9 @@ framework-src/
     CLAUDE.md               ... アプリ開発用テンプレート原本
     user-order.md           ... ユーザー要求テンプレート原本
     agents/                 ... エージェント定義原本（22）
-    commands/               ... コマンド定義原本（5）
-    process-rules/          ... プロセス規則原本（11）
-  en/                       ... 同一構成
+    commands/               ... コマンド定義原本（6）
+    process-rules/          ... プロセス規則原本（24）
+  （他言語を追加する場合は同一構成のディレクトリを足す）
 ```
 
 `setup.js` が選択された言語を作業位置へ展開する。
@@ -155,8 +155,8 @@ git config core.hooksPath maintenance-tools/hooks
 | `agent-list.md` | 全エージェント定義の frontmatter、`full-auto-dev-document-rules.md` §7 / §11 |
 | `full-auto-dev-document-rules.md` §7 | `agent-list.md` §2 のオーナーシップ、各エージェントの Out |
 | `review-standards.md` | `review-agent` の適用観点表、`full-auto-dev-process-rules.md` §9.2 |
-| `prompt-structure.md` | 全 24 のエージェント定義 |
-| エージェントの新設・削除 | `agent-list.md` §5 の「新規エージェント追加手順」に従い 6 手順すべてを実施する |
+| `prompt-structure.md` | 全 22 のエージェント定義 |
+| エージェントの新設・削除 | `agent-list.md` §6 の「新規エージェント追加手順」に従い全手順を実施する。**`setup.js` の `RETIRED` にも旧名を足す**（足さないと展開先に残り、選択可能なままになる） |
 
 ### 5.5 追加する提案には最小構成を併記する（MUST）
 
@@ -168,7 +168,7 @@ git config core.hooksPath maintenance-tools/hooks
 | 2 | **より小さい代替案**（最小構成） |
 | 3 | **最小構成を採らなかった理由** |
 
-**なぜ:** R2.18 は製品の設計に「最小構成との比較」を課すが、**フレームワーク自身は対象外だった。** 配布される規則は ja だけで 11,264 行あり、「これより小さくできないか」と問われたことが一度もない。**規則を足す提案には根拠が求められるのに、足さない選択肢を検討した証拠は求められてこなかった。** 増やす力だけが働く構造は、本試行が過剰設計の真因として特定したものであり、フレームワーク自身がその実例である。
+**なぜ:** R2.18 は製品の設計に「最小構成との比較」を課すが、**フレームワーク自身は対象外だった。** 配布される規則は ja だけで 11,000 行を超えており、「これより小さくできないか」と問われたことが一度もない。**規則を足す提案には根拠が求められるのに、足さない選択肢を検討した証拠は求められてこなかった。** 増やす力だけが働く構造は、本試行が過剰設計の真因として特定したものであり、フレームワーク自身がその実例である。
 
 **限界:** 保証するのは「比較を記録した」ことであって「比較の結論が正しい」ことではない。**これは R2.18 と同じ、意図的な受容である。**
 
@@ -198,7 +198,7 @@ git config core.hooksPath maintenance-tools/hooks
 
 ## 6. 検査を手元で走らせる
 
-以下はすべて依存ライブラリなしで動く。CI（`.github/workflows/framework-check.yml`）が同じ 10 個を実行するため、**手元で通れば CI も通る。**
+以下はすべて依存ライブラリなしで動く。CI（`.github/workflows/framework-check.yml`）が同じ 11 個を実行するため、**手元で通れば CI も通る。**
 
 | コマンド | 検査内容 |
 |---|---|
@@ -210,6 +210,7 @@ git config core.hooksPath maintenance-tools/hooks
 | `node maintenance-tools/check-terms.mjs` | 用語集 §1 が非採用とした語が本文に混入していないこと |
 | `node maintenance-tools/check-setup.mjs` | `setup.js` の展開内容・冪等性・言語切替・`.bak` 退避 |
 | `node maintenance-tools/check-mode-matrix.mjs` | **作業表の担当者・依頼元・出力・オーナー・返り値・章番号、および表 M との手順記号の一致**（方式表 §11 の機械判定できる検査） |
+| `node maintenance-tools/check-gate-guard.mjs` | **`tools/gate-guard.mjs` の 3 つの定数（守る対象・観点集合・遷移）が、プロセス規則 §9.4.1 のゲート条件表と移植ガイドの守備表に一致すること。** 門番が無効化されていないこと |
 | `node maintenance-tools/check-registry.mjs` | **file_type が §7 / §7.1 / §8 / §9.x / §11 の 5 表すべてに載っていること、および件数の宣言が実測と一致すること** |
 | `node maintenance-tools/split-work-table.mjs --check` | 生成物の作業表 11 枚が正本と一致していること（0 stale） |
 

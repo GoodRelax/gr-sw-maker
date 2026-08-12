@@ -16,7 +16,7 @@
 - 本プロジェクトはほぼ全自動開発で進行する
 - ユーザーへの確認は重要判断のみに限定する
 - 軽微な技術的判断はClaude Codeが自律的に行う
-- 仕様書はdocs/spec/配下に出力する（形式はプロジェクト規模に応じてANMS/ANPSを選択）。その他の設計成果物はdocs/配下にMarkdownで出力する
+- 仕様書はdocs/spec/配下に出力する（形式はプロジェクト規模に応じて ANMS / ANPS-part / ANPS-chapter を選択）。その他の設計成果物はdocs/配下にMarkdownで出力する
 - プロセス文書（パイプライン状態、引継ぎ、進捗）はproject-management/配下に出力する
 - プロセス記録（レビュー、意思決定、リスク、defect、CR、トレーサビリティ）はproject-records/配下に出力する
 - コードはsrc/配下、テストはtests/配下、IaCはinfra/配下に配置する
@@ -55,8 +55,9 @@ Phase 1 の `1e` で判定し、ここに記録する（プロセス規則 §3.1
 | レベル | 略称 | 正式名称 | 表現 | 規模 |
 |--------|------|----------|------|------|
 | 1 | ANMS | AI-Native Minimal Spec | 単一Markdownファイル | 1コンテキストウィンドウに収まる |
-| 2 | ANPS | AI-Native Plural Spec | 複数Markdownファイル + Common Block | 収まらない、GraphDB不要 |
-| 3 | ANGS | AI-Native Graph Spec | GraphDB + Git（MDはビュー） | 大規模 |
+| 2 | ANPS-part | AI-Native Plural Spec（部で分割） | 4 枚（3 部 ＋ 付録） | 1 コンテキストに収まらない |
+| 3 | ANPS-chapter | AI-Native Plural Spec（章で分割） | 14 枚 | 章ごとに独立して育てる規模 |
+> **ANGS（GraphDB 方式）は研究段階であり、選択肢から外した**（2026-08-12 決定）。`spec_format` の値域にも含まれない。
 
 - テンプレート: process-rules/spec-template.md
 - setup フェーズでユーザーと規模を判断し、形式を決定する
@@ -120,7 +121,7 @@ setup フェーズでユーザーと合意する。全エージェントおよ�
 | コーディング規約準拠 | 違反 0 件 | Linter 実行結果 |
 | コスト予算 | [記入必須: 例 50 USD] | アラート閾値の分母。cost-log.json の `budget_usd` に転記する。**未記入だと下行の相対閾値が比較対象を持たない** |
 | コスト予算アラート閾値 | 予算の [記入必須: 例 80%] | ユーザー通知をトリガー。**プレースホルダのままにしてはならない（MUST NOT）。** 未記入だと progress-monitor が比較対象を持たず、アラートが恒久的に発火しない |
-| コンテキスト使用率の引継ぎ閾値 | [記入必須: 例 80%] | 到達時に handoff を作成してセッションを中断する。`tools/session-meter.mjs` が書く session-state.json の `context_used_pct` と比較する |
+| コンテキスト使用率の引継ぎ閾値 | [記入必須: 例 80%] | 到達時に **`session-handoff`** を作成して再開点を残す（`handoff` とは別の file_type）。**比較する値は `tools/session-meter.mjs` が実測して書く `context_used_pct` だけである**（プロセス規則 §4.0.3）。**モデル自身の体感を閾値と比較してはならない（MUST NOT）。** statusLine が発火しない環境では `context_used_pct` が生まれないので、代わりに `compaction_count` の増加を契機とする |
 | パッチ対応時間 | Critical: [例: 48h], High: [例: 1週間] | operation フェーズのみ |
 
 ## APIドキュメント

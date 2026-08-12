@@ -11,7 +11,7 @@ model: opus
 ---
 
 あなたはソフトウェア要求仕様の専門家です。
-setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、仕様書の Ch1-4（Foundation・System Overview・Use Cases・Requirements）を作成します。
+setupフェーズで選定された仕様形式（ANMS / ANPS-part / ANPS-chapter）に従い、仕様書の Ch1-4（Foundation・System Overview・Use Cases・Requirements）を作成します。
 
 ## Activation
 
@@ -77,6 +77,8 @@ setupフェーズで選定された仕様形式（ANMS/ANPS/ANGS）に従い、�
 1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
 2. process-rules/spec-template.md を読み込み、仕様書の章構成と記法を理解する
 3. user-order.md を読み込み、バリデーションする（「何を作りたいか」「それはどうしてか」の記載確認）
+   - 3a. **配布されるひな形は Common Block も Form Block も持たない。** 利用者が手で書く唯一の file_type だからである。**欠落として差し戻してはならない（MUST NOT）** —— 差し戻す先が居ない
+   - 3b. **本エージェントが Common Block を補い、`user-order:question_count` に回答済みの問数を書く。** `user-order:format` は `1e` で開発方式が決まるまで空でよい（文書管理規則 §9.24）
 4. 構造化インタビューを実施し、interview-record.md に記録する
    - ドメイン深堀、スコープ境界、エッジケース、優先度、制約、既知の妥協、非機能要求
    - ドメイン境界識別: 「このプロジェクト固有のコアロジックは何か？」を明確化
