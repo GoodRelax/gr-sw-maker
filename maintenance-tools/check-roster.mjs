@@ -134,4 +134,61 @@ for (const lang of languages()) {
   }
 }
 
+// -- Output examples must be in the form the machinery can read --------------
+// A Form Block lives in YAML frontmatter (Document Rules section 5). An agent
+// whose worked example shows the old `<!-- FIELD: x -->` tag teaches the agent
+// to write a file that gate-guard cannot parse, and gate-guard treats an
+// unreadable review as a gate that never passed -- so the run stops with no
+// error pointing here. The spec file types are exempt: StrictDoc fixes their
+// header order, so their blocks go in a sibling .meta.yaml.
+for (const lang of languages()) {
+  const agentsDir = join(SRC, lang, "agents");
+  if (!existsSync(agentsDir)) continue;
+  for (const file of markdownFiles(agentsDir)) {
+    const lines = read(join(agentsDir, file)).split("\n");
+    lines.forEach((line, index) => {
+      // Only a tag naming a real file_type is an example. The rule forbidding
+      // the form has to be able to quote it, and writes `<!-- FIELD: … -->`
+      // with an ellipsis inside backticks, which must not trip the check.
+      const example = /(?<!`)<!-- FIELD: [a-z][a-z0-9-]* -->/.exec(line);
+      if (example) {
+        problems.push(
+          `${lang}/agents/${file}:${index + 1}: 出力例が独自タグ形式である（${example[0]}）。Form Block は YAML frontmatter に置く（文書管理規則 §5）`
+        );
+      }
+    });
+  }
+}
+
+// -- Chapter numbers an agent names must exist in the template ---------------
+// The specification went from six chapters to ten. A definition still pointing
+// at the old numbering sends the agent to the wrong chapter, and every check so
+// far compares documents to documents, never to the template.
+for (const lang of languages()) {
+  const templatePath = join(SRC, lang, "process-rules", "spec-template.md");
+  const agentsDir = join(SRC, lang, "agents");
+  if (!existsSync(templatePath) || !existsSync(agentsDir)) continue;
+
+  const chapters = new Set(
+    [...read(templatePath).matchAll(/^## Chapter (\d+)\./gm)].map((match) => Number(match[1]))
+  );
+  if (chapters.size === 0) continue;
+  const highest = Math.max(...chapters);
+
+  for (const file of markdownFiles(agentsDir)) {
+    const lines = read(join(agentsDir, file)).split("\n");
+    lines.forEach((line, index) => {
+      for (const match of line.matchAll(/\bCh(\d+)(?:-(\d+))?/g)) {
+        const from = Number(match[1]);
+        const to = match[2] ? Number(match[2]) : from;
+        if (!chapters.has(from) || to > highest) {
+          problems.push(
+            `${lang}/agents/${file}:${index + 1}: ${match[0]} は spec-template に無い章である`
+          );
+        }
+      }
+    });
+  }
+}
+
 finish("check-roster", problems, `${checkedAgents} agent definition(s)`);

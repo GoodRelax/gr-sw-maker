@@ -52,3 +52,17 @@ jobs:
       # protects an edited user-order.md.
       - name: setup
         run: node maintenance-tools/check-setup.mjs
+
+      # The work tables are the run path. A row naming a retired agent or an
+      # unregistered file_type produces a request that cannot be carried out.
+      - name: mode-matrix
+        run: node maintenance-tools/check-mode-matrix.mjs
+
+      # A file_type is described in five tables. Registering it in four of them
+      # leaves an agent with no way to decide what to write.
+      - name: registry
+        run: node maintenance-tools/check-registry.mjs
+
+      # The generated work tables must match the source they were split from.
+      - name: work-table
+        run: node maintenance-tools/split-work-table.mjs --check

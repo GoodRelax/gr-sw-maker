@@ -455,8 +455,8 @@ terminology-checker を**使用しない**エージェント:
 
 | 分類 | 件数 |
 |---|---:|
-| Common Block 管理対象の file_type（文書管理規則 §7） | 38 |
-| うち条件付き（該当プロセス有効時のみ） | field-issue, hw-requirement-spec, ai-requirement-spec, framework-requirement-spec |
+| Common Block 管理対象の file_type（文書管理規則 §7） | 42 |
+| うち条件付き（該当プロセス有効時のみ） | field-issue, hw-requirement-spec, ai-requirement-spec, framework-requirement-spec, disaster-recovery-plan, stakeholder-register, safety（計 7） |
 | file_type ではない生成物 | openapi.yaml, src/, tests/, infra/, cost-log.json, progress-log.json, test-progress.json, defect-curve.json |
 
 件数の正は文書管理規則 §7 のテーブルであり、本節はその要約である。齟齬があれば §7 を正とする。

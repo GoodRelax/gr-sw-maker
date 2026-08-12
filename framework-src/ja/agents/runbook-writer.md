@@ -37,7 +37,7 @@ model: sonnet
 
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
-| spec-architecture | architect | システム構成の理解 | Ch3 のシステム構成図 |
+| spec-architecture | architect | システム構成の理解 | Ch5 の構成と層 |
 | observability-design | architect | 監視・アラート設計の理解 | アラート定義と閾値 |
 | disaster-recovery-plan | architect | DR手順の理解 | RTO/RPO と復旧手順 |
 | threat-model | security-reviewer | セキュリティ運用の理解 | 運用時に残存するリスク |

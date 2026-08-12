@@ -35,8 +35,8 @@ model: sonnet
 
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
-| spec-foundation | srs-writer | 要求からリスクを識別 | Ch2 の NFR に数値基準 |
-| spec-architecture | architect | 設計からリスクを識別 | Ch3 の外部依存 |
+| spec-foundation | srs-writer | 要求からリスクを識別 | Ch4.2 の NFR に数値基準 |
+| spec-architecture | architect | 設計からリスクを識別 | Ch5 の外部依存 |
 | progress | progress-monitor | 進捗状況からリスクを評価 | 進捗率と遅延の有無 |
 
 > **ANMS（開発方式が簡易）では `spec-foundation` / `spec-architecture` / `spec-test` は単一の `spec`（`docs/spec/01-10-spec.md`）へ畳まれる**（文書管理規則 §9.39・名簿 §2）。**上表が名指しした file_type のファイルが無いことを欠落として差し戻してはならない（MUST NOT）。** 同じ章を `spec` の中から読む。仕様形式は依頼文の与件で渡される（`development-mode.md`「依頼に必ず添える与件」）。

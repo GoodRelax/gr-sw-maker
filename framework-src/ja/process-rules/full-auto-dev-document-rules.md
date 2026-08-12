@@ -211,15 +211,19 @@ process-rules/ 配下の全ファイル（本文書を含む）に適用する�
 **フォーマット:**
 
 ```
-{project-name}-spec.md            # ANMS（単一ファイル）
-{project-name}-spec-ch{N}.md      # ANPS（チャプター分割時）
+01-10-spec.md                     # ANMS（単一ファイル。Ch1-10 ＋ 付録）
+{NN}-{NN}-{部の名前}.md            # ANPS（部・章で分割時）
 ```
+
+**ファイル名の正本は仕様記述規則の「ファイル名と番号の規則」節である。** 番号は**その枚が持つ最初の章の番号**で、範囲を名前に含める。
 
 | ファイル | 命名例 | 備考 |
 |---------|--------|------|
-| ANMS仕様書 | `my-app-spec.md` | 単一ファイル |
-| ANPS 第 1 部 | `01-04-foundation.md` | チャプター分割 |
-| ANPS Ch3 | `my-app-spec-ch3.md` | チャプター分割 |
+| ANMS 仕様書 | `01-10-spec.md` | 単一ファイル。**`{project-name}-spec.md` としてはならない（MUST NOT）** |
+| ANPS 第 1 部 | `01-04-foundation.md` | 部で分割 |
+| ANPS 第 3 部のケース節 | `08-uc-test-cases.md` | 章で分割 |
+
+> **Common Block と Form Block は同名の `.meta.yaml` に置く**（§5 の例外）。ANMS なら `01-10-spec.meta.yaml` である。
 ## 3.5 ルート配置文書
 
 プロジェクトルートに配置する高可視性文書。
@@ -324,7 +328,7 @@ graph TD
 
 各ブロックの役割は明確である。Common Blockはファイルを識別し、Form Blockはファイルタイプ固有の定型フォーマット（AIが従うべき構造）を定義し、Detail Blockは詳細な説明・根拠・証拠を記述し、Footerは変更履歴を追跡する。**構造化された値は frontmatter に、散文は本文にある** — 機械が読む部分と人が読む部分が、解析なしで分かれている。
 
-**Form Block は 1 ファイルに 1 つである（MUST）。複数のエントリは Detail Block の表が担う。** §9 の 38 の file_type はすべてこの形をとっており、Form Block が持つのは件数・状態・ID といった**文書レベルの属性**である。例えば `test-plan` の Form Block は `test_case_count`（総数）を持ち、テストケースの一覧は Detail Block の表にある。`wbs`・`traceability`・`risk-register`・`threat-model`・`license-report` も同型である。**この規約により、Form Block を繰り返し検出するパーサは不要になる。**
+**Form Block は 1 ファイルに 1 つである（MUST）。複数のエントリは Detail Block の表が担う。** §9 の 42 の file_type はすべてこの形をとっており、Form Block が持つのは件数・状態・ID といった**文書レベルの属性**である。例えば `test-plan` の Form Block は `test_case_count`（総数）を持ち、テストケースの一覧は Detail Block の表にある。`wbs`・`traceability`・`risk-register`・`threat-model`・`license-report` も同型である。**この規約により、Form Block を繰り返し検出するパーサは不要になる。**
 
 ## 4.1 情報の配置基準
 
@@ -522,6 +526,12 @@ stateDiagram-v2
 
 Common Block は **YAML frontmatter** として記述する。ファイル先頭に `---` で囲んで置かなければならない（MUST）。独自のタグ形式を用いてはならない（MUST NOT）。
 
+> **例外は仕様書の 4 型だけである**（`spec` / `spec-foundation` / `spec-architecture` / `spec-test`。2026-08-12 追加）。**これらは Common Block と Form Block を同名の `.meta.yaml` に置く（MUST）。**
+>
+> **理由:** StrictDoc の文法は文書ヘッダ（`**Grammar**` / `**UID**` / `**Version**` と H1）の並びを規定しており、**その前に frontmatter を挟むと文書ヘッダを丸ごと失って文法が適用されなくなる**（仕様記述規則「文書ヘッダ」節）。**外部ツールがファイル構造を規定している場合に当たる**（§13.2 の条件 1）。`spec-template.md` が実際に H1 から始まるのはこのためである。
+>
+> **`.meta.yaml` の中身は frontmatter と同じキー順・同じ内容である。** 囲みの `---` だけを持たない。**仕様書を読む側は、Form Block を本文ではなく同名 `.meta.yaml` から読む。**
+
 **容器形式は Open Knowledge Format (OKF) v0.2 に従う。** 従来の `<doc:field>` 形式は専用パーサを要したが、YAML frontmatter は `yq`・Python・JS・GitHub の表示・各種エディタがそのまま読む。**標準があるものを自前で作らない。**
 
 **キー順序（AIの読取フローに最適化）:**
@@ -715,7 +725,7 @@ change_log は**本文末尾の表**として書く。frontmatter には置か�
 | Standard | 標準プロセスで作成する。§3.1.1 の免除マトリクスに従う |
 | Conditional | 該当する条件付きプロセスが有効な場合にのみ作成する |
 
-38 の file_type を一度に覚える必要はない。**Core の 9 種を理解すれば全自動開発は回る。**
+42 の file_type を一度に覚える必要はない。**Core の 11 種を理解すれば全自動開発は回る。**
 
 | file_type | 名前空間 | 目的 | ディレクトリ | シングルトン? | Tier |
 |-----------|---------|------|-------------|:----------:|:----:|
@@ -748,6 +758,8 @@ change_log は**本文末尾の表**として書く。frontmatter には置か�
 | hw-requirement-spec | `hw-requirement-spec:` | HW要求仕様（条件付き。external-dependency-spec継承） | `docs/hardware/` | Yes | Conditional |
 | ai-requirement-spec | `ai-requirement-spec:` | AI/LLM要求仕様（条件付き。external-dependency-spec継承） | `docs/ai/` | Yes | Conditional |
 | framework-requirement-spec | `framework-requirement-spec:` | フレームワーク要求仕様（条件付き。external-dependency-spec継承） | `docs/framework/` | Yes | Conditional |
+| safety | `safety:` | 安全分析（HARA / FMEA / FTA）の結果（条件付き: 機能安全フラグ有効時。`4l`） | `docs/safety/` | Yes | Conditional |
+| release-checklist | `release-checklist:` | 全ゲートの結果を集めたリリース判定チェックリスト（`7b`） | `project-management/` | Yes | Standard |
 | executive-dashboard | `executive-dashboard:` | プロジェクト全体ダッシュボード | ルート | Yes | Standard |
 | final-report | `final-report:` | プロジェクト総括レポート | ルート | Yes | Core |
 | user-order | `user-order:` | ユーザー入力仕様（3問形式） | ルート | Yes | Core |
@@ -856,6 +868,12 @@ external-dependency-spec（抽象テンプレート）
 | stakeholder-register | `phase-setup` | 全エージェント | project-manager |
 | retrospective-report | フェーズ完了時（随時） | project-manager | process-improver |
 | field-issue | 実機テスト中（随時） | project-manager, implementer, tester | field-test-engineer |
+| spec | `phase-planning`（以降 design・testing で章ごとに追記） | architect, implementer, review-agent, technical-authority, test-designer, tester, user-manual-writer | srs-writer |
+| spec-test | `phase-testing` | review-agent, technical-authority | test-designer |
+| safety | `phase-design`（条件付き: 機能安全フラグ） | technical-authority, review-agent | security-reviewer |
+| release-checklist | `phase-delivery` | technical-authority | project-manager |
+
+**本表は §7 の file_type と 1 対 1 である。** §7 に足したら本表にも足す（MUST）。
 
 ---
 
@@ -901,6 +919,17 @@ external-dependency-spec（抽象テンプレート）
 | `stakeholder-register:` | stakeholder-register Form Block | `stakeholder-register.stakeholder_count: 5` |
 | `retrospective-report:` | retrospective-report Form Block | `retrospective-report.approval_status: proposed` |
 | `field-issue:` | field-issue Form Block | `field-issue.type: defect` |
+| `tech-decision:` | tech-decision Form Block | `tech-decision.verdict: PASS` |
+| `governance-change-log:` | governance-change-log Form Block | `governance-change-log.applied_count: 3` |
+| `deployment-design:` | deployment-design Form Block | `deployment-design.target_env: container` |
+| `risk-register:` | risk-register Form Block | `risk-register.open_count: 4` |
+| `session-handoff:` | session-handoff Form Block | `session-handoff.context_used_pct: 82` |
+| `spec:` | spec Form Block（**ANMS。同名 `.meta.yaml` に置く**） | `spec.spec_format: ANMS` |
+| `spec-test:` | spec-test Form Block | `spec-test.tc_count: 24` |
+| `safety:` | safety Form Block | `safety.hazard_count: 7` |
+| `release-checklist:` | release-checklist Form Block | `release-checklist.unmet_count: 0` |
+
+**本表は §7 の file_type と 1 対 1 である。** 片方に足してもう片方を忘れると、名前空間の正が失われる。
 
 ---
 
@@ -1757,7 +1786,9 @@ owner は architect である。`infra/` の実装は implementer が行い、�
 
 ### Detail Block Guidance
 
-仕様書 Chapter 1〜10 と Appendix の全体を 1 ファイルに記載する。spec-template.md の構成に従う。
+仕様書 Chapter 1〜10 と Appendix の全体を 1 ファイル（`01-10-spec.md`）に記載する。spec-template.md の構成に従う。
+
+**Common Block と Form Block は本文に置かず、同名の `01-10-spec.meta.yaml` に置く（MUST）**（§5 の例外）。StrictDoc の文書ヘッダより前に frontmatter を挟めないためである。
 
 **本 file_type だけは章ごとにオーナーが変わる（唯一の例外）。** Ch1-4 を srs-writer、Ch5-7 を architect、Ch8-10 のケース節を test-designer、結果節を tester が書く。**Common Block と Form Block を触れるのは srs-writer だけである**（agent-list §2）。
 
@@ -1779,6 +1810,40 @@ owner は architect である。`infra/` の実装は implementer が行い、�
 仕様書 Ch8（Use Case Tests）・Ch9（Software Specification Tests）・Ch10（Non-Functional Tests）を記載する。ANPS で第 3 部として割れたときにだけ現れる。ANMS では spec に含まれる。
 
 ケースの節（8.1 / 9.1 / 10.1）は test-designer、結果の節（8.2 / 9.2 / 10.2）は tester が書く。
+
+---
+
+## 9.41 safety（名前空間: safety:）（条件付き: 機能安全フラグ有効時）
+
+### Fields
+
+| フィールド | 型 | 必須 | 説明 | 値域・制約 |
+|-----------|------|------|------|-----------|
+| safety:method | string | Yes | 用いた分析手法（カンマ区切り） | HARA / FMEA / FTA から 1 つ以上 |
+| safety:hazard_count | int | Yes | 洗い出した危害の総数 | — |
+| safety:unmitigated_count | int | Yes | 対策が未定の危害の数 | **0 でなければ GATE-DESIGN を通さない** → プロセス規則 §9.4.1 GATE-DESIGN |
+| safety:highest_severity | enum | Yes | 最も重い危害の重大度 | catastrophic / hazardous / major / minor / no-effect |
+
+### Detail Block Guidance
+
+危害ごとに 1 行の表を置く。列は「危害 / 発生条件 / 重大度 / 発生頻度 / 対策 / 対策後の残留リスク」。**手法ごとに節を分ける**（HARA は危害の同定と格付け、FMEA は fault のモードからの展開、FTA は頂上事象からの分解）。**`4l` で security-reviewer が書く。**
+
+---
+
+## 9.42 release-checklist（名前空間: release-checklist:）
+
+### Fields
+
+| フィールド | 型 | 必須 | 説明 | 値域・制約 |
+|-----------|------|------|------|-----------|
+| release-checklist:release_version | string | Yes | 判定対象の版 | `{メジャー}.{マイナー}.{パッチ}` |
+| release-checklist:gate_count | int | Yes | 集めたゲートの数 | 通常 8 |
+| release-checklist:unmet_count | int | Yes | 未充足の項目数 | **0 でなければリリース不可** → プロセス規則 §9.4.1 GATE-DELIVERY |
+| release-checklist:waiver_count | int | No | waiver を当てた項目数 | 0 以上。**1 以上なら final-report への転記が必須**（§9.1.1 の条件 3） |
+
+### Detail Block Guidance
+
+ゲートごとに 1 行の表を置く。列は「ゲート ID / 判定 / 根拠の tech-decision / 未充足なら理由 / waiver の有無」。**`7b` で project-manager が埋め、同じ `7b` の 2 行目で technical-authority が可否を出す。** 複数バージョンを並行保守するときにのみ作る。
 
 ---
 
@@ -1857,6 +1922,8 @@ archived   → 変更しない（参照専用）
 | main-agent | session-handoff | 完全制御。**会話履歴を持つ main-agent のみが書ける**（§11 の値域注記） |
 | process-improver | retrospective-report | ふりかえり・プロセス改善記録の完全制御 |
 | field-test-engineer | field-issue | 実機テストフィードバックの完全制御（条件付き: 実機テスト有効時）。feedback-classifier と field-issue-analyst は Detail Block に追記可 |
+| security-reviewer | safety | 安全分析（HARA / FMEA / FTA）の完全制御（条件付き: 機能安全フラグ有効時） |
+| project-manager | release-checklist | リリース判定チェックリストの完全制御 |
 
 **Detail Block例外:** 任意のエージェントが、自分がオーナーでないファイルのDetail Blockに追記してよい（MAY）。ただしchange_logに追記を記録することが条件。
 
@@ -1949,7 +2016,7 @@ CLAUDE.md に以下を設定する（setup フェーズで AI が提案）:
 | Common Block管理対象 | Common Block管理対象外 |
 |---------------------|----------------------|
 | 第7章の全ファイルタイプ（Form Block付き） | 外部ツール規定形式（.claude/agents/, openapi.yaml等） |
-| 仕様書（user-order.md, {project}-spec.md） | JSON時系列データ（cost-log, test-progress, defect-curve） |
+| 仕様書（user-order.md, `01-10-spec.md`）**ただし置き場は同名 `.meta.yaml`**（§5 の例外） | JSON時系列データ（cost-log, progress-log, test-progress, defect-curve） |
 | セキュリティ設計文書（threat-model, security-architecture） | ソースコード・テストコード |
 | 可観測性設計文書（observability-design） | 設定ファイル・IaC (Infrastructure as Code) |
 | WBS（wbs.md） | CLAUDE.md |

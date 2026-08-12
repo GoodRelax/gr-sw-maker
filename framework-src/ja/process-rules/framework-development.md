@@ -198,17 +198,22 @@ git config core.hooksPath maintenance-tools/hooks
 
 ## 6. 検査を手元で走らせる
 
-以下はすべて依存ライブラリなしで動く。CI（`.github/workflows/framework-check.yml`）が同じ 7 つを実行するため、**手元で通れば CI も通る。**
+以下はすべて依存ライブラリなしで動く。CI（`.github/workflows/framework-check.yml`）が同じ 10 個を実行するため、**手元で通れば CI も通る。**
 
 | コマンド | 検査内容 |
 |---|---|
 | `node --check <file>` | 全 `*.js` / `*.mjs` の構文 |
 | `node maintenance-tools/check-parity.mjs` | 言語ツリーの一致、行数・見出し・表行・コードフェンス・リンク先の一致 |
-| `node maintenance-tools/check-roster.mjs` | エージェント名簿と実体の一致、frontmatter の `name` / `model`、レビュー観点の配線 |
+| `node maintenance-tools/check-roster.mjs` | エージェント名簿と実体の一致、frontmatter の `name` / `model`、レビュー観点の配線、**出力例が frontmatter 形式であること**、**エージェントが引く章番号が仕様テンプレートに実在すること** |
 | `node maintenance-tools/check-links.mjs` | デッドリンク、節番号参照の実在 |
 | `node maintenance-tools/check-tagnames.mjs` | Form Block のタグ名が §9 の Fields 表に実在すること |
 | `node maintenance-tools/check-terms.mjs` | 用語集 §1 が非採用とした語が本文に混入していないこと |
 | `node maintenance-tools/check-setup.mjs` | `setup.js` の展開内容・冪等性・言語切替・`.bak` 退避 |
+| `node maintenance-tools/check-mode-matrix.mjs` | **作業表の担当者・依頼元・出力・オーナー・返り値・章番号、および表 M との手順記号の一致**（方式表 §11 の機械判定できる検査） |
+| `node maintenance-tools/check-registry.mjs` | **file_type が §7 / §7.1 / §8 / §9.x / §11 の 5 表すべてに載っていること、および件数の宣言が実測と一致すること** |
+| `node maintenance-tools/split-work-table.mjs --check` | 生成物の作業表 11 枚が正本と一致していること（0 stale） |
+
+**上記に含まれない検査が 1 本ある。** `node maintenance-tools/check-workspace.mjs` は**展開物**（`.claude/` と `process-rules/` 直下）が原本と揃っているかを見る。**原本ではなく作業位置を見る検査なので CI では走らせない** —— CI に展開物は存在しない。`setup.js` を実行した後に手元で走らせる。
 
 `check-setup.mjs` は一時ディレクトリに `setup.js` と `framework-src/` を複製してから実行するため、**作業中の `CLAUDE.md` や `user-order.md` を壊さない。**
 

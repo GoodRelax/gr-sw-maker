@@ -37,7 +37,7 @@ model: opus
 |-----------|--------|------|---------|
 | field-issue（classified） | feedback-classifier | 分析対象のチケット | issue_id, type, status = classified |
 | spec-foundation | srs-writer | 影響分析・仕様書更新要否の判定 | Ch4 の全 FR/NFR に ID |
-| spec-architecture | architect | 影響分析・仕様書更新要否の判定 | Ch3-4 |
+| spec-architecture | architect | 影響分析・仕様書更新要否の判定 | Ch5-7 |
 | （src/, tests/） | implementer, tester | 原因分析対象のソースコード | 再現手順が指すモジュール |
 
 > **ANMS（開発方式が簡易）では `spec-foundation` / `spec-architecture` / `spec-test` は単一の `spec`（`docs/spec/01-10-spec.md`）へ畳まれる**（文書管理規則 §9.39・名簿 §2）。**上表が名指しした file_type のファイルが無いことを欠落として差し戻してはならない（MUST NOT）。** 同じ章を `spec` の中から読む。仕様形式は依頼文の与件で渡される（`development-mode.md`「依頼に必ず添える与件」）。

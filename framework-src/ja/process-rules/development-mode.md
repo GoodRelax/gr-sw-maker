@@ -480,7 +480,7 @@ flowchart TD
 | エージェント | **無条件 11 エージェント** —— srs-writer<br />architect<br />technical-authority<br />project-manager<br />review-agent<br />implementer<br />security-reviewer<br />license-checker<br />test-designer<br />tester<br />user-manual-writer |
 | 条件付きで増えるエージェント | **8 エージェント** —— runbook-writer<br />field-test-engineer<br />feedback-classifier<br />field-issue-analyst<br />incident-reporter<br />progress-monitor<br />process-improver<br />change-manager<br />**全部有効なら 19 エージェント。** |
 | 簡易では決して起動しないエージェント | **2 エージェント** —— risk-manager（`4k` 免除）<br />decree-writer（`Fe` 免除）<br />**19 ＋ 2 = 21。名簿は現在 22 件である。**<br />差は `terminology-checker` の 1 件のみで、**作業表のどの行にも現れない**。**完了報告の用語チェック要請で呼ばれるため、手順を持たない**（`agent-orchestration-rules.md` §4.6 の規約 6）。<br />**`test-engineer` は名簿から外した**（2026-08-12 決定。作業表で 1 度も使わないため）。 |
-| 成果物 | user-order<br />CLAUDE.md<br />**tech-decision**<br />pipeline-state<br />interview-record<br />src<br />spec-foundation<br />spec-architecture<br />spec-test<br />traceability<br />test-plan<br />review<br />security-scan-report<br />license-report<br />final-report<br />user-manual<br />handoff<br />**17 件（表 M の `実施` から機械で導出した）。**<br />**ANMS なので 3 型は単一の `spec` へ畳まれ、現物のファイルは 1 枚である。** |
+| 成果物 | user-order<br />CLAUDE.md<br />**tech-decision**<br />pipeline-state<br />interview-record<br />src<br />spec-foundation<br />spec-architecture<br />spec-test<br />traceability<br />test-plan<br />review<br />security-scan-report<br />license-report<br />final-report<br />user-manual<br />handoff<br />session-handoff<br />**18 件（表 M の `実施` から機械で導出した）。**<br />**ANMS なので 3 型は単一の `spec` へ畳まれ、現物のファイルは 1 枚である。** |
 | レビュー報告 | **5 本 ＋ 再レビュー分**（`2i` `4m` `5e` `6k` `7a`。表 E-1 が正）。<br />**簡易でも報告ファイルを残す。** `gate-guard` は `project-records/reviews/` の実ファイルしか見ないので、残さないとゲートが開かない。<br />`7a` は 1 エージェントで R1〜R7 を網羅する。<br />合格線 Critical 0 / High 0。 |
 | ゲート | 全 8 ゲートを判定する。 |
 
@@ -564,7 +564,7 @@ flowchart TD
 | # | 判定 |
 |:-:|---|
 | 7 | **作業表に現れる手順記号の集合が、表 M に現れる集合と完全に一致する。** 片方にしか無い記号を許さない |
-| 8 | **作業表の手順記号が `commands/full-auto-dev.md` に実在する。手順セルに `新設` / `統合` / `分割` を含む行は実在検査の対象外とし、件数を出力する**（現在 14 件。`Phase 0` の 5 手順を除く） |
+| ~~8~~ | **削除した**（2026-08-12）。「作業表の手順記号が `commands/full-auto-dev.md` に実在する」ことを求めていたが、**当の `full-auto-dev.md` は「手順をこの文書に写してはならない（MUST NOT）」と定めて手順記号を 1 つも持たない。** 手順の正本が作業表へ移った時点で役目が終わっており、**このままでは 97 件すべてが落ちる**。検査 7（作業表と表 M の集合一致）が代替する |
 | 9 | 表 M の `条件付き` のセルには、同じ行の `備考` に条件が書かれている |
 | 10 | **作業表の備考に `[簡易・標準]` / `[厳格]` を持つ手順は、表 M で「経路が方式で変わる」と注記されている**（現在 `4m` `5a` `5e` `7a` の 4 つ） |
 | 11 | §10 に挙げた行が、作業表と表 M と表 E で実際に標準と厳格の差が出る行と一致する |
@@ -582,7 +582,7 @@ flowchart TD
 | 18 | **`出力` に現れる名前が `agent-list.md` §2 の file_type に実在する。** file_type でない生成物は除外リストで明示する —— `src` / `openapi` / `container-image` / `settings.json` / `agents` / `commands` / `CLAUDE.md`。**前 3 者は名簿 §2 が「file_type ではない生成物」として明示的に列挙している。新設候補ではない** |
 | **18b** | **`出力` の file_type のオーナーが `担当者` と一致する。** 異なる行は `備考` に移管の宣言を持つ（`agent-orchestration-rules.md` §4.7 の規約 4） |
 | **18c** | **`担当者` が `review-agent` の行の `出力` は `review` だけである**（`agent-orchestration-rules.md` §4.7 の規約 3。レビュアーに直させない） |
-| **18d** | **`担当者` が `**main-agent**` の行は `出力` が `—` である**（`agent-orchestration-rules.md` §4.5 の規約 1。`main-agent` に記録させない） |
+| **18d** | **`担当者` が `**main-agent**` の行は `出力` が `—` である**（`agent-orchestration-rules.md` §4.5 の規約 1。`main-agent` に記録させない）。**例外は `session-handoff` の 1 型だけである** —— 文書管理規則 §11 が「**サブエージェントでは復元できない情報を持つ成果物にのみ `main-agent` を指定できる（MUST）**」と定めており、セッションの会話文脈がそれに当たる |
 | **18f** | **`モデル` 列が `agents/*.md` の `model:` および `agent-list.md` §1 の `model` 列と一致する。** 名簿未登録の暫定値は `**暫定**` を併記する。**`fable` が現れたら FAIL** |
 | **18g** | **`モデル` 列に方式ごとの併記が無い。** モデルは担当者だけで決まる（2026-08-11 決定） |
 | **18e** | **`依頼元へ返す` の各値が「場所」「可否」「件数」「次の一手」のいずれかに分類できる。** 分類できない値があれば FAIL（`agent-orchestration-rules.md` §3.6・§4.3 の規約 4・§4.7 の規約 1） |

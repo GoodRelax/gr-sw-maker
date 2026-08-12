@@ -39,8 +39,8 @@ OWASP Top 10 および CWE/SANS Top 25 に基づくセキュリティ設計と�
 
 | file_type | 提供元 | 用途 | 必須要素 |
 |-----------|--------|------|---------|
-| spec-foundation | srs-writer | Ch2 非機能要求からセキュリティ要求を抽出 | Ch2 のセキュリティ NFR |
-| spec-architecture | architect | アーキテクチャのセキュリティ面を評価 | Ch3 の信頼境界 |
+| spec-foundation | srs-writer | Ch4.2 非機能要求からセキュリティ要求を抽出 | Ch4.2 のセキュリティ NFR |
+| spec-architecture | architect | アーキテクチャのセキュリティ面を評価 | Ch5 の層と境界 |
 | CLAUDE.md | project-manager (setup) | セキュリティ要求の確認 | セキュリティ要求の節 |
 | （src/） | implementer | 実装コードの脆弱性スキャン | スキャン対象のソース一式 |
 | license-report | license-checker | ライセンスリスクとセキュリティ脆弱性の相互参照 | 依存ライブラリとライセンス |

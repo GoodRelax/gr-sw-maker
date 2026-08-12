@@ -291,8 +291,8 @@ flowchart TD
 | `1c`<br />初期設定 | user-order から決めごとを起こし、<br />CLAUDE.md の案を書く | main-agent | architect | opus | user-order<br />`1b` の不足の一覧 | CLAUDE.md | 案の場所<br />利用者が埋める箇所 | **project-manager から移した。**<br />設計上の決めごとを並べた文書であり、設計のエージェントが起草する。 |
 | `1d`<br />初期設定<br />**新設** | CLAUDE.md の記入必須欄を利用者に示し、値を受け取る | **main-agent** | **利用者** | — | `1c` の CLAUDE.md<br />`1c` が返した「利用者が埋める箇所」 | CLAUDE.md | 埋めた値 | **[直列]** `1c` の後に走る。<br />**コスト予算・アラート閾値・引継ぎ閾値・カバレッジ目標が埋まらないと、`5c` の合格判定と `6l` の GATE-TEST が比較対象を持たない。**<br />CLAUDE.md は file_type ではないので検査 18 の除外リストにある。 |
 | `1e`<br />初期設定<br />**新設** | 表 0 に照らして開発方式を選び、<br />CLAUDE.md へ記録する | main-agent | technical-authority | opus | 表 0<br />user-order | tech-decision | 決めた方式と理由 | **表 0 を引くだけで軽く、以降の分岐の入力になる。**<br />CLAUDE.md「開発方式」節へ記録する。<br />節も未新設である。 |
-| `1f`<br />初期設定<br />**新設** | 関与者を洗い出し、<br />ステークホルダー登録簿に書く | main-agent | srs-writer | opus | user-order<br />`1b` の不足の一覧 | stakeholder-register | 登録簿の場所<br />関与者の数 | **project-manager から移した。**<br />要求側の成果物である。 |
-| `1g`<br />初期設定<br />**統合** | 条件付き 13 プロセスをプロセス規則 §3.4 に照らし、<br />要否を一括で判定する | main-agent | technical-authority | opus | user-order<br />`1e` の decision<br />プロセス規則 §3.4 | tech-decision | 13 件の可否と理由 | **project-manager から移した。判定が本務である。**<br />旧 `0c`〜`0n2` の 13 手順を 1 つにまとめる。 |
+| `1f`<br />初期設定<br />**新設** | 関与者を洗い出し、<br />ステークホルダー登録簿に書く | main-agent | srs-writer | opus | user-order<br />`1b` の不足の一覧 | stakeholder-register | 登録簿の場所<br />関与者の数 | **project-manager から移した。**<br />要求側の成果物である。<br />**`stakeholder-register` のオーナーは project-manager である**（名簿 §2）。**本行は srs-writer が書くので移管に当たる。** 名簿側の是正は別途。 |
+| `1g`<br />初期設定<br />**統合** | 条件付き 13 プロセスをプロセス規則 §3.4 に照らし、<br />要否を一括で判定する | main-agent | technical-authority | opus | user-order<br />`1e` の decision<br />プロセス規則 §3.4 | tech-decision | 13 件の可否と理由 | **project-manager から移した。判定が本務である。**<br />旧 `0c`〜`0n2` の 13 手順を 1 つにまとめる。<br />**HW・AI・フレームワークの 3 フラグがすべて不成立のときは、その旨を同じ tech-decision に記録する。** Phase 3 が丸ごと走らないため、**GATE-DEPENDENCY はこの記録をもって充足とする**（プロセス規則 §9.4.1）。**記録なき免除は規約違反である**（同 §3.1.1）。 |
 | `1h`<br />初期設定 | 評価結果をまとめ、<br />利用者へ渡す報告文を書く | main-agent | project-manager | opus | `1e` の decision<br />`1g` の decision | — | 報告文 | **文は下で起草させる**<br />（`agent-orchestration-rules.md` §4.7 の規約 5）。 |
 | `1h`<br />初期設定 | 報告文を利用者に示し、<br />確認を得る | **main-agent** | **利用者** | — | 報告文 | — | 確認 / 差し戻し | **[直列]** **利用者と話せるのは `main-agent` だけである**<br />（構造上の制約）。 |
 | `1i`<br />初期設定 | 方式と評価結果を pipeline-state に書いて初期化する | main-agent | project-manager | opus | `1e` の decision<br />`1g` の decision | pipeline-state | 初期化の完了 | 記録が本務である。 |
@@ -379,7 +379,7 @@ flowchart TD
 | `5f`<br />実装 | 依存関係に SCA を走らせ、<br />脆弱性を洗い出す | main-agent | security-reviewer | opus | `5a` の依存関係の一覧 | security-scan-report | 報告の場所と件数 | **本手順は SCA だけである。SAST は `5g` が持つ。**<br />依存が 0 件なら該当なしと記録する。 |
 | `5f`<br />実装 | 依存のライセンス面から帰属表示の要否を判定する | main-agent | license-checker | haiku | `5a` の依存関係の一覧 | — | 帰属表示の要否 | **[同時]** **兄弟で並べて起動する**<br />（`agent-orchestration-rules.md` §4.5.1）。 |
 | `5g`<br />実装<br />**新設** | ソースに SAST を走らせ、<br />脆弱性を洗い出す | main-agent | security-reviewer | opus | `5a` の src | security-scan-report | 報告の場所と件数 | 簡易は外部入力を扱う場合のみ。<br />**旧 §3.2.8 を SCA と 2 件に割って生まれた**<br />。<br />走らせる時期も対象も SCA と違う。 |
-| `5h`<br />実装 | 依存のライセンス互換性を確認し、<br />帰属表示をそろえる | main-agent | license-checker | haiku | 依存関係の一覧<br />`5f` の帰属表示の要否 | license-report | 報告の場所<br />非互換の件数 | 依存ライブラリを追加したら必ず走らせる。 |
+| `5h`<br />実装 | 依存のライセンス互換性を確認し、<br />帰属表示をそろえる | main-agent | license-checker | haiku | 依存関係の一覧<br />`5f` の帰属表示の要否 | license-report | 報告の場所<br />非互換の件数 | 依存ライブラリを追加したら必ず走らせる。<br />**依存が 0 件、または依存定義ファイルが無い場合は、該当なしとして license-report を残す**（`5f` と同じ形）。**GATE-IMPL が license-report の存在を無条件に要求するため、書かずに飛ばしてはならない（MUST NOT）。** |
 | `5i`<br />実装 | 指摘とスキャン結果を統合し、<br />合格条件に照らして GATE-IMPL の可否を出す | main-agent | technical-authority | opus | `5e` の review<br />`5f` `5g` の security-scan-report<br />`5h` の license-report<br />**`5c` の合格率とカバレッジ** | tech-decision | 可否と理由<br />統合済みの指摘 | 合格条件はプロセス規則 §9.4.1 が持つ。<br />**厳格では 5 エージェントの指摘をここで統合する**<br />（`agent-orchestration-rules.md` §4.5.2）。<br />**単体テストの合格率とカバレッジを tech-decision に転記する。** 単体テストは仕様書に載らないので（`5c`）、**ここが唯一の記録点であり、`6l` の GATE-TEST がこれを読む。** |
 
 **手順数が 8 → 9 になる。** `5g` の新設で 1 増える。
@@ -398,8 +398,8 @@ flowchart TD
 | `6g`<br />テスト<br />**新設** | 非機能テストの受入基準を決め、<br />テストコードを書く | main-agent | test-designer | opus | 対象: テスト<br />根拠: 数値目標を持つ NFR | spec-test<br />**traceability** | ケースの章の場所<br />付けた `TC` の UID 範囲 | **`6h` は実行だけで、ケースを作る行が無かった。**<br />数値目標を持つ NFR がある場合。 |
 | `6h`<br />テスト | 性能テストを走らせ、<br />NFR の数値目標との差を出す | main-agent | tester | sonnet | 対象: 自分が書く結果の節<br />根拠: 数値目標を持つ NFR | performance-report<br />spec-test | 達成 / 未達の別<br />未達の項目 | 数値目標を持つ NFR がある場合。<br />**`performance-report` のオーナーは tester であり、本行の担当者と一致する**（名簿 §2）。 |
 | `6i`<br />テスト | 実機でテストを行い、<br />フィードバックを記録する | main-agent | field-test-engineer | sonnet | `6b` `6d` の結果<br />利用者の操作 | field-issue | 記録の場所<br />挙がった件数 | 実機テストフラグ。<br />**利用者と実機でやり取りする部分は `main-agent` を通す。** |
-| `6i`<br />テスト | フィードバックを仕様書に照らし、<br />defect / CR / 質問に分類する | main-agent | feedback-classifier | sonnet | 対象: 全文<br />`6i` の field-issue | field-issue | 分類の内訳 | **[直列]** **兄弟で並べて起動する。field-test-engineer が呼んではならない**<br />（`agent-orchestration-rules.md` §4.5.1）。 |
-| `6i`<br />テスト | 原因を分析し、<br />対策を立てる | main-agent | field-issue-analyst | opus | `6i` の field-issue と分類 | field-issue | 原因と対策案<br />影響範囲 | **[直列]** 同上。 |
+| `6i`<br />テスト | フィードバックを仕様書に照らし、<br />defect / CR / 質問に分類する | main-agent | feedback-classifier | sonnet | 対象: 全文<br />`6i` の field-issue | field-issue | 分類の内訳 | **[直列]** **兄弟で並べて起動する。field-test-engineer が呼んではならない**<br />（`agent-orchestration-rules.md` §4.5.1）。<br />**`field-issue` のオーナーは field-test-engineer である**（名簿 §2）。**本行は Detail Block への追記であり、Common Block と Form Block は触れない**（文書管理規則 §11）。 |
+| `6i`<br />テスト | 原因を分析し、<br />対策を立てる | main-agent | field-issue-analyst | opus | `6i` の field-issue と分類 | field-issue | 原因と対策案<br />影響範囲 | **[直列]** 同上。<br />**`field-issue` のオーナーは field-test-engineer である**（名簿 §2）。**本行も Detail Block への追記に限る**（文書管理規則 §11）。 |
 | `6j`<br />テスト | テスト消化曲線と defect curve を更新する | main-agent | progress-monitor | sonnet | `6b` `6d` の結果<br />defect の一覧 | progress | 曲線の場所<br />収束の傾向 | 1 週間未満の走行では点が足りない。 |
 | `6k`<br />テスト | テストコードを R6 に照らし、<br />指摘を挙げる | main-agent | review-agent | opus | 対象: テスト<br />根拠: 対象ノードの祖先 | review | 指摘の場所と件数<br />Critical / High の有無 | **R6 は 1 観点なので、厳格でも 1 エージェントである**<br />（割る先が無い）。 |
 | `6l`<br />テスト | テスト結果と指摘を合格条件に照らし、<br />GATE-TEST の可否を出す | main-agent | technical-authority | opus | `6k` の review<br />`6b` `6d` `6f` `6h` の結果<br />**`5i` の tech-decision**<br />`6a` `6e` `6g` の traceability | tech-decision | 可否と理由<br />統合済みの指摘 | 合格条件はプロセス規則 §9.4.1 が持つ。<br />**カバレッジは `5i` の tech-decision から読む。** 単体テストは仕様書に載らないため、他に載る場所がない。<br />`traceability` は「全 FR にテスト対応がある」の判定に要る。 |
@@ -476,8 +476,9 @@ flowchart TD
 | フェーズ | 作業 | 依頼元 | 担当者 | モデル | 入力 | 出力 | 依頼元へ返す | 備考 |
 |---|---|---|---|---|---|---|---|---|
 | `Fa`<br />フェーズ完了時 | トークン消費とコストを数え、<br />予算と突き合わせる | main-agent | progress-monitor | sonnet | `progress-log`（フックの記録）<br />Agent の返り値 | progress | 累計と予算比 | **計測が本務である。**<br />予算とアラート閾値は CLAUDE.md「品質目標」が持つ。<br />閾値に達したら `main-agent` が利用者へ通知する。<br />**トークンはフックでは取れないので、`main-agent` が Agent の返り値を渡す**<br />（`agent-orchestration-rules.md` §4.5.3）。 |
-| `Fb`<br />フェーズ完了時 | 続きから再開できる引継ぎを書く | main-agent | project-manager | opus | pipeline-state<br />当該フェーズの成果物の場所 | handoff | 引継ぎ文の場所 | 文脈の圧縮が起きたときに書く。<br />発火を判断するのは `main-agent` である<br />（自分の文脈の話であるため）。<br />**引継ぎ閾値と比べる値は現在生まれていない**<br />。 |
-| `Fc`<br />フェーズ完了時 | pipeline-state と executive-dashboard を更新し、<br />報告文を書く | main-agent | project-manager | opus | 当該フェーズのゲート判定結果<br />`progress-log`（フックの記録） | pipeline-state<br />executive-dashboard | 報告文<br />次のフェーズ | **統合が本務である。**<br />簡易は pipeline-state のみ。<br />**手順ごとに起動してはならない。フェーズ境界にまとめる**<br />（`agent-orchestration-rules.md` §4.5.3）。 |
+| `Fb`<br />フェーズ完了時 | フェーズの区切りとして、続きから再開できる引継ぎを書く | main-agent | project-manager | opus | pipeline-state<br />当該フェーズの成果物の場所 | handoff | 引継ぎ文の場所 | **フェーズ境界の引継ぎである。** 誰が続きを引き取っても再開できることが目的。 |
+| `Fb`<br />フェーズ完了時 | 中断したセッションを続きから再開できるように書く | **main-agent** | **main-agent** | —<br />（セッションのモデル） | pipeline-state<br />会話の文脈 | session-handoff | — | **[直列]** **文脈の圧縮が起きたときに書く。発火を判断するのも書くのも `main-agent` である** —— **サブエージェントは会話履歴を見ないので、セッションの文脈を復元できるのは `main-agent` だけだからである**（文書管理規則 §11 の `main-agent` 所有の条件）。<br />**`handoff` と別の file_type である。取り違えてはならない（MUST NOT）。**<br />引継ぎ閾値は CLAUDE.md「品質目標」が持ち、比べる値は `tools/session-meter.mjs` が書く。 |
+| `Fc`<br />フェーズ完了時 | pipeline-state と executive-dashboard を更新し、<br />報告文を書く | main-agent | project-manager | opus | 当該フェーズのゲート判定結果<br />`progress-log`（フックの記録） | pipeline-state<br />executive-dashboard | 報告文<br />次のフェーズ<br />**累計コストと予算比** | **統合が本務である。**<br />簡易は pipeline-state のみ。<br />**手順ごとに起動してはならない。フェーズ境界にまとめる**<br />（`agent-orchestration-rules.md` §4.5.3）。<br />**`Fa` が免除される方式（簡易）では、コストの突き合わせを本手順に畳む。** 予算とアラート閾値は CLAUDE.md「品質目標」が持ち、**閾値に達したら `main-agent` が `Fj` で利用者へ上げる。**<br />**畳まないと簡易ではコストが一度も測られず、`Fj` のコスト契機が恒久的に発火しない。** |
 | `Fc`<br />フェーズ完了時 | フェーズの完了を利用者に報告する | **main-agent** | **利用者** | — | 報告文 | — | 受領 / 差し戻し | **[直列]** **報告するのは `main-agent` である。** |
 | `Fd`<br />フェーズ完了時 | defect とゲートの結果からふりかえり、<br />改善案を出す | main-agent | process-improver | sonnet | 当該フェーズの defect<br />ゲート判定結果 | retrospective-report | 報告の場所<br />改善案 | 各フェーズ完了時に行う。<br />改善案の適用は `Fe` が受ける。 |
 | `Fe`<br />フェーズ完了時 | 承認済みの改善策をガバナンスファイルへ適用する | main-agent | decree-writer | sonnet | `Fd` の改善案<br />利用者の承認 | governance-change-log | before/after diff | `Fd` に従属する。<br />**承認するのは利用者である**<br />（`main-agent` 経由）。 |
@@ -499,7 +500,7 @@ flowchart TD
 | `Fg`<br />随時<br />**新設** | CR に当たる defect を change-request へ振り分ける | main-agent | change-manager | sonnet | `Fg` の defect | change-request | 振り分けの結果 | **[直列]** 同上。 |
 | `Fh`<br />随時<br />**新設** | 文書の版を上げ、<br />廃止文書を `old/` へ移す | main-agent | **各 file_type のオーナー** | 各体の既定 | 当該 file_type の現物 | 全 file_type | 新しい版の場所 | **単一の担当者を置かない唯一の行である。**<br />オーナーの対応は `agent-list.md` §2 が持つ。 |
 | `Fh`<br />随時<br />**新設** | 新旧の版の差分を確かめる | main-agent | review-agent | opus | 新旧の版 | — | 差分の可否 | **[直列]** **兄弟で並べて起動する**<br />（`agent-orchestration-rules.md` §4.5.1）。 |
-| `Fi`<br />随時<br />**新設** | 指摘に分類を付けて 1 通で回答する | main-agent | **指摘を受けた成果物のオーナー** | 各体の既定 | レビューの review<br />対象: 全文 | review | 回答の場所<br />争う件の数 | `agent-orchestration-rules.md` §4.3 が定める往復。<br />**分類は争う / 直した / 保留。争う件を先頭に置く。**<br />**1 件ずつ送ってはならない（MUST NOT）。** |
+| `Fi`<br />随時<br />**新設** | 指摘に分類を付けて 1 通で回答する | main-agent | **指摘を受けた成果物のオーナー** | 各体の既定 | レビューの review<br />対象: 全文 | — | 回答の場所<br />争う件の数 | `agent-orchestration-rules.md` §4.3 が定める往復。<br />**分類は争う / 直した / 保留。争う件を先頭に置く。**<br />**1 件ずつ送ってはならない（MUST NOT）。**<br />**回答は戻り値であって成果物ではない。`review` を書いてはならない（MUST NOT）** —— オーナーは review-agent であり、指摘対応テーブルへの追記は下の 2 行目が行う。 |
 | `Fi`<br />随時<br />**新設** | 回答を読み、指摘の可否を再判定する | main-agent | review-agent | opus | `Fi` の回答<br />対象: 全文 | review | 再判定の結果<br />決着しない争点 | **[直列]** `agent-orchestration-rules.md` §4.1 の再開で回す。<br />**表 E-1 の「再レビュー」がこの行である。** |
 | `Fj`<br />随時<br />**新設** | 即時に上げる事象の報告文を書く | main-agent | project-manager | opus | risk-register<br />progress<br />ゲートの判定結果 | — | 報告文 | `agent-orchestration-rules.md` §4.5.3 が「即時。`main` が利用者へ上げる」と定める 3 事象。<br />**`main-agent` に起草させない**（`agent-orchestration-rules.md` §4.7 の規約 5）。 |
 | `Fj`<br />随時<br />**新設** | 事象を利用者に示し、判断を得る | **main-agent** | **利用者** | — | 報告文 | — | 利用者の判断 | **[直列]** リスク score≧6 ／ コスト閾値の到達 ／ ゲート FAIL のエスカレーション。 |
@@ -691,7 +692,7 @@ flowchart TD
 | エージェント | **無条件 11 エージェント** —— srs-writer<br />architect<br />technical-authority<br />project-manager<br />review-agent<br />implementer<br />security-reviewer<br />license-checker<br />test-designer<br />tester<br />user-manual-writer |
 | 条件付きで増えるエージェント | **8 エージェント** —— runbook-writer<br />field-test-engineer<br />feedback-classifier<br />field-issue-analyst<br />incident-reporter<br />progress-monitor<br />process-improver<br />change-manager<br />**全部有効なら 19 エージェント。** |
 | 簡易では決して起動しないエージェント | **2 エージェント** —— risk-manager（`4k` 免除）<br />decree-writer（`Fe` 免除）<br />**19 ＋ 2 = 21。名簿は現在 22 件である。**<br />差は `terminology-checker` の 1 件のみで、**作業表のどの行にも現れない**。**完了報告の用語チェック要請で呼ばれるため、手順を持たない**（`agent-orchestration-rules.md` §4.6 の規約 6）。<br />**`test-engineer` は名簿から外した**（2026-08-12 決定。作業表で 1 度も使わないため）。 |
-| 成果物 | user-order<br />CLAUDE.md<br />**tech-decision**<br />pipeline-state<br />interview-record<br />src<br />spec-foundation<br />spec-architecture<br />spec-test<br />traceability<br />test-plan<br />review<br />security-scan-report<br />license-report<br />final-report<br />user-manual<br />handoff<br />**17 件（表 M の `実施` から機械で導出した）。**<br />**ANMS なので 3 型は単一の `spec` へ畳まれ、現物のファイルは 1 枚である。** |
+| 成果物 | user-order<br />CLAUDE.md<br />**tech-decision**<br />pipeline-state<br />interview-record<br />src<br />spec-foundation<br />spec-architecture<br />spec-test<br />traceability<br />test-plan<br />review<br />security-scan-report<br />license-report<br />final-report<br />user-manual<br />handoff<br />session-handoff<br />**18 件（表 M の `実施` から機械で導出した）。**<br />**ANMS なので 3 型は単一の `spec` へ畳まれ、現物のファイルは 1 枚である。** |
 | レビュー報告 | **5 本 ＋ 再レビュー分**（`2i` `4m` `5e` `6k` `7a`。表 E-1 が正）。<br />**簡易でも報告ファイルを残す。** `gate-guard` は `project-records/reviews/` の実ファイルしか見ないので、残さないとゲートが開かない。<br />`7a` は 1 エージェントで R1〜R7 を網羅する。<br />合格線 Critical 0 / High 0。 |
 | ゲート | 全 8 ゲートを判定する。 |
 
@@ -775,7 +776,7 @@ flowchart TD
 | # | 判定 |
 |:-:|---|
 | 7 | **作業表に現れる手順記号の集合が、表 M に現れる集合と完全に一致する。** 片方にしか無い記号を許さない |
-| 8 | **作業表の手順記号が `commands/full-auto-dev.md` に実在する。手順セルに `新設` / `統合` / `分割` を含む行は実在検査の対象外とし、件数を出力する**（現在 14 件。`Phase 0` の 5 手順を除く） |
+| ~~8~~ | **削除した**（2026-08-12）。「作業表の手順記号が `commands/full-auto-dev.md` に実在する」ことを求めていたが、**当の `full-auto-dev.md` は「手順をこの文書に写してはならない（MUST NOT）」と定めて手順記号を 1 つも持たない。** 手順の正本が作業表へ移った時点で役目が終わっており、**このままでは 97 件すべてが落ちる**。検査 7（作業表と表 M の集合一致）が代替する |
 | 9 | 表 M の `条件付き` のセルには、同じ行の `備考` に条件が書かれている |
 | 10 | **作業表の備考に `[簡易・標準]` / `[厳格]` を持つ手順は、表 M で「経路が方式で変わる」と注記されている**（現在 `4m` `5a` `5e` `7a` の 4 つ） |
 | 11 | §10 に挙げた行が、作業表と表 M と表 E で実際に標準と厳格の差が出る行と一致する |
@@ -793,7 +794,7 @@ flowchart TD
 | 18 | **`出力` に現れる名前が `agent-list.md` §2 の file_type に実在する。** file_type でない生成物は除外リストで明示する —— `src` / `openapi` / `container-image` / `settings.json` / `agents` / `commands` / `CLAUDE.md`。**前 3 者は名簿 §2 が「file_type ではない生成物」として明示的に列挙している。新設候補ではない** |
 | **18b** | **`出力` の file_type のオーナーが `担当者` と一致する。** 異なる行は `備考` に移管の宣言を持つ（`agent-orchestration-rules.md` §4.7 の規約 4） |
 | **18c** | **`担当者` が `review-agent` の行の `出力` は `review` だけである**（`agent-orchestration-rules.md` §4.7 の規約 3。レビュアーに直させない） |
-| **18d** | **`担当者` が `**main-agent**` の行は `出力` が `—` である**（`agent-orchestration-rules.md` §4.5 の規約 1。`main-agent` に記録させない） |
+| **18d** | **`担当者` が `**main-agent**` の行は `出力` が `—` である**（`agent-orchestration-rules.md` §4.5 の規約 1。`main-agent` に記録させない）。**例外は `session-handoff` の 1 型だけである** —— 文書管理規則 §11 が「**サブエージェントでは復元できない情報を持つ成果物にのみ `main-agent` を指定できる（MUST）**」と定めており、セッションの会話文脈がそれに当たる |
 | **18f** | **`モデル` 列が `agents/*.md` の `model:` および `agent-list.md` §1 の `model` 列と一致する。** 名簿未登録の暫定値は `**暫定**` を併記する。**`fable` が現れたら FAIL** |
 | **18g** | **`モデル` 列に方式ごとの併記が無い。** モデルは担当者だけで決まる（2026-08-11 決定） |
 | **18e** | **`依頼元へ返す` の各値が「場所」「可否」「件数」「次の一手」のいずれかに分類できる。** 分類できない値があれば FAIL（`agent-orchestration-rules.md` §3.6・§4.3 の規約 4・§4.7 の規約 1） |
