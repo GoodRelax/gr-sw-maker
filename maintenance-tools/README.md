@@ -1,6 +1,6 @@
 # 道具の目録
 
-本書は `maintenance-tools/` と `tools/` の 2 つのディレクトリにまたがる 20 ファイルの目録である。**両者を分ける軸は「配るか否か」である。** `maintenance-tools/` の 12 ファイルは本リポジトリを守るためのもので、利用者プロジェクトへは 1 つも届かない。`tools/` の 8 ファイルは利用者プロジェクトの中で動くもので、`create-gr-sw-maker/bin/create.js` の `USER_TOOLS` 許可リストがそのまま配布対象である。
+本書は `maintenance-tools/` と `tools/` の 2 つのディレクトリにまたがる 23 ファイルの目録である。**両者を分ける軸は「配るか否か」である。** `maintenance-tools/` の 15 ファイルは本リポジトリを守るためのもので、利用者プロジェクトへは 1 つも届かない。`tools/` の 8 ファイルは利用者プロジェクトの中で動くもので、`create-gr-sw-maker/bin/create.js` の `USER_TOOLS` 許可リストがそのまま配布対象である。
 
 各欄はスクリプトの実体から読み取ったものであり、**正本はスクリプト自身と、それを起動する `.github/workflows/framework-check.yml`・`.claude/settings.json`・`maintenance-tools/hooks/` である。** 本書と実体が食い違ったときは実体が正しい。
 
@@ -14,7 +14,7 @@
 
 | 分類 | 置き場 | 何をするものか | 該当 |
 |---|---|---|---|
-| 検査 | `maintenance-tools/` | 正本の食い違いを見つけて非 0 で落ちる | `check-parity.mjs` `check-roster.mjs` `check-links.mjs` `check-tagnames.mjs` `check-terms.mjs` `check-setup.mjs` `hooks/pre-commit` |
+| 検査 | `maintenance-tools/` | 正本の食い違いを見つけて非 0 で落ちる | `check-parity.mjs` `check-roster.mjs` `check-links.mjs` `check-tagnames.mjs` `check-terms.mjs` `check-setup.mjs` `check-mode-matrix.mjs` `check-registry.mjs` `check-workspace.mjs` `hooks/pre-commit` |
 | 検査 | `tools/` | 利用者プロジェクトの仕様書のグラフを検査する | `spec-query/checks.jq` |
 | 生成 | `maintenance-tools/` | 正本から別の形を作り出す | `split-work-table.mjs` `jsonl2md.mjs` |
 | 計測 | `maintenance-tools/` | フレームワーク自身を測る | `context-census.mjs` |
@@ -115,7 +115,7 @@ flowchart TB
     ChecksJq -->|"文法として対になる"| Sgra
 ```
 
-`maintenance-tools/` へ入る矢印は CI と `git commit` と手動だけであり、利用者プロジェクトからは 1 本も入らない。`tools/` へ入る矢印はフックと statusLine と Phase 0 の起動であり、いずれも利用者プロジェクトの中で発火する。CI から起動される検査 6 本は `framework-src/{lang}/process-rules/framework-development.md` §6 が手元での実行方法も案内している。
+**CI のステップは 10 本である**（syntax ＋ 検査 8 本 ＋ `split-work-table --check`）。`maintenance-tools/` へ入る矢印は CI と `git commit` と手動だけであり、利用者プロジェクトからは 1 本も入らない。`tools/` へ入る矢印はフックと statusLine と Phase 0 の起動であり、いずれも利用者プロジェクトの中で発火する。CI から起動される検査 6 本は `framework-src/{lang}/process-rules/framework-development.md` §6 が手元での実行方法も案内している。
 
 ---
 

@@ -140,13 +140,20 @@ if (event === "PreToolUse") {
   entry.duration_ms = Number.isNaN(started) ? null : Date.parse(at) - started;
 }
 
-/** Newest open entry matching this tool_use_id, or failing that, this agent. */
+/**
+ * Newest open entry matching this tool_use_id, or failing that, this agent.
+ *
+ * The fallback runs even when an id was supplied: the runtime may attach one to
+ * PostToolUse and not to PreToolUse, and a matcher that gave up there would
+ * leave every entry open forever -- which reads as "nothing ran" rather than
+ * "duration unknown", the confusion the progress rules exist to prevent.
+ */
 function findOpen(list, id, who) {
-  for (let i = list.length - 1; i >= 0; i -= 1) {
-    if (list[i].ended_at) continue;
-    if (id && list[i].tool_use_id === id) return i;
+  if (id) {
+    for (let i = list.length - 1; i >= 0; i -= 1) {
+      if (!list[i].ended_at && list[i].tool_use_id === id) return i;
+    }
   }
-  if (id) return -1;
   for (let i = list.length - 1; i >= 0; i -= 1) {
     if (!list[i].ended_at && list[i].agent === who) return i;
   }

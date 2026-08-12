@@ -104,6 +104,7 @@ function ownership(rules) {
   let inSection = false;
   for (const line of lines) {
     if (/^# 11\./.test(line)) inSection = true;
+    else if (inSection && /^# \d+\./.test(line)) break; // section 11 ends here
     if (!inSection) continue;
     const match = /^\| ([a-z-]+) \| ([a-z][a-z0-9-]*) \|/.exec(line);
     if (match && registered.has(match[2]) && !owners.has(match[2])) {
@@ -116,7 +117,11 @@ function ownership(rules) {
 /** Step symbols in the mode table (section 6), expanding "0a〜0e" ranges. */
 function modeTableSteps(text) {
   const lines = text.split("\n");
-  const start = lines.findIndex((line) => line.includes("表 M"));
+  // Anchor on the section heading, not on the first mention of the table: the
+  // legend and the phase-history tables also say "表 M", and starting there
+  // would let their step symbols stand in for the real ones.
+  const start = lines.findIndex((line) => /^## 6\. .*表 M/.test(line));
+  if (start === -1) return new Set();
   const end = lines.findIndex((line, index) => index > start && /^## 7\./.test(line));
   const steps = new Set();
   for (let i = start; i < (end === -1 ? lines.length : end); i += 1) {

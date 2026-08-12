@@ -50,7 +50,6 @@ for (const lang of languages()) {
 
   // Section 7.1: the workflow reference, ending where section 8 begins.
   const workflow = new Set();
-  for (const line of section(lines, "# 8. ", "# 8. ").length ? [] : []) workflow.add(line);
   const beforeEight = lines.slice(0, lines.findIndex((line) => line.startsWith("# 8. ")));
   const wfStart = beforeEight.findIndex((line) => line.includes("| file_type | commissioned_by"));
   if (wfStart !== -1) {
@@ -90,8 +89,16 @@ for (const lang of languages()) {
     if (!forms.has(type)) problems.push(`${lang}: "${type}" の Form Block 定義（§9.x）が無い`);
     if (!owners.has(type)) problems.push(`${lang}: "${type}" のオーナーが §11 に無い`);
   }
+  // Both directions: a type left behind in one of the four tables after being
+  // removed from the register is just as invisible as one never added.
   for (const type of forms) {
     if (!registered.has(type)) problems.push(`${lang}: §9.x に "${type}" があるが §7 に登録が無い`);
+  }
+  for (const type of namespaces) {
+    if (!registered.has(type)) problems.push(`${lang}: §8 に "${type}" があるが §7 に登録が無い`);
+  }
+  for (const type of owners.keys()) {
+    if (!registered.has(type)) problems.push(`${lang}: §11 に "${type}" があるが §7 に登録が無い`);
   }
 
   // Counts stated in prose, against what the register actually holds.

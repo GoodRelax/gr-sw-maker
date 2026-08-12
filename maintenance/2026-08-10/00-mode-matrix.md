@@ -756,7 +756,7 @@ flowchart TD
 
 ## 11. 本表が満たすべき検査
 
-`tools/check-mode-matrix.mjs` が確かめる。同ファイルは未作成である。
+`maintenance-tools/check-mode-matrix.mjs` が確かめる（2026-08-12 に新設。CI のステップ `mode-matrix`）。**機械で判定できる検査だけを実装しており、意味理解を要するもの（検査 21 の動詞判定、検査 18e の分類）は実装していない。**
 
 **軸を 2 つに割ったので、検査も 2 群に割れる。**
 
@@ -785,13 +785,13 @@ flowchart TD
 
 | # | 判定 |
 |:-:|---|
-| 12 | **`依頼元` と `担当者` が `agent-list.md` §1 の名簿に実在する。** 名簿外の値として `**main-agent**` / `**利用者**` / `**各 file_type のオーナー**` / `setup.js` の 4 つだけを許す |
+| 12 | **`依頼元` と `担当者` が `agent-list.md` §1 の名簿に実在する。** 名簿外の値として `**main-agent**` / `**利用者**` / `**各 file_type のオーナー**` / `**指摘を受けた成果物のオーナー**`（`Fi`）/ `setup.js` の 5 つだけを許す |
 | 13 | **全行に `担当者` が 1 つある。** 複数を書いてはならない。**`× N` の形と `**各 file_type のオーナー**` を 1 つとみなす** |
 | 14 | **同じ手順記号の行が複数あれば、`依頼元` はすべて同じである**（兄弟の規則。`agent-orchestration-rules.md` §4.5.1） |
 | 15 | **`担当者` が `**利用者**` の行は、`依頼元` が `**main-agent**` である**（`agent-orchestration-rules.md` §4.5 の規約 1）。エージェントが利用者に直接話す経路を許さない |
 | 16 | **`依頼元` は `**main-agent**` か `**利用者**` だけである**（`agent-orchestration-rules.md` §4.5 の規約 3・7）。エージェントがエージェントを起動する経路を許さない |
 | 17 | **`担当者` がその方式で 1 つも `実施` を持たないエージェントは、その方式で起動しない**（旧 表 C の導出。表 M を引く） |
-| 18 | **`出力` に現れる名前が `agent-list.md` §2 の file_type に実在する。** file_type でない生成物は除外リストで明示する —— `src` / `openapi` / `container-image` / `settings.json` / `agents` / `commands` / `CLAUDE.md`。**前 3 者は名簿 §2 が「file_type ではない生成物」として明示的に列挙している。新設候補ではない** |
+| 18 | **`出力` に現れる名前が `agent-list.md` §2 の file_type に実在する。** file_type でない生成物は除外リストで明示する —— `src` / `tests` / `infra` / `openapi` / `container-image` / `settings.json` / `agents` / `commands` / `process-rules` / `CLAUDE.md` / `全 file_type`（`Fh`）。**前 3 者は名簿 §2 が「file_type ではない生成物」として明示的に列挙している。新設候補ではない** |
 | **18b** | **`出力` の file_type のオーナーが `担当者` と一致する。** 異なる行は `備考` に移管の宣言を持つ（`agent-orchestration-rules.md` §4.7 の規約 4） |
 | **18c** | **`担当者` が `review-agent` の行の `出力` は `review` だけである**（`agent-orchestration-rules.md` §4.7 の規約 3。レビュアーに直させない） |
 | **18d** | **`担当者` が `**main-agent**` の行は `出力` が `—` である**（`agent-orchestration-rules.md` §4.5 の規約 1。`main-agent` に記録させない）。**例外は `session-handoff` の 1 型だけである** —— 文書管理規則 §11 が「**サブエージェントでは復元できない情報を持つ成果物にのみ `main-agent` を指定できる（MUST）**」と定めており、セッションの会話文脈がそれに当たる |
@@ -809,7 +809,7 @@ flowchart TD
 
 > **現状 FAIL する検査が 3 つある。段 1・段 6 で解消する。**
 >
-> **検査 12 は解消した**（2026-08-11）。`test-designer` と `tester` を `agent-list.md` §1 に登録し、`framework-src/{ja,en}/agents/` に定義を新設した。**名簿は 24 件、定義は 48 件（2 言語）で `check-roster` は PASS である。** PoC のための一時的な除外は不要になった。
+> **検査 12 は解消した**（2026-08-11）。`test-designer` と `tester` を `agent-list.md` §1 に登録し、`framework-src/ja/agents/` に定義を新設した。**現在は名簿 22 件・定義 22 件で `check-roster` は PASS である**（2026-08-12 に `test-engineer` を削除し、`kotodama-kun` を `terminology-checker` へ改名した。`framework-src/en/` は削除済みで言語ツリーは 1 つである）。
 >
 > **検査 18**（`出力` が file_type に実在する）—— 次の 4 件が名簿に無い。**名簿を直すか出力を寄せるかは名簿側の判断であり、本表では決めない。**
 >
@@ -829,7 +829,7 @@ flowchart TD
 | # | 判定 |
 |:-:|---|
 | 24 | 存在しないエージェント名を `担当者` に 1 件仕込むと FAIL する |
-| 25 | 存在しない手順記号を作業表に 1 件仕込むと FAIL する（検査 7・8 の両方が落ちる） |
+| 25 | 存在しない手順記号を作業表に 1 件仕込むと FAIL する（検査 7 が落ちる。**検査 8 は削除済み**） |
 | 26 | `依頼元` にエージェントの名前を 1 件仕込むと FAIL する（検査 16） |
 | 27 | `出力` の値を `依頼元へ返す` にも書くと FAIL する（検査 20） |
 

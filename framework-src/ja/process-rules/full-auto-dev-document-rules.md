@@ -923,7 +923,6 @@ external-dependency-spec（抽象テンプレート）
 | `governance-change-log:` | governance-change-log Form Block | `governance-change-log.applied_count: 3` |
 | `deployment-design:` | deployment-design Form Block | `deployment-design.target_env: container` |
 | `risk-register:` | risk-register Form Block | `risk-register.open_count: 4` |
-| `session-handoff:` | session-handoff Form Block | `session-handoff.context_used_pct: 82` |
 | `spec:` | spec Form Block（**ANMS。同名 `.meta.yaml` に置く**） | `spec.spec_format: ANMS` |
 | `spec-test:` | spec-test Form Block | `spec-test.tc_count: 24` |
 | `safety:` | safety Form Block | `safety.hazard_count: 7` |
