@@ -35,3 +35,10 @@ maintenance/temporary/
 /process-rules/
 /CLAUDE.md
 /user-order.md
+
+# setup.js writes these when it overwrites an edited CLAUDE.md or user-order.md.
+# They are backups of a deploy output, so they are output too -- but the rules
+# above are anchored to the exact file name and never covered them, and a
+# tracked CLAUDE.md.bak came back as a modified file on every re-deploy.
+/CLAUDE.md.bak
+/user-order.md.bak
