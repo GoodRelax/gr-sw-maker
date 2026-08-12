@@ -54,6 +54,7 @@ OWASP Top 10 および CWE/SANS Top 25 に基づくセキュリティ設計と�
 | threat-model | docs/security/ | architect, implementer |
 | security-architecture | docs/security/ | architect, implementer |
 | security-scan-report | project-records/security/ | review-agent, project-manager |
+| safety | project-records/safety/ | technical-authority, review-agent（**条件付き: 機能安全フラグ有効時。`4l`**） |
 
 ### Work
 
@@ -63,7 +64,7 @@ OWASP Top 10 および CWE/SANS Top 25 に基づくセキュリティ設計と�
 
 0. 最初のメッセージの冒頭でユーザーに `[security-reviewer]` と名乗る
 1. In の必須要素を検査する。欠落があれば Exception に従い差し戻しを要請する
-2. 仕様書 Ch2 非機能要求からセキュリティ要求を抽出する
+2. 仕様書 Ch4.2 非機能要求からセキュリティ要求を抽出する
 3. 脅威モデリング（STRIDE）を実施する
 4. セキュリティアーキテクチャを設計する
 5. 実装コードの脆弱性を手動でスキャンする
@@ -112,7 +113,7 @@ OWASP Top 10 および CWE/SANS Top 25 に基づくセキュリティ設計と�
 | 異常 | 対応 |
 |------|------|
 | In の Form Block が文書管理規則 §9 の定義に適合しない | 解釈で補完しない。違反フィールドを列挙して差し戻しを要請する |
-| セキュリティ要求が仕様書に未記載 | **作業を止めない。** 未記載であること自体を Critical 指摘として security-scan-report に記録した上で、CLAUDE.md「セキュリティ要求」と OWASP Top 10 を基準に STRIDE 脅威モデリングを実施する。Ch2 への追記要請を完了報告に含めて返す |
+| セキュリティ要求が仕様書に未記載 | **作業を止めない。** 未記載であること自体を Critical 指摘として security-scan-report に記録した上で、CLAUDE.md「セキュリティ要求」と OWASP Top 10 を基準に STRIDE 脅威モデリングを実施する。Ch4.2 への追記要請を完了報告に含めて返す |
 | Critical 脆弱性を発見した | 即座に project-manager に報告。修正されるまで次フェーズへの移行をブロック |
 | スキャンツールが利用不可 | 手動レビューのみで実施し、ツール不在をレポートに記載 |
 | 依存ライブラリに既知の重大脆弱性 | project-manager に報告し、ライブラリの差し替えまたはバージョンアップを提案 |

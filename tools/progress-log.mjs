@@ -33,7 +33,7 @@
 // drops its own entry rather than corrupting the log -- the same direction as
 // every other failure here.
 
-import { readFileSync, writeFileSync, renameSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, renameSync, mkdirSync, existsSync, rmSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 
 const LOG = ["project-management", "progress", "progress-log.json"];
@@ -98,8 +98,18 @@ function readLog(path) {
 function writeLog(path, entries) {
   mkdirSync(dirname(path), { recursive: true });
   const staging = `${path}.${process.pid}.tmp`;
-  writeFileSync(staging, JSON.stringify(entries, null, 2) + "\n", "utf8");
-  renameSync(staging, path);
+  try {
+    writeFileSync(staging, JSON.stringify(entries, null, 2) + "\n", "utf8");
+    renameSync(staging, path);
+  } finally {
+    // A rename that failed leaves the staging file behind, and nothing in the
+    // user gitignore covers *.tmp -- it would be committed as project content.
+    try {
+      if (existsSync(staging)) rmSync(staging, { force: true });
+    } catch {
+      // Nothing further to try; the log is best-effort by design.
+    }
+  }
 }
 
 if (process.env.GR_SW_MAKER_SKIP_PROGRESS_LOG === "1") done();

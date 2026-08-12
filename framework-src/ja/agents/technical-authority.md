@@ -136,7 +136,7 @@ tech-decision:
 ```
 
 - `verdict` は `PASS` / `FAIL` のいずれか
-- `send_back_to` は FAIL のときのみ記載し、`planning` / `design` / `implementation` / `testing` のいずれか（プロセス規則 §4.7.1 の 4 経路）
+- `send_back_to` は FAIL のときのみ記載し、`planning` / `design` / `implementation` / `testing` / `delivery` / `operation` のいずれか。**前 4 つはプロセス規則 §4.7.1 の経路、後 2 つは当該フェーズ内へ戻す場合である** —— GATE-DELIVERY の FAIL（受入テスト不合格・user-manual の不備）と GATE-EOL の FAIL は、戻す先が同じフェーズの中にしか無い
 - `waiver` は `none` または waiver 記録への参照
 
 ### フェーズ遷移条件（技術面）

@@ -132,7 +132,11 @@ function formBlock(text, namespace) {
 /** A scalar field inside a Form Block. */
 function fieldValue(block, name) {
   if (!block) return null;
-  const match = new RegExp(`^\\s+${name}:\\s*(.*)$`, "m").exec(block);
+  // [^\S\r\n] is horizontal whitespace only. A plain \s* would cross the
+  // newline, so an empty `gate:` would take the next line as its value -- and
+  // a non-null gate that does not match discards the review entirely, which
+  // shuts a gate that should have opened through the gate_phase fallback.
+  const match = new RegExp(`^[^\\S\\r\\n]+${name}:[^\\S\\r\\n]*(.*)$`, "m").exec(block);
   if (!match) return null;
   return match[1].trim().replace(/^["']|["']$/g, "") || null;
 }

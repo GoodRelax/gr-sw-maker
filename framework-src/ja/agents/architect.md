@@ -84,12 +84,12 @@ docs/spec/ の仕様書 Ch5-7 を詳細化し、OpenAPI 3.0仕様を docs/api/ �
 2. 仕様書 Ch1-4 と interview-record.md を読み込む
 3. レイヤー仕訳を実施する（Entity / Use Case / Adapter / Framework の4層分類）
 4. Ch5 Design を詳細化する。**5.2-5.5 に現れる名前は R2.1 の品詞に従う**（Entity は名詞、Use Case は動詞句、Adapter は役割+方式、**イベントは過去形**、単位が固定の量は名前に単位）
-   - 3.1 Architecture Concept: アーキテクチャ方式と凡例の定義
-   - 3.2 Components: コンポーネント図（レイヤー色分け必須）
-   - 3.3 File Structure: ディレクトリ構成。**各コンポーネントの公開面を宣言する**（R2.19）
-   - 3.4 Domain Model: クラス図（レイヤー色分け必須）、ER図、状態遷移図
-   - 3.5 Behavior: シーケンス図、アクティビティ図
-   - 3.6 Decisions: ADR（Architecture Decision Records）。**キャッシュを用いる場合はキャッシュ方針の ADR を含める**（R2.20）
+   - 5.1 Architecture Concept: アーキテクチャ方式と凡例の定義
+   - 5.2 Components: コンポーネント図（レイヤー色分け必須）
+   - 5.3 File Structure: ディレクトリ構成。**各コンポーネントの公開面を宣言する**（R2.19）
+   - 5.4 Domain Model: クラス図（レイヤー色分け必須）、ER図、状態遷移図
+   - 5.5 Behavior: シーケンス図、アクティビティ図
+   - 5.6 Decisions: ADR（Architecture Decision Records）。**キャッシュを用いる場合はキャッシュ方針の ADR を含める**（R2.20）
 5. Ch6 Software Specification を詳細化する（各 SWS の `STATEMENT` を EARS 1 文で書き、`Relations` の `Parent` に `FR-xxx` または `NFR-xxx`、`Role` に `Satisfies` を書く）
 6. Ch7 Test Strategy を定義する（テストマトリクス）
 7. **最小構成と比較する。** 要求を満たす最小の構成を 1 つ書き出し、採用案がそれに対して増やした要素と、各々を増やした理由を Ch5.6 の ADR-000「最小構成との比較」に記録する（R2.18。**比較を書けない増分は採用しない**）

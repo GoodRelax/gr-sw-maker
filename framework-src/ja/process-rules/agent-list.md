@@ -105,6 +105,7 @@
 | threat-model | docs/security/ | 単 | design |
 | security-architecture | docs/security/ | 単 | design |
 | security-scan-report | project-records/security/ | 連 | implementation 以降 |
+| safety | project-records/safety/ | 単 | design（条件付き: 機能安全フラグ） |
 
 ### implementer
 

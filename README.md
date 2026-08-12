@@ -93,22 +93,22 @@ Projects built with this framework are collected in
 
 ## Development Flow
 
-After launch, the AI progresses through 8 phases. Two of them run only when the conditions apply.
+After launch, the AI progresses through 9 phases (phase 0, install, is the framework deployment that happens before `/full-auto-dev`). Two of them run only when the conditions apply.
 
 |  #  | Phase                | Conditional | What the AI does                                                                            | What you do                                    |
 | :-: | -------------------- | :---------: | ------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-|  0  | setup                |      —      | Evaluate the 13 conditional processes, propose the project configuration (`CLAUDE.md`)      | Review and approve the configuration           |
-|  1  | planning             |      —      | Structured interview, mocks and PoCs, specification Ch1-2                                    | Answer the interview, **iterate on the mock until it matches what you had in mind**, approve the spec |
-|  2  | dependency-selection |     Yes     | Evaluate and select HW / AI / framework dependencies, design the Adapter layer                | Approve the selection                          |
-|  3  | design               |      —      | Specification Ch3-6, OpenAPI, threat model, observability and deployment design, WBS, risks | —                                              |
-|  4  | implementation       |      —      | Code, unit tests, IaC, dependency vulnerability scan, license check                          | —                                              |
-|  5  | testing              |      —      | Integration, system and performance tests; field testing when enabled                        | Field testing, when enabled                    |
-|  6  | delivery             |      —      | Final review, deployment, user manual, runbook, final report                                 | Approve the IaC, run the acceptance tests      |
-|  7  | operation            |     Yes     | Incident reports, patching, SLA monitoring                                                   | —                                              |
+|  1  | setup                |      —      | Evaluate the 13 conditional processes, propose the project configuration (`CLAUDE.md`)      | Review and approve the configuration           |
+|  2  | planning             |      —      | Structured interview, mocks and PoCs, specification Ch1-4                                    | Answer the interview, **iterate on the mock until it matches what you had in mind**, approve the spec |
+|  3  | dependency-selection |     Yes     | Evaluate and select HW / AI / framework dependencies, design the Adapter layer                | Approve the selection                          |
+|  4  | design               |      —      | Specification Ch5-7, OpenAPI, threat model, observability and deployment design, WBS, risks | —                                              |
+|  5  | implementation       |      —      | Code, unit tests, IaC, dependency vulnerability scan, license check                          | —                                              |
+|  6  | testing              |      —      | Integration, system and performance tests; field testing when enabled                        | Field testing, when enabled                    |
+|  7  | delivery             |      —      | Final review, deployment, user manual, runbook, final report                                 | Approve the IaC, run the acceptance tests      |
+|  8  | operation            |     Yes     | Incident reports, patching, SLA monitoring                                                   | —                                              |
 
-`dependency-selection` runs when HW, AI/LLM or framework integration is enabled; `operation` runs when the project is operated after release. Both are decided in phase 0.
+`dependency-selection` runs when HW, AI/LLM or framework integration is enabled; `operation` runs when the project is operated after release. Both are decided in phase 1.
 
-Quality gates (AI reviews) must pass at each phase boundary before proceeding. A gate that fails three times escalates to you rather than looping.
+Quality gates (AI reviews) must pass at each phase boundary before proceeding. A gate that fails three times escalates to you rather than looping (twice in strict mode).
 
 ---
 

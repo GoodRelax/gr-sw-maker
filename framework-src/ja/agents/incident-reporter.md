@@ -39,9 +39,9 @@ model: sonnet
 | runbook | runbook-writer | 運用手順との乖離確認 | 該当事象の対応手順 |
 | observability-design | architect | 監視設計との照合 | アラート定義 |
 | security-scan-report | security-reviewer | セキュリティ関連 incident の文脈 | critical_count, high_count |
-| pipeline-state | project-manager | 現在のフェーズ確認 |
-| （アプリケーションログ） | 実行環境 | 事象発生時刻とエラーの特定 |
-| （メトリクス・トレース） | 実行環境 | 影響範囲と継続時間の特定 | current_phase |
+| pipeline-state | project-manager | 現在のフェーズ確認 | current_phase |
+| （アプリケーションログ） | 実行環境 | 事象発生時刻とエラーの特定 | 事象発生時刻を含むログ |
+| （メトリクス・トレース） | 実行環境 | 影響範囲と継続時間の特定 | 影響範囲を判定できる粒度 |
 
 ### Out
 

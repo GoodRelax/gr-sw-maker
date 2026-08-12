@@ -39,8 +39,17 @@ const FILE_TARGETS = ["CLAUDE.md", "user-order.md"];
 // a user's project forever: a retired agent remains selectable, and an old work
 // table coexists with the current one under a different file name. That is how
 // two step symbols come to mean two different things at once.
+// Names that were deployed by an earlier version and must be removed on a
+// re-deploy. A retired agent left in .claude/agents/ keeps its frontmatter, so
+// Claude Code still offers it -- the roster says it does not exist while the
+// runtime says it does.
 const RETIRED = {
-  agents: ["orchestrator.md"],
+  agents: [
+    "orchestrator.md", // superseded by project-manager
+    "kotodama-kun.md", // renamed to terminology-checker
+    "test-engineer.md", // split into test-designer and tester, then removed
+    "framework-translation-verifier.md", // retired with the English tree
+  ],
   commands: [],
   "process-rules": [],
 };
@@ -196,33 +205,42 @@ function printPortingGuide() {
   console.log("  to convert the framework for your AI platform.");
 }
 
+/**
+ * The interactive menu, built from the language trees that actually exist.
+ *
+ * Hard-coding the languages meant the menu kept offering en after that tree was
+ * removed, and four of the six choices died on "No originals for en" -- from a
+ * menu the installer points people at. Translation entries use the first
+ * available tree as their source, since /translate-framework reads an existing
+ * tree to write a new one.
+ */
 async function selectFromMenu() {
+  const langs = availableLanguages();
+  if (langs.length === 0) {
+    throw new Error("No language trees under framework-src/. Nothing to deploy.");
+  }
+
+  const choices = [];
+  for (const porting of [false, true]) {
+    for (const langCode of langs) choices.push({ langCode, porting, translate: false });
+    choices.push({ langCode: langs[0], porting, translate: true });
+  }
+
   console.log("");
   console.log("Select your environment:");
-  console.log("");
-  console.log("  Claude Code:");
-  console.log("    1) en (English)");
-  console.log("    2) ja (Japanese)");
-  console.log("    3) Other language");
-  console.log("");
-  console.log("  Other AI:");
-  console.log("    4) en (English)");
-  console.log("    5) ja (Japanese)");
-  console.log("    6) Other language");
+  let index = 0;
+  for (const porting of [false, true]) {
+    console.log("");
+    console.log(porting ? "  Other AI:" : "  Claude Code:");
+    for (const langCode of langs) console.log(`    ${++index}) ${langCode}`);
+    console.log(`    ${++index}) Other language (translated from ${langs[0]})`);
+  }
   console.log("");
 
   const answer = await ask("> ");
-
-  switch (answer) {
-    case "1": return { langCode: "en", porting: false, translate: false };
-    case "2": return { langCode: "ja", porting: false, translate: false };
-    case "3": return { langCode: "en", porting: false, translate: true };
-    case "4": return { langCode: "en", porting: true, translate: false };
-    case "5": return { langCode: "ja", porting: true, translate: false };
-    case "6": return { langCode: "en", porting: true, translate: true };
-    default:
-      throw new Error(`Invalid selection: "${answer}"`);
-  }
+  const picked = choices[Number(answer) - 1];
+  if (!picked) throw new Error(`Invalid selection: "${answer}"`);
+  return picked;
 }
 
 async function main() {

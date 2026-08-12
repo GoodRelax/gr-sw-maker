@@ -48,8 +48,8 @@ model: opus
 | spec-architecture | architect | R2/R4/R5/R7 レビュー対象 | Ch5-7, Ch6 の全 SWS に Parent（FR / NFR） |
 | （src/） | implementer | R2/R3/R4/R5/R7 レビュー対象 | 全関数に `@purity` タグ |
 | （tests/） | test-designer, implementer | R6 レビュー対象 | テストの実行結果 |
-| test-plan | test-designer | R6 テスト計画の妥当性レビュー | テスト観点と対象 FR |
-| performance-report | tester | R5 性能テスト結果のレビュー | NFR ごとの実測値 |
+| test-plan | test-designer | R6 テスト計画の妥当性レビュー（**`7a` の最終レビューでのみ。`test-plan` は `7j` の成果物であり `6k` の時点では存在しない**） | テスト観点と対象 FR |
+| performance-report | tester | R5 性能テスト結果のレビュー（**`7a` の最終レビューでのみ。`6h` は条件付きで、走らなければ存在しない**） | NFR ごとの実測値 |
 | traceability | test-designer | R1 要求-テスト間トレースの完全性レビュー | 全 FR の実装・テスト対応 |
 | review-standards.md | framework | R1-R7 の詳細チェック項目 | 総合レビューチェックリストの全行 |
 

@@ -758,7 +758,7 @@ change_log は**本文末尾の表**として書く。frontmatter には置か�
 | hw-requirement-spec | `hw-requirement-spec:` | HW要求仕様（条件付き。external-dependency-spec継承） | `docs/hardware/` | Yes | Conditional |
 | ai-requirement-spec | `ai-requirement-spec:` | AI/LLM要求仕様（条件付き。external-dependency-spec継承） | `docs/ai/` | Yes | Conditional |
 | framework-requirement-spec | `framework-requirement-spec:` | フレームワーク要求仕様（条件付き。external-dependency-spec継承） | `docs/framework/` | Yes | Conditional |
-| safety | `safety:` | 安全分析（HARA / FMEA / FTA）の結果（条件付き: 機能安全フラグ有効時。`4l`） | `docs/safety/` | Yes | Conditional |
+| safety | `safety:` | 安全分析（HARA / FMEA / FTA）の結果（条件付き: 機能安全フラグ有効時。`4l`） | `project-records/safety/` | Yes | Conditional |
 | release-checklist | `release-checklist:` | 全ゲートの結果を集めたリリース判定チェックリスト（`7b`） | `project-management/` | Yes | Standard |
 | executive-dashboard | `executive-dashboard:` | プロジェクト全体ダッシュボード | ルート | Yes | Standard |
 | final-report | `final-report:` | プロジェクト総括レポート | ルート | Yes | Core |
@@ -1679,7 +1679,7 @@ field-issue の詳細を記載する。field-test-engineer がフィードバッ
 | tech-decision:gate | string | No | 対象ゲート（ゲート判定の場合） | GATE-XXX |
 | tech-decision:verdict | enum | No | ゲート判定結果（ゲート判定の場合） | PASS / FAIL / CONDITIONAL / NOT-APPLICABLE。**CONDITIONAL と NOT-APPLICABLE は理由を Detail Block に書く** |
 | tech-decision:fail_count | integer | No | 同一ゲートの連続 FAIL 回数 | 0 以上 |
-| tech-decision:send_back_to | enum | No | 戻し先（FAIL の場合） | planning / design / implementation / testing。**プロセス規則 §4.7.1 の 4 経路と対応する。** R1 の指摘は planning、R6 の指摘は testing へ戻すため、この 2 値が無いと `Fk` が戻し先を記録できず走行が終端する |
+| tech-decision:send_back_to | enum | No | 戻し先（FAIL の場合） | planning / design / implementation / testing / **delivery** / **operation**。**プロセス規則 §4.7.1 の 4 経路に、当該フェーズ内へ戻す 2 値を加えたものである。** R1 の指摘は planning、R6 の指摘は testing へ戻す。**GATE-DELIVERY の FAIL（受入テスト不合格・user-manual の不備）と GATE-EOL の FAIL は、戻す先が当該フェーズ内にしか無い。** この値域が欠けると `Fk` が戻し先を記録できず走行が終端する |
 | tech-decision:rationale | text | Yes | 判断根拠 | — |
 | tech-decision:waiver | string | No | waiver の有無と参照 | none / waiver 記録への参照 |
 | tech-decision:reevaluate_at | string | No | 再評価の時期（waiver 時は必須） | — |
