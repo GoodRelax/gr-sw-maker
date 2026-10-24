@@ -573,33 +573,33 @@ A checklist that combines all review perspectives (R1–R8) and can also be used
 | R1 | Completeness verification | SHOULD | Requirements are MECE. No gaps from each stakeholder's viewpoint (administrator/general user/external system) | — | — |
 | R1 | Elimination of negation and passive voice | SHOULD | Negative requirements state the alternative action. Passive voice is rewritten in active voice (responsibility made clear). No double negatives | — | — |
 | R1 | Traceability | MUST | Purpose, higher-level requirements, lower-level requirements, implementation, and tests can be traced both ways by ID. Meeting the lower level meets the higher level, and meeting the higher level meets the purpose. Each requirement has a verification method | — | — |
-| R1 | Requirements notation (EARS) | SHOULD | Requirements are written in the EARS patterns, with one shall per sentence | — | — |
+| R1 | Requirements notation (EARS: Easy Approach to Requirements Syntax) | SHOULD | Requirements are written in the EARS patterns, with one shall per sentence | — | — |
 | R2 | Naming | MUST | Names express the essence — the most important item in design (Screaming Architecture; in software, words carry power). No generic names. For parts of speech, units, and consistent terms, see the Naming section | — | — |
-| R2 | SRP | MUST | Each class, unit, module, component, and layer has only one responsibility | — | — |
+| R2 | SRP (Single Responsibility Principle) | MUST | Each class, unit, module, component, and layer has only one responsibility | — | — |
 | R2 | SRP (responsibility sentence) | MUST | After removing the procedure, scope, and constraint phrases, one phrase remains | — | — |
 | R2 | SRP (higher-level element) | MUST | The responsibility can be stated in one sentence without listing the elements inside | — | — |
-| R2 | OCP | SHOULD | Open for extension, closed for modification. New behavior comes through Strategy/Template, not through added if/switch branches | — | — |
-| R2 | LSP | SHOULD | A subclass does not strengthen preconditions, weaken postconditions, or change the parent's contract | — | — |
-| R2 | ISP | SHOULD | No class is forced to implement interface methods it does not use. Large interfaces are split by usage | — | — |
-| R2 | DIP | SHOULD | Upper modules depend on abstractions, not on concrete lower modules (DB/API) | — | — |
-| R2 | DRY | SHOULD | No duplicated logic. Magic numbers/strings are defined as constants. No duplicated validation across layers | — | — |
-| R2 | KISS | SHOULD | The simplest solution that works. Nesting depth below 4. Flattened with early returns | — | — |
-| R2 | YAGNI | SHOULD | No preemptive features or excessive abstraction. No unused parameters/flags/settings | — | — |
-| R2 | SoC | MUST | UI, business, and data access are not mixed. Validation, transformation, and persistence are separated | — | — |
-| R2 | SLAP | MUST | Each function stays at a single level of abstraction (intent and low-level details are not mixed) | — | — |
-| R2 | LoD | SHOULD | No deep chains like `a.b.c.d`. Only direct collaborators are used | — | — |
-| R2 | CQS | SHOULD | A method either changes state or returns a value, not both | — | — |
-| R2 | POLA | MUST | Behaves as the name says. No hidden side effects. No double-negative Booleans | — | — |
-| R2 | PIE | MUST | Names and comments express "why," not "what." Intermediate results are named | — | — |
-| R2 | CA | MUST | Dependencies point one way, toward the center that changes least. The center is not contaminated by frameworks/DB. The number of layers does not matter | — | — |
+| R2 | OCP (Open-Closed Principle) | SHOULD | Open for extension, closed for modification. New behavior comes through Strategy/Template, not through added if/switch branches | — | — |
+| R2 | LSP (Liskov Substitution Principle) | SHOULD | A subclass does not strengthen preconditions, weaken postconditions, or change the parent's contract | — | — |
+| R2 | ISP (Interface Segregation Principle) | SHOULD | No class is forced to implement interface methods it does not use. Large interfaces are split by usage | — | — |
+| R2 | DIP (Dependency Inversion Principle) | SHOULD | Upper modules depend on abstractions, not on concrete lower modules (DB/API) | — | — |
+| R2 | DRY (Don't Repeat Yourself) | SHOULD | No duplicated logic. Magic numbers/strings are defined as constants. No duplicated validation across layers | — | — |
+| R2 | KISS (Keep It Simple, Stupid) | SHOULD | The simplest solution that works. Nesting depth below 4. Flattened with early returns | — | — |
+| R2 | YAGNI (You Aren't Gonna Need It) | SHOULD | No preemptive features or excessive abstraction. No unused parameters/flags/settings | — | — |
+| R2 | SoC (Separation of Concerns) | MUST | UI, business, and data access are not mixed. Validation, transformation, and persistence are separated | — | — |
+| R2 | SLAP (Single Level of Abstraction Principle) | MUST | Each function stays at a single level of abstraction (intent and low-level details are not mixed) | — | — |
+| R2 | LoD (Law of Demeter / Principle of Least Knowledge) | SHOULD | No deep chains like `a.b.c.d`. Only direct collaborators are used | — | — |
+| R2 | CQS (Command-Query Separation) | SHOULD | A method either changes state or returns a value, not both | — | — |
+| R2 | POLA (Principle of Least Astonishment) | MUST | Behaves as the name says. No hidden side effects. No double-negative Booleans | — | — |
+| R2 | PIE (Program Intently and Expressively) | MUST | Names and comments express "why," not "what." Intermediate results are named | — | — |
+| R2 | CA (Clean Architecture / Layered Architecture) | MUST | Dependencies point one way, toward the center that changes least. The center is not contaminated by frameworks/DB. The number of layers does not matter | — | — |
 | R2 | Prompt Engineering | SHOULD | Location, input/output schemas, tests, versions, and hallucination countermeasures are in place | — | — |
 | R2 | Comparison with the Minimal Configuration | MUST | ADR-000 in Ch5.6 has the minimal configuration, the added elements, and the reason for each | — | — |
 | R2 | Component Boundaries | MUST | Other components are referred to only through their public face in Ch5.3 (an axis separate from CA in R2) | — | — |
 | R2 | Cache Policy | MUST | If caches are used, an ADR in Ch5.6 records what is cached, the invalidation trigger, the allowed staleness, and the behavior on simultaneous expiry | — | — |
 | R2 | DRY (one place) | MUST | The same decision, calculation, or conversion is not written in two or more places | — | — |
 | R2 | DRY (public face) | MUST | Search the public face of other components before writing a helper function. Do not copy non-public functions | — | — |
-| R2 | OKPN | MUST | Each name of a data element takes values of one kind only. For exceptions, see "OKPN/OMPV" in R2 | — | — |
-| R2 | OMPV | MUST | Each value of a data element has one meaning only. For exceptions, see "OKPN/OMPV" in R2 | — | — |
+| R2 | OKPN (One Kind Per Name) | MUST | Each name of a data element takes values of one kind only. For exceptions, see "OKPN/OMPV" in R2 | — | — |
+| R2 | OMPV (One Meaning Per Value) | MUST | Each value of a data element has one meaning only. For exceptions, see "OKPN/OMPV" in R2 | — | — |
 | R2 | Compatibility and Versions | MUST | Stored and exchanged formats carry a version, and a reader learns of an incompatible change through an error | — | — |
 | R2 | Build Versions | MUST | The build system adds the version automatically, and the source commit can be traced from it | — | — |
 | R3 | Error Handling | MUST | All external I/O (network/DB/file) has error handling. Errors are not swallowed (no empty catch) | — | — |
