@@ -2,7 +2,7 @@
 
 **`08-poc-plan.md` から読む。** 何をするかが書いてある。残る 4 つはその作業の材料である。**何がどこに在るのかは `09-repository-layout.md` が持つ。**
 
-**生きているファイルは 6 つ。** `History/` は記録であり、**書き換えない。** `to-del/` は削除待ちである。
+**生きているファイルは 7 つ。** `History/` は記録であり、**書き換えない。** `suspended/` は去就が未決のものを置く場所で、`framework-translation-verifier.md` 1 件が在る（`09-repository-layout.md` §5 の論点 1）。
 
 **同じことを 2 か所に書かない。** 下表の「何を持つか」が正本の境界である。
 
@@ -10,6 +10,7 @@
 |---|---|---:|---|
 | `09-repository-layout.md` | **リポジトリの配置。** 何が①開発用・②配布元・③展開物・④公開説明・⑤その他か。削除ツールが消す範囲と、main との配置の違い | 152 | —（配置が変わるまで生きる） |
 | `08-poc-plan.md` | **PoC の準備手順と作業計画。** 何を・どの順で直せば PoC が始まるか。`03-work-order.md` の後継 | 194 | —（PoC が終われば `History/` へ） |
+| `10-poc-run-log.md` | **PoC の走行記録。** 実際に走らせて観測したもの —— defect・§8.2 の未決に付いた答え・走行前の記述と実際の食い違い。**計画が予測を、本書が実測を持つ** | 216 | —（PoC が終われば `History/` へ） |
 | `00-mode-matrix.md` | **開発方式の対応表と作業表。** 方式を 1 つ決めれば、仕様書・作業・担当・経路・成果物・レビューがすべて決まる | 840 | **移動禁止。** `maintenance-tools/split-work-table.mjs` が定数で参照し、`framework-src/ja/process-rules/` の 11 ファイルを生成する |
 | `01-spec-template.md` | 仕様書テンプレート。そのまま `strictdoc export` が通る 1 枚 | 664 | `framework-src/ja/process-rules/spec-template.md` を置換 |
 | `02-spec-writing-rules.md` | 仕様書の解説書。章ごとの規則・EARS・Cockburn・記入例・検査 | 1510 | `framework-src/ja/process-rules/spec-writing-rules.md` を新設 |
