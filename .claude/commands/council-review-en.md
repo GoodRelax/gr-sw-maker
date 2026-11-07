@@ -68,7 +68,7 @@ If Phase 0 passes, JA and EN content is confirmed consistent. From this point, *
 | F04 | `process-rules/agent-list-en.md` | Agent list (Single Source of Truth) |
 | F05 | `process-rules/glossary-en.md` | Glossary |
 | F06 | `process-rules/defect-taxonomy-en.md` | Defect taxonomy |
-| F07 | `process-rules/review-standards-en.md` | Review standards (R1-R6) |
+| F07 | `process-rules/review-standards-en.md` | Software NDD Development Review Standards |
 | F08 | `process-rules/prompt-structure-en.md` | Prompt structure conventions (S0-S6) |
 | F09 | `process-rules/spec-template-en.md` | Specification template |
 | F10 | `process-rules/porting-guide-en.md` | Porting guide |
@@ -197,7 +197,7 @@ The following 4 experts conduct a review from a bird's-eye perspective.
 
 **Verification items:**
 - [ ] Are the transition conditions for the 8 phases (setup→operation) free of contradictions within F02?
-- [ ] Do the quality gate (R1-R6) application phases match between F02 and F07?
+- [ ] Do the quality gate application phases match between F02 and F07?
 - [ ] Do the escalation criteria (risk≧6, cost 80%, impact_level=high) match between F02 and F01?
 - [ ] Is the change management flow (F02 §3.2) description consistent?
 - [ ] Is the defect state transition (F02 stateDiagram) defined?
@@ -246,7 +246,7 @@ The following 4 experts conduct a review from a bird's-eye perspective.
 | X05 | F04 §4 Activation map ↔ F02 §2 Phase definitions | Phase names, launched agents consistency |
 | X06 | F04 §3 Data flow diagram ↔ F11 Each agent's In/Out | file_type flow consistency (read only necessary agent definitions) |
 | X08 | F05 Glossary ↔ F06 Defect taxonomy | No contradictions in term definitions |
-| X09 | F02 §3.3 Quality management ↔ F07 Review standards R1-R6 | Perspective and target phase consistency |
+| X09 | F02 §3.3 Quality management ↔ F07 Software NDD Development Review Standards | Perspective and target phase consistency |
 | X10 | F01 CLAUDE.md Agent Teams ↔ F04 §1 Agent list | Agent count, names, roles match |
 | X11 | F10 Porting guide model mapping ↔ F04 §1 model column | Model assignment match |
 | X16 | F02 Appendix A Sequence diagram ↔ F04 §3 Data flow diagram | Participant and message consistency |

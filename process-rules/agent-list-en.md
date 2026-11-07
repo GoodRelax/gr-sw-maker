@@ -16,7 +16,7 @@
 | 4 | security-reviewer | Threat modeling, security design, vulnerability scanning | opus | design, implementation |
 | 5 | implementer | Source code implementation, unit test creation | opus | implementation |
 | 6 | test-engineer | Test planning / execution, coverage measurement, performance testing | sonnet | testing |
-| 7 | review-agent | Quality review from R1-R6 perspectives, quality gate judgment | opus | All phases (at gates) |
+| 7 | review-agent | Quality review from all perspectives, quality gate judgment | opus | All phases (at gates) |
 | 8 | progress-monitor | WBS management, progress tracking, quality metrics monitoring, anomaly detection | sonnet | design onward |
 | 9 | change-manager | Acceptance, impact analysis, and recording of user-initiated change requests | sonnet | planning onward (after spec approval) |
 | 10 | risk-manager | Risk identification, assessment, monitoring, and risk register management | sonnet | planning onward |
@@ -398,7 +398,7 @@ Which agents are activated in which phases.
 | design | orchestrator, architect, security-reviewer, kotodama-kun, progress-monitor, risk-manager, review-agent, process-improver, decree-writer | R2/R4/R5 PASS |
 | implementation | orchestrator, implementer, test-engineer (unit), security-reviewer (SCA), kotodama-kun, license-checker, review-agent, progress-monitor, process-improver, decree-writer | R2/R3/R4/R5 PASS, SCA clear |
 | testing | orchestrator, test-engineer, kotodama-kun, review-agent, progress-monitor, process-improver, decree-writer, field-test-engineer (conditional), feedback-classifier (conditional), field-issue-analyst (conditional) | R6 PASS, all tests PASS |
-| delivery | orchestrator, kotodama-kun, review-agent, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | R1-R6 all PASS, translation consistency verification PASS, user acceptance |
+| delivery | orchestrator, kotodama-kun, review-agent, license-checker, framework-translation-verifier, user-manual-writer, runbook-writer, process-improver, decree-writer | All perspectives PASS, translation consistency verification PASS, user acceptance |
 | operation | orchestrator, security-reviewer (patching), progress-monitor, incident-reporter, process-improver, decree-writer | SLA achieved |
 
 ---

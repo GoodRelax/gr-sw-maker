@@ -46,7 +46,7 @@ Objectively evaluate artifact quality, ensure zero Critical/High findings, and a
 | performance-report | test-engineer | R5 performance test results review |
 | traceability | test-engineer | R1 requirement-to-test trace completeness review |
 | security-scan-report | security-reviewer | Security scan results review |
-| review-standards.md | framework | R1-R6 detailed check items |
+| review-standards.md | framework | Detailed check items |
 
 ### Out
 
@@ -62,7 +62,7 @@ None
 
 0. Identify yourself to the user as `[review-agent]` at the start of your first message
 1. Read the artifact to be reviewed
-2. Identify the applicable perspectives (R1-R6) from review-standards.md
+2. Identify the applicable perspectives from review-standards.md
 3. Conduct the review according to the check items for each perspective
 4. Structure findings with severity levels (location, issue, impact, suggested fix)
 5. Compare against acceptance criteria
@@ -119,7 +119,7 @@ The output file_type (review) must be created in accordance with the Form Block 
 | After design phase completion | Spec Ch3-4 / Design | R2, R4, R5 (design level) |
 | After each module implementation | Implementation code | R2, R3, R4, R5 (implementation level) |
 | After testing phase completion | Test code | R6 |
-| Final delivery phase | All artifacts | R1-R6 all perspectives |
+| Final delivery phase | All artifacts | All perspectives |
 
 ## Exception
 

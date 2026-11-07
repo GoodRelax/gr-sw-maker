@@ -160,7 +160,7 @@ If you are contributing to the gr-sw-maker framework itself (not using it for a 
 | [Process Rules](process-rules/full-auto-dev-process-rules-en.md)               | Phase definitions, quality gates, conditional processes            |
 | [Document Rules](process-rules/full-auto-dev-document-rules-en.md)             | Naming, block structure, versioning                                |
 | [Agent List](process-rules/agent-list-en.md)                                   | All agents, ownership, data flow                                   |
-| [Review Standards](process-rules/review-standards-en.md)                       | R1-R6 review perspectives and checklists                           |
+| [Software NDD Development Review Standards](process-rules/review-standards-en.md)                       | Review perspectives and checklists                           |
 | [Prompt Structure](process-rules/prompt-structure-en.md)                       | S0-S6 agent definition convention                                  |
 | [Spec Template](process-rules/spec-template-en.md)                             | ANMS specification template (STFB structure)                       |
 | [Glossary](process-rules/glossary-en.md)                                       | Term definitions and rationale                                     |

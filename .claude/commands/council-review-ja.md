@@ -68,7 +68,7 @@ Phase 0 を通過した場合、日英の内容は一致しているため、以
 | F04 | `process-rules/agent-list-en.md` | エージェント一覧（Single Source of Truth） |
 | F05 | `process-rules/glossary-en.md` | 用語集 |
 | F06 | `process-rules/defect-taxonomy-en.md` | 不具合分類 |
-| F07 | `process-rules/review-standards-en.md` | レビュー基準（R1-R6） |
+| F07 | `process-rules/review-standards-en.md` | ソフトウェアNDD開発レビュー基準書 |
 | F08 | `process-rules/prompt-structure-en.md` | プロンプト構造規約（S0-S6） |
 | F09 | `process-rules/spec-template-en.md` | 仕様テンプレート |
 | F10 | `process-rules/porting-guide-en.md` | 移植ガイド |
@@ -197,7 +197,7 @@ full-auto-dev-document-rules §7 の file_type マスターテーブルの実際
 
 **検証項目:**
 - [ ] 8フェーズ（setup→operation）の遷移条件が F02 内で矛盾していないか
-- [ ] 品質ゲート（R1-R6）の適用フェーズが F02 と F07 で一致しているか
+- [ ] 品質ゲートの適用フェーズが F02 と F07 で一致しているか
 - [ ] エスカレーション基準（リスク≧6、コスト80%、impact_level=high）が F02 と F01 で一致しているか
 - [ ] 変更管理フロー（F02 §3.2）の記述が一貫しているか
 - [ ] defect 状態遷移（F02 stateDiagram）が定義されているか
@@ -246,7 +246,7 @@ full-auto-dev-document-rules §7 の file_type マスターテーブルの実際
 | X05 | F04 §4 アクティベーションマップ ↔ F02 §2 フェーズ定義 | フェーズ名、起動エージェントの整合 |
 | X06 | F04 §3 データフロー図 ↔ F11 各エージェントの In/Out | file_type の流れの整合（必要なエージェント定義のみ読み込む） |
 | X08 | F05 用語集 ↔ F06 不具合分類 | 用語定義の矛盾なし |
-| X09 | F02 §3.3 品質管理 ↔ F07 レビュー基準 R1-R6 | 観点・対象フェーズの整合 |
+| X09 | F02 §3.3 品質管理 ↔ F07 ソフトウェアNDD開発レビュー基準書 | 観点・対象フェーズの整合 |
 | X10 | F01 CLAUDE.md Agent Teams ↔ F04 §1 エージェント一覧 | エージェント数、名前、役割の一致 |
 | X11 | F10 移植ガイド モデルマッピング ↔ F04 §1 model 列 | モデル割当の一致 |
 | X16 | F02 付録A シーケンス図 ↔ F04 §3 データフロー図 | 参加者・メッセージの整合 |

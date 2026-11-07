@@ -46,7 +46,7 @@ model: opus
 | performance-report | test-engineer | R5 性能テスト結果のレビュー |
 | traceability | test-engineer | R1 要求-テスト間トレースの完全性レビュー |
 | security-scan-report | security-reviewer | セキュリティスキャン結果のレビュー |
-| review-standards.md | framework | R1-R6 の詳細チェック項目 |
+| review-standards.md | framework | 詳細チェック項目 |
 
 ### Out
 
@@ -62,7 +62,7 @@ model: opus
 
 0. 最初のメッセージの冒頭でユーザーに `[review-agent]` と名乗る
 1. レビュー対象の成果物を読み込む
-2. review-standards.md から適用する観点（R1-R6）を特定する
+2. review-standards.md から適用する観点を特定する
 3. 各観点のチェック項目に従いレビューを実施する
 4. 指摘事項を重大度付きで構造化する（箇所・問題・影響・修正案）
 5. 合格基準と照合する
@@ -119,7 +119,7 @@ model: opus
 | design フェーズ完了後 | 仕様書 Ch3-4・設計 | R2, R4, R5（設計レベル） |
 | 各モジュール実装完了後 | 実装コード | R2, R3, R4, R5（実装レベル） |
 | testing フェーズ完了後 | テストコード | R6 |
-| delivery フェーズ最終 | 全成果物 | R1-R6 全観点 |
+| delivery フェーズ最終 | 全成果物 | 全観点 |
 
 ## Exception
 

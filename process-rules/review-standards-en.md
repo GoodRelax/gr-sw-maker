@@ -1,6 +1,6 @@
 # Software NDD Development Review Standards
 
-**Version:** `2026-11-08T03:37:40+09:00`
+**Version:** `2026-11-08T04:22:57+09:00`
 
 > **Related documents:** [Process Rules](full-auto-dev-process-rules-en.md) §9 Quality Management Framework, [Document Management Rules](full-auto-dev-document-rules-en.md)
 
@@ -45,7 +45,7 @@ A reviewer (a human or an AI) reviews in this order:
 | Review Finding Disposition Rules | The flow, severities, and records for handling findings | Findings |
 | Comprehensive Review Checklist | One table that gathers every perspective for checking | All |
 | Design Principles Index | The list of design principles and what to check for each | — |
-| References | The standards whose terms this document uses | — |
+| References | The standards and works whose terms and rules this document uses | — |
 
 ### Version
 
@@ -276,6 +276,20 @@ Naming is the primary interface of software. Treat naming as the most important 
 - Are the elements that the adopted option adds to the minimal configuration listed, each with the reason it was added?
 - Does each reason go beyond "because the rules say so" (**state which rule served which requirement**)?
 
+**Design Patterns**
+- Merits: they apply proven solutions to design problems that keep coming back. A pattern's name becomes a shared word that conveys the design's intent briefly. They separate the parts that change
+- Demerits: they add layers of indirection, and so more code to read and test. Used where no problem exists, they make change harder
+- Is a pattern used only when a requirement or an expected change written in the documents calls for it (KISS, YAGNI; the comparison with the minimal configuration follows the ADR-000 rule)?
+- Can the problem the pattern solves be named?
+- Is a singleton avoided as the default, with the dependency passed in from outside (DIP)? If one is used, is the reason written?
+    - Reason: a singleton hides global state and is hard to replace in tests
+    - Example: bad calling `Logger.getInstance()` inside a function → good receiving `logger` as an argument
+- Are the signs of overdoing it absent?
+    - An abstraction with one implementation and no planned second one
+    - Layers of Factory or Strategy for a single fixed behavior
+    - A pattern whose problem cannot be named
+- Does a pattern's role appear in a name only when it helps the reader (NEIM), and not as decoration?
+
 **SoC (Separation of Concerns)**
 - Are UI logic and business logic kept apart?
 - Is data access logic kept out of the business logic layer?
@@ -399,45 +413,42 @@ Naming is the primary interface of software. Treat naming as the most important 
 
 ### Comments
 
-Comments carry only what the code cannot say. Their content is limited to what this section lists. To put anything else in a comment, first set it in the project rules, and then follow them.
+Comments are limited to the kinds below, are written in English, and start with their kind. To use another kind, first set it in the project rules. People may have AI translate them. A comment that is hard to translate is evidence of a problem.
 
-**Why:**
-- Do comments explain why it is done (Why; PIE in R2)?
-    - Example: good `// The payment API allows 10 calls per second, so space the calls out`
-- Do comments avoid restating what the code does (What and How), leaving that to the code (expressed by names and structure)?
-    - Example: bad `// add tax` (the next line is `x = y * 1.1`) → good `priceWithTax = priceWithoutTax * taxMultiplier` with no comment
+| Kind | Form | When |
+|:---|:---|:---|
+| Why | `// Why: <reason>` | There is a reason the code cannot say |
+| Spec | `// Spec: FR-012` | The code implements behavior in the specification. Do not copy its content |
+| Summary | `// Summary: <EARS>` | The behavior is not in the specification and cannot be read easily from the code |
+| Temporary | `// Temporary: <reason>. Until: <condition>.` | Temporary code and comments |
+| R7 comments | `@purity <value>`, `// Section: <name>`, `// Consistency: <unit>` | "`@purity` Tag", "Structural Separation", and "Separation of Collection and Processing" in R7 call for them |
 
-**Specification IDs:**
-- Do comments carry the specification's ID, rather than what the specification says?
-    - Example: bad `// Reject an order with no items` (a copy of the specification's sentence) → good `// FR-012`
-- When the specification is updated, is the code traced from the ID and fixed?
-
-**Summary:**
-- Does a function whose name makes it obvious go without a summary comment?
-- Is the function's behavior written in the specification, with the code referring to its ID (this is the proper form)?
-- Is a long summary comment like the example below treated as a temporary comment (following "Temporary" below)?
-- Is a summary comment 1 to 3 sentences in EARS ("EARS" in R1b)?
-    - Example: 3 sentences for the normal, semi-normal, and abnormal cases. The last line is the condition that ends the temporary state
+**Rules:**
+- A `Summary` is 1 sentence. With 2 to 3 sentences, add `Temporary`. With 4 or more, split the processing. The proper place for a summary is the specification
+    - Example: 3 sentences for the normal, semi-normal, and abnormal cases
       ```
-      // When the file exists, readDocument shall return the parsed document.
+      // Summary: When the file exists, readDocument shall return the parsed document.
       // If the file is missing, then readDocument shall return {"isDocumentFound": false}.
       // If the file is corrupt, then readDocument shall raise DocumentCorruptError.
-      // To be written in the specification, version xxx.
+      // Temporary: The summary is long. Until: It is written in the specification, version xxx.
       ```
-- Is a function too complex to summarize in 3 sentences split up?
+- When the specification is updated, trace the code from the `Spec` ID and fix it
 
-**Temporary:**
-- Do temporary code and temporary comments state why they are temporary and the condition that ends that state?
-    - Example: bad `// temporary measure` → good `// Temporary measure for xxx. Fix in the beta version`
+**Items a machine checks (lint):**
+- Does every comment start with one of the kinds above?
+- Is the comment in English?
+- Does the `Spec` ID exist in the specification?
+- Is a `Summary` 3 sentences or fewer, with `Temporary` when it has 2 or more?
+- Does `Temporary` have `Until:`?
+- Is the `@purity` tag present as "`@purity` Tag" in R7 sets?
 
-**Tags and the comments R7 sets:**
-- Is the `@purity` tag added as "`@purity` Tag" in R7 sets?
-- Is the unit of consistency stated in Spec Ch5.5 or in a comment in the code ("Separation of Collection and Processing" in R7)?
-- Is a section comment placed before the non-pure group ("Structural Separation" in R7)?
-
-**Language:**
-- Are comments written in English?
-- People may have AI translate them. A comment that is hard to translate is evidence of a problem.
+**Items AI judges Yes/No:**
+- Does `Why` state a reason?
+    - Example: good `// Why: The payment API allows 10 calls per second, so space the calls out`
+- Is the `Summary` needed? It is not if the normal, semi-normal, and abnormal behaviors can all be stated from the name, the types, and the body alone
+- Does the comment avoid restating the next code or copying the specification?
+    - Example: bad `// add tax` (the next line is `x = y * 1.1`) → good `priceWithTax = priceWithoutTax * taxMultiplier` with no comment
+    - Example: bad `// Reject an order with no items` (a copy of the specification's sentence) → good `// Spec: FR-012`
 
 ---
 
@@ -845,6 +856,8 @@ A checklist that combines all review perspectives (NDD, R1–R8) and can also be
 | R2 | CA (Clean Architecture / Layered Architecture) | MUST | Dependencies point one way, toward the center that changes least. The center is not contaminated by frameworks/DB. The number of layers does not matter | — | — |
 | R2 | Prompt Engineering | SHOULD | Location, input/output schemas, tests, versions, and hallucination countermeasures are in place | — | — |
 | R2 | Comparison with the Minimal Configuration | MUST | ADR-000 in Ch5.6 has the minimal configuration, the added elements, and the reason for each | — | — |
+| R2 | Design Patterns (when to use) | SHOULD | Used only when a requirement or an expected change written in the documents calls for it. The problem solved can be named. No signs of overdoing it (an abstraction with no planned second implementation, layers for a single behavior). A pattern's role appears in a name only when it helps the reader | — | — |
+| R2 | Design Patterns (singleton) | SHOULD | A singleton is not the default; the dependency is passed in from outside. If one is used, the reason is written | — | — |
 | R2 | Component Boundaries | MUST | Other components are referred to only through their public face in Ch5.3 (an axis separate from CA in R2) | — | — |
 | R2 | Cache Policy | MUST | If caches are used, an ADR in Ch5.6 records what is cached, the invalidation trigger, the allowed staleness, and the behavior on simultaneous expiry | — | — |
 | R2 | DRY (one place) | MUST | The same decision, calculation, or conversion is not written in two or more places | — | — |
@@ -861,12 +874,11 @@ A checklist that combines all review perspectives (NDD, R1–R8) and can also be
 | R3 | Time | MUST | Elapsed time uses a monotonic clock, stored and exchanged times are UTC or carry an offset, and date arithmetic uses calendar APIs | — | — |
 | R3 | Null Trap | MUST | The specification defines how an omitted data element and a null value are handled, and the implementation follows it | — | — |
 | R3 | Logging and Observability | MUST | Log levels are used by meaning, personal information and secrets are not logged, and enough context remains to trace the cause of a failure | — | — |
-| R3 | Comments (content) | MUST | Comments carry only what the Comments section in R3 lists. Anything else is set in the project rules first, and then followed | — | — |
-| R3 | Comments (Why) | MUST | Comments state Why. They do not restate what the code does (What and How); the code says that | — | — |
-| R3 | Comments (specification IDs) | MUST | Comments carry the specification's ID, not a copy of its content. When the specification is updated, the code is traced from the ID and fixed | — | — |
-| R3 | Comments (summary) | SHOULD | No summary where the name makes it obvious. Behavior is written in the specification and referred to by ID. A long summary in the code is treated as a temporary comment. If written, 1 to 3 sentences in EARS. A function too complex for 3 sentences is split up | — | — |
-| R3 | Comments (temporary) | MUST | Temporary code and temporary comments state why they are temporary and the condition that ends that state | — | — |
-| R3 | Comments (language) | MUST | Comments are written in English | — | — |
+| R3 | Comments (kinds) | MUST | Every comment starts with a kind from the Comments section in R3 and is in English. Other kinds are set in the project rules first | — | — |
+| R3 | Comments (Why and restating) | MUST | `Why` states a reason. A comment does not restate the next code or copy the specification | — | — |
+| R3 | Comments (Spec) | MUST | The `Spec` ID exists in the specification. When the specification is updated, the code is traced from the ID and fixed | — | — |
+| R3 | Comments (Summary) | SHOULD | None if all behaviors can be stated from the name, the types, and the body. If written, 1 sentence in EARS. With 2 to 3 sentences, `Temporary` is added. With 4 or more, the processing is split | — | — |
+| R3 | Comments (Temporary) | MUST | `Temporary` has a reason and `Until:` (the condition that ends the temporary state) | — | — |
 | R4 | Deadlock | MUST | Lock acquisition order across multiple resources is uniform and documented. No external calls or long-running work inside DB transactions | — | — |
 | R4 | Race Condition | MUST | Concurrent access to shared state is identified. Check-Then-Act and Read-Modify-Write are made atomic (lock/atomic). No races across await | — | — |
 | R4 | Glitch | MUST | Updates of multiple fields are atomic (no observable intermediate glitch). The implementation matches the state transitions in Spec Ch5.5. Event notification timing (before/after) is defined | — | — |
@@ -920,6 +932,7 @@ A checklist that combines all review perspectives (NDD, R1–R8) and can also be
 | Simplicity | KISS | Keep It Simple, Stupid | Is the simplest working solution chosen? |
 | Simplicity | YAGNI | You Aren't Gonna Need It | Is only what is needed now built, with no over-engineering? |
 | Simplicity | Minimal Comparison | — | Does ADR-000 in Ch5.6 compare with the minimal configuration and give the reasons for the additions ("Comparison with the Minimal Configuration" in R2)? |
+| Simplicity | Design Patterns | — | Is a pattern used only when a requirement calls for it, with no signs of overdoing it ("Design Patterns" in R2)? |
 | Simplicity | DRY | Don't Repeat Yourself | Are code, logic, and definitions free of duplication? |
 | Separation of Responsibilities | SoC | Separation of Concerns | Are concerns properly separated? |
 | Separation of Responsibilities | SRP | Single Responsibility Principle | Does each class, unit, module, component, and layer have only one responsibility? Is a higher-level responsibility a summary of the lower-level responsibilities, not their sum (SRP in R2)? |
@@ -953,3 +966,13 @@ A checklist that combines all review perspectives (NDD, R1–R8) and can also be
 ## References
 
 - OMG, *Unified Modeling Language (UML)*, Version 2.5.1, December 2017. Clause 13 Common Behavior (Event, Trigger) and Clause 14 StateMachines (state machine terms). https://www.omg.org/spec/UML/2.5.1
+- A. Mavin, P. Wilkinson, A. Harwood, M. Novak, "Easy Approach to Requirements Syntax (EARS)", 17th IEEE International Requirements Engineering Conference (RE'09), 2009, pp. 317-322. DOI 10.1109/RE.2009.9. (EARS)
+- S. Bradner, *Key words for use in RFCs to Indicate Requirement Levels*, RFC 2119, BCP 14, March 1997. https://www.rfc-editor.org/rfc/rfc2119 (MUST / SHOULD keywords)
+- B. Leiba, *Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words*, RFC 8174, BCP 14, May 2017. https://www.rfc-editor.org/rfc/rfc8174 (MUST / SHOULD keywords)
+- Cucumber, *Gherkin Reference*. https://cucumber.io/docs/gherkin/reference/ (Gherkin)
+- R. C. Martin, *Agile Software Development, Principles, Patterns, and Practices*, Prentice Hall, 2002. ISBN 0-13-597444-5. (SRP, OCP, LSP, ISP, DIP)
+- R. C. Martin, *Clean Architecture: A Craftsman's Guide to Software Structure and Design*, Prentice Hall, 2017. ISBN 978-0-13-449416-6. (CA)
+- E. Gamma, R. Helm, R. Johnson, J. Vlissides, *Design Patterns: Elements of Reusable Object-Oriented Software*, Addison-Wesley, 1994. ISBN 978-0-201-63361-0. (Design patterns)
+- K. J. Lieberherr, I. M. Holland, "Assuring good style for object-oriented programs", IEEE Software 6(5), 1989, pp. 38-48. DOI 10.1109/52.35588. (LoD)
+- A. Hunt, D. Thomas, *The Pragmatic Programmer: From Journeyman to Master*, Addison-Wesley, 1999. ISBN 978-0-201-61622-4. (DRY)
+- V. Subramaniam, A. Hunt, *Practices of an Agile Developer*, Pragmatic Bookshelf, 2006. Practice 25. (PIE)

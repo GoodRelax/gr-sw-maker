@@ -157,7 +157,7 @@ gr-sw-maker フレームワーク自体のメンテナンスを行う場合、�
 | [プロセス規則](process-rules/full-auto-dev-process-rules-ja.md) | フェーズ定義、品質ゲート、条件付きプロセス |
 | [文書管理規則](process-rules/full-auto-dev-document-rules-ja.md) | 命名、ブロック構造、バージョニング |
 | [エージェント一覧](process-rules/agent-list-ja.md) | 全エージェントの名簿、オーナーシップ、データフロー |
-| [レビュー基準](process-rules/review-standards-ja.md) | R1-R6 レビュー観点とチェックリスト |
+| [ソフトウェアNDD開発レビュー基準書](process-rules/review-standards-ja.md) | レビュー観点とチェックリスト |
 | [プロンプト構造規約](process-rules/prompt-structure-ja.md) | S0-S6 エージェント定義規約 |
 | [仕様テンプレート](process-rules/spec-template-ja.md) | ANMS 仕様テンプレート（STFB 構造） |
 | [用語集](process-rules/glossary-ja.md) | フレームワーク用語の定義と選定理由 |

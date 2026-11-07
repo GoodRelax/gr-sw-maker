@@ -1,6 +1,6 @@
 # ソフトウェアNDD開発レビュー基準書
 
-**バージョン:** `2026-11-08T03:37:40+09:00`
+**バージョン:** `2026-11-08T04:22:57+09:00`
 
 > **関連文書:** [プロセス規則](full-auto-dev-process-rules-ja.md) §9 品質管理フレームワーク、[文書管理規則](full-auto-dev-document-rules-ja.md)
 
@@ -45,7 +45,7 @@
 | レビュー指摘対応ルール | 指摘の対応の流れ・重大度・記録 | 指摘 |
 | 総合レビューチェックリスト | 全観点を 1 表にまとめた確認表 | すべて |
 | 設計原則の索引 | 設計原則の一覧と確認観点 | — |
-| 出典 | 本書が用語を借りた規格 | — |
+| 出典 | 本書が用語と規則を借りた規格と文献 | — |
 
 ### バージョン
 
@@ -276,6 +276,20 @@ NDD は、命名を最優先とする AI 連携の SW 開発スタイルであ�
 - 採用案が最小構成に対して増やした要素が列挙され、各々に増やした理由があるか
 - 理由が「規約に従ったため」だけになっていないか（**どの規約がどの要求のために働いたかまで書く**）
 
+**デザインパターン（Design Patterns）**
+- メリット: 繰り返し現れる設計の問題に、実績のある解き方を使える。パターンの名前が共通の語になり、設計の意図を短く伝えられる。変わる部分を分けられる
+- デメリット: 間接の層が増え、読むコードと試験が増える。問題の無い所で使うと、かえって変更しにくくなる
+- パターンを、要求か、文書にある予想される変更が求める時だけ使っているか（KISS・YAGNI。最小構成との比較は ADR-000 の決まりに従う）
+- パターンが解く問題を言えるか
+- シングルトンを既定にせず、依存を外から渡しているか（DIP）。使うなら理由を書いているか
+    - 理由: シングルトンは全体の状態を隠し、試験で差し替えにくい
+    - 例: 悪い 関数の中で `Logger.getInstance()` を呼ぶ → 良い `logger` を引数で受け取る
+- やりすぎの兆候が無いか
+    - 実装が 1 つで、2 つ目の予定が無い抽象
+    - 決まった 1 つの振る舞いのための Factory や Strategy の層
+    - 解く問題を言えないパターン
+- パターンの役割を名前に出すのは、読み手の助けになる時だけか（NEIM）。飾りとして出していないか
+
 **SoC（Separation of Concerns / 関心の分離）**
 - UIロジックとビジネスロジックが混在していないか
 - データアクセスロジックがビジネスロジック層に漏れていないか
@@ -399,45 +413,42 @@ NDD は、命名を最優先とする AI 連携の SW 開発スタイルであ�
 
 ### コメント
 
-コメントには、コードで語れないことだけを書く。書く内容は、この節に挙げたものに限る。これ以外の内容をコメントに書くなら、先にプロジェクトルールに定め、それに従う。
+コメントは次の種類に限り、英語で書き、先頭に種類を書く。ほかの種類を使うなら、先にプロジェクトルールに定める。人間は AI に翻訳させてもよい。翻訳が大変なほどのコメントは、問題がある証拠である。
 
-**Why:**
-- コメントが「なぜそうしているか」（Why）を説明しているか（R2 の PIE）
-    - 例: 良い `// The payment API allows 10 calls per second, so space the calls out`
-- コードの処理の言い換え（What と How）をコメントに書かず、コードで語っているか（名前と構造で表しているか）
-    - 例: 悪い `// add tax`（次の行は `x = y * 1.1`）→ 良い コメントなしの `priceWithTax = priceWithoutTax * taxMultiplier`
+| 種類 | 書く形 | 書く時 |
+|:---|:---|:---|
+| Why | `// Why: <reason>` | コードで語れない理由がある時 |
+| Spec | `// Spec: FR-012` | 仕様書にある振る舞いを実装する時。内容は写さない |
+| Summary | `// Summary: <EARS>` | 振る舞いが仕様書に無く、コードからも容易に読めない時 |
+| Temporary | `// Temporary: <reason>. Until: <condition>.` | 暫定のコードとコメント |
+| R7 のコメント | `@purity <value>`、`// Section: <name>`、`// Consistency: <unit>` | R7 の `@purity` タグ、構造の分離、収集と処理の分離が定める時 |
 
-**仕様書の ID:**
-- 仕様書に書いてあることをコメントに書かず、仕様書の ID を書いているか
-    - 例: 悪い `// Reject an order with no items`（仕様の文の写し）→ 良い `// FR-012`
-- 仕様書を更新したとき、ID からコードを追跡して直しているか
-
-**要約:**
-- 名前で自明な関数に、要約コメントを書いていないか
-- 関数の振る舞いを仕様書に書き、コードからその ID を参照しているか（これが本来の形である）
-- 下の例のような長い要約コメントを、暫定コメントとして扱っているか（下の「暫定」の決まりに従う）
-- 要約コメントは、EARS で 1〜3 文か（R1b の EARS）
-    - 例: 正常・準正常・異常で 3 文。最後の行は、暫定状態を解消する条件
+**決まり:**
+- `Summary` は 1 文とする。2〜3 文なら `Temporary` を付ける。4 文以上なら処理を分ける。要約の本来の置き場は仕様書である
+    - 例: 正常・準正常・異常で 3 文
       ```
-      // When the file exists, readDocument shall return the parsed document.
+      // Summary: When the file exists, readDocument shall return the parsed document.
       // If the file is missing, then readDocument shall return {"isDocumentFound": false}.
       // If the file is corrupt, then readDocument shall raise DocumentCorruptError.
-      // To be written in the specification, version xxx.
+      // Temporary: The summary is long. Until: It is written in the specification, version xxx.
       ```
-- 処理が複雑で要約コメントを 3 文で書けない関数は、処理を分けているか
+- 仕様書を更新したら、`Spec` の ID からコードを追跡して直す
 
-**暫定:**
-- 暫定コードと暫定コメントに、暫定である理由と、暫定状態を解消する条件を書いているか
-    - 例: 悪い `// temporary measure` → 良い `// Temporary measure for xxx. Fix in the beta version`
+**機械で判定する項目（lint）:**
+- すべてのコメントが上の種類で始まっているか
+- コメントが英語か
+- `Spec` の ID が仕様書に実在するか
+- `Summary` が 3 文以下で、2 文以上なら `Temporary` があるか
+- `Temporary` に `Until:` があるか
+- R7 の `@purity` タグの決まりどおりに、`@purity` タグがあるか
 
-**タグと R7 が定めるコメント:**
-- R7 の `@purity` タグの決まりどおりに、`@purity` タグを付けているか
-- 一貫性の単位を、仕様書 Ch5.5 かコードのコメントに明示しているか（R7 の収集と処理の分離）
-- 非純粋群の前にセクションコメントを置いているか（R7 の構造の分離）
-
-**言語:**
-- コメントを英語で書いているか
-- 人間は AI に翻訳させてもよい。翻訳が大変なほどのコメントは、問題がある証拠である。
+**AI が Yes/No で判定する項目:**
+- `Why` は理由を述べているか
+    - 例: 良い `// Why: The payment API allows 10 calls per second, so space the calls out`
+- `Summary` は要るか。名前・型・本体だけを読んで、正常・準正常・異常の振る舞いを全部言えるなら要らない
+- コメントは、次のコードの言い換えや仕様書の写しではないか
+    - 例: 悪い `// add tax`（次の行は `x = y * 1.1`）→ 良い コメントなしの `priceWithTax = priceWithoutTax * taxMultiplier`
+    - 例: 悪い `// Reject an order with no items`（仕様の文の写し）→ 良い `// Spec: FR-012`
 
 ---
 
@@ -468,7 +479,7 @@ NDD は、命名を最優先とする AI 連携の SW 開発スタイルであ�
   ```
 - イベントハンドラが並列実行されることでキューやカウンタが不整合になる箇所はないか
 - `Promise.all` で並列実行する処理が同一リソースを競合して更新しないか
-- DBのRead-Modify-Writeがアトミックでない箇所に楽観ロックまたは悲観ロックが適用されているか
+- DBのRead-Modify-Writeが非アトミックな箇所に楽観ロックまたは悲観ロックが適用されているか
 
 **コードレベル（マルチスレッド言語向け）:**
 - 共有変数へのアクセスに適切なロック・アトミック操作・揮発性修飾が行われているか
@@ -845,6 +856,8 @@ review-agent が修正後の再レビューを実施する際:
 | R2 | CA（Clean Architecture / クリーンアーキテクチャ / レイヤードアーキテクチャ） | MUST | 依存は一方向で、最も変わりにくい中心を向く。中心がフレームワーク/DBに汚染されない。層の数は問わない | — | — |
 | R2 | プロンプト工学 | SHOULD | 置き場・入出力スキーマ・試験・版・ハルシネーション対策がある | — | — |
 | R2 | 最小構成との比較 | MUST | Ch5.6 の ADR-000 に、最小構成と、増やした要素とその理由がある | — | — |
+| R2 | デザインパターン（使う条件） | SHOULD | 要求か、文書にある予想される変更が求める時だけ使う。解く問題を言える。やりすぎの兆候（2 つ目の予定が無い抽象、1 つの振る舞いのための層）なし。役割を名前に出すのは読み手の助けになる時だけ | — | — |
+| R2 | デザインパターン（シングルトン） | SHOULD | シングルトンを既定にせず、依存を外から渡す。使うなら理由を書く | — | — |
 | R2 | コンポーネント境界 | MUST | 他コンポーネントは Ch5.3 の公開面だけを参照する（R2 の CA とは別の軸） | — | — |
 | R2 | キャッシュ方針 | MUST | キャッシュを用いるなら、Ch5.6 の ADR に対象・無効化の契機・許容する陳腐化・同時失効時の挙動がある | — | — |
 | R2 | DRY（1 か所） | MUST | 同じ判断・計算・変換を2か所以上に書かない | — | — |
@@ -861,12 +874,11 @@ review-agent が修正後の再レビューを実施する際:
 | R3 | 時刻 | MUST | 経過時間は単調時計、保存と交換は UTC かオフセット付き、日付の加減算は暦の API | — | — |
 | R3 | Null Trap | MUST | 省いた場合と値が null の場合の扱いを仕様に定め、実装が従う | — | — |
 | R3 | ログと観測 | MUST | ログの水準を使い分け、個人情報と秘密を出さず、失敗の原因を追える文脈を残す | — | — |
-| R3 | コメント（内容） | MUST | コメントに書くのは R3 のコメントの節に挙げた内容だけ。それ以外はプロジェクトルールに定めてから従う | — | — |
-| R3 | コメント（Why） | MUST | コメントに Why を書く。処理の言い換え（What と How）は書かず、コードで語る | — | — |
-| R3 | コメント（仕様書の ID） | MUST | 仕様書の内容を写さず ID を書く。仕様書を更新したら ID からコードを追跡して直す | — | — |
-| R3 | コメント（要約） | SHOULD | 名前で自明なら要約を書かない。振る舞いは仕様書に書き ID を参照する。コードの長い要約は暫定コメントとして扱う。書くなら EARS で 1〜3 文。3 文で書けないほど複雑なら処理を分ける | — | — |
-| R3 | コメント（暫定） | MUST | 暫定コードと暫定コメントに、暫定である理由と、暫定状態を解消する条件を書く | — | — |
-| R3 | コメント（言語） | MUST | コメントを英語で書く | — | — |
+| R3 | コメント（種類） | MUST | すべてのコメントが R3 のコメントの節の種類で始まり、英語で書かれている。ほかの種類はプロジェクトルールに定めてから使う | — | — |
+| R3 | コメント（Why と言い換え） | MUST | `Why` は理由を述べる。コメントは次のコードの言い換えや仕様書の写しではない | — | — |
+| R3 | コメント（Spec） | MUST | `Spec` の ID が仕様書に実在する。仕様書を更新したら ID からコードを追跡して直す | — | — |
+| R3 | コメント（Summary） | SHOULD | 名前・型・本体から全部の振る舞いを言えるなら書かない。書くなら EARS で 1 文。2〜3 文は `Temporary` を付ける。4 文以上は処理を分ける | — | — |
+| R3 | コメント（Temporary） | MUST | `Temporary` に理由と `Until:`（暫定状態を解消する条件）がある | — | — |
 | R4 | デッドロック | MUST | 複数資源のロック取得順が統一・文書化。DBトランザクション内で外部呼び出し/長時間処理をしない | — | — |
 | R4 | レースコンディション | MUST | 共有状態への並行アクセスを特定。Check-Then-Act と Read-Modify-Write をアトミック（原子的）にする（ロック/アトミック操作）。await 跨ぎの競合なし | — | — |
 | R4 | グリッチ | MUST | 複数フィールド更新をアトミックにする（観測可能な中間グリッチなし）。実装が Spec Ch5.5 の状態遷移と一致。イベント通知タイミング（前/後）を定義 | — | — |
@@ -920,6 +932,7 @@ review-agent が修正後の再レビューを実施する際:
 | 簡潔性   | KISS                 | Keep It Simple, Stupid                | 動作する最も単純な解決を選んでいるか                                       |
 | 簡潔性   | YAGNI                | You Aren't Gonna Need It             | 今必要でない機能を作っていないか。オーバーエンジニアリングしていないか     |
 | 簡潔性   | Minimal Comparison   | —                                     | Ch5.6 の ADR-000 で最小構成と比較し、増分の理由を示しているか（R2 の最小構成との比較）     |
+| 簡潔性   | Design Patterns      | —                                     | 要求が求める時だけパターンを使い、やりすぎの兆候が無いか（R2 のデザインパターン） |
 | 簡潔性   | DRY                  | Don't Repeat Yourself                 | コード・ロジック・定義に重複がないか                                       |
 | 責務分離 | SoC                  | Separation of Concerns                | 関心ごとが適切に分離されているか                                           |
 | 責務分離 | SRP                  | Single Responsibility Principle       | 各クラス・ユニット・モジュール・コンポーネント・層が責務を1つだけ持つか。上位水準の責務は下位水準の要約であり、総和になっていないか（R2 の SRP） |
@@ -953,3 +966,13 @@ review-agent が修正後の再レビューを実施する際:
 ## 出典
 
 - OMG, *Unified Modeling Language (UML)*, Version 2.5.1, December 2017. 13 章 Common Behavior（Event・Trigger）と 14 章 StateMachines（ステートマシンの用語）. https://www.omg.org/spec/UML/2.5.1
+- A. Mavin, P. Wilkinson, A. Harwood, M. Novak, "Easy Approach to Requirements Syntax (EARS)", 17th IEEE International Requirements Engineering Conference (RE'09), 2009, pp. 317-322. DOI 10.1109/RE.2009.9. （EARS）
+- S. Bradner, *Key words for use in RFCs to Indicate Requirement Levels*, RFC 2119, BCP 14, March 1997. https://www.rfc-editor.org/rfc/rfc2119 （MUST / SHOULD のキーワード）
+- B. Leiba, *Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words*, RFC 8174, BCP 14, May 2017. https://www.rfc-editor.org/rfc/rfc8174 （MUST / SHOULD のキーワード）
+- Cucumber, *Gherkin Reference*. https://cucumber.io/docs/gherkin/reference/ （Gherkin）
+- R. C. Martin, *Agile Software Development, Principles, Patterns, and Practices*, Prentice Hall, 2002. ISBN 0-13-597444-5. （SRP・OCP・LSP・ISP・DIP）
+- R. C. Martin, *Clean Architecture: A Craftsman's Guide to Software Structure and Design*, Prentice Hall, 2017. ISBN 978-0-13-449416-6. （CA）
+- E. Gamma, R. Helm, R. Johnson, J. Vlissides, *Design Patterns: Elements of Reusable Object-Oriented Software*, Addison-Wesley, 1994. ISBN 978-0-201-63361-0. （デザインパターン）
+- K. J. Lieberherr, I. M. Holland, "Assuring good style for object-oriented programs", IEEE Software 6(5), 1989, pp. 38-48. DOI 10.1109/52.35588. （LoD）
+- A. Hunt, D. Thomas, *The Pragmatic Programmer: From Journeyman to Master*, Addison-Wesley, 1999. ISBN 978-0-201-61622-4. （DRY）
+- V. Subramaniam, A. Hunt, *Practices of an Agile Developer*, Pragmatic Bookshelf, 2006. Practice 25. （PIE）

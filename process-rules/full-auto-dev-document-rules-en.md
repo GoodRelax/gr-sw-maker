@@ -95,7 +95,7 @@ Revision rules applicable to all files under process-rules/ (including this docu
     prompt-structure-en.md
     glossary-ja.md                       # Glossary
     glossary-en.md
-    review-standards-ja.md               # Software NDD Development Review Standards (R1-R6)
+    review-standards-ja.md               # Software NDD Development Review Standards
     review-standards-en.md
     spec-template-ja.md                  # Specification template
     spec-template-en.md
@@ -980,7 +980,7 @@ Describe deliverables, human intervention requirements, and quality gate results
 |-----------|------|------|------|-----------|
 | review:id | string | Yes | review-NNN | — |
 | review:target | string | Yes | Review target (file path or description) | — |
-| review:dimensions | string | Yes | Applied R1-R6 dimensions (e.g., "R1" or "R2,R4,R5") | — |
+| review:dimensions | string | Yes | Applied dimensions (e.g., "R1" or "R2,R4,R5") | — |
 | review:result | enum | Yes | Review result | pass / fail |
 | review:critical_count | int | Yes | Number of Critical findings | = 0 required for phase transition |
 | review:high_count | int | Yes | Number of High findings | = 0 required for phase transition |

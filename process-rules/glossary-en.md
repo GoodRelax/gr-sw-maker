@@ -45,7 +45,7 @@ Concepts defined by this framework that are not found in dictionaries.
 | Out | Agent output. The final deliverable at the end of work. Corresponds to End Conditions. Becomes the In for the next agent |
 | Work | Agent temporary working files. Deleted after Out is completed. Not reused |
 | pure function | No mutable internal state, no side effects, reads no external state. Output depends only on arguments (referentially transparent) |
-| semi-pure function | No mutable state, no side effects, but reads external state itself. Not referentially transparent. semi-pure-a = reads immutable values (deterministic); semi-pure-b = reads mutable/nondeterministic (clock, RNG, DB/file read) |
+| semi-pure function | No mutable state, no side effects, but reads external state itself. Not referentially transparent. semi-pure-immutable = reads immutable values (deterministic); semi-pure-mutable = reads mutable values, so non-deterministic (clock, RNG, DB/file read) |
 | non-pure function | Has mutable internal state, OR any side effect (global/argument mutation, I/O, log, lock/mutex, throw, HW/OS/env change) |
 | immutable class | Fields never change after construction; methods return new instances and are pure (this is fixed = an extra argument). E.g. LocalDate, record |
 | value object | Immutable object compared by value, not identity. Pure methods. E.g. Money, Coordinate |
