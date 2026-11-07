@@ -1955,7 +1955,7 @@ If any condition is not met, the orchestrator MUST NOT proceed to the next phase
 
 ### 9.2 Review Perspectives (R1-R6)
 
-Six perspectives applied by review-agent. **For detailed checklists, refer to `process-rules/review-standards.md` (Review Standards Specification).** The following is a summary of each perspective.
+Six perspectives applied by review-agent. **For detailed checklists, refer to `process-rules/review-standards.md` (Software NDD Development Review Standards).** The following is a summary of each perspective.
 
 | Perspective | Content | Applicable To |
 | --- | --- | --- |

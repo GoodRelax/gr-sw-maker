@@ -2,7 +2,7 @@
 
 > **Document positioning:** Rules defining the management process for user feedback during the field testing phase (Single Source of Truth). Applied when the conditional process "Field Testing" is enabled.
 > **Derived from:** [Process Rules](full-auto-dev-process-rules.md) §4.6 (testing phase)
-> **Related documents:** [Agent List](agent-list.md), [Document Management Rules](full-auto-dev-document-rules.md) §7/§9 (field-issue file_type), [Review Standards](review-standards.md)
+> **Related documents:** [Agent List](agent-list.md), [Document Management Rules](full-auto-dev-document-rules.md) §7/§9 (field-issue file_type), [Software NDD Development Review Standards](review-standards.md)
 
 ---
 

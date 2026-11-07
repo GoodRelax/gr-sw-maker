@@ -45,7 +45,7 @@ process-rules/ 配下の全ファイル（本文書を含む）に適用する�
 |---------|------|
 | full-auto-dev-process-rules.md | プロセス規則 |
 | full-auto-dev-document-rules.md | 文書管理規則（本文書） |
-| review-standards.md | レビュー観点規約 |
+| review-standards.md | ソフトウェアNDD開発レビュー基準書 |
 | prompt-structure.md | プロンプト構造規約 |
 | agent-list.md | エージェント一覧 |
 | glossary.md | 用語集 |
@@ -95,7 +95,7 @@ process-rules/ 配下の全ファイル（本文書を含む）に適用する�
     prompt-structure-en.md
     glossary-ja.md                       # 用語集
     glossary-en.md
-    review-standards-ja.md               # レビュー観点規約書（R1〜R6）
+    review-standards-ja.md               # ソフトウェアNDD開発レビュー基準書（R1〜R6）
     review-standards-en.md
     spec-template-ja.md                  # 仕様書テンプレート
     spec-template-en.md

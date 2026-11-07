@@ -1,4 +1,6 @@
-# NDD Development Review Standards
+# Software NDD Development Review Standards
+
+**Version:** `2026-11-08T03:37:40+09:00`
 
 > **Related documents:** [Process Rules](full-auto-dev-process-rules-en.md) §9 Quality Management Framework, [Document Management Rules](full-auto-dev-document-rules-en.md)
 
@@ -44,6 +46,12 @@ A reviewer (a human or an AI) reviews in this order:
 | Comprehensive Review Checklist | One table that gathers every perspective for checking | All |
 | Design Principles Index | The list of design principles and what to check for each | — |
 | References | The standards whose terms this document uses | — |
+
+### Version
+
+- The version of this document is the date and time when an update was finished, written to the second. The format is ISO 8601 with the time offset (example: `2026-11-08T02:33:53+09:00`).
+- Whoever updates this document (a human or an AI) changes the version at the head to that date and time on every update, even for a change of one character.
+- The Japanese and English versions are updated together and carry the same value.
 
 ---
 
@@ -181,14 +189,14 @@ NDD is an AI-collaborative software development style that puts naming first. Pe
 
 Naming is the primary interface of software. Treat naming as the most important review item: it is MUST, not SHOULD. The principles of names (choosing names and NEIM) apply from the requirements stage on, so the NDD section at the top holds them. This section sets the naming rules for design and code (parts of speech, units, per layer). Code should scream its intent (Screaming Architecture). In software, words carry power: names define the structure and the intent.
 
-**Parts of speech** (`pure` / `semi-pure-a` / `semi-pure-b` / `non-pure` are the four purity values. They are defined in R7 below; the annotation rule is "`@purity` Tag" in R7)**:**
+**Parts of speech** (`pure` / `semi-pure-immutable` / `semi-pure-mutable` / `non-pure` are the four purity values. They are defined in R7 below; the annotation rule is "`@purity` Tag" in R7)**:**
 
 | Target | Part of speech | Example |
 |---|---|---|
 | Class, type | Noun or noun phrase | `Order`, `CellVoltage` |
 | Command (`non-pure`; changes state) | Verb + object | `cancelOrder` |
-| Query (`pure` / `semi-pure-a`) | Noun phrase, or `is/has/can` | `totalPrice`, `isExpired` |
-| Operation that reads the outside (`semi-pure-b`) | Verb + object | `readDocument`, `fetchUser` |
+| Query (`pure` / `semi-pure-immutable`) | Noun phrase, or `is/has/can` | `totalPrice`, `isExpired` |
+| Operation that reads the outside (`semi-pure-mutable`) | Verb + object | `readDocument`, `fetchUser` |
 | Property | Noun | `retryCount` |
 | Boolean (variable, function, property) | Starts with `is/has/can` (do not use `should`, because the name does not show whose judgment it is; write the result of a judgment like `isRetryRequired`) | `isExpired`, `hasChildren` |
 | Collection (variable, property) | Plural | `orders`, `tasks` |
@@ -196,7 +204,7 @@ Naming is the primary interface of software. Treat naming as the most important 
 
 **Distinguish commands from events by their form.** A command is **a request for something to happen**, and it can be refused. An event is **a notice of something that has already happened**, and it cannot be refused. When `PlaceOrder` and `OrderPlaced` differ in form, **the receiver can read from the name whether it may refuse.** The part of speech of a method matches the CQS separation in R2.
 
-**Having no side effect is not the same as being cheap to call.** A function that reads the clock, random numbers, or a DB/file/network (`semi-pure-b`) **is named with a verb**, even when it changes no state and only returns a value. A noun name hides that the call is slow and can fail, so it gets called casually inside loops (POLA in R2). Do not rename `readDocument()` to `document()`. **Decide by the function's existing `@purity` tag (R7)** — there is no need to classify it again.
+**Having no side effect is not the same as being cheap to call.** A function that reads the clock, random numbers, or a DB/file/network (`semi-pure-mutable`) **is named with a verb**, even when it changes no state and only returns a value. A noun name hides that the call is slow and can fail, so it gets called casually inside loops (POLA in R2). Do not rename `readDocument()` to `document()`. **Decide by the function's existing `@purity` tag (R7)** — there is no need to classify it again.
 
 **Put the unit in the name of a quantity whose unit is fixed.** `timeoutMs` / `voltageMv` / `capacityAh`. **A unit mix-up passes the type check.** This does not apply to a value that carries its unit at run time (`Quantity { amount, unit }`, etc.), because there the unit is part of the value, not of the name.
 
@@ -292,7 +300,7 @@ Naming is the primary interface of software. Treat naming as the most important 
 
 **PIE (Program Intently and Expressively)**
 - Do variable and function names express not only "what it does" but also "why it does it"?
-- Do comments explain "why" rather than "what" (which is obvious from the code)?
+- Do comments explain "why" rather than "what" (which is obvious from the code)? (For details, see Comments in R3.)
 - Are intermediate results named with temporary variables wherever this clarifies intent?
 
 **CA (Clean Architecture / Layered Architecture)**
@@ -388,6 +396,48 @@ Naming is the primary interface of software. Treat naming as the most important 
     - Example: bad `{"taskId": 7, "parentTaskId": null}` → good `{"taskId": 7}` (specification: a task with `parentTaskId` omitted is a top-level task; a null value is an error)
     - Example: `undefined` in TypeScript, or a discriminated union `{"isTaskFound": false}` / `{"isTaskFound": true, "task": {"taskId": 7}}`
 - Exception: Where a referenced standard defines the specification of a data element, conform to that specification.
+
+### Comments
+
+Comments carry only what the code cannot say. Their content is limited to what this section lists. To put anything else in a comment, first set it in the project rules, and then follow them.
+
+**Why:**
+- Do comments explain why it is done (Why; PIE in R2)?
+    - Example: good `// The payment API allows 10 calls per second, so space the calls out`
+- Do comments avoid restating what the code does (What and How), leaving that to the code (expressed by names and structure)?
+    - Example: bad `// add tax` (the next line is `x = y * 1.1`) → good `priceWithTax = priceWithoutTax * taxMultiplier` with no comment
+
+**Specification IDs:**
+- Do comments carry the specification's ID, rather than what the specification says?
+    - Example: bad `// Reject an order with no items` (a copy of the specification's sentence) → good `// FR-012`
+- When the specification is updated, is the code traced from the ID and fixed?
+
+**Summary:**
+- Does a function whose name makes it obvious go without a summary comment?
+- Is the function's behavior written in the specification, with the code referring to its ID (this is the proper form)?
+- Is a long summary comment like the example below treated as a temporary comment (following "Temporary" below)?
+- Is a summary comment 1 to 3 sentences in EARS ("EARS" in R1b)?
+    - Example: 3 sentences for the normal, semi-normal, and abnormal cases. The last line is the condition that ends the temporary state
+      ```
+      // When the file exists, readDocument shall return the parsed document.
+      // If the file is missing, then readDocument shall return {"isDocumentFound": false}.
+      // If the file is corrupt, then readDocument shall raise DocumentCorruptError.
+      // To be written in the specification, version xxx.
+      ```
+- Is a function too complex to summarize in 3 sentences split up?
+
+**Temporary:**
+- Do temporary code and temporary comments state why they are temporary and the condition that ends that state?
+    - Example: bad `// temporary measure` → good `// Temporary measure for xxx. Fix in the beta version`
+
+**Tags and the comments R7 sets:**
+- Is the `@purity` tag added as "`@purity` Tag" in R7 sets?
+- Is the unit of consistency stated in Spec Ch5.5 or in a comment in the code ("Separation of Collection and Processing" in R7)?
+- Is a section comment placed before the non-pure group ("Structural Separation" in R7)?
+
+**Language:**
+- Are comments written in English?
+- People may have AI translate them. A comment that is hard to translate is evidence of a problem.
 
 ---
 
@@ -621,15 +671,15 @@ Classify functions and classes along the axis of purity, and separate non-pure e
 | Category | Tag value | Definition |
 |------|--------|------|
 | Pure | `pure` | No mutable internal state, no side effects, reads no external state. The output is determined by the arguments alone (referentially transparent) |
-| Semi-pure-a | `semi-pure-a` | No side effects, but reads external state that is an **immutable value** (constants, settings read at startup, etc.). Deterministic |
-| Semi-pure-b | `semi-pure-b` | No side effects, but reads external state that is **mutable or non-deterministic** (clock, random numbers, DB/file/network reads) |
+| Semi-pure-immutable | `semi-pure-immutable` | No side effects, but reads external state that is an **immutable value** (constants, settings read at startup, etc.). Deterministic |
+| Semi-pure-mutable | `semi-pure-mutable` | No side effects, but reads external state that is **mutable** (clock, random numbers, DB/file/network reads). Non-deterministic |
 | Non-pure | `non-pure` | Has mutable internal state, or has side effects |
 
 **List of non-pure effects:** I/O, DB writes, log output, acquiring and releasing a lock/mutex/semaphore, rewriting global variables or arguments, changing HW/OS/environment variables. For throwing exceptions, follow "Exception handling" under "Purity of Calculation Logic" in R7.
 
 ### Purity of Calculation Logic
 
-Implement domain calculation logic (business rules, decisions, conversions) as `pure` or `semi-pure-a`. Do not mix non-pure effects into calculation logic; separate them into functions/units dedicated to them.
+Implement domain calculation logic (business rules, decisions, conversions) as `pure` or `semi-pure-immutable`. Do not mix non-pure effects into calculation logic; separate them into functions/units dedicated to them.
 
 - Are the decision (deciding what to do) and the execution (actually applying the effect) kept in separate functions?
 - Are business rules free of I/O, log output, and lock acquisition?
@@ -638,7 +688,7 @@ Implement domain calculation logic (business rules, decisions, conversions) as `
 
 ### Lifting External Reads
 
-Collect `semi-pure-b` reads (clock, random numbers, DB/file/network reads) at the start of the function, and where possible inject them as arguments to lift the function to `pure`.
+Collect `semi-pure-mutable` reads (clock, random numbers, DB/file/network reads) at the start of the function, and where possible inject them as arguments to lift the function to `pure`.
 
 - Does the function avoid getting the current time, generating random numbers, or calling a repository directly inside itself?
 - Does argument injection let the unit tests of the function be written with fixed values only?
@@ -663,10 +713,10 @@ A pure-side class is an immutable class, a value object, or a stateless class, a
 Every function/method carries exactly one `@purity` tag inside the language's comment (`//`, `#`, `--`, `/* */`, `"""..."""`, etc.). The value is one of the following four.
 
 ```text
-@purity pure | semi-pure-a | semi-pure-b | non-pure
+@purity pure | semi-pure-immutable | semi-pure-mutable | non-pure
 ```
 
-`@purity` is a text marker inside a comment, not language syntax, so it works in every language and can be checked with grep. **State pure explicitly too; never leave it unmarked** (to tell a missing tag from pure). Spelling out all four values in full prevents the accident in which `grep '@purity semi-pure-a'` picks up `semi-pure-b` by prefix match.
+`@purity` is a text marker inside a comment, not language syntax, so it works in every language and can be checked with grep. **State pure explicitly too; never leave it unmarked** (to tell a missing tag from pure). None of the four values is a prefix of another, so `grep '@purity semi-pure-mutable'` does not pick up `semi-pure-immutable`. The plain `grep '@purity semi-pure'` picks up both.
 
 **Exemptions:**
 
@@ -758,7 +808,7 @@ When review-agent performs a re-review after corrections:
 
 A checklist that combines all review perspectives (NDD, R1–R8) and can also be used on its own. Keywords follow RFC 2119 (MUST/SHALL = mandatory, SHOULD = recommended). The reviewer MUST fill in the Verdict (PASS/FAIL/NA) for every row. Every FAIL MUST be raised as a finding. When the Verdict is not PASS (FAIL/NA), or when a MUST item is intentionally skipped, the reason MUST be written in Remark. Each row maps to the detailed section above by its chapter and perspective name; see there for rationale and examples.
 
-**Purity annotation convention (language-agnostic, for R7):** every function/method MUST carry exactly one `@purity` tag inside the language's comment (`//`, `#`, `--`, `/* */`, `"""..."""`, etc.). The value is one of four: `pure` / `semi-pure-a` / `semi-pure-b` / `non-pure`. `@purity` is a text marker inside a comment, not language syntax, so it works in every language and is greppable. Pure is stated explicitly, never left unmarked. For exemptions, see "`@purity` Tag" in R7.
+**Purity annotation convention (language-agnostic, for R7):** every function/method MUST carry exactly one `@purity` tag inside the language's comment (`//`, `#`, `--`, `/* */`, `"""..."""`, etc.). The value is one of four: `pure` / `semi-pure-immutable` / `semi-pure-mutable` / `non-pure`. `@purity` is a text marker inside a comment, not language syntax, so it works in every language and is greppable. Pure is stated explicitly, never left unmarked. For exemptions, see "`@purity` Tag" in R7.
 
 | Chapter | Perspective | Level | Check item | Verdict | Remark |
 |----|------|-------|----------|:------:|--------|
@@ -791,7 +841,7 @@ A checklist that combines all review perspectives (NDD, R1–R8) and can also be
 | R2 | LoD (Law of Demeter / Principle of Least Knowledge) | SHOULD | No deep chains like `a.b.c.d`. Only direct collaborators are used | — | — |
 | R2 | CQS (Command-Query Separation) | SHOULD | A method either changes state or returns a value, not both | — | — |
 | R2 | POLA (Principle of Least Astonishment) | MUST | Behaves as the name says. No hidden side effects. No double-negative Booleans | — | — |
-| R2 | PIE (Program Intently and Expressively) | MUST | Names and comments express "why," not "what." Intermediate results are named | — | — |
+| R2 | PIE (Program Intently and Expressively) | MUST | Names and comments express "why," not "what" (for comment details, see Comments in R3). Intermediate results are named | — | — |
 | R2 | CA (Clean Architecture / Layered Architecture) | MUST | Dependencies point one way, toward the center that changes least. The center is not contaminated by frameworks/DB. The number of layers does not matter | — | — |
 | R2 | Prompt Engineering | SHOULD | Location, input/output schemas, tests, versions, and hallucination countermeasures are in place | — | — |
 | R2 | Comparison with the Minimal Configuration | MUST | ADR-000 in Ch5.6 has the minimal configuration, the added elements, and the reason for each | — | — |
@@ -811,6 +861,12 @@ A checklist that combines all review perspectives (NDD, R1–R8) and can also be
 | R3 | Time | MUST | Elapsed time uses a monotonic clock, stored and exchanged times are UTC or carry an offset, and date arithmetic uses calendar APIs | — | — |
 | R3 | Null Trap | MUST | The specification defines how an omitted data element and a null value are handled, and the implementation follows it | — | — |
 | R3 | Logging and Observability | MUST | Log levels are used by meaning, personal information and secrets are not logged, and enough context remains to trace the cause of a failure | — | — |
+| R3 | Comments (content) | MUST | Comments carry only what the Comments section in R3 lists. Anything else is set in the project rules first, and then followed | — | — |
+| R3 | Comments (Why) | MUST | Comments state Why. They do not restate what the code does (What and How); the code says that | — | — |
+| R3 | Comments (specification IDs) | MUST | Comments carry the specification's ID, not a copy of its content. When the specification is updated, the code is traced from the ID and fixed | — | — |
+| R3 | Comments (summary) | SHOULD | No summary where the name makes it obvious. Behavior is written in the specification and referred to by ID. A long summary in the code is treated as a temporary comment. If written, 1 to 3 sentences in EARS. A function too complex for 3 sentences is split up | — | — |
+| R3 | Comments (temporary) | MUST | Temporary code and temporary comments state why they are temporary and the condition that ends that state | — | — |
+| R3 | Comments (language) | MUST | Comments are written in English | — | — |
 | R4 | Deadlock | MUST | Lock acquisition order across multiple resources is uniform and documented. No external calls or long-running work inside DB transactions | — | — |
 | R4 | Race Condition | MUST | Concurrent access to shared state is identified. Check-Then-Act and Read-Modify-Write are made atomic (lock/atomic). No races across await | — | — |
 | R4 | Glitch | MUST | Updates of multiple fields are atomic (no observable intermediate glitch). The implementation matches the state transitions in Spec Ch5.5. Event notification timing (before/after) is defined | — | — |
@@ -830,9 +886,9 @@ A checklist that combines all review perspectives (NDD, R1–R8) and can also be
 | R6 | Coverage | MUST | Boundary values, abnormal cases, and edge cases are covered (not just normal cases). Requirement coverage traces to FR-xxx | — | — |
 | R6 | Test Names | MUST | Test names express intent. Overuse of mocks/stubs does not leave actual behavior unverified | — | — |
 | R6 | Gherkin | SHOULD | Test cases are written in Given / When / Then, with one behavior per scenario and a requirement ID | — | — |
-| R7 | Purity Classification | MUST | Each function/method is classified as `pure` / `semi-pure-a` (reads immutable values) / `semi-pure-b` (reads mutable or non-deterministic state) / `non-pure` (mutable state or side effects) | — | — |
-| R7 | Purity of Calculation Logic | MUST | Calculation logic (business rules, decisions, conversions) is `pure` or `semi-pure-a`. Non-pure effects are not mixed in (orthogonal to CA in R2) | — | — |
-| R7 | Lifting External Reads | SHOULD | `semi-pure-b` reads (clock, random numbers, DB/file/network reads) are collected at the start and, where possible, injected as arguments to lift the function to `pure` | — | — |
+| R7 | Purity Classification | MUST | Each function/method is classified as `pure` / `semi-pure-immutable` (reads immutable values) / `semi-pure-mutable` (reads mutable state) / `non-pure` (mutable state or side effects) | — | — |
+| R7 | Purity of Calculation Logic | MUST | Calculation logic (business rules, decisions, conversions) is `pure` or `semi-pure-immutable`. Non-pure effects are not mixed in (orthogonal to CA in R2) | — | — |
+| R7 | Lifting External Reads | SHOULD | `semi-pure-mutable` reads (clock, random numbers, DB/file/network reads) are collected at the start and, where possible, injected as arguments to lift the function to `pure` | — | — |
 | R7 | Separation of Collection and Processing | MUST | No new external reads in the middle of processing. If every item cannot be collected, the unit of consistency is stated | — | — |
 | R7 | Immutability of Pure-Side Classes | MUST | Each pure-side class is an immutable class, a value object, or a stateless class and holds no mutable state. A class with mutable state or side-effecting methods is stateful (non-pure) | — | — |
 | R7 | `@purity` Tag | MUST | Every function/method carries a `@purity` tag in a comment (exemptions are in the "`@purity` Tag" section) | — | — |
@@ -877,7 +933,7 @@ A checklist that combines all review perspectives (NDD, R1–R8) and can also be
 | Readability | POLA | Principle of Least Astonishment | Does it behave as the reader expects? |
 | Readability | PIE | Program Intently and Expressively | Does the code convey its intent clearly? |
 | Testing | Testability | — | Is it easy to unit test? Is the design easy to inject mocks and stubs into? |
-| Purity | Pure / Semi-pure-a / Semi-pure-b / Non-pure | — | Can each function be classified as pure / semi-pure-a / semi-pure-b / non-pure? Are side effects and external reads moved out of calculation logic (functional core / imperative shell; "Purity Classification" and "Purity of Calculation Logic" in R7)? |
+| Purity | Pure / Semi-pure-immutable / Semi-pure-mutable / Non-pure | — | Can each function be classified as pure / semi-pure-immutable / semi-pure-mutable / non-pure? Are side effects and external reads moved out of calculation logic (functional core / imperative shell; "Purity Classification" and "Purity of Calculation Logic" in R7)? |
 | Structure | Collect-Process Separation | Collect, then process | Is processing free of new external reads in the middle? When collecting every item is impossible, is the unit of consistency (chunk/snapshot/transaction) stated, so that the result does not depend on timing? ("Separation of Collection and Processing" in R7) |
 | State Transition | State Transition | — | Is reading the transition condition kept separate from performing the transition? ("Separation of Collection and Processing" in R7) |
 | State Transition | State Machine | — | Does each state machine have a diagram and a state transition table as a pair, with separate names for the definition and the current state, at most one transition per event (except order-independent sharing), and decided transitions for faults ("State Machine" in R4)? |

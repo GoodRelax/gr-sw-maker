@@ -45,7 +45,7 @@ Revision rules applicable to all files under process-rules/ (including this docu
 |---------|------|
 | full-auto-dev-process-rules.md | Process rules |
 | full-auto-dev-document-rules.md | Document management rules (this document) |
-| review-standards.md | Review standards |
+| review-standards.md | Software NDD Development Review Standards |
 | prompt-structure.md | Prompt structure conventions |
 | agent-list.md | Agent list |
 | glossary.md | Glossary |
@@ -95,7 +95,7 @@ Revision rules applicable to all files under process-rules/ (including this docu
     prompt-structure-en.md
     glossary-ja.md                       # Glossary
     glossary-en.md
-    review-standards-ja.md               # Review standards (R1-R6)
+    review-standards-ja.md               # Software NDD Development Review Standards (R1-R6)
     review-standards-en.md
     spec-template-ja.md                  # Specification template
     spec-template-en.md

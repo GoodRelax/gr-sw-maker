@@ -2,7 +2,7 @@
 
 > **本文書の位置づけ:** 実機テストフェーズにおけるユーザーフィードバックの管理プロセスを定義する規則（Single Source of Truth）。条件付きプロセス「実機テスト」が有効な場合に適用する。
 > **導出元:** [プロセス規則](full-auto-dev-process-rules.md) §4.6（testing フェーズ）
-> **関連文書:** [エージェント一覧](agent-list.md)、[文書管理規則](full-auto-dev-document-rules.md) §7・§9（field-issue file_type）、[レビュー観点規約](review-standards.md)
+> **関連文書:** [エージェント一覧](agent-list.md)、[文書管理規則](full-auto-dev-document-rules.md) §7・§9（field-issue file_type）、[ソフトウェアNDD開発レビュー基準書](review-standards.md)
 
 ---
 
