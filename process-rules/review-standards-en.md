@@ -1,8 +1,6 @@
 # Software NDD Development Review Standards
 
-**Version:** `2026-11-08T10:11:13+09:00`
-
-> **Related documents:** [Process Rules](full-auto-dev-process-rules-en.md) §9 Quality Management Framework, [Document Management Rules](full-auto-dev-document-rules-en.md)
+**Version:** `20261108T161004Z`
 
 ---
 
@@ -12,7 +10,7 @@
 
 This document sets the perspectives for checking software deliverables (specifications, designs, code, and tests) in review.
 
-This document is the single source of truth for the review perspectives that review-agent refers to.
+This document is the single source of truth for the review perspectives that the reviewer refers to.
 
 ### Scope
 
@@ -49,7 +47,7 @@ A reviewer (a human or an AI) reviews in this order:
 
 ### Version
 
-- The version of this document is the date and time when an update was finished, written to the second. The format is ISO 8601 with the time offset (example: `2026-11-08T02:33:53+09:00`).
+- The version of this document is the date and time when an update was finished, written to the second. The format is the ISO 8601 basic format in Coordinated Universal Time (UTC) (example: `20261107T173353Z`).
 - Whoever updates this document (a human or an AI) changes the version at the head to that date and time on every update, even for a change of one character.
 - The Japanese and English versions are updated together and carry the same value.
 
@@ -359,10 +357,10 @@ Naming is the primary interface of software. Treat naming as the most important 
 - Exception: Where a referenced standard defines the specification of a data element, conform to that specification.
 
 **Prompt Engineering (when AI/LLM integration is enabled)**
-- Are product prompt templates placed under `src/` (not mixed with the meta-layer under `.claude/`)?
+- Are product prompt templates placed apart from the instructions used for development?
 - Does each prompt have explicit input/output schemas (expected input types, expected output types)?
 - Are prompt instructions free of ambiguous expressions (apply the same ambiguity elimination perspective as R1b to prompts)?
-- Do tests for prompts (input-to-expected-output pairs) exist under tests/?
+- Do tests for prompts (input-to-expected-output pairs) exist?
 - Is a prompt versioning policy defined (handling behavioral changes when models are updated)?
 - Are hallucination countermeasures designed (output verification logic, grounding techniques)?
 
@@ -560,8 +558,11 @@ Comments are limited to the kinds below, are written in English, and start with 
 - Does each event have exactly one meaning?
 - Does the design avoid giving one event several meanings?
     - Example: bad `Done` stands for both "saving finished" and "printing finished" → good split it into `SaveCompleted` and `PrintCompleted`
-- Is the next state decided only by the current state and the event (and the guard)?
-- Does the design avoid the UML history pseudostates (`shallowHistory`, `deepHistory`; H and H* in diagrams)? (The result changes with the path taken, and the specification and the tests grow complex, so avoid them as far as possible. If the result depends on the previous state, define that difference as a state. If used, write the reason in the Remark of the "State Machine (defining states)" row of the Comprehensive Review Checklist, as when a MUST item is intentionally skipped.)
+- Is the next state decided only by the current state and the event (and the guard), except for transitions whose history pseudostate row is NA?
+- Does the design avoid the UML history pseudostates (`shallowHistory`, `deepHistory`; H and H* in diagrams)?
+    - Reason: The result changes with the path taken, and the specification and the tests grow complex, so avoid them as far as possible
+    - Alternative: If the result depends on the previous state, define that difference as a state
+    - If used: Write the reason in the Remark of the "State Machine (history pseudostates; defining states)" row of the Comprehensive Review Checklist, as when a MUST item is intentionally skipped
     - Example: bad record the previous state (`playing` or `fastForwarding`) in a history variable to resume from `paused` → good split the state into `pausedFromPlaying` and `pausedFromFastForwarding`
 
 #### Actions and Timers
@@ -673,7 +674,7 @@ Comments are limited to the kinds below, are written in English, and start with 
 
 ## R7: Purity and Structure Review Perspectives (Targeting Spec Ch5-6 and Code)
 
-Classify functions and classes along the axis of purity, and separate non-pure effects from calculation logic, so that the code stays easy to test and easy to reason about. Terms follow the [Glossary](glossary-en.md).
+Classify functions and classes along the axis of purity, and separate non-pure effects from calculation logic, so that the code stays easy to test and easy to reason about.
 
 **Relation to the layer axis:** This section is a rule on the purity axis, and it is **orthogonal** to the layer axis (Entity/UseCase/Adapter/Framework, CA in R2). Pure functions may live in the Adapter layer, and mutable aggregates (such as DDD Aggregates) may live in the Entity layer. Do not raise a violation on one axis as a violation on the other.
 
@@ -738,7 +739,7 @@ Every function/method carries exactly one `@purity` tag inside the language's co
 | Vendored third-party code | It is not a design decision of this project |
 | Single-expression lambdas and anonymous functions | The annotation would be longer than the body and hurt readability |
 
-For product code other than the exemptions, the tag coverage (`purity_tag_coverage_pct`) must be 100%.
+For product code other than the exemptions, the tag coverage must be 100%.
 
 ### Structural Separation
 
@@ -776,48 +777,56 @@ Express failures on the calculation-logic side with return types (Result / Eithe
 
 ## Review Finding Disposition Rules
 
-After review-agent raises findings, the following disposition workflow applies. See also process-rules §9.5.
+After the reviewer raises findings, the following disposition workflow applies.
 
 ### Disposition Flow
 
-1. review-agent raises findings with severity (Critical / High / Medium / Low)
-2. The responsible agent (or project-manager) triages each finding and records a disposition
-3. project-manager verifies all findings have dispositions before allowing phase transition
+1. The reviewer raises findings with severity (Critical / High / Medium / Low)
+2. The assignee (or the progress manager) triages each finding and records a disposition
+3. The progress manager verifies all findings have dispositions before allowing phase transition
 
 ### Disposition Rules by Severity
 
-| Severity | Allowed Dispositions | Gate Requirement (Lite / Standard) | Gate Requirement (Strict) |
-|--------|-------------|-----------|-----------|
-| Critical | fixed only | Must be 0 for phase transition (per CLAUDE.md Quality Targets) | Same as Lite / Standard |
-| High | fixed only | Must be 0 for phase transition (per CLAUDE.md Quality Targets) | Same as Lite / Standard |
-| Medium | fixed / deferred / accepted | All must have a recorded disposition | **Must be 0 (fixed only). Deferred and accepted are not allowed** |
-| Low | fixed / deferred / accepted | **Lite: no record needed. Standard: all must have a recorded disposition** | All must have a recorded disposition |
+| Severity | Against the Standards | By Harm | Allowed Dispositions | Gate Requirement |
+|--------|-----------|-----------|-------------|-----------|
+| Critical | (Not decided on this axis) | - Safety of life, body, health, property, or the environment is compromised<br>- Cybersecurity is compromised<br>- A law is violated<br>- A financial loss is caused<br>- A right is infringed<br>- Data lost or a system stopped by a defect is difficult to restore | fixed only | Must be 0 for phase transition |
+| High | A MUST row is FAIL | The function cannot achieve its purpose | fixed only | Must be 0 for phase transition |
+| Medium | A SHOULD row is FAIL | The function achieves its purpose but is hard to use or hard to maintain | fixed / deferred / accepted | All must have a recorded disposition |
+| Low | No row is FAIL | - The writing of code or comments is inappropriate, with no effect on behavior or on maintenance effort<br>- A defect that general users do not notice, or can tolerate if they do | fixed / deferred / accepted | All must have a recorded disposition |
 
-> **The passing bar depends on the development mode** (Table E-2 in `development-mode.md` is the source; reflected in this table on 2026-08-12). **The mode is always stated in the request as one of its givens** (`development-mode.md` "Givens always attached to a request"), so both the reviewer and the judge can look up this table by mode.
->
-> **The scope of re-review also depends on the mode.** Standard re-checks only the findings marked "fixed"; **Strict re-checks all findings** (deferred and accepted ones are verified too).
->
-> **Escalation of a gate FAIL:** Lite and Standard escalate to the user on the **3rd** FAIL, and **Strict on the 2nd** (retry policy in Process Rules §9.1.1).
+Severity is the highest level that applies. Judge harm by what would happen if the defect occurred. Judge a function by the unit of work seen by its users.
+
+This table is a general guideline. The project defines the actual definitions and rules to suit itself, writes them in one place, and attaches them to the review request.
+
+If the project has its own definitions and rules, follow them. For anything it has not decided, use this section.
 
 ### Recording Requirements
 
 - **fixed**: Fix the issue the finding points out, then request re-review. The re-review report confirms resolution
-- **deferred**: Create a decision record in `project-records/decisions/` with: deferral rationale, risk assessment, and planned resolution timeline. The finding remains tracked
-- **accepted**: Record the acceptance rationale in the review report's Finding Disposition Table
+- **deferred**: Record the deferral rationale, risk assessment, and planned resolution timeline. The finding remains tracked
+- **accepted**: Record the acceptance rationale in the review report's finding record
 
 ### Re-review Behavior
 
-When review-agent performs a re-review after corrections:
+When the reviewer performs a re-review after corrections:
 1. Verify each previously raised finding against its recorded disposition
 2. Confirm that findings with the disposition "fixed" are actually resolved in the corrected artifact
 3. Record the verification result in a new review report with updated counts
-4. Any new findings discovered during re-review are added to the Finding Disposition Table
+4. Any new findings discovered during re-review are added to the finding record
 
 ---
 
 ## Comprehensive Review Checklist (NDD, R1–R8, Mandatory)
 
-A checklist that combines all review perspectives (NDD, R1–R8) and can also be used on its own. Keywords follow RFC 2119 (MUST/SHALL = mandatory, SHOULD = recommended). The reviewer MUST fill in the Verdict (PASS/FAIL/NA) for every row. Every FAIL MUST be raised as a finding. When the Verdict is not PASS (FAIL/NA), or when a MUST item is intentionally skipped, the reason MUST be written in Remark. Each row maps to the detailed section above by its chapter and perspective name; see there for rationale and examples.
+A checklist that combines all review perspectives (NDD, R1–R8) and can also be used on its own. Keywords follow RFC 2119 (MUST/SHALL = mandatory, SHOULD = recommended).
+
+- The reviewer MUST fill in the Verdict (PASS/FAIL/NA) for every row.
+- Every FAIL MUST be raised as a finding.
+- When the Verdict is not PASS (FAIL/NA), the reason MUST be written in Remark.
+- When a MUST or SHOULD item is intentionally skipped, the Verdict MUST be NA and the reason MUST be written in Remark.
+- NA means that the row does not apply, or that it was skipped with a written reason.
+
+Each row maps to the detailed section above by its chapter and perspective name; see there for rationale and examples.
 
 **Purity annotation convention (language-agnostic, for R7):** every function/method MUST carry exactly one `@purity` tag inside the language's comment (`//`, `#`, `--`, `/* */`, `"""..."""`, etc.). The value is one of four: `pure` / `semi-pure-immutable` / `semi-pure-mutable` / `non-pure`. `@purity` is a text marker inside a comment, not language syntax, so it works in every language and is greppable. Pure is stated explicitly, never left unmarked. For exemptions, see "`@purity` Tag" in R7.
 
@@ -883,7 +892,8 @@ A checklist that combines all review perspectives (NDD, R1–R8) and can also be
 | R4 | Race Condition | MUST | Concurrent access to shared state is identified. Check-Then-Act and Read-Modify-Write are made atomic (lock/atomic). No races across await | — | — |
 | R4 | Glitch | MUST | Updates of multiple fields are atomic (no observable intermediate glitch). The implementation matches the state transitions in Spec Ch5.5. Event notification timing (before/after) is defined | — | — |
 | R4 | State Machine (naming) | MUST | The definition is `...StateMachine`, the state type is `...State`, and the current state is `current...State`. States are adjectives or participles (present or past), events are past tense. No serial numbers. A transition is identified by the names of its source vertex, trigger, and guard | — | — |
-| R4 | State Machine (defining states) | MUST | States are not defined by combinations of values; each state and each event has exactly one meaning. The next state depends only on the current state and the event (and the guard). Each initialization enters exactly one state. Avoid history pseudostates (H, H*) as far as possible; if used, write the reason in Remark | — | — |
+| R4 | State Machine (defining states) | MUST | States are not defined by combinations of values; each state and each event has exactly one meaning. The next state depends only on the current state and the event (and the guard), except for transitions whose history pseudostate row is NA. Each initialization enters exactly one state | — | — |
+| R4 | State Machine (history pseudostates; defining states) | MUST | Avoid history pseudostates (H, H*) as far as possible; if used, set the Verdict to NA and write the reason in Remark | — | — |
 | R4 | State Machine (actions and timers) | MUST | Timers are independent state machines. State actions finish at once without waiting. Do not use `doActivity` | — | — |
 | R4 | State Machine (multiple state machines) | MUST | Cooperating state machines run synchronously under one event dispatcher per component, and a component acts on another component's state machines only through asynchronous events (no direct reads or writes). One event moves at most one transition (except when the result is the same in any order). If they interact, only one receives the event and moves the others with the event that its transition raises. Events arriving during a transition are not lost, and the handling of a queue overflow is decided. Avoid orthogonal regions and `fork` / `join` as far as possible (if used, only when the result is the same in any order) | — | — |
 | R4 | State Machine (state transition tables and tests) | MUST | The state transition diagram and the state transition table come as a pair with matching content (if written by hand separately, one is the master and each can be traced to the other). There is no behavior that is not in the table. Estimate the number of test cases and keep each state machine small enough to test every cell. Every cell is decided, and a legend defines how "ignore" and "error" are written; guards neither overlap nor leave gaps. Every cell (each guard branch) is tested | — | — |
