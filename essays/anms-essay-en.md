@@ -238,8 +238,8 @@ The following example derives a specification from the concept of "a car with a 
 ````markdown
 **1. Foundation**
 
-- **Background:** Affluent customers desire the experience of a personal chauffeur — just tell it where to go, and it delivers you safely, comfortably, and on time. However, hiring a human chauffeur is expensive, and 24/7 availability is impractical.
-- **Challenges:** Human chauffeurs are inconsistent due to fatigue and health conditions. Late-night and early-morning availability is limited.
+- **Background:** Affluent customers desire the experience of a personal chauffeur — just tell it where to go, and it delivers you safely, comfortably, and on time. However, hiring a human chauffeur is expensive, and 24/7 availability is impractical. Human chauffeurs are also inconsistent due to fatigue and health conditions, and late-night and early-morning availability is limited.
+- **Challenges:** Make driving quality independent of a person's physical condition. Keep the same level of service late at night and early in the morning.
 - **Goals:** Deliver the "just tell it where to go" experience without a human chauffeur, 24 hours a day, 365 days a year.
 - **Approach:** Autonomous driving software. Three-layer architecture: environment perception via sensor fusion (LiDAR + camera), route planning, and vehicle control.
 - **Scope:** In-scope: Autonomous driving on public roads and highways, destination setting via passenger dialogue. Out-of-scope: Unpaved roads, snow-covered surfaces.
