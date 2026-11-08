@@ -1,6 +1,6 @@
 # Software NDD Development Review Standards
 
-**Version:** `2026-11-08T04:22:57+09:00`
+**Version:** `2026-11-08T10:11:13+09:00`
 
 > **Related documents:** [Process Rules](full-auto-dev-process-rules-en.md) §9 Quality Management Framework, [Document Management Rules](full-auto-dev-document-rules-en.md)
 
@@ -418,7 +418,7 @@ Comments are limited to the kinds below, are written in English, and start with 
 | Kind | Form | When |
 |:---|:---|:---|
 | Why | `// Why: <reason>` | There is a reason the code cannot say |
-| Spec | `// Spec: FR-012` | The code implements behavior in the specification. Do not copy its content |
+| Spec | `// Spec: FR-012` | The code implements or tests behavior in the specification. Do not copy its content |
 | Summary | `// Summary: <EARS>` | The behavior is not in the specification and cannot be read easily from the code |
 | Temporary | `// Temporary: <reason>. Until: <condition>.` | Temporary code and comments |
 | R7 comments | `@purity <value>`, `// Section: <name>`, `// Consistency: <unit>` | "`@purity` Tag", "Structural Separation", and "Separation of Collection and Processing" in R7 call for them |

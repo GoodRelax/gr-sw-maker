@@ -1,6 +1,6 @@
 # ソフトウェアNDD開発レビュー基準書
 
-**バージョン:** `2026-11-08T04:22:57+09:00`
+**バージョン:** `2026-11-08T10:11:13+09:00`
 
 > **関連文書:** [プロセス規則](full-auto-dev-process-rules-ja.md) §9 品質管理フレームワーク、[文書管理規則](full-auto-dev-document-rules-ja.md)
 
@@ -418,7 +418,7 @@ NDD は、命名を最優先とする AI 連携の SW 開発スタイルであ�
 | 種類 | 書く形 | 書く時 |
 |:---|:---|:---|
 | Why | `// Why: <reason>` | コードで語れない理由がある時 |
-| Spec | `// Spec: FR-012` | 仕様書にある振る舞いを実装する時。内容は写さない |
+| Spec | `// Spec: FR-012` | 仕様書にある振る舞いを実装する時と、試験する時。内容は写さない |
 | Summary | `// Summary: <EARS>` | 振る舞いが仕様書に無く、コードからも容易に読めない時 |
 | Temporary | `// Temporary: <reason>. Until: <condition>.` | 暫定のコードとコメント |
 | R7 のコメント | `@purity <value>`、`// Section: <name>`、`// Consistency: <unit>` | R7 の `@purity` タグ、構造の分離、収集と処理の分離が定める時 |
